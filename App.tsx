@@ -15,14 +15,17 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 import {Provider} from 'react-redux';
-import {persistor, store} from './src/redux/store';
+import {persistor, store} from '@redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
+import Home from '@screens/home';
 
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SafeAreaView style={styles.container}></SafeAreaView>
+        <SafeAreaView style={styles.container}>
+          <Home />
+        </SafeAreaView>
       </PersistGate>
     </Provider>
   );

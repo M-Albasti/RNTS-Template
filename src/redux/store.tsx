@@ -24,8 +24,14 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Automatically adds the thunk middleware and the Redux DevTools extension
 export const store = configureStore({
-  // Can automatically calls `combineReducers` but persist storage needed 
+  // Can automatically calls `combineReducers` but persist storage needed
   reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export const persistor = persistStore(store);
