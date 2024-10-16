@@ -1,10 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {Text, View} from 'react-native';
 import {styles} from './styles';
 
-const Profile = (): React.JSX.Element => {
+const Profile = (props: any): React.JSX.Element => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Profile</Text>
     </View>
   );

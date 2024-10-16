@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Text, View} from 'react-native';
 import {styles} from './styles';
 
-const Home = (): React.JSX.Element => {
+const Home = (props: any): React.JSX.Element => {
   return (
-    <View>
+    <View style={styles.container}>
       <Text>Home</Text>
     </View>
   );

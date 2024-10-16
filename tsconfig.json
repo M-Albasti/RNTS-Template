@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@src/*": ["./src/*"],
-      "@api": ["./src/api/*"],
+      "@api/*": ["./src/api/*"],
       "@assets/*": ["./src/assets/*"],
       "@atoms/*": ["./src/components/atoms/*"],
       "@molecules/*": ["./src/components/molecules/*"],
@@ -18,8 +18,8 @@
       "@screens/*": ["./src/screens/*"],
       "@services/*": ["./src/services/*"],
       "@theme/*": ["./src/theme/*"],
-      "@translation": ["./src/translation/*"],
-      "@types": ["./src/types/*"],
+      "@translation/*": ["./src/translation/*"],
+      "@types/*": ["./src/types/*"],
       "@utils/*": ["./src/utils/*"],
     }
   }

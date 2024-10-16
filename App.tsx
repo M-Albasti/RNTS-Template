@@ -17,14 +17,14 @@ import _ from 'lodash';
 import {Provider} from 'react-redux';
 import {persistor, store} from '@redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import Home from '@screens/home';
+import NavigationScreens from '@navigation/index';
 
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaView style={styles.container}>
-          <Home />
+          <NavigationScreens />
         </SafeAreaView>
       </PersistGate>
     </Provider>
@@ -33,8 +33,6 @@ function App(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
     flex: 1,
   },
 });
