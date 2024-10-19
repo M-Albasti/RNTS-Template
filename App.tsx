@@ -6,26 +6,21 @@
  */
 
 import React from 'react';
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet} from 'react-native';
 import _ from 'lodash';
 import {Provider} from 'react-redux';
 import {persistor, store} from '@redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import NavigationScreens from '@navigation/index';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 function App(): React.JSX.Element {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SafeAreaView style={styles.container}>
+        <SafeAreaProvider style={styles.container}>
           <NavigationScreens />
-        </SafeAreaView>
+        </SafeAreaProvider>
       </PersistGate>
     </Provider>
   );
