@@ -5,10 +5,16 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {navigationRef} from './NavigationServices';
+import {Text} from 'react-native';
+import {linking} from '@services/deepLinking';
 
 const Navigation = ({children}: React.JSX.Element | any): React.JSX.Element => {
   return (
-    <NavigationContainer ref={navigationRef} theme={DefaultTheme}>
+    <NavigationContainer
+      ref={navigationRef}
+      theme={DefaultTheme}
+      linking={linking}
+      fallback={<Text>Loading...</Text>}>
       {children}
     </NavigationContainer>
   );

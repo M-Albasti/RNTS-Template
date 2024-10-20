@@ -10,10 +10,14 @@ const DrawerNavigation = (props: any) => {
     <Drawer.Navigator
       initialRouteName="Home"
       screenOptions={{drawerType: 'slide'}}>
-      <Drawer.Screen name="Home">{props => <Home {...props} />}</Drawer.Screen>
-      <Drawer.Screen name="Profile">
-        {props => <Profile {...props} />}
-      </Drawer.Screen>
+      <Drawer.Group>
+        <Drawer.Screen name="Home">
+          {props => <Home {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Profile">
+          {props => <Profile {...props} />}
+        </Drawer.Screen>
+      </Drawer.Group>
     </Drawer.Navigator>
   );
 };
