@@ -10,10 +10,16 @@ const Profile = (props: any): React.JSX.Element => {
         onPress={() => {
           props.navigation.navigate('StackRoot', {
             screen: 'Settings',
-            initial: false
+            initial: false,
           });
         }}>
         <Text>open settings</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          props.navigation.getParent('DrawerRoot').openDrawer();
+        }}>
+        <Text>open Drawer</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );

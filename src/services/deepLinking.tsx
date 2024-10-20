@@ -9,6 +9,7 @@ export const linking: LinkingOptions<any> = {
     'https://*.projectdeeplink.com',
   ],
   config: {
+    initialRouteName: 'Home',
     /* configuration for matching screens with paths */
     screens: {
       // this way for the profile can be implemented inside the nested navigator
@@ -22,13 +23,18 @@ export const linking: LinkingOptions<any> = {
           id: id => id.replace(/^user-/, ''),
         },
       },
-      // Home: 'Home',
+      Home: 'Home',
       StackRoot: {
+        path: 'StackRoot',
         screens: {
           Settings: 'Settings',
           DrawerRoot: {
+            path: 'DrawerRoot',
             screens: {
-              // Profile: 'Profile',
+              Profile: {
+                path: 'Profiles',
+                exact: true,
+              },
             },
           },
         },

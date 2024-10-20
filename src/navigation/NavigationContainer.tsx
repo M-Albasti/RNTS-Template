@@ -4,7 +4,7 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {navigationRef} from './NavigationServices';
+import {navigationRef} from '@services/NavigationServices';
 import {Text} from 'react-native';
 import {linking} from '@services/deepLinking';
 

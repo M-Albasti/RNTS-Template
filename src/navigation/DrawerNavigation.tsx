@@ -8,6 +8,7 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigation = (props: any) => {
   return (
     <Drawer.Navigator
+      id="DrawerRoot"
       initialRouteName="Home"
       screenOptions={{drawerType: 'slide'}}>
       <Drawer.Group>
