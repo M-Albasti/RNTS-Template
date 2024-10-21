@@ -37,13 +37,13 @@
 			<true/>
 		</dict>
 		<key>NSCameraUsageDescription</key>
-		<string>we need to open the camera to take a picture to upload</string>
+		<string>$(PRODUCT_NAME) need to open the camera to take a picture to upload</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string/>
 		<key>NSMicrophoneUsageDescription</key>
-		<string>we need to open the microphone to recorde your voice in videos you want to upload</string>
+		<string>$(PRODUCT_NAME) need to open the microphone to recorde your voice in videos you want to upload</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>we need to open your photo gallery to pick an image</string>
+		<string>$(PRODUCT_NAME) need to open your photo gallery to pick an image</string>
 		<key>UIAppFonts</key>
 		<array>
 			<string>AntDesign.ttf</string>
