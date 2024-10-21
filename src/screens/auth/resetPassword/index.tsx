@@ -2,13 +2,12 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {styles} from './styles';
 
-const Settings = (props: any) => {
-  console.log("🚀 ~ Settings ~ props:", props)
+const ResetPassword = (props: any) => {
   return (
     <View style={styles.container}>
-      <Text>Settings</Text>
+      <Text>ResetPassword</Text>
     </View>
   );
 };
 
-export default Settings;
+export default ResetPassword;

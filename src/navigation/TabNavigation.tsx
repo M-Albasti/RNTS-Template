@@ -1,9 +1,8 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Home from '@screens/home';
 import Profile from '@screens/profile';
-import StackNavigation from './StackNavigation';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface TabBarIconProps {
   focused: boolean;
@@ -13,7 +12,7 @@ interface TabBarIconProps {
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = () => {
+const TabNavigation = (props: any) => {
   return (
     <Tab.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
       <Tab.Group>
@@ -40,15 +39,6 @@ const TabNavigation = () => {
             },
           }}>
           {props => <Profile {...props} />}
-        </Tab.Screen>
-        <Tab.Screen
-          name="StackRoot"
-          options={{
-            tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
-              return <Ionicons name="list-sharp" size={size} color={color} />;
-            },
-          }}>
-          {props => <StackNavigation {...props} />}
         </Tab.Screen>
       </Tab.Group>
     </Tab.Navigator>

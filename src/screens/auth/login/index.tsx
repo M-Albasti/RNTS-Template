@@ -2,21 +2,18 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 
-const Home = (props: any): React.JSX.Element => {
+const Login = (props: any) => {
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text style={styles.textStyle}>Login</Text>
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('DrawerRoot', {
-            screen: 'Profile',
-            initial: false,
-          });
+          props.navigation.replace('DrawerRoot');
         }}>
-        <Text>Go To Profile</Text>
+        <Text style={styles.textStyle}>Go Home</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default Home;
+export default Login;

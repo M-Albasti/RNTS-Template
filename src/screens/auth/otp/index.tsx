@@ -2,13 +2,12 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import {styles} from './styles';
 
-const Settings = (props: any) => {
-  console.log("🚀 ~ Settings ~ props:", props)
+const OTP = (props: any) => {
   return (
     <View style={styles.container}>
-      <Text>Settings</Text>
+      <Text>OTP</Text>
     </View>
   );
 };
 
-export default Settings;
+export default OTP;

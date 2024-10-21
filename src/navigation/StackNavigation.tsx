@@ -1,22 +1,41 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DrawerNavigation from './DrawerNavigation';
-import Home from '@screens/home';
-import Profile from '@screens/profile';
 import Settings from '@screens/settings';
+import NotFound from '@screens/notFound';
+import Login from '@screens/auth/login';
+import Register from '@screens/auth/register';
+import ForgetPassword from '@screens/auth/forgetPassword';
+import ResetPassword from '@screens/auth/resetPassword';
+import OTP from '@screens/auth/otp';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = (props: any): React.JSX.Element => {
+  console.log('🚀 ~ StackNavigation ~ props:', props?.route);
   return (
-    <Stack.Navigator initialRouteName="DrawerRoot">
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{headerShown: false}}>
       <Stack.Group>
-        <Stack.Screen name="Home">{props => <Home {...props} />}</Stack.Screen>
-        <Stack.Screen name="Profile">
-          {props => <Profile {...props} />}
+        <Stack.Screen name="Login">
+          {props => <Login {...props} />}
         </Stack.Screen>
+        <Stack.Screen name="Register">
+          {props => <Register {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="ForgetPassword">
+          {props => <ForgetPassword {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="ResetPassword">
+          {props => <ResetPassword {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="OTP">{props => <OTP {...props} />}</Stack.Screen>
         <Stack.Screen name="DrawerRoot">
           {props => <DrawerNavigation {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="NotFound">
+          {props => <NotFound {...props} />}
         </Stack.Screen>
       </Stack.Group>
       <Stack.Group screenOptions={{presentation: 'modal'}}>

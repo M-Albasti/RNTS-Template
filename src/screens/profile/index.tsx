@@ -3,15 +3,13 @@ import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 
 const Profile = (props: any): React.JSX.Element => {
+  console.log('🚀 ~ Profile ~ props:', props);
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
       <TouchableOpacity
         onPress={() => {
-          props.navigation.navigate('StackRoot', {
-            screen: 'Settings',
-            initial: false,
-          });
+          props.navigation.navigate('Settings');
         }}>
         <Text>open settings</Text>
       </TouchableOpacity>
