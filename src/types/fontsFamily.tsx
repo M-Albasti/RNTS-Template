@@ -1,0 +1,16 @@
+export type FontsFamily =
+  | 'AntDesign'
+  | 'Entypo'
+  | 'EvilIcons'
+  | 'Feather'
+  | 'FontAwesome'
+  | 'FontAwesome5'
+  | 'FontAwesome6'
+  | 'Fontisto'
+  | 'Foundation'
+  | 'Ionicons'
+  | 'MaterialCommunityIcons'
+  | 'MaterialIcons'
+  | 'Octicons'
+  | 'SimpleLineIcons'
+  | 'Zocial';
