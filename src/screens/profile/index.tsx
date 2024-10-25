@@ -3,7 +3,6 @@ import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 
 const Profile = (props: any): React.JSX.Element => {
-  console.log('🚀 ~ Profile ~ props:', props);
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>

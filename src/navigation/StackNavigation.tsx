@@ -12,7 +12,6 @@ import OTP from '@screens/auth/otp';
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = (props: any): React.JSX.Element => {
-  console.log('🚀 ~ StackNavigation ~ props:', props?.route);
   return (
     <Stack.Navigator
       initialRouteName="Login"
