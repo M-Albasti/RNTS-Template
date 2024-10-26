@@ -1,4 +1,11 @@
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import VideoCameraModal from '../organisms/VideoCameraModal';
 import {
@@ -11,6 +18,11 @@ import {
   VideoFile,
 } from 'react-native-vision-camera';
 import {permissionsRequest} from '@services/permissionsRequest';
+import VideoPlayer from '../atoms/VideoPlayer';
+import {VideoRef} from 'react-native-video';
+import {appColors} from '@constants/colors';
+import TouchableIcon from '../molecules/TouchableIcon';
+import TouchableTextIcon from '../molecules/TouchableTextIcon';
 
 const VideoRecord = () => {
   const [cameraPosition, setCameraPosition] = useState<CameraPosition>('front');
@@ -18,9 +30,13 @@ const VideoRecord = () => {
   const [videoFile, setVideoFile] = useState<VideoFile | null>();
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioEnable, setAudioEnable] = useState<boolean>(false);
-  const [cameraVisible, setCameraVisible] = useState<boolean>(true);
+  const [cameraVisible, setCameraVisible] = useState<boolean>(false);
+  const [fullscreen, setFullscreen] = useState<boolean>(false);
+  const [videoReady, setVideoReady] = useState<boolean>(true);
+  const [repeat, setRepeat] = useState<boolean>(true);
   const device: CameraDevice | undefined = useCameraDevice(cameraPosition);
   const cameraRef = useRef<Camera | null>();
+  const videoRef = useRef<VideoRef | null>();
   const cameraPermission = useCameraPermission();
   const microphonePermission = useMicrophonePermission();
 
@@ -39,12 +55,15 @@ const VideoRecord = () => {
 
   const onCameraReady = (ref: Camera | null) => {
     cameraRef.current = ref;
-    console.log('🚀 ~ onCameraReady ~ cameraRef.current:', cameraRef.current);
+  };
+
+  const onVideoReady = (ref: VideoRef) => {
+    videoRef.current = ref;
   };
 
   const changeCameraPosition = () => {
     if (cameraPosition == 'back') {
-      flashToggle();
+      setCameraFlash('off');
       setCameraPosition('front');
     } else {
       setCameraPosition('back');
@@ -60,7 +79,7 @@ const VideoRecord = () => {
   };
 
   const cameraToggle = () => {
-    flashToggle();
+    setCameraFlash('off');
     setCameraVisible(!cameraVisible);
   };
 
@@ -74,7 +93,6 @@ const VideoRecord = () => {
         fileType: 'mp4',
         flash: cameraFlash,
         onRecordingError: error => {
-          // console.log('try-catch error=>', {error});
           console.error('Recording failed! onRecordingError=>', error);
         },
         onRecordingFinished: video => {
@@ -107,14 +125,47 @@ const VideoRecord = () => {
   const onAcceptVideo = () => {
     // onSuccess({...video, mime: 'video/mp4'});
   };
+
+  const onReadyForDisplay = () => {
+    setVideoReady(false);
+  };
+
+  const videoPause = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  const videoResume = () => {
+    if (videoRef.current) {
+      videoRef.current.resume();
+    }
+  };
+
+  const videoDismissFullScreen = () => {
+    if (videoRef.current) {
+      setFullscreen(false);
+      videoRef.current.dismissFullscreenPlayer();
+    }
+  };
+
+  const videoPresentFullScreen = () => {
+    if (videoRef.current) {
+      setFullscreen(true);
+      videoRef.current.presentFullscreenPlayer();
+    }
+  };
+
   if (cameraPermission.hasPermission && microphonePermission.hasPermission) {
     return (
-      <View>
+      <View style={styles.container}>
         <VideoCameraModal
           device={device}
           cameraVisible={cameraVisible}
           audio={audioEnable}
           isRecording={isRecording}
+          startRecording={startRecording}
+          stopRecording={stopRecording}
           cameraPosition={cameraPosition}
           cameraToggle={cameraToggle}
           audioToggle={audioToggle}
@@ -122,6 +173,34 @@ const VideoRecord = () => {
           changeCameraPosition={changeCameraPosition}
           flashToggle={flashToggle}
           cameraFlash={cameraFlash}
+        />
+        {!cameraVisible && (
+          <VideoPlayer
+            // uri={videoFile?.path}
+            uri={
+              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+            }
+            onVideoReady={onVideoReady}
+            onReadyForDisplay={onReadyForDisplay}
+            fullscreen={fullscreen}
+            repeat={repeat}
+            controls={true}
+          />
+        )}
+        {videoReady && videoFile?.path && (
+          <ActivityIndicator
+            color={appColors.green}
+            size={'large'}
+            style={StyleSheet.absoluteFill}
+          />
+        )}
+        <TouchableTextIcon
+          iconType={'FontAwesome5'}
+          name={'camera-retro'}
+          size={35}
+          color={appColors.black}
+          onPress={cameraToggle}
+          style={styles.cameraIcon}
         />
       </View>
     );
@@ -136,4 +215,18 @@ const VideoRecord = () => {
 
 export default VideoRecord;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  cameraIcon: {
+    alignSelf: 'center',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'right',
+    fontSize: 25,
+    fontWeight: 'bold'
+  },
+});

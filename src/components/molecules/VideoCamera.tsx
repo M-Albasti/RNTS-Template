@@ -3,7 +3,7 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import VisionCamera from '../atoms/VisionCamera';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
 import TextView from '../atoms/TextView';
-import TouchableIcon from '../atoms/TouchableIcon';
+import TouchableIcon from './TouchableIcon';
 import {appColors} from '@constants/colors';
 
 const {width, height} = Dimensions.get('screen');
@@ -15,6 +15,8 @@ interface VideoCameraProps {
   cameraActive: boolean;
   audio: boolean;
   isRecording: boolean;
+  startRecording: () => void;
+  stopRecording: () => void;
   onCameraReady: (ref: Camera | null) => void;
   changeCameraPosition: () => void;
   flashToggle: () => void;
@@ -29,6 +31,8 @@ const VideoCamera = ({
   cameraActive,
   audio,
   isRecording,
+  startRecording,
+  stopRecording,
   onCameraReady,
   changeCameraPosition,
   flashToggle,
@@ -79,7 +83,7 @@ const VideoCamera = ({
           name={isRecording ? 'stop-circle-outline' : 'record-circle'}
           size={35}
           color={appColors.white}
-          onPress={audioToggle}
+          onPress={isRecording ? stopRecording : startRecording}
         />
         {device.hasTorch ? (
           <TouchableIcon

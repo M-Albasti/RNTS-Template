@@ -9,6 +9,8 @@ interface VideoCameraModalProps {
   cameraVisible: boolean;
   audio: boolean;
   isRecording: boolean;
+  startRecording: () => void;
+  stopRecording: () => void;
   cameraPosition: CameraPosition;
   cameraFlash?: 'on' | 'off';
   transparent?: boolean;
@@ -24,6 +26,8 @@ const VideoCameraModal = ({
   cameraVisible,
   audio,
   isRecording,
+  startRecording,
+  stopRecording,
   cameraPosition,
   cameraFlash,
   transparent,
@@ -49,6 +53,8 @@ const VideoCameraModal = ({
         cameraActive={cameraVisible}
         audio={audio}
         isRecording={isRecording}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
         cameraFlash={cameraFlash}
         cameraPosition={cameraPosition}
         changeCameraPosition={changeCameraPosition}

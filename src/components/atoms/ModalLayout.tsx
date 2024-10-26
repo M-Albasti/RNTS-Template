@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  Modal,
-  SafeAreaView,
-  ModalProps,
-  ViewStyle,
-} from 'react-native';
+import {Modal, SafeAreaView, ModalProps, ViewStyle} from 'react-native';
 
 const ModalLayout = (props: ModalProps & ViewStyle) => {
   return (

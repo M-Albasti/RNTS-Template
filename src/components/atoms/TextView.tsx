@@ -1,10 +1,12 @@
-import {StyleSheet, Text, TextProps, View, ViewStyle} from 'react-native';
 import React from 'react';
+import {StyleSheet, Text, TextProps, View, ViewStyle} from 'react-native';
 
 const TextView = (props: TextProps & ViewStyle) => {
   return (
-    <View>
-      <Text>TextView</Text>
+    <View style={props.style}>
+      <Text style={props.style} numberOfLines={props.numberOfLines}>
+        {props.children}
+      </Text>
     </View>
   );
 };

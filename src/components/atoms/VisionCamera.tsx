@@ -1,4 +1,4 @@
-import React, {RefObject, useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {
   Camera,
@@ -34,8 +34,9 @@ const VisionCamera = ({
       video={video}
       audio={audio}
       photo={photo}
-      torch={torch}
+      torch={device.hasTorch ? torch : 'off'}
       onError={onError}
+      photoQualityBalance={'speed'}
       focusable={focusable}
       resizeMode={resizeMode}
       lowLightBoost={device.supportsLowLightBoost}
