@@ -7,7 +7,7 @@ interface TouchableIconProps extends IconProps {
   iconType: FontsFamily;
 }
 
-const Icon = (props: TouchableIconProps) => {
+const Icon = (props: TouchableIconProps): React.JSX.Element => {
   const Icon = iconComponents[props.iconType];
 
   return <Icon name={props.name} size={props.size} color={props.color} />;

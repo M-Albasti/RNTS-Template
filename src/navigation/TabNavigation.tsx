@@ -12,7 +12,7 @@ interface TabBarIconProps {
 
 const Tab = createBottomTabNavigator();
 
-const TabNavigation = (props: any) => {
+const TabNavigation = (props: any): React.JSX.Element => {
   return (
     <Tab.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
       <Tab.Group>

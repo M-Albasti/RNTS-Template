@@ -2,12 +2,12 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import TabNavigation from './TabNavigation';
 import Profile from '@screens/profile';
-import Audio from '@screens/audios';
-import Video from '@screens/videos';
+import Audio from '@screens/audios/audioPlayer';
+import Video from '@screens/videos/recordVideo';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerNavigation = (props: any) => {
+const DrawerNavigation = (props: any): React.JSX.Element => {
   return (
     <Drawer.Navigator
       id="DrawerRoot"

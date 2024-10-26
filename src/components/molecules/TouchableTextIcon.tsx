@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import Icon from '../atoms/Icon';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 import {FontsFamily} from '@types/fontsFamily';
@@ -9,7 +9,7 @@ interface TouchableIconProps extends IconButtonProps {
   iconType: FontsFamily;
 }
 
-const TouchableTextIcon = (props: TouchableIconProps) => {
+const TouchableTextIcon = (props: TouchableIconProps): React.JSX.Element => {
   return (
     <TouchableOpacity onPress={props.onPress} style={props.style}>
       <Icon

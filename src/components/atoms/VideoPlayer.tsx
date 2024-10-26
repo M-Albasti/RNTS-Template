@@ -38,17 +38,16 @@ const VideoPlayer = ({
       style={styles.backgroundVideo}
       onReadyForDisplay={onReadyForDisplay}
       controls={controls}
-      // onProgress={(progress: OnProgressData) => {
-      //   console.log('progress =>', progress);
-      // }}
+      onProgress={(progress: OnProgressData) => {
+        console.log('progress =>', progress);
+      }}
     />
   );
 };
 
 export default VideoPlayer;
 
-// Later on in your styles..
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   backgroundVideo: {
     flex: 1,
   },

@@ -1,11 +1,13 @@
+import React, {useEffect, useRef, useState} from 'react';
 import {
+  Dimensions,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
@@ -16,8 +18,14 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 import {permissionsRequest} from '@services/permissionsRequest';
 import SoundPlayer from 'react-native-sound-player';
+import TouchableIcon from '@molecules/TouchableIcon';
+import {appColors} from '@constants/colors';
+import Slider from '@react-native-community/slider';
+import {sounds} from '@constants/sounds';
 
-const Audio = (props: any) => {
+const {width, height} = Dimensions.get('screen');
+
+const Audio = (props: any): React.JSX.Element => {
   const [recordSecs, setRecordSecs] = useState<string | number>();
   const [recordTime, setRecordTime] = useState<string>();
   const [currentPositionSec, setCurrentPositionSec] = useState<number>();
@@ -215,7 +223,84 @@ const Audio = (props: any) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{}}>
+      <ScrollView>
+        <View style={styles.mainbar}>
+          <TouchableIcon
+            iconType={'AntDesign'}
+            name={'left'}
+            size={24}
+            color={appColors.black}
+          />
+          <Text style={styles.nowPlayingText}> Now Playing </Text>
+          <TouchableIcon
+            iconType={'Entypo'}
+            name="dots-three-horizontal"
+            size={24}
+            color={appColors.black}
+          />
+        </View>
+
+        <View style={styles.musicLogoView}>
+          <Image
+            source={{uri: sounds[0].artwork}}
+            style={styles.imageView}
+            resizeMode="stretch"
+          />
+        </View>
+
+        <View style={styles.nameOfSongView}>
+          <Text style={styles.nameOfSongText1}>#02 - Practice</Text>
+          <Text style={styles.nameOfSongText2}>
+            Digital Marketing - By Setup Cast
+          </Text>
+        </View>
+
+        <View style={styles.sliderView}>
+          <Text style={styles.sliderTime}> 4:10 </Text>
+          <Slider
+            style={styles.sliderStyle}
+            minimumValue={0}
+            maximumValue={12.02}
+            minimumTrackTintColor={appColors.primary}
+            maximumTrackTintColor={appColors.black60}
+            thumbTintColor={appColors.primary}
+            value={3.5}
+          />
+          <Text style={styles.sliderTime}>12:02</Text>
+        </View>
+
+        <View style={styles.functionsView}>
+          <TouchableIcon
+            iconType={'Entypo'}
+            name="shuffle"
+            size={24}
+            color={appColors.primary}
+          />
+          <TouchableIcon
+            iconType={'Entypo'}
+            name="controller-fast-backward"
+            size={24}
+            color={appColors.primary}
+          />
+          <TouchableIcon
+            iconType={'AntDesign'}
+            name="pausecircle"
+            size={50}
+            color={appColors.primary}
+          />
+          <TouchableIcon
+            iconType={'Entypo'}
+            name="controller-fast-forward"
+            size={24}
+            color={appColors.primary}
+          />
+          <TouchableIcon
+            iconType={'Feather'}
+            name="repeat"
+            size={20}
+            color={appColors.primary}
+          />
+        </View>
         <Text>Audio</Text>
         <TouchableOpacity
           style={styles.buttonContainerStyle}
@@ -314,6 +399,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: width,
+    height: height,
   },
   buttonContainerStyle: {
     padding: 10,
@@ -325,7 +412,7 @@ const styles = StyleSheet.create({
     width: 200,
   },
   button: {
-    backgroundColor: '#007BFF',
+    backgroundColor: appColors.primary,
     padding: 15,
     marginVertical: 10,
     borderRadius: 5,
@@ -339,5 +426,69 @@ const styles = StyleSheet.create({
   status: {
     marginTop: 20,
     fontSize: 16,
+  },
+  mainbar: {
+    height: height * 0.1,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: '10%',
+  },
+  nowPlayingText: {
+    fontSize: 19,
+    textAlign: 'center',
+  },
+  musicLogoView: {
+    height: height * 0.3,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imageView: {
+    height: '100%',
+    width: '80%',
+    borderRadius: 10,
+  },
+  nameOfSongView: {
+    height: height * 0.15,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  nameOfSongText1: {
+    fontSize: 19,
+    fontWeight: 'bold',
+    color: appColors.black80,
+  },
+  nameOfSongText2: {
+    color: appColors.black60,
+    marginTop: '4%',
+  },
+  sliderView: {
+    height: height * 0.1,
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: '10%',
+  },
+  sliderStyle: {
+    height: '70%',
+    width: '70%',
+  },
+  sliderTime: {
+    fontSize: 15,
+    color: appColors.gray,
+    width: '15%',
+    textAlign: 'center',
+  },
+  functionsView: {
+    flexDirection: 'row',
+    height: height * 0.1,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: '10%',
   },
 });

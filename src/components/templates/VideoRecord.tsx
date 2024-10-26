@@ -3,7 +3,6 @@ import {
   Platform,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
@@ -21,10 +20,9 @@ import {permissionsRequest} from '@services/permissionsRequest';
 import VideoPlayer from '../atoms/VideoPlayer';
 import {VideoRef} from 'react-native-video';
 import {appColors} from '@constants/colors';
-import TouchableIcon from '../molecules/TouchableIcon';
 import TouchableTextIcon from '../molecules/TouchableTextIcon';
 
-const VideoRecord = () => {
+const VideoRecord = (): React.JSX.Element => {
   const [cameraPosition, setCameraPosition] = useState<CameraPosition>('front');
   const [cameraFlash, setCameraFlash] = useState<'on' | 'off'>('off');
   const [videoFile, setVideoFile] = useState<VideoFile | null>();
@@ -227,6 +225,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'right',
     fontSize: 25,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });

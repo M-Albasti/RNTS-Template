@@ -1,7 +1,7 @@
 import React from 'react';
 import {Modal, SafeAreaView, ModalProps, ViewStyle} from 'react-native';
 
-const ModalLayout = (props: ModalProps & ViewStyle) => {
+const ModalLayout = (props: ModalProps & ViewStyle): React.JSX.Element => {
   return (
     <SafeAreaView
       style={{

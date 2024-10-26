@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
 import {styles} from './styles';
 
 const NotFound = (props: any): React.JSX.Element => {

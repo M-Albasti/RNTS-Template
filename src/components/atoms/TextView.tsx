@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TextProps, View, ViewStyle} from 'react-native';
+import {Text, TextProps, View, ViewStyle} from 'react-native';
 
-const TextView = (props: TextProps & ViewStyle) => {
+const TextView = (props: TextProps & ViewStyle): React.JSX.Element => {
   return (
     <View style={props.style}>
       <Text style={props.style} numberOfLines={props.numberOfLines}>
@@ -12,5 +12,3 @@ const TextView = (props: TextProps & ViewStyle) => {
 };
 
 export default TextView;
-
-const styles = StyleSheet.create({});

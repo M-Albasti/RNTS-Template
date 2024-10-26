@@ -3,7 +3,6 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["./src/*"],
       "@api/*": ["./src/api/*"],
       "@assets/*": ["./src/assets/*"],
       "@atoms/*": ["./src/components/atoms/*"],
@@ -20,7 +19,7 @@
       "@theme/*": ["./src/theme/*"],
       "@translation/*": ["./src/translation/*"],
       "@types/*": ["./src/types/*"],
-      "@utils/*": ["./src/utils/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   }
 }
