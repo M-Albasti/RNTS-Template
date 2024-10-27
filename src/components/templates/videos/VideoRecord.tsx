@@ -1,12 +1,6 @@
-import {
-  ActivityIndicator,
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import VideoCameraModal from '../organisms/VideoCameraModal';
+import VideoCameraModal from '../../organisms/videos/VideoCameraModal';
 import {
   Camera,
   CameraDevice,
@@ -17,24 +11,22 @@ import {
   VideoFile,
 } from 'react-native-vision-camera';
 import {permissionsRequest} from '@services/permissionsRequest';
-import VideoPlayer from '../atoms/VideoPlayer';
-import {VideoRef} from 'react-native-video';
-import {appColors} from '@constants/colors';
-import TouchableTextIcon from '../molecules/TouchableTextIcon';
+import TextView from '@atoms/TextView';
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const VideoRecord = (): React.JSX.Element => {
+interface VideoRecord {
+  navigation: AppStackNavigationProp<'RecordVideo'>;
+}
+
+const VideoRecord = (props: VideoRecord): React.JSX.Element => {
   const [cameraPosition, setCameraPosition] = useState<CameraPosition>('front');
   const [cameraFlash, setCameraFlash] = useState<'on' | 'off'>('off');
   const [videoFile, setVideoFile] = useState<VideoFile | null>();
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [audioEnable, setAudioEnable] = useState<boolean>(false);
-  const [cameraVisible, setCameraVisible] = useState<boolean>(false);
-  const [fullscreen, setFullscreen] = useState<boolean>(false);
-  const [videoReady, setVideoReady] = useState<boolean>(true);
-  const [repeat, setRepeat] = useState<boolean>(true);
+  const [audioEnable, setAudioEnable] = useState<boolean>(true);
+  const [cameraVisible, setCameraVisible] = useState<boolean>(true);
   const device: CameraDevice | undefined = useCameraDevice(cameraPosition);
   const cameraRef = useRef<Camera | null>();
-  const videoRef = useRef<VideoRef | null>();
   const cameraPermission = useCameraPermission();
   const microphonePermission = useMicrophonePermission();
 
@@ -53,10 +45,6 @@ const VideoRecord = (): React.JSX.Element => {
 
   const onCameraReady = (ref: Camera | null) => {
     cameraRef.current = ref;
-  };
-
-  const onVideoReady = (ref: VideoRef) => {
-    videoRef.current = ref;
   };
 
   const changeCameraPosition = () => {
@@ -79,6 +67,9 @@ const VideoRecord = (): React.JSX.Element => {
   const cameraToggle = () => {
     setCameraFlash('off');
     setCameraVisible(!cameraVisible);
+    if (props.navigation.canGoBack()) {
+      props.navigation.goBack();
+    }
   };
 
   const audioToggle = () => {
@@ -124,35 +115,15 @@ const VideoRecord = (): React.JSX.Element => {
     // onSuccess({...video, mime: 'video/mp4'});
   };
 
-  const onReadyForDisplay = () => {
-    setVideoReady(false);
-  };
-
-  const videoPause = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-  };
-
-  const videoResume = () => {
-    if (videoRef.current) {
-      videoRef.current.resume();
-    }
-  };
-
-  const videoDismissFullScreen = () => {
-    if (videoRef.current) {
-      setFullscreen(false);
-      videoRef.current.dismissFullscreenPlayer();
-    }
-  };
-
-  const videoPresentFullScreen = () => {
-    if (videoRef.current) {
-      setFullscreen(true);
-      videoRef.current.presentFullscreenPlayer();
-    }
-  };
+  if (device == null) {
+    return (
+      <TextView
+        text={'No Supported Device!'}
+        style={styles.noDeviceText}
+        containerStyle={styles.noDeviceContainer}
+      />
+    );
+  }
 
   if (cameraPermission.hasPermission && microphonePermission.hasPermission) {
     return (
@@ -172,41 +143,15 @@ const VideoRecord = (): React.JSX.Element => {
           flashToggle={flashToggle}
           cameraFlash={cameraFlash}
         />
-        {!cameraVisible && (
-          <VideoPlayer
-            // uri={videoFile?.path}
-            uri={
-              'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-            }
-            onVideoReady={onVideoReady}
-            onReadyForDisplay={onReadyForDisplay}
-            fullscreen={fullscreen}
-            repeat={repeat}
-            controls={true}
-          />
-        )}
-        {videoReady && videoFile?.path && (
-          <ActivityIndicator
-            color={appColors.green}
-            size={'large'}
-            style={StyleSheet.absoluteFill}
-          />
-        )}
-        <TouchableTextIcon
-          iconType={'FontAwesome5'}
-          name={'camera-retro'}
-          size={35}
-          color={appColors.black}
-          onPress={cameraToggle}
-          style={styles.cameraIcon}
-        />
       </View>
     );
   } else {
     return (
-      <View>
-        <Text>No Camera Permission !!</Text>
-      </View>
+      <TextView
+        text={'No Camera Permission !!'}
+        containerStyle={styles.permissionContainer}
+        style={styles.permissionText}
+      />
     );
   }
 };
@@ -217,12 +162,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  cameraIcon: {
-    alignSelf: 'center',
-    padding: 10,
-    flexDirection: 'row',
+  permissionContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  permissionText: {
+    textAlign: 'right',
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  noDeviceContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noDeviceText: {
     textAlign: 'right',
     fontSize: 25,
     fontWeight: 'bold',

@@ -1,11 +1,10 @@
-import React, {RefObject} from 'react';
-import ModalLayout from '../atoms/ModalLayout';
+import React from 'react';
+import ModalLayout from '../../atoms/ModalLayout';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
-import TextView from '../atoms/TextView';
-import VideoCamera from '../molecules/VideoCamera';
+import VideoCamera from '../../molecules/videos/VideoCamera';
 
 interface VideoCameraModalProps {
-  device: CameraDevice | undefined | null;
+  device: CameraDevice;
   cameraVisible: boolean;
   audio: boolean;
   isRecording: boolean;
@@ -37,10 +36,6 @@ const VideoCameraModal = ({
   flashToggle,
   audioToggle,
 }: VideoCameraModalProps) => {
-  if (device == null) {
-    return <TextView />;
-  }
-
   return (
     <ModalLayout
       visible={cameraVisible}

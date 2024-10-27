@@ -1,13 +1,19 @@
 import React from 'react';
 import {View} from 'react-native';
-import VideoRecord from '@templates/VideoRecord';
+import VideoRecord from '@templates/videos/VideoRecord';
+import {styles} from './styles';
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const Video = (props: any): React.JSX.Element => {
+interface RecordVideoProps {
+  navigation: AppStackNavigationProp<'RecordVideo'>;
+}
+
+const RecordVideo = (props: RecordVideoProps): React.JSX.Element => {
   return (
-    <View style={{flex: 1}}>
-      <VideoRecord />
+    <View style={styles.container}>
+      <VideoRecord navigation={props.navigation} />
     </View>
   );
 };
 
-export default Video;
+export default RecordVideo;

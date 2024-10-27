@@ -1,3 +1,4 @@
+import {appColors} from '@constants/colors';
 import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import Video, {
@@ -13,13 +14,14 @@ interface VideoPlayerProps extends ReactVideoProps {
   uri: ReactVideoSource['uri'];
 }
 
-const VideoPlayer = ({
+const VideoView = ({
   uri,
   onVideoReady,
   fullscreen,
   repeat,
   controls,
   onReadyForDisplay,
+  renderLoader,
 }: VideoPlayerProps) => {
   const onError = useCallback((error: OnVideoErrorData) => {
     console.log('Video Error =>', error);
@@ -33,9 +35,16 @@ const VideoPlayer = ({
       ref={(ref: VideoRef) => onVideoReady(ref)}
       // Callback when video cannot be loaded
       onError={onError}
+      disableFocus
       repeat={repeat}
       fullscreen={fullscreen}
       style={styles.backgroundVideo}
+      playWhenInactive={false}
+      playInBackground={false}
+      renderLoader={renderLoader}
+      volume={1.0}
+      resizeMode={'contain'}
+      ignoreSilentSwitch={"obey"}
       onReadyForDisplay={onReadyForDisplay}
       controls={controls}
       onProgress={(progress: OnProgressData) => {
@@ -45,10 +54,11 @@ const VideoPlayer = ({
   );
 };
 
-export default VideoPlayer;
+export default VideoView;
 
 const styles = StyleSheet.create({
   backgroundVideo: {
     flex: 1,
+    backgroundColor: appColors.black,
   },
 });

@@ -1,15 +1,14 @@
-import React, {RefObject} from 'react';
+import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import VisionCamera from '../atoms/VisionCamera';
+import VisionCamera from '../../atoms/VisionCamera';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
-import TextView from '../atoms/TextView';
-import TouchableIcon from './TouchableIcon';
+import TouchableIcon from '../TouchableIcon';
 import {appColors} from '@constants/colors';
 
 const {width, height} = Dimensions.get('screen');
 
 interface VideoCameraProps {
-  device: CameraDevice | undefined | null;
+  device: CameraDevice;
   cameraPosition?: CameraPosition;
   cameraFlash?: 'on' | 'off';
   cameraActive: boolean;
@@ -39,10 +38,6 @@ const VideoCamera = ({
   audioToggle,
   cameraToggle,
 }: VideoCameraProps) => {
-  if (device == null) {
-    return <TextView />;
-  }
-
   return (
     <View style={styles.cameraContainer}>
       <VisionCamera

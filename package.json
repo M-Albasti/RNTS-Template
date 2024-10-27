@@ -17,6 +17,8 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@reduxjs/toolkit": "^2.2.8",
+    "@rneui/base": "^4.0.0-rc.8",
+    "@rneui/themed": "^4.0.0-rc.8",
     "@types/react-redux": "^7.1.34",
     "axios": "^1.7.7",
     "lodash": "^4.17.21",

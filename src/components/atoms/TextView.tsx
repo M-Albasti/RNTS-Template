@@ -1,11 +1,16 @@
 import React from 'react';
 import {Text, TextProps, View, ViewStyle} from 'react-native';
 
-const TextView = (props: TextProps & ViewStyle): React.JSX.Element => {
+interface TextViewProps extends TextProps {
+  containerStyle?: ViewStyle;
+  text: string;
+}
+
+const TextView = (props: TextViewProps): React.JSX.Element => {
   return (
-    <View style={props.style}>
+    <View style={props.containerStyle}>
       <Text style={props.style} numberOfLines={props.numberOfLines}>
-        {props.children}
+        {props.text}
       </Text>
     </View>
   );
