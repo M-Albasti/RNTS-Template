@@ -1,13 +1,13 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import TouchableTextIcon from '../TouchableTextIcon';
+import TouchableTextIcon from '../../../atoms/TouchableTextIcon';
 import {appColors} from '@constants/colors';
 
 interface VideosListButtonsProps {
   navigateToRecordVideo: () => void;
 }
 
-const VideosListButtons = (props: VideosListButtonsProps) => {
+const Buttons = (props: VideosListButtonsProps): React.JSX.Element => {
   return (
     <View style={styles.container}>
       <TouchableTextIcon
@@ -25,7 +25,7 @@ const VideosListButtons = (props: VideosListButtonsProps) => {
   );
 };
 
-export default VideosListButtons;
+export default Buttons;
 
 const styles = StyleSheet.create({
   container: {

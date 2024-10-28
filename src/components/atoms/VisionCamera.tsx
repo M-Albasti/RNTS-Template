@@ -21,7 +21,7 @@ const VisionCamera = ({
   isActive,
   enableZoomGesture,
   onCameraReady,
-}: VisionCameraProps) => {
+}: VisionCameraProps): React.JSX.Element => {
   const onError = useCallback((error: CameraRuntimeError) => {
     console.error(error);
   }, []);

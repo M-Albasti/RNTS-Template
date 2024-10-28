@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import VideosListWithButtons from '@organisms/videos/VideosListWithButtons';
+import ListWithButtons from '@organisms/videos/videosList/ListWithButtons';
 import {VideoProps, videos} from '@constants/videos';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface VideosListViewProps {
-  navigation: AppStackNavigationProp<'VideosMenu'>;
+  navigation: AppStackNavigationProp<'VideosList'>;
 }
 
-const VideosListView = (props: VideosListViewProps) => {
+const ListView = (props: VideosListViewProps): React.JSX.Element => {
   const onVideoItemPress = (item: VideoProps) => {
     props.navigation.navigate('VideoPlayer', {
       videoDetails: item,
@@ -21,7 +21,7 @@ const VideosListView = (props: VideosListViewProps) => {
 
   return (
     <View style={styles.container}>
-      <VideosListWithButtons
+      <ListWithButtons
         videosData={videos}
         onVideoItemPress={onVideoItemPress}
         navigateToRecordVideo={navigateToRecordVideo}
@@ -30,7 +30,7 @@ const VideosListView = (props: VideosListViewProps) => {
   );
 };
 
-export default VideosListView;
+export default ListView;
 
 const styles = StyleSheet.create({
   container: {

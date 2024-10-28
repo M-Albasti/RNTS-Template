@@ -5,7 +5,7 @@ import {VideoProps} from '@constants/videos';
 export type RootStackParamList = {
   Home: undefined; // No params
   Details: undefined; // Params for Details screen
-  VideosMenu: undefined;
+  VideosList: undefined;
   VideoPlayer: {videoDetails: VideoProps};
   RecordVideo: undefined;
 };

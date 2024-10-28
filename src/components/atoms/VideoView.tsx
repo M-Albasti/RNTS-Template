@@ -22,7 +22,7 @@ const VideoView = ({
   controls,
   onReadyForDisplay,
   renderLoader,
-}: VideoPlayerProps) => {
+}: VideoPlayerProps): React.JSX.Element => {
   const onError = useCallback((error: OnVideoErrorData) => {
     console.log('Video Error =>', error);
   }, []);
@@ -44,7 +44,7 @@ const VideoView = ({
       renderLoader={renderLoader}
       volume={1.0}
       resizeMode={'contain'}
-      ignoreSilentSwitch={"obey"}
+      ignoreSilentSwitch={'obey'}
       onReadyForDisplay={onReadyForDisplay}
       controls={controls}
       onProgress={(progress: OnProgressData) => {

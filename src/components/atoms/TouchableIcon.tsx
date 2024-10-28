@@ -1,6 +1,6 @@
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
-import Icon from '../atoms/Icon';
+import Icon from './Icon';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 import {FontsFamily} from '@Types/fontsFamily';
 

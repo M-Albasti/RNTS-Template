@@ -16,7 +16,7 @@ interface TextViewProps
 
 const TouchableText = (props: TextViewProps): React.JSX.Element => {
   return (
-    <TouchableOpacity style={props.touchableStyle}>
+    <TouchableOpacity style={props.touchableStyle} onPress={props.onPress}>
       <Text style={props.textStyle} numberOfLines={props.numberOfLines}>
         {props.text}
       </Text>

@@ -1,8 +1,8 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import VideosList from '@molecules/videos/VideosList';
+import List from '@molecules/videos/videosList/List';
 import {VideoProps} from '@constants/videos';
-import VideosListButtons from '@molecules/videos/VideosListButtons';
+import Buttons from '@molecules/videos/videosList/Buttons';
 
 interface VideosListWithButtonsProps {
   videosData: VideoProps[];
@@ -10,19 +10,21 @@ interface VideosListWithButtonsProps {
   navigateToRecordVideo: () => void;
 }
 
-const VideosListWithButtons = (props: VideosListWithButtonsProps) => {
+const ListWithButtons = (
+  props: VideosListWithButtonsProps,
+): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <VideosList
+      <List
         videosData={props.videosData}
         onVideoItemPress={props.onVideoItemPress}
       />
-      <VideosListButtons navigateToRecordVideo={props.navigateToRecordVideo} />
+      <Buttons navigateToRecordVideo={props.navigateToRecordVideo} />
     </View>
   );
 };
 
-export default VideosListWithButtons;
+export default ListWithButtons;
 
 const styles = StyleSheet.create({
   container: {

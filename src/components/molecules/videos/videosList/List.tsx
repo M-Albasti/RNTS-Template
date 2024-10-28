@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, VirtualizedList} from 'react-native';
+import {VirtualizedList} from 'react-native';
 import {VideoProps} from '@constants/videos';
 import VideoListItem from '@atoms/VideoListItem';
 
@@ -13,7 +13,7 @@ interface RenderItemProps {
   index: number;
 }
 
-const VideosList = (props: VideosListProps) => {
+const List = (props: VideosListProps): React.JSX.Element => {
   const renderItem = ({item, index}: RenderItemProps) => {
     return (
       <VideoListItem
@@ -38,6 +38,4 @@ const VideosList = (props: VideosListProps) => {
   );
 };
 
-export default VideosList;
-
-const styles = StyleSheet.create({});
+export default List;

@@ -1,6 +1,6 @@
 import {Platform, StyleSheet, View} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import VideoCameraModal from '../../organisms/videos/VideoCameraModal';
+import CameraModal from '../../../organisms/videos/recordVideo/CameraModal';
 import {
   Camera,
   CameraDevice,
@@ -14,14 +14,14 @@ import {permissionsRequest} from '@services/permissionsRequest';
 import TextView from '@atoms/TextView';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
-interface VideoRecord {
+interface VideoRecordProps {
   navigation: AppStackNavigationProp<'RecordVideo'>;
+  setVideoFile: (video: VideoFile) => void;
 }
 
-const VideoRecord = (props: VideoRecord): React.JSX.Element => {
+const Recorder = (props: VideoRecordProps): React.JSX.Element => {
   const [cameraPosition, setCameraPosition] = useState<CameraPosition>('front');
   const [cameraFlash, setCameraFlash] = useState<'on' | 'off'>('off');
-  const [videoFile, setVideoFile] = useState<VideoFile | null>();
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioEnable, setAudioEnable] = useState<boolean>(true);
   const [cameraVisible, setCameraVisible] = useState<boolean>(true);
@@ -87,10 +87,12 @@ const VideoRecord = (props: VideoRecord): React.JSX.Element => {
         onRecordingFinished: video => {
           if (Platform.OS === 'android') {
             video.path = `file://${video?.path}`;
-            setVideoFile(video);
+            props.setVideoFile(video);
           } else {
-            setVideoFile(video);
+            props.setVideoFile(video);
           }
+          setCameraFlash('off');
+          setCameraVisible(!cameraVisible);
           console.log('onRecordingFinished=>', {video});
         },
       });
@@ -102,17 +104,7 @@ const VideoRecord = (props: VideoRecord): React.JSX.Element => {
     if (cameraRef.current) {
       setIsRecording(false);
       await cameraRef.current.stopRecording();
-      setIsRecording(false);
     }
-  };
-
-  const onRejectVideo = () => {
-    setVideoFile(null);
-    setIsRecording(false);
-  };
-
-  const onAcceptVideo = () => {
-    // onSuccess({...video, mime: 'video/mp4'});
   };
 
   if (device == null) {
@@ -128,7 +120,7 @@ const VideoRecord = (props: VideoRecord): React.JSX.Element => {
   if (cameraPermission.hasPermission && microphonePermission.hasPermission) {
     return (
       <View style={styles.container}>
-        <VideoCameraModal
+        <CameraModal
           device={device}
           cameraVisible={cameraVisible}
           audio={audioEnable}
@@ -156,7 +148,7 @@ const VideoRecord = (props: VideoRecord): React.JSX.Element => {
   }
 };
 
-export default VideoRecord;
+export default Recorder;
 
 const styles = StyleSheet.create({
   container: {

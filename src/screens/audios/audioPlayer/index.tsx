@@ -18,7 +18,7 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 import {permissionsRequest} from '@services/permissionsRequest';
 import SoundPlayer from 'react-native-sound-player';
-import TouchableIcon from '@molecules/TouchableIcon';
+import TouchableIcon from '@atoms/TouchableIcon';
 import {appColors} from '@constants/colors';
 import Slider from '@react-native-community/slider';
 import {sounds} from '@constants/sounds';

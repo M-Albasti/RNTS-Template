@@ -1,7 +1,7 @@
 import React from 'react';
-import ModalLayout from '../../atoms/ModalLayout';
+import ModalLayout from '../../../atoms/ModalLayout';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
-import VideoCamera from '../../molecules/videos/VideoCamera';
+import CameraView from '../../../molecules/videos/recordVideo/CameraView';
 
 interface VideoCameraModalProps {
   device: CameraDevice;
@@ -20,7 +20,7 @@ interface VideoCameraModalProps {
   audioToggle: () => void;
 }
 
-const VideoCameraModal = ({
+const CameraModal = ({
   device,
   cameraVisible,
   audio,
@@ -35,14 +35,14 @@ const VideoCameraModal = ({
   changeCameraPosition,
   flashToggle,
   audioToggle,
-}: VideoCameraModalProps) => {
+}: VideoCameraModalProps): React.JSX.Element => {
   return (
     <ModalLayout
       visible={cameraVisible}
       transparent={transparent}
       onRequestClose={cameraToggle}
       onDismiss={cameraToggle}>
-      <VideoCamera
+      <CameraView
         device={device}
         onCameraReady={onCameraReady}
         cameraActive={cameraVisible}
@@ -61,4 +61,4 @@ const VideoCameraModal = ({
   );
 };
 
-export default VideoCameraModal;
+export default CameraModal;

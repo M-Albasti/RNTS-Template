@@ -1,8 +1,8 @@
 import React from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import VisionCamera from '../../atoms/VisionCamera';
+import VisionCamera from '../../../atoms/VisionCamera';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
-import TouchableIcon from '../TouchableIcon';
+import TouchableIcon from '../../../atoms/TouchableIcon';
 import {appColors} from '@constants/colors';
 
 const {width, height} = Dimensions.get('screen');
@@ -23,7 +23,7 @@ interface VideoCameraProps {
   cameraToggle: () => void;
 }
 
-const VideoCamera = ({
+const CameraView = ({
   device,
   cameraPosition = 'back',
   cameraFlash = 'off',
@@ -37,7 +37,7 @@ const VideoCamera = ({
   flashToggle,
   audioToggle,
   cameraToggle,
-}: VideoCameraProps) => {
+}: VideoCameraProps): React.JSX.Element => {
   return (
     <View style={styles.cameraContainer}>
       <VisionCamera
@@ -96,7 +96,7 @@ const VideoCamera = ({
   );
 };
 
-export default VideoCamera;
+export default CameraView;
 
 const styles = StyleSheet.create({
   cameraContainer: {
