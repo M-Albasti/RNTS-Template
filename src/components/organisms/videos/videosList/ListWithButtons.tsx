@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import List from '@molecules/videos/videosList/List';
 import {VideoProps} from '@constants/videos';
 import Buttons from '@molecules/videos/videosList/Buttons';

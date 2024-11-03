@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Platform, ScrollView, Text, View} from 'react-native';
 import SoundPlayer from 'react-native-sound-player';
 import TouchableIcon from '@atoms/TouchableIcon';
 import {appColors} from '@constants/colors';
@@ -7,19 +7,45 @@ import Slider from '@react-native-community/slider';
 import {sounds} from '@constants/sounds';
 import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
+import {minutesFormat} from '@utils/minutesFormat';
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
-const Audio = (props: any): React.JSX.Element => {
+interface AudioPlayerProps {
+  navigation: AppStackNavigationProp<'AudioPlayer'>;
+  route: AppRouteProp<'AudioPlayer'>;
+}
+
+const AudioPlayer = (props: AudioPlayerProps): React.JSX.Element => {
+  const {audioDetails} = props.route.params;
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<boolean>(false);
+  const [duration, setDuration] = useState<number>(0);
+  const [currentTime, setCurrentTime] = useState<number>(0);
 
   useFocusEffect(
     useCallback(() => {
       if (!isLoaded) {
         loadSound();
       }
-    }, []),
+    }, [isLoaded]),
   );
+
+  useEffect(() => {
+    let interval: number | NodeJS.Timeout | null = null;
+    if (isPlaying) {
+      if (currentTime < duration) {
+        interval = setInterval(async () => {
+          setCurrentTime((await SoundPlayer.getInfo()).currentTime);
+        }, 1000);
+      }
+    }
+    return () => {
+      if (interval != null) {
+        clearInterval(interval); // Cleanup on unmount
+      }
+    };
+  }, [currentTime, duration, isPlaying]);
 
   useEffect(() => {
     if (isLoaded) {
@@ -27,6 +53,9 @@ const Audio = (props: any): React.JSX.Element => {
         'FinishedPlaying',
         ({success}) => {
           stopSound().then(() => {
+            if (Platform.OS === 'android') {
+              loadSound();
+            }
             if (repeat) {
               playSound();
             }
@@ -50,13 +79,13 @@ const Audio = (props: any): React.JSX.Element => {
   {
     /* Sound Player */
   }
-  const loadSound = () => {
+  const loadSound = async () => {
     try {
       setIsLoaded(true);
       setIsPlaying(false);
-      SoundPlayer.loadUrl(
-        'https://www.chosic.com/wp-content/uploads/2021/04/kvgarlic__largestreamoverloginforestmarch.mp3',
-      );
+      SoundPlayer.loadUrl(audioDetails?.url);
+      setCurrentTime((await SoundPlayer.getInfo()).currentTime);
+      setDuration((await SoundPlayer.getInfo()).duration);
     } catch (error) {
       setIsLoaded(false);
       console.log('loadSound Error =>', error);
@@ -87,6 +116,7 @@ const Audio = (props: any): React.JSX.Element => {
   const stopSound = async () => {
     try {
       SoundPlayer.stop();
+      setCurrentTime(0);
       setIsPlaying(false);
     } catch (error) {
       console.log('stopSound Error =>', error);
@@ -101,6 +131,11 @@ const Audio = (props: any): React.JSX.Element => {
     }
   };
 
+  const onSeekSound = (value: number) => {
+    SoundPlayer.seek(value);
+    setCurrentTime(value);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -110,6 +145,11 @@ const Audio = (props: any): React.JSX.Element => {
             name={'left'}
             size={24}
             color={appColors.black}
+            onPress={() => {
+              if (props.navigation.canGoBack()) {
+                props.navigation.goBack();
+              }
+            }}
           />
           <Text style={styles.nowPlayingText}> Now Playing </Text>
           <TouchableIcon
@@ -122,31 +162,32 @@ const Audio = (props: any): React.JSX.Element => {
 
         <View style={styles.musicLogoView}>
           <Image
-            source={{uri: sounds[0].artwork}}
+            source={{uri: audioDetails.artwork}}
             style={styles.imageView}
             resizeMode="stretch"
           />
         </View>
 
         <View style={styles.nameOfSongView}>
-          <Text style={styles.nameOfSongText1}>#02 - Practice</Text>
-          <Text style={styles.nameOfSongText2}>
-            Digital Marketing - By Setup Cast
-          </Text>
+          <Text style={styles.nameOfSongText1}>{audioDetails.artist}</Text>
+          <Text style={styles.nameOfSongText2}>{audioDetails.album}</Text>
         </View>
 
         <View style={styles.sliderView}>
-          <Text style={styles.sliderTime}> 4:10 </Text>
+          <Text style={styles.sliderTime}> {minutesFormat(currentTime)} </Text>
           <Slider
             style={styles.sliderStyle}
             minimumValue={0}
-            maximumValue={12.02}
+            step={1}
+            maximumValue={duration}
             minimumTrackTintColor={appColors.primary}
             maximumTrackTintColor={appColors.black60}
+            tapToSeek={true}
+            onSlidingComplete={onSeekSound}
             thumbTintColor={appColors.primary}
-            value={3.5}
+            value={currentTime}
           />
-          <Text style={styles.sliderTime}>12:02</Text>
+          <Text style={styles.sliderTime}>{minutesFormat(duration)}</Text>
         </View>
 
         <View style={styles.functionsView}>
@@ -155,6 +196,7 @@ const Audio = (props: any): React.JSX.Element => {
             name={'stop-circle'}
             size={35}
             color={appColors.primary}
+            onPress={stopSound}
           />
           <TouchableIcon
             iconType={'Entypo'}
@@ -183,12 +225,9 @@ const Audio = (props: any): React.JSX.Element => {
             onPress={repeatSound}
           />
         </View>
-        <Text style={styles.status}>
-          {isLoaded ? 'Loading...' : isPlaying ? 'Playing...' : 'Stopped'}
-        </Text>
       </ScrollView>
     </View>
   );
 };
 
-export default Audio;
+export default AudioPlayer;

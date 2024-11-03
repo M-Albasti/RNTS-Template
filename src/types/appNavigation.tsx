@@ -1,6 +1,7 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import {VideoProps} from '@constants/videos';
+import {SoundProps} from '@constants/sounds';
 
 export type RootStackParamList = {
   Home: undefined; // No params
@@ -8,6 +9,9 @@ export type RootStackParamList = {
   VideosList: undefined;
   VideoPlayer: {videoDetails: VideoProps};
   RecordVideo: undefined;
+  RecordAudio: undefined;
+  AudioPlayer: {audioDetails: SoundProps};
+  AudiosList: undefined;
 };
 
 // Define a global type for StackNavigationProp

@@ -11,22 +11,6 @@ export const styles = StyleSheet.create({
     width: width,
     height: height,
   },
-  button: {
-    backgroundColor: appColors.primary,
-    padding: 15,
-    marginVertical: 10,
-    borderRadius: 5,
-    width: 200,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  status: {
-    marginTop: 20,
-    fontSize: 16,
-  },
   mainbar: {
     height: height * 0.1,
     width: '100%',

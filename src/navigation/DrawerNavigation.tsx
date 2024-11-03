@@ -2,9 +2,8 @@ import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import TabNavigation from './TabNavigation';
 import Profile from '@screens/profile';
-import Audio from '@screens/audios/audioPlayer';
-import Video from '@screens/videos/recordVideo';
 import VideoStackNavigation from './VideoStack';
+import AudioStackNavigation from './AudioStack';
 
 const Drawer = createDrawerNavigator();
 
@@ -22,8 +21,8 @@ const DrawerNavigation = (props: any): React.JSX.Element => {
         <Drawer.Screen name="Profile">
           {props => <Profile {...props} />}
         </Drawer.Screen>
-        <Drawer.Screen name="Audio">
-          {props => <Audio {...props} />}
+        <Drawer.Screen name="AudioStack" options={{title: 'Audios'}}>
+          {props => <AudioStackNavigation {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="VideoStack" options={{title: 'Videos'}}>
           {props => <VideoStackNavigation {...props} />}

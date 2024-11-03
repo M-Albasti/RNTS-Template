@@ -1,14 +1,14 @@
-interface SoundsProps {
+export interface SoundProps {
   id: string;
   url: string;
   title: string;
   artist: string;
   artwork: string;
   album: string;
-  duration: number;
+  duration?: number;
 }
 
-export const sounds: SoundsProps[] = [
+export const sounds: SoundProps[] = [
   {
     id: '1',
     url: 'https://www.chosic.com/wp-content/uploads/2021/07/The-Epic-Hero-Epic-Cinematic-Keys-of-Moon-Music.mp3',

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
@@ -10,8 +10,14 @@ import AudioRecorderPlayer, {
 } from 'react-native-audio-recorder-player';
 import {styles} from './styles';
 import {permissionsRequest} from '@services/permissionsRequest';
+import _ from 'lodash';
+import {useAppDispatch} from '@hooks/useAppDispatch';
+import {addAudio, uploadAudio} from '@redux/slices/audiosSlice';
+import {useAppSelector} from '@hooks/useAppSelector';
+import moment from 'moment';
 
 const RecordAudio = (props: any): React.JSX.Element => {
+  const dispatch = useAppDispatch();
   const [recordSecs, setRecordSecs] = useState<string | number>();
   const [recordTime, setRecordTime] = useState<string>();
   const [currentPositionSec, setCurrentPositionSec] = useState<number>();
@@ -20,15 +26,7 @@ const RecordAudio = (props: any): React.JSX.Element => {
   const [duration, setDuration] = useState<string>();
   const [recordPath, setRecordPath] = useState<string>();
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
-  console.log(
-    '🚀 ~ Audio ~ audioRecorderPlayer:',
-    recordSecs,
-    recordTime,
-    currentPositionSec,
-    currentDurationSec,
-    playTime,
-    duration,
-  );
+  const {status} = useAppSelector(state => state.audio);
 
   useEffect(() => {
     permissionsRequest('microphone');
@@ -39,7 +37,7 @@ const RecordAudio = (props: any): React.JSX.Element => {
   }
   const onStartRecord = async () => {
     try {
-      const path = `audio-${new Date()}.m4a`;
+      const path = `audio-${moment().unix()}.m4a`;
       const audioSet: AudioSet = {
         AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
         AudioSourceAndroid: AudioSourceAndroidType.MIC,
@@ -145,58 +143,104 @@ const RecordAudio = (props: any): React.JSX.Element => {
       console.log('onStopPlay Error =>', error);
     }
   };
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onStartRecord}>
-        <Text>start record</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onPauseRecord}>
-        <Text>pause record</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onResumeRecord}>
-        <Text>resume record</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onStopRecord}>
-        <Text>stop record</Text>
-      </TouchableOpacity>
-      <View style={{borderWidth: 1, width: '100%', borderColor: '#000'}} />
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onStartPlay}>
-        <Text>start play</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onPausePlay}>
-        <Text>pause play</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onResumePlay}>
-        <Text>resume play</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonContainerStyle}
-        onPress={onStopPlay}>
-        <Text>stop play</Text>
-      </TouchableOpacity>
-      <Text>recordSecs: {recordSecs}</Text>
-      <Text>recordTime: {recordTime}</Text>
-      <Text>currentPositionSec: {currentPositionSec}</Text>
-      <Text>currentDurationSec: {currentDurationSec}</Text>
-      <Text>duration: {duration}</Text>
-      <Text>playTime: {playTime}</Text>
 
-      <Text>{recordPath}</Text>
-    </View>
+  const retakeAudio = () => {
+    setRecordPath('');
+    setRecordSecs('');
+    setRecordTime('');
+    setPlayTime('');
+    setDuration('');
+    setCurrentDurationSec(0);
+    setCurrentPositionSec(0);
+  };
+
+  const onUploadAudio = () => {
+    const extension = _.last(recordPath?.split('.')) || '';
+    const type = `audio/${extension}`;
+    const audioFile = {
+      uri: recordPath,
+      type: type,
+      name: `audio-${moment().unix()}.${extension}`,
+    };
+    const formData = new FormData();
+    formData.append('file', audioFile);
+    // dispatch(uploadAudio(formData)).then(() => {
+    //   dispatch(addAudio(audioFile));
+    // });
+  };
+
+  return (
+    <ScrollView style={styles.container}>
+      {_.isEmpty(recordPath) && (
+        <View style={styles.recordAudioContainer}>
+          <Text style={styles.headerTextStyle}>Record Audio</Text>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onStartRecord}>
+            <Text>start record</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onPauseRecord}>
+            <Text>pause record</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onResumeRecord}>
+            <Text>resume record</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onStopRecord}>
+            <Text>stop record</Text>
+          </TouchableOpacity>
+          <Text>recordSecs: {recordSecs}</Text>
+          <Text>recordTime: {recordTime}</Text>
+        </View>
+      )}
+      {!_.isEmpty(recordPath) && (
+        <View style={styles.recordAudioContainer}>
+          <Text style={styles.headerTextStyle}>Recorded Audio</Text>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onStartPlay}>
+            <Text>start play</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onPausePlay}>
+            <Text>pause play</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onResumePlay}>
+            <Text>resume play</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onStopPlay}>
+            <Text>stop play</Text>
+          </TouchableOpacity>
+          <Text>currentPositionSec: {currentPositionSec}</Text>
+          <Text>currentDurationSec: {currentDurationSec}</Text>
+          <Text>duration: {duration}</Text>
+          <Text>playTime: {playTime}</Text>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={retakeAudio}>
+            <Text>Retake Audio</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonContainerStyle}
+            onPress={onUploadAudio}
+            disabled={status == 'loading'}>
+            <Text>
+              {status == 'loading' ? 'Upload in progress' : 'Upload Audio'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </ScrollView>
   );
 };
 
