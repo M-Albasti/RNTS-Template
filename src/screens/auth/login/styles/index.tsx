@@ -1,4 +1,4 @@
-import {isDarkTheme} from '@services/appTheme';
+import {isDarkTheme} from '@theme/appTheme';
 import {appColors} from '@constants/colors';
 import {StyleSheet} from 'react-native';
 

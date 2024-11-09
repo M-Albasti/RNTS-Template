@@ -20,6 +20,7 @@ export const createMyTheme = (
       border,
       notification,
     },
+    fonts: theme.fonts,
   };
 };
 

@@ -1,10 +1,10 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 
 const Profile = (props: any): React.JSX.Element => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text>Profile</Text>
       <TouchableOpacity
         onPress={() => {
@@ -14,11 +14,11 @@ const Profile = (props: any): React.JSX.Element => {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          props.navigation.getParent('DrawerRoot').openDrawer();
+          props.navigation.openDrawer();
         }}>
         <Text>open Drawer</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

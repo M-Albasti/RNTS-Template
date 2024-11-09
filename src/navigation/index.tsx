@@ -1,11 +1,11 @@
 import React from 'react';
 import Navigation from './NavigationContainer';
-import StackNavigation from './StackNavigation';
+import StackNavigator from './StackNavigator';
 
 const NavigationScreens = (): React.JSX.Element => {
   return (
     <Navigation>
-      <StackNavigation />
+      <StackNavigator />
     </Navigation>
   );
 };

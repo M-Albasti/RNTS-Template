@@ -1,18 +1,17 @@
 import {appColors} from '@constants/colors';
-import {StyleSheet, Dimensions} from 'react-native';
-
-const {width, height} = Dimensions.get('screen');
+import {ScreenHeight, ScreenWidth} from '@rneui/base';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: width,
-    height: height,
+    width: ScreenWidth,
+    height: ScreenHeight,
   },
   mainbar: {
-    height: height * 0.1,
+    height: ScreenHeight * 0.1,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -24,7 +23,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   musicLogoView: {
-    height: height * 0.3,
+    height: ScreenHeight * 0.3,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -35,7 +34,7 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   nameOfSongView: {
-    height: height * 0.15,
+    height: ScreenHeight * 0.15,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -50,7 +49,7 @@ export const styles = StyleSheet.create({
     marginTop: '4%',
   },
   sliderView: {
-    height: height * 0.1,
+    height: ScreenHeight * 0.1,
     width: '100%',
     alignItems: 'center',
     flexDirection: 'row',
@@ -69,7 +68,7 @@ export const styles = StyleSheet.create({
   },
   functionsView: {
     flexDirection: 'row',
-    height: height * 0.1,
+    height: ScreenHeight * 0.1,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',

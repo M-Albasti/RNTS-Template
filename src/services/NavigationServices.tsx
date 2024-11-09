@@ -1,14 +1,18 @@
+import {RootStackParamList} from '@Types/appNavigation';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
-export const navigationRef = createNavigationContainerRef();
+export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 export const goBack = () => {
   return navigationRef?.goBack();
 };
 
-export const navigate = (name: string, params?: Record<string, any>) => {
+export const navigate = <ScreenName extends keyof RootStackParamList>(
+  name: ScreenName,
+  params: RootStackParamList[ScreenName],
+) => {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name, params);
+    navigationRef.navigate<any>(name, params);
   }
 };
 

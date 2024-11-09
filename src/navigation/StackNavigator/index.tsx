@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import DrawerNavigation from './DrawerNavigation';
+import DrawerNavigator from '../DrawerNavigator';
 import Settings from '@screens/settings';
 import NotFound from '@screens/notFound';
 import Login from '@screens/auth/login';
@@ -8,13 +8,25 @@ import Register from '@screens/auth/register';
 import ForgetPassword from '@screens/auth/forgetPassword';
 import ResetPassword from '@screens/auth/resetPassword';
 import OTP from '@screens/auth/otp';
+import {SafeAreaView, Text, View} from 'react-native';
+import {styles} from './styles';
 
 const Stack = createNativeStackNavigator();
 
-const StackNavigation = (props: any): React.JSX.Element => {
+const StackNavigator = (props: any): React.JSX.Element => {
   return (
     <Stack.Navigator
       initialRouteName="Login"
+      layout={({children, state, descriptors, navigation}) => (
+        <Suspense
+          fallback={
+            <View style={styles.fallback}>
+              <Text style={styles.fallbackText}>Loading…</Text>
+            </View>
+          }>
+          <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+        </Suspense>
+      )}
       screenOptions={{headerShown: false}}>
       <Stack.Group>
         <Stack.Screen name="Login">
@@ -31,7 +43,7 @@ const StackNavigation = (props: any): React.JSX.Element => {
         </Stack.Screen>
         <Stack.Screen name="OTP">{props => <OTP {...props} />}</Stack.Screen>
         <Stack.Screen name="DrawerRoot">
-          {props => <DrawerNavigation {...props} />}
+          {props => <DrawerNavigator {...props} />}
         </Stack.Screen>
         <Stack.Screen name="NotFound">
           {props => <NotFound {...props} />}
@@ -46,4 +58,4 @@ const StackNavigation = (props: any): React.JSX.Element => {
   );
 };
 
-export default StackNavigation;
+export default StackNavigator;

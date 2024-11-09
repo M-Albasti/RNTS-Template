@@ -1,9 +1,8 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {appColors} from '@constants/colors';
 import TouchableText from '@atoms/TouchableText';
-
-const {width, height} = Dimensions.get('screen');
+import {ScreenHeight, ScreenWidth} from '@rneui/base';
 
 interface ButtonsProps {
   onDismiss: () => void;
@@ -47,8 +46,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     paddingHorizontal: 15,
     backgroundColor: appColors.black60,
-    width: width,
-    height: height * 0.1,
+    width: ScreenWidth,
+    height: ScreenHeight * 0.1,
   },
   recordTouchableContainer: {
     alignSelf: 'center',
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     marginVertical: 10,
     borderColor: appColors.white,
-    width: width / 3.5,
+    width: ScreenWidth / 3.5,
   },
   recordText: {
     textAlign: 'right',

@@ -1,9 +1,9 @@
 import React from 'react';
-import {Modal, SafeAreaView, ModalProps, ViewStyle} from 'react-native';
+import {Modal, ModalProps, ViewStyle, View} from 'react-native';
 
 const ModalLayout = (props: ModalProps & ViewStyle): React.JSX.Element => {
   return (
-    <SafeAreaView
+    <View
       style={{
         width: props.width,
         height: props.height,
@@ -36,7 +36,7 @@ const ModalLayout = (props: ModalProps & ViewStyle): React.JSX.Element => {
         onRequestClose={props.onRequestClose}>
         {props.children}
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

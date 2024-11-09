@@ -1,10 +1,10 @@
 import React from 'react';
-import {SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {styles} from './styles';
 
 const NotFound = (props: any): React.JSX.Element => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <Text>NotFound</Text>
       <TouchableOpacity
         onPress={() => {
@@ -12,7 +12,7 @@ const NotFound = (props: any): React.JSX.Element => {
         }}>
         <Text>Go Back To Home</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 };
 

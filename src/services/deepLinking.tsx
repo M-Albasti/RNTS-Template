@@ -70,7 +70,9 @@ const config: ConfigTypes = {
      * NotFount Screen and it can be used
      * inside the nested navigators
      */
-    NotFound: '*',
+    NotFound: {
+      path: '*',
+    },
   },
 };
 

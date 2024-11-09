@@ -1,11 +1,10 @@
 import React from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import VisionCamera from '../../../atoms/VisionCamera';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
 import TouchableIcon from '../../../atoms/TouchableIcon';
 import {appColors} from '@constants/colors';
-
-const {width, height} = Dimensions.get('screen');
+import {ScreenWidth} from '@rneui/base';
 
 interface VideoCameraProps {
   device: CameraDevice;
@@ -106,14 +105,14 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    width: width,
+    width: ScreenWidth,
     backgroundColor: appColors.black60,
   },
   bottomButtonsContainer: {
     padding: 10,
     justifyContent: 'space-between',
     flexDirection: 'row',
-    width: width,
+    width: ScreenWidth,
     backgroundColor: appColors.black60,
     position: 'absolute',
     bottom: 0,
