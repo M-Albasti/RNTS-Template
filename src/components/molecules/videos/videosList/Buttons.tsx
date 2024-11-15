@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import TouchableTextIcon from '../../../atoms/TouchableTextIcon';
 import {appColors} from '@constants/colors';

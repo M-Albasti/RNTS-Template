@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
     borderRadius: ScreenWidth,
     width: ScreenHeight * 0.08,
     marginBottom: TAB_HIGHT,
-    backgroundColor: 'red',
+    backgroundColor: appColors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -56,5 +56,19 @@ export const styles = StyleSheet.create({
   },
   fallbackText: {
     fontSize: 25,
+  },
+  outerBox: {
+    width: 150,
+    height: 150,
+    backgroundColor: '#b58df1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    margin: 20,
+  },
+  box: {
+    width: 80,
+    height: 80,
+    backgroundColor: '#782aeb',
   },
 });

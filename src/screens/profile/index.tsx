@@ -1,23 +1,25 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import {styles} from './styles';
+import TextView from '@atoms/TextView';
+import TouchableText from '@atoms/TouchableText';
 
 const Profile = (props: any): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <Text>Profile</Text>
-      <TouchableOpacity
+      <TextView text={'Profile'} />
+      <TouchableText
+        text={'open settings'}
         onPress={() => {
           props.navigation.navigate('Settings');
-        }}>
-        <Text>open settings</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
+        }}
+      />
+      <TouchableText
+        text={'open Drawer'}
         onPress={() => {
           props.navigation.openDrawer();
-        }}>
-        <Text>open Drawer</Text>
-      </TouchableOpacity>
+        }}
+      />
     </View>
   );
 };

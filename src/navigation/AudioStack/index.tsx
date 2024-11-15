@@ -4,8 +4,9 @@ import {RootStackParamList} from '@Types/appNavigation';
 import RecordAudio from '@screens/audios/recordAudio';
 import AudiosList from '@screens/audios/audiosList';
 import AudioPlayer from '@screens/audios/audioPlayer';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {styles} from './styles';
+import TextView from '@atoms/TextView';
 
 const AudioStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -16,9 +17,11 @@ const AudioStackNavigator = (props: any): React.JSX.Element => {
       layout={({children, state, descriptors, navigation}) => (
         <Suspense
           fallback={
-            <View style={styles.fallback}>
-              <Text style={styles.fallbackText}>Loading…</Text>
-            </View>
+            <TextView
+              text={'Loading...'}
+              style={styles.fallbackText}
+              containerStyle={styles.fallback}
+            />
           }>
           <View style={styles.container}>{children}</View>
         </Suspense>

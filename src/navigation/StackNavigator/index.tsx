@@ -8,27 +8,34 @@ import Register from '@screens/auth/register';
 import ForgetPassword from '@screens/auth/forgetPassword';
 import ResetPassword from '@screens/auth/resetPassword';
 import OTP from '@screens/auth/otp';
-import {SafeAreaView, Text, View} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import {styles} from './styles';
+import TextView from '@atoms/TextView';
+import OnBoarding from '@screens/onboarding';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = (props: any): React.JSX.Element => {
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="OnBoarding"
       layout={({children, state, descriptors, navigation}) => (
         <Suspense
           fallback={
-            <View style={styles.fallback}>
-              <Text style={styles.fallbackText}>Loading…</Text>
-            </View>
+            <TextView
+              text={'Loading...'}
+              style={styles.fallbackText}
+              containerStyle={styles.fallback}
+            />
           }>
           <SafeAreaView style={styles.container}>{children}</SafeAreaView>
         </Suspense>
       )}
       screenOptions={{headerShown: false}}>
       <Stack.Group>
+        <Stack.Screen name="OnBoarding">
+          {props => <OnBoarding {...props} />}
+        </Stack.Screen>
         <Stack.Screen name="Login">
           {props => <Login {...props} />}
         </Stack.Screen>

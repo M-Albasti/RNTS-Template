@@ -1,17 +1,19 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import {styles} from './styles';
+import TouchableText from '@atoms/TouchableText';
+import TextView from '@atoms/TextView';
 
 const NotFound = (props: any): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <Text>NotFound</Text>
-      <TouchableOpacity
+      <TextView text={'Not Found!'} />
+      <TouchableText
+        text={'Go Back To Home'}
         onPress={() => {
           props.navigation.goBack();
-        }}>
-        <Text>Go Back To Home</Text>
-      </TouchableOpacity>
+        }}
+      />
     </View>
   );
 };

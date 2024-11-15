@@ -5,8 +5,9 @@ import Profile from '@screens/profile';
 import VideoStackNavigator from '../VideoStack';
 import AudioStackNavigator from '../AudioStack';
 import {appColors} from '@constants/colors';
-import {Platform, Text, View} from 'react-native';
+import {Platform, View} from 'react-native';
 import {styles} from './styles';
+import TextView from '@atoms/TextView';
 
 const Drawer = createDrawerNavigator();
 
@@ -18,9 +19,11 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
       layout={({children, state, descriptors, navigation}) => (
         <Suspense
           fallback={
-            <View style={styles.fallback}>
-              <Text style={styles.fallbackText}>Loading…</Text>
-            </View>
+            <TextView
+              text={'Loading...'}
+              style={styles.fallbackText}
+              containerStyle={styles.fallback}
+            />
           }>
           <View style={styles.container}>{children}</View>
         </Suspense>

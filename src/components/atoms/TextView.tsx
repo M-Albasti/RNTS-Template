@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, TextProps, View, ViewStyle} from 'react-native';
+import {useTheme} from '@react-navigation/native';
 
 interface TextViewProps extends TextProps {
   containerStyle?: ViewStyle;
@@ -7,9 +8,13 @@ interface TextViewProps extends TextProps {
 }
 
 const TextView = (props: TextViewProps): React.JSX.Element => {
+  const themeTextColor = useTheme().colors.text;
+
   return (
     <View style={props.containerStyle}>
-      <Text style={props.style} numberOfLines={props.numberOfLines}>
+      <Text
+        style={[{color: themeTextColor}, props.style]}
+        numberOfLines={props.numberOfLines}>
         {props.text}
       </Text>
     </View>

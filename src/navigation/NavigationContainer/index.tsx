@@ -5,17 +5,19 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import {navigationRef} from '@services/NavigationServices';
-import {Text, View, useColorScheme} from 'react-native';
+import {useColorScheme} from 'react-native';
 import {linking} from '@services/deepLinking';
 import {createMyTheme} from '@theme/appTheme';
 import {appColors} from '@constants/colors';
+import TextView from '@atoms/TextView';
+import {styles} from '@navigation/TabNavigator/styles';
 
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
   const scheme = useColorScheme();
   const theme = createMyTheme(
     scheme === 'dark' ? DarkTheme : DefaultTheme,
     appColors.primary,
-    appColors.white,
+    scheme === 'dark' ? appColors.black : appColors.white,
   );
 
   return (
@@ -24,9 +26,11 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
       theme={theme}
       linking={linking}
       fallback={
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 25}}>Loading...</Text>
-        </View>
+        <TextView
+          text={'Loading...'}
+          style={styles.fallbackText}
+          containerStyle={styles.fallback}
+        />
       }>
       {children}
     </NavigationContainer>

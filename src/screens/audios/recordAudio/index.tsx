@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
@@ -15,6 +15,8 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {addAudio, uploadAudio} from '@redux/slices/audiosSlice';
 import {useAppSelector} from '@hooks/useAppSelector';
 import moment from 'moment';
+import TextView from '@atoms/TextView';
+import TouchableText from '@atoms/TouchableText';
 
 const RecordAudio = (props: any): React.JSX.Element => {
   const dispatch = useAppDispatch();
@@ -173,71 +175,79 @@ const RecordAudio = (props: any): React.JSX.Element => {
     <ScrollView style={styles.container}>
       {_.isEmpty(recordPath) && (
         <View style={styles.recordAudioContainer}>
-          <Text style={styles.headerTextStyle}>Record Audio</Text>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onStartRecord}>
-            <Text>start record</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onPauseRecord}>
-            <Text>pause record</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onResumeRecord}>
-            <Text>resume record</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onStopRecord}>
-            <Text>stop record</Text>
-          </TouchableOpacity>
-          <Text>recordSecs: {recordSecs}</Text>
-          <Text>recordTime: {recordTime}</Text>
+          <TextView text={'Record Audio'} style={styles.headerTextStyle} />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'start record'}
+            onPress={onStartRecord}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'pause record'}
+            onPress={onPauseRecord}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'resume record'}
+            onPress={onResumeRecord}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'stop record'}
+            onPress={onStopRecord}
+          />
+          <TextView text={`recordSecs: ${recordSecs}`} />
+          <TextView text={`recordTime: ${recordTime}`} />
         </View>
       )}
       {!_.isEmpty(recordPath) && (
         <View style={styles.recordAudioContainer}>
-          <Text style={styles.headerTextStyle}>Recorded Audio</Text>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onStartPlay}>
-            <Text>start play</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onPausePlay}>
-            <Text>pause play</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onResumePlay}>
-            <Text>resume play</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={onStopPlay}>
-            <Text>stop play</Text>
-          </TouchableOpacity>
-          <Text>currentPositionSec: {currentPositionSec}</Text>
-          <Text>currentDurationSec: {currentDurationSec}</Text>
-          <Text>duration: {duration}</Text>
-          <Text>playTime: {playTime}</Text>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
-            onPress={retakeAudio}>
-            <Text>Retake Audio</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonContainerStyle}
+          <TextView text={'Recorded Audio'} style={styles.headerTextStyle} />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'start play'}
+            onPress={onStartPlay}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'pause play'}
+            onPress={onPausePlay}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'resume play'}
+            onPress={onResumePlay}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'stop play'}
+            onPress={onStopPlay}
+          />
+          <TextView text={`currentPositionSec: ${currentPositionSec}`} />
+          <TextView text={`currentDurationSec: ${currentDurationSec}`} />
+          <TextView text={`duration: ${duration}`} />
+          <TextView text={`playTime: ${playTime}`} />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={'Retake Audio'}
+            onPress={retakeAudio}
+          />
+          <TouchableText
+            textStyle={{}}
+            touchableStyle={styles.buttonContainerStyle}
+            text={status == 'loading' ? 'Upload in progress' : 'Upload Audio'}
             onPress={onUploadAudio}
-            disabled={status == 'loading'}>
-            <Text>
-              {status == 'loading' ? 'Upload in progress' : 'Upload Audio'}
-            </Text>
-          </TouchableOpacity>
+            disabled={status == 'loading'}
+          />
         </View>
       )}
     </ScrollView>

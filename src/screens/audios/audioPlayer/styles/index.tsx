@@ -63,8 +63,11 @@ export const styles = StyleSheet.create({
   sliderTime: {
     fontSize: 15,
     color: appColors.gray,
-    width: '15%',
+    width: '100%',
     textAlign: 'center',
+  },
+  containerSliderTime: {
+    width: '15%',
   },
   functionsView: {
     flexDirection: 'row',

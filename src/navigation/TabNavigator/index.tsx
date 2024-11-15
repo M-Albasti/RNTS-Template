@@ -1,5 +1,5 @@
 import React, {Suspense} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import {
   BottomTabBarButtonProps,
   createBottomTabNavigator,
@@ -10,6 +10,8 @@ import {useTheme} from '@react-navigation/native';
 import IconView from '@atoms/Icon';
 import {styles} from './styles';
 import {appColors} from '@constants/colors';
+import TextView from '@atoms/TextView';
+import TouchableText from '@atoms/TouchableText';
 
 interface TabBarIconProps {
   focused: boolean;
@@ -39,9 +41,11 @@ const TabNavigator = (props: any): React.JSX.Element => {
       layout={({children, state, descriptors, navigation}) => (
         <Suspense
           fallback={
-            <View style={styles.fallback}>
-              <Text style={styles.fallbackText}>Loading…</Text>
-            </View>
+            <TextView
+              text={'Loading...'}
+              style={styles.fallbackText}
+              containerStyle={styles.fallback}
+            />
           }>
           <View style={{flex: 1}}>{children}</View>
         </Suspense>
@@ -104,18 +108,18 @@ const TabNavigator = (props: any): React.JSX.Element => {
             tabBarItemStyle: styles.tabBarItemStyle,
             tabBarButton: (props: BottomTabBarButtonProps) => {
               return (
-                <TouchableOpacity
-                  // {...props}
-                  style={{
+                <TouchableText
+                  textStyle={{}}
+                  touchableStyle={{
                     ...styles.floatingButtonStyle,
                     borderColor: colors.background,
                   }}
+                  text={'hello'}
                   onPress={e => {
                     e.preventDefault();
                     console.log('we are here !!');
-                  }}>
-                  <Text>hello</Text>
-                </TouchableOpacity>
+                  }}
+                />
               );
             },
           }}

@@ -1,14 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, Platform, ScrollView, Text, View} from 'react-native';
+import {Image, Platform, ScrollView, View} from 'react-native';
 import SoundPlayer from 'react-native-sound-player';
 import TouchableIcon from '@atoms/TouchableIcon';
 import {appColors} from '@constants/colors';
 import Slider from '@react-native-community/slider';
-import {sounds} from '@constants/sounds';
 import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
 import {minutesFormat} from '@utils/minutesFormat';
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+import TextView from '@atoms/TextView';
 
 interface AudioPlayerProps {
   navigation: AppStackNavigationProp<'AudioPlayer'>;
@@ -151,7 +151,7 @@ const AudioPlayer = (props: AudioPlayerProps): React.JSX.Element => {
               }
             }}
           />
-          <Text style={styles.nowPlayingText}> Now Playing </Text>
+          <TextView text={'Now Playing'} style={styles.nowPlayingText} />
           <TouchableIcon
             iconType={'Entypo'}
             name="dots-three-horizontal"
@@ -169,12 +169,16 @@ const AudioPlayer = (props: AudioPlayerProps): React.JSX.Element => {
         </View>
 
         <View style={styles.nameOfSongView}>
-          <Text style={styles.nameOfSongText1}>{audioDetails.artist}</Text>
-          <Text style={styles.nameOfSongText2}>{audioDetails.album}</Text>
+          <TextView text={audioDetails.artist} style={styles.nameOfSongText1} />
+          <TextView text={audioDetails.album} style={styles.nameOfSongText2} />
         </View>
 
         <View style={styles.sliderView}>
-          <Text style={styles.sliderTime}> {minutesFormat(currentTime)} </Text>
+          <TextView
+            text={minutesFormat(currentTime)}
+            containerStyle={styles.containerSliderTime}
+            style={styles.sliderTime}
+          />
           <Slider
             style={styles.sliderStyle}
             minimumValue={0}
@@ -187,7 +191,11 @@ const AudioPlayer = (props: AudioPlayerProps): React.JSX.Element => {
             thumbTintColor={appColors.primary}
             value={currentTime}
           />
-          <Text style={styles.sliderTime}>{minutesFormat(duration)}</Text>
+          <TextView
+            text={minutesFormat(duration)}
+            containerStyle={styles.containerSliderTime}
+            style={styles.sliderTime}
+          />
         </View>
 
         <View style={styles.functionsView}>

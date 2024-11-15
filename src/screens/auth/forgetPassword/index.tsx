@@ -1,11 +1,12 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import {styles} from './styles';
+import TextView from '@atoms/TextView';
 
 const ForgetPassword = (props: any): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <Text>ForgetPassword</Text>
+      <TextView text={'Forget Password'} />
     </View>
   );
 };
