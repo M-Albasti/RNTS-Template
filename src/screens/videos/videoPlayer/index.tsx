@@ -1,6 +1,6 @@
 import {appColors} from '@constants/colors';
 import React, {useRef, useState} from 'react';
-import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Platform, StyleSheet, View} from 'react-native';
 import {styles} from './styles';
 import {VideoRef} from 'react-native-video';
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
@@ -18,6 +18,7 @@ const VideoPlayer = (props: VideoPlayerProps): React.JSX.Element => {
   const videoRef = useRef<VideoRef | null>();
 
   const onVideoReady = (ref: VideoRef) => {
+    console.log('🚀 ~ onVideoReady ~ ref:', ref, videoDetails.sources[0]);
     videoRef.current = ref;
   };
 
@@ -52,13 +53,6 @@ const VideoPlayer = (props: VideoPlayerProps): React.JSX.Element => {
       <VideoView
         uri={videoDetails.sources[0]}
         onVideoReady={onVideoReady}
-        renderLoader={
-          <ActivityIndicator
-            color={appColors.green}
-            size={'large'}
-            style={StyleSheet.absoluteFill}
-          />
-        }
         fullscreen={fullscreen}
         repeat={repeat}
         controls={true}

@@ -33,6 +33,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
             subtitle: 'Done with React Native Onboarding Swiper3',
           },
         ]}
+        onDone={() => props.navigation.navigate('Login')}
         containerStyles={styles.onBoardingContainer}
         imageContainerStyles={styles.imageOnBoardingContainer}
       />
