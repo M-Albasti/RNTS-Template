@@ -13,18 +13,21 @@ import {persistor, store} from '@redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
 import NavigationScreens from '@navigation/index';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-function App(): React.JSX.Element {
+const App = (): React.JSX.Element => {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <GestureHandlerRootView style={styles.container}>
-          <NavigationScreens />
-        </GestureHandlerRootView>
+        <SafeAreaProvider>
+          <GestureHandlerRootView style={styles.container}>
+            <NavigationScreens />
+          </GestureHandlerRootView>
+        </SafeAreaProvider>
       </PersistGate>
     </Provider>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

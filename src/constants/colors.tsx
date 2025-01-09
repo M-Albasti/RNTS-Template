@@ -1,6 +1,6 @@
 export const appColors = {
   primary: '#87CEEB',
-  transparent: '#00FFFFFF',
+  transparent: '#FFFFFF00',
   // comfortableColors
   softWhite: '#F5F5F5', // Pure Soft White
   softWhite80: '#F5F5F5CC',

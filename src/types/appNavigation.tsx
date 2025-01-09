@@ -4,8 +4,22 @@ import {VideoProps} from '@constants/videos';
 import {SoundProps} from '@constants/sounds';
 
 export type RootStackParamList = {
-  Home: undefined; // No params
-  Details: undefined; // Params for Details screen
+  OnBoarding: undefined;
+  Login: undefined;
+  Register: undefined;
+  ForgetPassword: undefined;
+  ResetPassword: undefined;
+  OTP: undefined;
+  NotFound: undefined;
+  Settings: undefined;
+  DrawerRoot: undefined;
+  TabRoot: undefined;
+  Home: undefined;
+  Profile: undefined;
+  AudioStack: undefined;
+  VideoStack: undefined;
+  Details: undefined;
+  PopUp: undefined;
   VideosList: undefined;
   VideoPlayer: {videoDetails: VideoProps};
   RecordVideo: undefined;

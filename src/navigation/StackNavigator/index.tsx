@@ -12,8 +12,9 @@ import {SafeAreaView} from 'react-native';
 import {styles} from './styles';
 import TextView from '@atoms/TextView';
 import OnBoarding from '@screens/onboarding';
+import {RootStackParamList} from '@Types/appNavigation';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const StackNavigator = (props: any): React.JSX.Element => {
   return (

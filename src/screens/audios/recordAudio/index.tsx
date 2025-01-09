@@ -17,8 +17,13 @@ import {useAppSelector} from '@hooks/useAppSelector';
 import moment from 'moment';
 import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
+import { AppStackNavigationProp } from '@Types/appNavigation';
 
-const RecordAudio = (props: any): React.JSX.Element => {
+interface RecordAudioProps {
+  navigation: AppStackNavigationProp<'RecordAudio'>
+}
+
+const RecordAudio = (props: RecordAudioProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const [recordSecs, setRecordSecs] = useState<string | number>();
   const [recordTime, setRecordTime] = useState<string>();

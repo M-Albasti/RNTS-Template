@@ -8,8 +8,9 @@ import {appColors} from '@constants/colors';
 import {Platform, View} from 'react-native';
 import {styles} from './styles';
 import TextView from '@atoms/TextView';
+import {RootStackParamList} from '@Types/appNavigation';
 
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<RootStackParamList>();
 
 const DrawerNavigator = (props: any): React.JSX.Element => {
   return (

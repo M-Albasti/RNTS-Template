@@ -18,7 +18,6 @@ const VideoPlayer = (props: VideoPlayerProps): React.JSX.Element => {
   const videoRef = useRef<VideoRef | null>();
 
   const onVideoReady = (ref: VideoRef) => {
-    console.log('🚀 ~ onVideoReady ~ ref:', ref, videoDetails.sources[0]);
     videoRef.current = ref;
   };
 
