@@ -1,14 +1,25 @@
-import React from 'react';
-import {Image, Text, View} from 'react-native';
-import {styles} from './styles';
+import React, { useRef } from 'react';
+import { Image, View } from 'react-native';
+import { styles } from './styles';
 import Onboarding from 'react-native-onboarding-swiper';
-import {ScreenHeight, ScreenWidth} from '@rneui/base';
-import {appColors} from '@constants/colors';
+import { ScreenHeight, ScreenWidth } from '@rneui/base';
+import { appColors } from '@constants/colors';
 
 const OnBoarding = (props: any): React.JSX.Element => {
+  const onBoardingRef = useRef<Onboarding>();
+
+  const onOnboardingReady = (ref: Onboarding) => {
+    onBoardingRef.current = ref;
+  }
+
   return (
     <View style={styles.container}>
       <Onboarding
+        ref={(ref: Onboarding | null) => {
+          if (!!ref) {
+            onOnboardingReady(ref)
+          }
+        }}
         pages={[
           {
             backgroundColor: appColors.transparent,
@@ -16,7 +27,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
               <Image
                 source={require('@assets/images/onboarding1.jpg')}
                 resizeMode="stretch"
-                style={{width: ScreenWidth, height: ScreenHeight / 2}}
+                style={{ width: ScreenWidth, height: ScreenHeight / 2 }}
               />
             ),
             title: 'Onboarding1',
@@ -28,7 +39,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
               <Image
                 source={require('@assets/images/onboarding2.jpg')}
                 resizeMode="stretch"
-                style={{width: ScreenWidth, height: ScreenHeight / 2}}
+                style={{ width: ScreenWidth, height: ScreenHeight / 2 }}
               />
             ),
             title: 'Onboarding2',
@@ -40,7 +51,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
               <Image
                 source={require('@assets/images/onboarding3.jpg')}
                 resizeMode="stretch"
-                style={{width: ScreenWidth, height: ScreenHeight / 2}}
+                style={{ width: ScreenWidth, height: ScreenHeight / 2 }}
               />
             ),
             title: 'Onboarding3',
