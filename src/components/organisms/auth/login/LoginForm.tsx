@@ -2,6 +2,9 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
 import PasswordTextInput from '@molecules/passwordTextInput';
+import {ScreenWidth} from '@rneui/base';
+
+//* types import
 import type {Dispatch, SetStateAction} from 'react';
 
 interface LoginFormProps {
@@ -35,5 +38,6 @@ export default LoginForm;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: ScreenWidth,
   },
 });

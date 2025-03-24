@@ -79,7 +79,6 @@ const TabNavigator = (props: any): React.JSX.Element => {
         </Tab.Screen>
         <Tab.Screen
           name="PopUp"
-          component={EmptyComponent}
           options={{
             tabBarItemStyle: styles.tabBarItemStyle,
             tabBarButton: (props: BottomTabBarButtonProps) => {
@@ -97,8 +96,9 @@ const TabNavigator = (props: any): React.JSX.Element => {
                 />
               );
             },
-          }}
-        />
+          }}>
+          {props => <EmptyComponent />}
+        </Tab.Screen>
         <Tab.Screen
           name="Profile"
           options={{

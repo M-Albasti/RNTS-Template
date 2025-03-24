@@ -2,6 +2,8 @@ import React from 'react';
 import {StatusBar} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 import {appColors} from '@constants/colors';
+
+//* types import
 import type {StatusBarStyle} from 'react-native';
 
 interface StatusBarProps {

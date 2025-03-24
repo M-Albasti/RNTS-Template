@@ -8,7 +8,7 @@ import Register from '@screens/auth/register';
 import ForgetPassword from '@screens/auth/forgetPassword';
 import ResetPassword from '@screens/auth/resetPassword';
 import OTP from '@screens/auth/otp';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {styles} from './styles';
 import TextView from '@atoms/TextView';
 import OnBoarding from '@screens/onboarding';

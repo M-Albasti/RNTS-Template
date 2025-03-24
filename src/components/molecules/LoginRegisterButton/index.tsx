@@ -18,7 +18,10 @@ const LoginRegisterButton = (
         textStyle={styles.textStyle}
         text={'Register'}
         onPress={() => {
-          props.navigation.replace('DrawerRoot');
+          props.navigation.reset({
+            index: 0,
+            routes: [{name: 'DrawerRoot'}],
+          });
         }}
       />
     </View>

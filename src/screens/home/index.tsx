@@ -1,11 +1,17 @@
 import React from 'react';
-import { I18nManager, Text, View } from 'react-native';
-import { styles } from './styles';
+import {I18nManager, Text, View} from 'react-native';
+import {styles} from './styles';
 import TouchableText from '@atoms/TouchableText';
 import TextView from '@atoms/TextView';
 import Swiper from 'react-native-swiper';
+import {changeLanguage} from '@translation/i18n';
+import {useAppSelector} from '@hooks/useAppSelector';
+import {useAppDispatch} from '@hooks/useAppDispatch';
 
 const Home = (props: any): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+  const lang = useAppSelector(state => state?.appSettings?.lang);
+
   return (
     <View style={styles.container}>
       <TextView text={'Home'} />
@@ -20,7 +26,9 @@ const Home = (props: any): React.JSX.Element => {
       />
       <TouchableText
         text={'change language'}
-        onPress={() => { I18nManager.forceRTL(false) }}
+        onPress={() => {
+          changeLanguage(lang == 'ar' ? 'en' : 'ar', dispatch);
+        }}
       />
 
       <Swiper

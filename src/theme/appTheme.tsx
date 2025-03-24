@@ -1,5 +1,7 @@
-import type {Theme} from '@react-navigation/native';
 import {Appearance} from 'react-native';
+
+//* types import
+import type {Theme} from '@react-navigation/native';
 
 export const createMyTheme = (
   theme: Theme,

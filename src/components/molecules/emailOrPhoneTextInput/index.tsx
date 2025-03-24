@@ -1,7 +1,9 @@
 import React from 'react';
 import TextInputView from '@atoms/TextInputView';
-import type {Dispatch, SetStateAction} from 'react';
 import IconView from '@atoms/Icon';
+
+//* types import
+import type {Dispatch, SetStateAction} from 'react';
 
 interface EmailOrPhoneTextInputProps {
   emailOrPhone: string;

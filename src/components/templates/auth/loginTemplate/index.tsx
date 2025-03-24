@@ -25,7 +25,10 @@ const LoginTemplate = (props: LoginTemplateProps) => {
 
     try {
       loginValidation.parse(data); // Validate data
-      props.navigation.replace('DrawerRoot');
+      props.navigation.reset({
+        index: 0,
+        routes: [{name: 'DrawerRoot'}],
+      });
       Alert.alert('Validation Success', 'Your inputs are valid!');
     } catch (error) {
       if (error instanceof z.ZodError) {
