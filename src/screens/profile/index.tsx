@@ -1,8 +1,13 @@
+//* packages import
 import React from 'react';
 import {View} from 'react-native';
-import {styles} from './styles';
+
+//* components import
 import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
+
+//* styles import
+import {styles} from './styles';
 
 const Profile = (props: any): React.JSX.Element => {
   return (

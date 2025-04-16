@@ -1,7 +1,12 @@
+//* packages import
 import React from 'react';
 import {TouchableOpacity} from 'react-native';
-import Icon from './Icon';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
+
+//* components import
+import Icon from './Icon';
+
+//* types import
 import {FontsFamily} from '@Types/fontsFamily';
 
 interface TouchableIconProps extends IconButtonProps {

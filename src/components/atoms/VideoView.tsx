@@ -1,4 +1,4 @@
-import {appColors} from '@constants/colors';
+//* packages import
 import React, {useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import Video, {
@@ -8,6 +8,9 @@ import Video, {
   ReactVideoSource,
   VideoRef,
 } from 'react-native-video';
+
+//* constants import
+import {appColors} from '@constants/colors';
 
 interface VideoPlayerProps extends ReactVideoProps {
   onVideoReady: (ref: VideoRef) => void;

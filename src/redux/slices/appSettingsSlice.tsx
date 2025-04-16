@@ -1,5 +1,8 @@
-import {Languages} from '@Types/languages';
+//* packages import
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+
+//* types import
+import {Languages} from '@Types/languages';
 
 interface appSettings {
   lang: Languages;

@@ -1,10 +1,15 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import VisionCamera from '../../../atoms/VisionCamera';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
-import TouchableIcon from '../../../atoms/TouchableIcon';
-import {appColors} from '@constants/colors';
 import {ScreenWidth} from '@rneui/base';
+
+//* components import
+import VisionCamera from '@atoms/VisionCamera';
+import TouchableIcon from '@atoms/TouchableIcon';
+
+//* constants import
+import {appColors} from '@constants/colors';
 
 interface VideoCameraProps {
   device: CameraDevice;

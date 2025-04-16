@@ -7,6 +7,7 @@ import AudioPlayer from '@screens/audios/audioPlayer';
 import {View} from 'react-native';
 import {styles} from './styles';
 import TextView from '@atoms/TextView';
+import ErrorBoundary from '@atoms/ErrorBoundary';
 
 const AudioStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -15,16 +16,18 @@ const AudioStackNavigator = (props: any): React.JSX.Element => {
     <AudioStack.Navigator
       initialRouteName="AudiosList"
       layout={({children, state, descriptors, navigation}) => (
-        <Suspense
-          fallback={
-            <TextView
-              text={'Loading...'}
-              style={styles.fallbackText}
-              containerStyle={styles.fallback}
-            />
-          }>
-          <View style={styles.container}>{children}</View>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <TextView
+                text={'Loading...'}
+                style={styles.fallbackText}
+                containerStyle={styles.fallback}
+              />
+            }>
+            <View style={styles.container}>{children}</View>
+          </Suspense>
+        </ErrorBoundary>
       )}
       screenOptions={{headerShown: false}}>
       <AudioStack.Group>

@@ -1,5 +1,4 @@
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+import {mock} from '@config/mockApi';
 
 // Sample array of users
 const users = [
@@ -17,12 +16,6 @@ const users = [
   },
   // Add more users as needed
 ];
-
-// Create an instance of Axios
-export const api = axios.create();
-
-// Create an instance of MockAdapter and attach it to the Axios instance
-const mock = new MockAdapter(api, {delayResponse: 1000}); // Simulate a 1-second delay
 
 // Mock POST /login API
 mock.onPost('/login').reply(config => {

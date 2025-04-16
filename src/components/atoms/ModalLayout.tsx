@@ -1,3 +1,4 @@
+//* packages import
 import React from 'react';
 import {Modal, ModalProps, ViewStyle, View} from 'react-native';
 

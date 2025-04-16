@@ -1,10 +1,17 @@
+//* pakages import
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import Recorder from '@templates/videos/recordVideo/Recorder';
-import {styles} from './styles';
-import {AppStackNavigationProp} from '@Types/appNavigation';
-import Preview from '@templates/videos/recordedVideo/Preview';
 import {VideoFile} from 'react-native-vision-camera';
+
+//* components import
+import Recorder from '@templates/videos/recordVideo/Recorder';
+import Preview from '@templates/videos/recordedVideo/Preview';
+
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 interface RecordVideoProps {
   navigation: AppStackNavigationProp<'RecordVideo'>;

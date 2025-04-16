@@ -1,6 +1,9 @@
+//* packages import
+import {z} from 'zod';
+
+//* utils import
 import {emailValidation} from '@utils/emailValidation';
 import {phoneValidation} from '@utils/phoneValidation';
-import {z} from 'zod';
 
 // Combine them with a union and dynamic refinement
 const loginValidation = z

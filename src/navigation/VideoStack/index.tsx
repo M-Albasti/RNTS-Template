@@ -1,12 +1,22 @@
+//* packages import
 import React, {Suspense} from 'react';
+import {View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+//* screens import
 import VideosList from '@screens/videos/videosList';
 import RecordVideo from '@screens/videos/recordVideo';
 import VideoPlayer from '@screens/videos/videoPlayer';
-import {RootStackParamList} from '@Types/appNavigation';
-import {View} from 'react-native';
-import {styles} from './styles';
+
+//* components import
 import TextView from '@atoms/TextView';
+import ErrorBoundary from '@atoms/ErrorBoundary';
+
+//* types import
+import {RootStackParamList} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 const VideoStack = createNativeStackNavigator<RootStackParamList>();
 
@@ -15,16 +25,18 @@ const VideoStackNavigator = (props: any): React.JSX.Element => {
     <VideoStack.Navigator
       initialRouteName="VideosList"
       layout={({children, state, descriptors, navigation}) => (
-        <Suspense
-          fallback={
-            <TextView
-              text={'Loading...'}
-              style={styles.fallbackText}
-              containerStyle={styles.fallback}
-            />
-          }>
-          <View style={styles.container}>{children}</View>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <TextView
+                text={'Loading...'}
+                style={styles.fallbackText}
+                containerStyle={styles.fallback}
+              />
+            }>
+            <View style={styles.container}>{children}</View>
+          </Suspense>
+        </ErrorBoundary>
       )}
       screenOptions={{headerShown: false}}>
       <VideoStack.Group>

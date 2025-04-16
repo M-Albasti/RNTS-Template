@@ -1,12 +1,18 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import ViewWithButtons from '@organisms/videos/recordedVideo/ViewWithButtons';
 import {VideoFile} from 'react-native-vision-camera';
-import {AppStackNavigationProp} from '@Types/appNavigation';
 import _ from 'lodash';
 import moment from 'moment';
+
+//* components import
+import ViewWithButtons from '@organisms/videos/recordedVideo/ViewWithButtons';
+
+//* constants import
+import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* hooks import
 import {useAppDispatch} from '@hooks/useAppDispatch';
-import {addVideo, uploadVideo} from '@redux/slices/videosSlice';
 
 interface PreviewProps {
   navigation: AppStackNavigationProp<'RecordVideo'>;

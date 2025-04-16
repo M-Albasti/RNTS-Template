@@ -16,6 +16,10 @@ end
 
 target 'NewProject' do
   config = use_native_modules!
+  
+  use_frameworks! :linkage => :static
+  # right after `use_frameworks! :linkage => :static`
+  $RNFirebaseAsStaticFramework = true
 
   use_react_native!(
     :path => config[:reactNativePath],
@@ -26,6 +30,16 @@ target 'NewProject' do
   target 'NewProjectTests' do
     inherit! :complete
     # Pods for testing
+  end
+  
+  pre_install do |installer|
+    installer.pod_targets.each do |pod|
+      if pod.name.eql?('op-sqlite')
+        def pod.build_type
+          Pod::BuildType.static_library
+        end
+      end
+    end
   end
 
   post_install do |installer|

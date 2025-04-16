@@ -1,7 +1,14 @@
-import {StyleSheet, View} from 'react-native';
+//* packages import
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
+
+//* components import
 import ListWithButtons from '@organisms/videos/videosList/ListWithButtons';
+
+//* constants import
 import {VideoProps, videos} from '@constants/videos';
+
+//* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface VideosListViewProps {

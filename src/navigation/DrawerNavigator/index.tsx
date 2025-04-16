@@ -1,14 +1,28 @@
+//* packages import
 import React, {Suspense} from 'react';
+import {Platform, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import TabNavigator from '../TabNavigator';
+
+//* screens import
 import Profile from '@screens/profile';
+
+//* components import
+import TextView from '@atoms/TextView';
+import ErrorBoundary from '@atoms/ErrorBoundary';
+
+//* navigators import
+import TabNavigator from '../TabNavigator';
 import VideoStackNavigator from '../VideoStack';
 import AudioStackNavigator from '../AudioStack';
-import {appColors} from '@constants/colors';
-import {Platform, View} from 'react-native';
-import {styles} from './styles';
-import TextView from '@atoms/TextView';
+
+//* types import
 import {RootStackParamList} from '@Types/appNavigation';
+
+//* constants import
+import {appColors} from '@constants/colors';
+
+//* styles import
+import {styles} from './styles';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
@@ -18,16 +32,18 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
       backBehavior="history"
       initialRouteName="TabRoot"
       layout={({children, state, descriptors, navigation}) => (
-        <Suspense
-          fallback={
-            <TextView
-              text={'Loading...'}
-              style={styles.fallbackText}
-              containerStyle={styles.fallback}
-            />
-          }>
-          <View style={styles.container}>{children}</View>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <TextView
+                text={'Loading...'}
+                style={styles.fallbackText}
+                containerStyle={styles.fallback}
+              />
+            }>
+            <View style={styles.container}>{children}</View>
+          </Suspense>
+        </ErrorBoundary>
       )}
       screenOptions={{
         drawerType: 'slide',

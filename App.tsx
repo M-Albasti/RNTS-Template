@@ -5,15 +5,20 @@
  * @format
  */
 
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import _ from 'lodash';
 import {Provider} from 'react-redux';
-import {persistor, store} from '@redux/store';
 import {PersistGate} from 'redux-persist/integration/react';
-import NavigationScreens from '@navigation/index';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+
+//* navigators import
+import NavigationScreens from '@navigation/index';
+
+//* redux import
+import {persistor, store} from '@redux/store';
 
 const App = (): React.JSX.Element => {
   return (

@@ -1,9 +1,14 @@
+//* packages import
 import React, {useRef, useState} from 'react';
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
-import {appColors} from '@constants/colors';
 import {VideoRef} from 'react-native-video';
 import {VideoFile} from 'react-native-vision-camera';
+
+//* components import
 import VideoView from '@atoms/VideoView';
+
+//* constants import
+import {appColors} from '@constants/colors';
 
 interface VideoViewProps {
   videoFile: VideoFile;

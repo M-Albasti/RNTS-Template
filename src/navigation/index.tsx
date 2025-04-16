@@ -1,4 +1,7 @@
+//* packages import
 import React from 'react';
+
+//* navigators import
 import Navigation from './NavigationContainer';
 import StackNavigator from './StackNavigator';
 

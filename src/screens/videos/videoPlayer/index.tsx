@@ -1,10 +1,19 @@
-import {appColors} from '@constants/colors';
+//* packages import
 import React, {useRef, useState} from 'react';
-import {ActivityIndicator, Platform, StyleSheet, View} from 'react-native';
-import {styles} from './styles';
+import {View} from 'react-native';
 import {VideoRef} from 'react-native-video';
-import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+
+//* components import
 import VideoView from '@atoms/VideoView';
+
+//* types import
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+
+//* constants import
+import {appColors} from '@constants/colors';
+
+//* styles import
+import {styles} from './styles';
 
 interface VideoPlayerProps {
   navigation: AppStackNavigationProp<'VideoPlayer'>;

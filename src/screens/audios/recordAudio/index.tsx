@@ -1,4 +1,5 @@
-import React, {useEffect, useRef, useState} from 'react';
+//* packages import
+import React, {useLayoutEffect, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import AudioRecorderPlayer, {
   AVEncoderAudioQualityIOSType,
@@ -8,19 +9,31 @@ import AudioRecorderPlayer, {
   AudioSet,
   AudioSourceAndroidType,
 } from 'react-native-audio-recorder-player';
-import {styles} from './styles';
-import {permissionsRequest} from '@services/permissionsRequest';
-import _ from 'lodash';
-import {useAppDispatch} from '@hooks/useAppDispatch';
-import {addAudio, uploadAudio} from '@redux/slices/audiosSlice';
-import {useAppSelector} from '@hooks/useAppSelector';
 import moment from 'moment';
+import _ from 'lodash';
+
+//* components import
 import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
-import { AppStackNavigationProp } from '@Types/appNavigation';
+
+//* redux import
+import {addAudio, uploadAudio} from '@redux/slices/audiosSlice';
+
+//* helpers import
+import {permissionsRequest} from '@helpers/permissionsRequest';
+
+//* hooks import
+import {useAppDispatch} from '@hooks/useAppDispatch';
+import {useAppSelector} from '@hooks/useAppSelector';
+
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 interface RecordAudioProps {
-  navigation: AppStackNavigationProp<'RecordAudio'>
+  navigation: AppStackNavigationProp<'RecordAudio'>;
 }
 
 const RecordAudio = (props: RecordAudioProps): React.JSX.Element => {
@@ -35,7 +48,7 @@ const RecordAudio = (props: RecordAudioProps): React.JSX.Element => {
   const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
   const {status} = useAppSelector(state => state.audio);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     permissionsRequest('microphone');
   }, []);
 

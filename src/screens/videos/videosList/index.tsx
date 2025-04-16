@@ -1,8 +1,15 @@
+//* packages import
 import React from 'react';
 import {View} from 'react-native';
+
+//* components import
 import ListView from '@templates/videos/videosList/ListView';
-import {styles} from './styles';
+
+//* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 interface VideosMenuProps {
   navigation: AppStackNavigationProp<'VideosList'>;

@@ -1,18 +1,30 @@
+//* packages import
 import React, {Suspense} from 'react';
 import {View} from 'react-native';
 import {
   BottomTabBarButtonProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
+import {useTheme} from '@react-navigation/native';
+
+//* screens import
 import Home from '@screens/home';
 import Profile from '@screens/profile';
-import {useTheme} from '@react-navigation/native';
+
+//* types import
+import {RootStackParamList} from '@Types/appNavigation';
+
+//* components import
 import IconView from '@atoms/Icon';
-import {styles} from './styles';
-import {appColors} from '@constants/colors';
 import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
-import {RootStackParamList} from '@Types/appNavigation';
+import ErrorBoundary from '@atoms/ErrorBoundary';
+
+//* constants import
+import {appColors} from '@constants/colors';
+
+//* styles import
+import {styles} from './styles';
 
 interface TabBarIconProps {
   focused: boolean;
@@ -40,16 +52,18 @@ const TabNavigator = (props: any): React.JSX.Element => {
         tabBarStyle: styles.tabBarStyle,
       }}
       layout={({children, state, descriptors, navigation}) => (
-        <Suspense
-          fallback={
-            <TextView
-              text={'Loading...'}
-              style={styles.fallbackText}
-              containerStyle={styles.fallback}
-            />
-          }>
-          <View style={{flex: 1}}>{children}</View>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <TextView
+                text={'Loading...'}
+                style={styles.fallbackText}
+                containerStyle={styles.fallback}
+              />
+            }>
+            <View style={{flex: 1}}>{children}</View>
+          </Suspense>
+        </ErrorBoundary>
       )}>
       <Tab.Group>
         <Tab.Screen

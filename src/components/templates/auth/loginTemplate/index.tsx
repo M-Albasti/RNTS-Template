@@ -1,41 +1,38 @@
+//* packages import
 import React, {useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
+import {z} from 'zod';
+
+//* components import
 import LoginHeader from '@organisms/auth/login/LoginHeader';
 import LoginForm from '@organisms/auth/login/LoginForm';
 import LoginButtons from '@organisms/auth/login/LoginButtons';
-import {AppStackNavigationProp} from '@Types/appNavigation';
-import loginValidation from '@services/loginValidation';
-import {z} from 'zod';
+
+//* types import
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+
+//* utils import
+import loginValidation from '@utils/loginValidation';
+import {loginService} from '@services/authServices/loginService';
+import {useAppDispatch} from '@hooks/useAppDispatch';
 
 interface LoginTemplateProps {
-  navigation: AppStackNavigationProp<'Login'>;
+  navigation: AppStackNavigationProp<'Login' | 'FirebaseEmailLogin'>;
+  registerType: AppRouteProp<'Register' | 'FirebaseEmailRegister'>;
 }
 
-const LoginTemplate = (props: LoginTemplateProps) => {
+const LoginTemplate = (props: LoginTemplateProps): React.JSX.Element => {
   const [emailOrPhone, setEmailOrPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const onLogin = () => {
-    const data = {emailOrPhone, password};
-
-    try {
-      loginValidation.parse(data); // Validate data
-      props.navigation.reset({
-        index: 0,
-        routes: [{name: 'DrawerRoot'}],
-      });
-      Alert.alert('Validation Success', 'Your inputs are valid!');
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errorMessages = error.errors.map(err => err.message).join('\n');
-        Alert.alert('Validation Error', errorMessages);
-      }
-    }
+    loginService('firebase', {emailOrPhone, password}, dispatch);
   };
 
   return (
@@ -49,7 +46,11 @@ const LoginTemplate = (props: LoginTemplateProps) => {
         showPassword={showPassword}
         toggleShowPassword={toggleShowPassword}
       />
-      <LoginButtons navigation={props.navigation} onLogin={onLogin} />
+      <LoginButtons
+        navigation={props.navigation}
+        registerType={props.registerType}
+        onLogin={onLogin}
+      />
     </View>
   );
 };

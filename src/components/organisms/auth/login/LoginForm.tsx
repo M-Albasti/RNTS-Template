@@ -1,8 +1,11 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
-import PasswordTextInput from '@molecules/passwordTextInput';
 import {ScreenWidth} from '@rneui/base';
+
+//* components import
+import EmailOrPhoneTextInput from '@molecules/EmailOrPhoneTextInput';
+import PasswordTextInput from '@molecules/PasswordTextInput';
 
 //* types import
 import type {Dispatch, SetStateAction} from 'react';

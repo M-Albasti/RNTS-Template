@@ -1,14 +1,20 @@
-// i18n.js
+//* packages import
+import {I18nManager} from 'react-native';
 import i18next from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
+import RNRestart from 'react-native-restart'; // Import package from node modules
+
+//* redux import
+import {addLanguage} from '@redux/slices/appSettingsSlice';
+
+//* types import
+import {Languages} from '@Types/languages';
+import {AppDispatch} from '@Types/appDispatch';
+
+//* language import
 import enTranslate from './en/index.json';
 import arTranslate from './ar/index.json';
-import {Languages} from '@Types/languages';
-import RNRestart from 'react-native-restart'; // Import package from node modules
-import {I18nManager} from 'react-native';
-import {addLanguage} from '@redux/slices/appSettingsSlice';
-import {AppDispatch} from '@Types/appDispatch';
 
 const resources = {
   en: {

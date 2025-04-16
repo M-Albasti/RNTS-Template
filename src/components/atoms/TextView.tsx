@@ -1,3 +1,4 @@
+//* packages import
 import React from 'react';
 import {Text, TextProps, View, ViewStyle} from 'react-native';
 import {useTheme} from '@react-navigation/native';

@@ -1,6 +1,11 @@
-import {StyleSheet, View} from 'react-native';
+//* package imports
 import React from 'react';
-import TouchableTextIcon from '../../../atoms/TouchableTextIcon';
+import {StyleSheet, View} from 'react-native';
+
+//* components imports
+import TouchableTextIcon from '@atoms/TouchableTextIcon';
+
+//* constants imports
 import {appColors} from '@constants/colors';
 
 interface VideosListButtonsProps {

@@ -1,8 +1,15 @@
+//* packages import
 import React from 'react';
 import {View} from 'react-native';
-import {styles} from './styles';
-import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* components import
 import LoginTemplate from '@templates/auth/loginTemplate';
+
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 interface LoginProps {
   navigation: AppStackNavigationProp<'Login'>;
@@ -11,7 +18,10 @@ interface LoginProps {
 const Login = (props: LoginProps): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <LoginTemplate navigation={props.navigation} />
+      <LoginTemplate
+        navigation={props.navigation}
+        registerType={{key: 'Register', name: 'Register'}}
+      />
     </View>
   );
 };

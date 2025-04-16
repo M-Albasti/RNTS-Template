@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "4965146642",
+    "project_id": "rnts-template",
+    "storage_bucket": "rnts-template.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4965146642:android:845c3c6b390714561078cb",
+        "android_client_info": {
+          "package_name": "com.rnts.template"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCnxqCUZLPxMkv7OWh96qntPQ5oa4Pp5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,11 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import TouchableTextIcon from '../../../atoms/TouchableTextIcon';
+
+//* components import
+import TouchableTextIcon from '@atoms/TouchableTextIcon';
+
+//* constants import
 import {appColors} from '@constants/colors';
 
 interface AudiosListButtonsProps {

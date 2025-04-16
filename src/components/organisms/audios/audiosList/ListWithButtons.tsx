@@ -1,7 +1,12 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+
+//* components import
 import List from '@molecules/audios/audiosList/List';
 import Buttons from '@molecules/audios/audiosList/Buttons';
+
+//* constants import
 import {SoundProps} from '@constants/sounds';
 
 interface AudiosListWithButtonsProps {

@@ -1,12 +1,22 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import TouchableText from '@atoms/TouchableText';
-import {isDarkTheme} from '@theme/appTheme';
-import {appColors} from '@constants/colors';
 import {useTranslation} from 'react-i18next';
-import {changeLanguage} from '@translation/i18n';
+
+//* components import
+import TouchableText from '@atoms/TouchableText';
+
+//* constants import
+import {appColors} from '@constants/colors';
+//* theme import
+import {isDarkTheme} from '@theme/appTheme';
+
+//* hooks import
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
+
+//* translation import
+import {changeLanguage} from '@translation/i18n';
 
 interface LoginButtonProps {
   onLogin: () => void;

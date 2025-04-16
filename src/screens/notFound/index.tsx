@@ -1,8 +1,13 @@
+//* packages import
 import React from 'react';
 import {View} from 'react-native';
-import {styles} from './styles';
+
+//* components import
 import TouchableText from '@atoms/TouchableText';
 import TextView from '@atoms/TextView';
+
+//* styles import
+import {styles} from './styles';
 
 const NotFound = (props: any): React.JSX.Element => {
   return (

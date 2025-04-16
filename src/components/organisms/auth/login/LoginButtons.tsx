@@ -1,12 +1,17 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import TouchableText from '@atoms/TouchableText';
+
+//* components import
 import LoginButton from '@molecules/LoginButton';
 import LoginRegisterButton from '@molecules/LoginRegisterButton';
-import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* types import
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface LoginButtonsProps {
-  navigation: AppStackNavigationProp<'Login'>;
+  navigation: AppStackNavigationProp<'Login' | 'FirebaseEmailLogin'>;
+  registerType: AppRouteProp<'Register' | 'FirebaseEmailRegister'>;
   onLogin: () => void;
 }
 
@@ -14,7 +19,7 @@ const LoginButtons = (props: LoginButtonsProps): React.JSX.Element => {
   return (
     <View style={styles.container}>
       <LoginButton onLogin={props.onLogin} />
-      <LoginRegisterButton navigation={props.navigation} />
+      <LoginRegisterButton navigation={props.navigation} registerType={props.registerType} />
     </View>
   );
 };

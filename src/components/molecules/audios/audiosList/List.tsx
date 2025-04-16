@@ -1,7 +1,12 @@
+//* packages import
 import React from 'react';
 import {VirtualizedList} from 'react-native';
-import {SoundProps} from '@constants/sounds';
+
+//* components import
 import AudioListItem from '@atoms/AudioListItem';
+
+//* constants import
+import {SoundProps} from '@constants/sounds';
 
 interface AudiosListProps {
   audiosData: SoundProps[];

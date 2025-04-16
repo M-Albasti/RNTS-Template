@@ -1,8 +1,11 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {VideoFile} from 'react-native-vision-camera';
+
+//* components import
 import Buttons from '@molecules/videos/recordedVideo/Buttons';
 import VideoView from '@molecules/videos/recordedVideo/VideoContainer';
-import {VideoFile} from 'react-native-vision-camera';
 
 interface ViewWithButtonsProps {
   videoFile: VideoFile;

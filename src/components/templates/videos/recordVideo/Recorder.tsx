@@ -1,6 +1,6 @@
+//* packages import
+import React, {useLayoutEffect, useRef, useState} from 'react';
 import {Platform, StyleSheet, View} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import CameraModal from '../../../organisms/videos/recordVideo/CameraModal';
 import {
   Camera,
   CameraDevice,
@@ -10,8 +10,15 @@ import {
   useMicrophonePermission,
   VideoFile,
 } from 'react-native-vision-camera';
-import {permissionsRequest} from '@services/permissionsRequest';
+
+//* components import
+import CameraModal from '@organisms/videos/recordVideo/CameraModal';
 import TextView from '@atoms/TextView';
+
+//* helpers import
+import {permissionsRequest} from '@helpers/permissionsRequest';
+
+//* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface VideoRecordProps {
@@ -30,7 +37,7 @@ const Recorder = (props: VideoRecordProps): React.JSX.Element => {
   const cameraPermission = useCameraPermission();
   const microphonePermission = useMicrophonePermission();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     requestCameraPermission();
   }, []);
 

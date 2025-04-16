@@ -1,4 +1,7 @@
+//* packages import
 import React from 'react';
+
+//* components import
 import TextInputView from '@atoms/TextInputView';
 import IconView from '@atoms/Icon';
 

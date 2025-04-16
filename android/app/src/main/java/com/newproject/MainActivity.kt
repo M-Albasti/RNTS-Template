@@ -1,4 +1,4 @@
-package com.newproject
+package com.rnts.template
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

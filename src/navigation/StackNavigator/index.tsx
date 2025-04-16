@@ -1,58 +1,65 @@
+//* packages import
 import React, {Suspense} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import _ from 'lodash';
+
+//* navigators import
 import DrawerNavigator from '../DrawerNavigator';
+import AuthStackNavigator from '@navigation/AuthStack';
+
+//* screens import
 import Settings from '@screens/settings';
 import NotFound from '@screens/notFound';
-import Login from '@screens/auth/login';
-import Register from '@screens/auth/register';
-import ForgetPassword from '@screens/auth/forgetPassword';
-import ResetPassword from '@screens/auth/resetPassword';
-import OTP from '@screens/auth/otp';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {styles} from './styles';
-import TextView from '@atoms/TextView';
-import OnBoarding from '@screens/onboarding';
+
+//* hooks import
+import {useAppSelector} from '@hooks/useAppSelector';
+
+//* types import
 import {RootStackParamList} from '@Types/appNavigation';
+
+//* components import
+import TextView from '@atoms/TextView';
+import ErrorBoundary from '@atoms/ErrorBoundary';
+
+//* styles import
+import {styles} from './styles';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const StackNavigator = (props: any): React.JSX.Element => {
+  const user = useAppSelector(state => state.auth.user);
+  console.log('🚀 ~ StackNavigator user:', user, _.isEmpty(user));
+
   return (
     <Stack.Navigator
-      initialRouteName="OnBoarding"
       layout={({children, state, descriptors, navigation}) => (
-        <Suspense
-          fallback={
-            <TextView
-              text={'Loading...'}
-              style={styles.fallbackText}
-              containerStyle={styles.fallback}
-            />
-          }>
-          <SafeAreaView style={styles.container}>{children}</SafeAreaView>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense
+            fallback={
+              <TextView
+                text={'Loading...'}
+                style={styles.fallbackText}
+                containerStyle={styles.fallback}
+              />
+            }>
+            <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+          </Suspense>
+        </ErrorBoundary>
       )}
       screenOptions={{headerShown: false}}>
       <Stack.Group>
-        <Stack.Screen name="OnBoarding">
-          {props => <OnBoarding {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="Login">
-          {props => <Login {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="Register">
-          {props => <Register {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="ForgetPassword">
-          {props => <ForgetPassword {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="ResetPassword">
-          {props => <ResetPassword {...props} />}
-        </Stack.Screen>
-        <Stack.Screen name="OTP">{props => <OTP {...props} />}</Stack.Screen>
-        <Stack.Screen name="DrawerRoot">
-          {props => <DrawerNavigator {...props} />}
-        </Stack.Screen>
+        {/* Auth Navigator */}
+        {_.isEmpty(user) ? (
+          <Stack.Screen name="AuthStack">
+            {props => <AuthStackNavigator {...props} />}
+          </Stack.Screen>
+        ) : (
+          // User Navigator
+          <Stack.Screen name="DrawerRoot">
+            {props => <DrawerNavigator {...props} />}
+          </Stack.Screen>
+        )}
         <Stack.Screen name="NotFound">
           {props => <NotFound {...props} />}
         </Stack.Screen>

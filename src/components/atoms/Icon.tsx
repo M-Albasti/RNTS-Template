@@ -1,8 +1,13 @@
-import React from 'react';
-import {iconComponents} from '@constants/vectorIcons';
-import {FontsFamily} from '@Types/fontsFamily';
-import {IconProps} from 'react-native-vector-icons/Icon';
+//* packages import
+import React, {FC} from 'react';
 import {View, ViewStyle} from 'react-native';
+import {IconProps} from 'react-native-vector-icons/Icon';
+
+//* constants import
+import {iconComponents} from '@constants/vectorIcons';
+
+//* types import
+import {FontsFamily} from '@Types/fontsFamily';
 
 interface IconViewProps extends IconProps {
   iconType: FontsFamily;
@@ -10,7 +15,7 @@ interface IconViewProps extends IconProps {
 }
 
 const IconView = (props: IconViewProps): React.JSX.Element => {
-  const Icon = iconComponents[props.iconType];
+  const Icon = iconComponents[props.iconType] as unknown as FC<IconProps>;
 
   return (
     <View style={props.iconContainerStyle}>

@@ -1,14 +1,25 @@
+//* packages import
 import React, {useCallback, useEffect, useState} from 'react';
 import {Image, Platform, ScrollView, View} from 'react-native';
 import SoundPlayer from 'react-native-sound-player';
-import TouchableIcon from '@atoms/TouchableIcon';
-import {appColors} from '@constants/colors';
 import Slider from '@react-native-community/slider';
-import {styles} from './styles';
 import {useFocusEffect} from '@react-navigation/native';
-import {minutesFormat} from '@utils/minutesFormat';
-import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+
+//* components import
+import TouchableIcon from '@atoms/TouchableIcon';
 import TextView from '@atoms/TextView';
+
+//* constants import
+import {appColors} from '@constants/colors';
+
+//* utils import
+import {minutesFormat} from '@utils/minutesFormat';
+
+//* types import
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 interface AudioPlayerProps {
   navigation: AppStackNavigationProp<'AudioPlayer'>;

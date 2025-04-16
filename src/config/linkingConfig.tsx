@@ -1,11 +1,6 @@
-import type {LinkingOptions, PathConfigMap} from '@react-navigation/native';
+import {ConfigTypes} from '@Types/linkingConfig';
 
-interface ConfigTypes {
-  initialRouteName?: string | number | symbol | undefined;
-  screens: PathConfigMap<object>;
-}
-
-const config: ConfigTypes = {
+export const linkingConfig: ConfigTypes = {
   initialRouteName: 'Login',
   /* configuration for matching screens with paths */
   screens: {
@@ -74,15 +69,4 @@ const config: ConfigTypes = {
       path: '*',
     },
   },
-};
-
-export const linking: LinkingOptions<any> = {
-  enabled: true,
-  prefixes: [
-    /* your linking prefixes */
-    'projectdeeplink://',
-    'https://projectdeeplink.com',
-    'https://*.projectdeeplink.com',
-  ],
-  config: config,
 };

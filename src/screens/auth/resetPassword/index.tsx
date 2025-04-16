@@ -1,7 +1,12 @@
+//* packages import
 import React from 'react';
 import {View} from 'react-native';
-import {styles} from './styles';
+
+//* components import
 import TextView from '@atoms/TextView';
+
+//* styles import
+import {styles} from './styles';
 
 const ResetPassword = (props: any): React.JSX.Element => {
   return (

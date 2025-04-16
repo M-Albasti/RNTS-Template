@@ -1,7 +1,10 @@
+//* packages import
 import React from 'react';
-import ModalLayout from '../../../atoms/ModalLayout';
 import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
-import CameraView from '../../../molecules/videos/recordVideo/CameraView';
+
+//* components import
+import ModalLayout from '@atoms/ModalLayout';
+import CameraView from '@molecules/videos/recordVideo/CameraView';
 
 interface VideoCameraModalProps {
   device: CameraDevice;

@@ -1,3 +1,4 @@
+//* packages import
 import {Appearance} from 'react-native';
 
 //* types import

@@ -12,6 +12,7 @@ module.exports = {
           '@organisms': './src/components/organisms',
           '@templates': './src/components/templates',
           '@constants': './src/constants',
+          '@config': './src/config',
           '@helpers': './src/helpers',
           '@hooks': './src/hooks',
           '@navigation': './src/navigation',

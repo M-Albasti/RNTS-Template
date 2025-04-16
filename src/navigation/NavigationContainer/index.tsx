@@ -1,18 +1,33 @@
+//* packages import
 import React, {PropsWithChildren} from 'react';
+import {useColorScheme} from 'react-native';
 import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {navigationRef} from '@services/NavigationServices';
-import {useColorScheme} from 'react-native';
-import {linking} from '@services/deepLinking';
-import {createMyTheme} from '@theme/appTheme';
-import {appColors} from '@constants/colors';
+
+//* components import
 import TextView from '@atoms/TextView';
-import {styles} from '@navigation/TabNavigator/styles';
+
+//* services import
+import {navigationRef} from '@services/navigationServices/NavigationService';
+import {linking} from '@services/linkingServices/deepLinking';
+
+//* hooks import
 import {useAppSelector} from '@hooks/useAppSelector';
+
+//* constants import
+import {appColors} from '@constants/colors';
+
+//* theme import
+import {createMyTheme} from '@theme/appTheme';
+
+//* translation import
 import {initLanguage} from '@translation/i18n'; // Import the i18n initialization file
+
+//* styles import
+import {styles} from '@navigation/TabNavigator/styles';
 
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
   const scheme = useColorScheme();

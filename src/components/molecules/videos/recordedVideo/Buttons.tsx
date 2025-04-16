@@ -1,8 +1,13 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {appColors} from '@constants/colors';
-import TouchableText from '@atoms/TouchableText';
 import {ScreenHeight, ScreenWidth} from '@rneui/base';
+
+//* components import
+import TouchableText from '@atoms/TouchableText';
+
+//* constants import
+import {appColors} from '@constants/colors';
 
 interface ButtonsProps {
   onDismiss: () => void;

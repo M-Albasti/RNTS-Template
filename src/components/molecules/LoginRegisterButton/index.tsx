@@ -1,28 +1,37 @@
+//* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+
+//* components import
 import TouchableText from '@atoms/TouchableText';
-import {isDarkTheme} from '@theme/appTheme';
+
+//* constants import
 import {appColors} from '@constants/colors';
-import {AppStackNavigationProp} from '@Types/appNavigation';
+
+//* theme import
+import {isDarkTheme} from '@theme/appTheme';
+
+//* types import
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface LoginRegisterButtonProps {
-  navigation: AppStackNavigationProp<'Login'>;
+  navigation: AppStackNavigationProp<'Login' | 'FirebaseEmailLogin'>;
+  registerType: AppRouteProp<'Register' | 'FirebaseEmailRegister'>;
 }
 
 const LoginRegisterButton = (
   props: LoginRegisterButtonProps,
 ): React.JSX.Element => {
+  const goToRegister = () => {
+    props.navigation.navigate(props.registerType);
+  };
+
   return (
     <View>
       <TouchableText
         textStyle={styles.textStyle}
         text={'Register'}
-        onPress={() => {
-          props.navigation.reset({
-            index: 0,
-            routes: [{name: 'DrawerRoot'}],
-          });
-        }}
+        onPress={goToRegister}
       />
     </View>
   );

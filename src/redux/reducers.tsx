@@ -1,5 +1,7 @@
+//* packages import
 import {combineReducers} from 'redux';
 
+//* reducers import
 import authReducer from './slices/authSlice';
 import videosReducer from './slices/videosSlice';
 import audiosReducer from './slices/audiosSlice';

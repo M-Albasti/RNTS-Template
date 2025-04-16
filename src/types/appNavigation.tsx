@@ -1,11 +1,20 @@
+//* packages import
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
+
+//* constants import
 import {VideoProps} from '@constants/videos';
 import {SoundProps} from '@constants/sounds';
 
 export type RootStackParamList = {
+  AuthStack: undefined;
+  FirebaseAuthStack: undefined;
   OnBoarding: undefined;
+  AuthMethod: undefined;
+  FirebaseLoginMethod: undefined;
   Login: undefined;
+  FirebaseEmailLogin: undefined;
+  FirebaseEmailRegister: undefined;
   Register: undefined;
   ForgetPassword: undefined;
   ResetPassword: undefined;

@@ -1,6 +1,9 @@
+//* packages import
 import React from 'react';
 import {StatusBar} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
+
+//* constants import
 import {appColors} from '@constants/colors';
 
 //* types import

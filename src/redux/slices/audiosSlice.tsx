@@ -1,7 +1,10 @@
-import {SoundProps} from '@constants/sounds';
+//* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios, {AxiosError} from 'axios';
 import moment from 'moment';
+
+//* constants import
+import {SoundProps} from '@constants/sounds';
 
 interface audio {
   audios: object[];

@@ -1,16 +1,32 @@
+//* packages import
 import React from 'react';
 import {I18nManager, Text, View} from 'react-native';
-import {styles} from './styles';
+import Swiper from 'react-native-swiper';
+
+//* components import
 import TouchableText from '@atoms/TouchableText';
 import TextView from '@atoms/TextView';
-import Swiper from 'react-native-swiper';
-import {changeLanguage} from '@translation/i18n';
+
+//* services import
+import {logoutService} from '@services/authServices/logoutService';
+
+//* hooks import
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useAppDispatch} from '@hooks/useAppDispatch';
+
+//* translation import
+import {changeLanguage} from '@translation/i18n';
+
+//* styles import
+import {styles} from './styles';
 
 const Home = (props: any): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const lang = useAppSelector(state => state?.appSettings?.lang);
+
+  const logout = () => {
+    logoutService('firebase', dispatch);
+  };
 
   return (
     <View style={styles.container}>
@@ -24,6 +40,7 @@ const Home = (props: any): React.JSX.Element => {
           });
         }}
       />
+      <TouchableText text={'Logout'} onPress={logout} />
       <TouchableText
         text={'change language'}
         onPress={() => {

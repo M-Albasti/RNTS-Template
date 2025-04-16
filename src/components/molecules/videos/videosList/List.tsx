@@ -1,7 +1,12 @@
+//* packages import
 import React from 'react';
 import {VirtualizedList} from 'react-native';
-import {VideoProps} from '@constants/videos';
+
+//* components import
 import VideoListItem from '@atoms/VideoListItem';
+
+//* constants import
+import {VideoProps} from '@constants/videos';
 
 interface VideosListProps {
   videosData: VideoProps[];
