@@ -3,14 +3,13 @@ import React from 'react';
 import {View} from 'react-native';
 
 //* components import
-import TextView from '@atoms/TextView';
+import RegisterTemplate from '@templates/auth/registerTemplate';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 //* styles import
 import {styles} from './styles';
-import RegisterTemplate from '@templates/auth/registerTemplate';
 
 interface RegisterProps {
   navigation: AppStackNavigationProp<'FirebaseEmailRegister'>;
@@ -25,6 +24,7 @@ const FirebaseEmailRegister = (props: RegisterProps): React.JSX.Element => {
           key: 'FirebaseEmailRegister',
           name: 'FirebaseEmailRegister',
         }}
+        keyboardType={'email-address'}
       />
     </View>
   );

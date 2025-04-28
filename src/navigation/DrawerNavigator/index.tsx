@@ -12,8 +12,8 @@ import ErrorBoundary from '@atoms/ErrorBoundary';
 
 //* navigators import
 import TabNavigator from '../TabNavigator';
-import VideoStackNavigator from '../VideoStack';
-import AudioStackNavigator from '../AudioStack';
+import VideoNavigator from '../VideoNavigator';
+import AudioNavigator from '../AudioNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -64,10 +64,10 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
           {props => <Profile {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="AudioStack" options={{title: 'Audios'}}>
-          {props => <AudioStackNavigator {...props} />}
+          {props => <AudioNavigator {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="VideoStack" options={{title: 'Videos'}}>
-          {props => <VideoStackNavigator {...props} />}
+          {props => <VideoNavigator {...props} />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

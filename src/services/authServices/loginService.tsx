@@ -2,21 +2,28 @@
 import {Dispatch} from 'redux';
 import {Alert} from 'react-native';
 import {z} from 'zod';
+import _ from 'lodash';
 
 //* redux import
 import {addUser} from '@redux/slices/authSlice';
 
 //* services import
 import {loginFirebaseWithEmail} from '@services/firebaseServices/firebaseEmailService';
+import {
+  confirmVerificationCode,
+  loginFirebaseWithPhoneNumber,
+} from '@services/firebaseServices/firebasePhoneService';
 
 //* helpers import
-import {cleanFirebaseUser} from '@helpers/cleanFirebaseUser';
+import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
 
 //* utils import
 import loginValidation from '@utils/loginValidation';
 
 //* types import
-// import {AppStackNavigationProp} from '@Types/appNavigation';
+import {LoginTypes} from '@Types/loginTypes';
+import {AppStackNavigationProp} from '@Types/appNavigation';
+import {LoginScreens} from '@Types/loginScreens';
 
 interface LoginCredentials {
   emailOrPhone: string;
@@ -24,18 +31,18 @@ interface LoginCredentials {
 }
 
 export const loginService = async (
-  loginType: string,
+  loginType: LoginTypes,
   credentials: LoginCredentials,
-  //   navigation: AppStackNavigationProp<'Login' | 'FirebaseEmailLogin'>,
   dispatch: Dispatch,
+  navigation?: AppStackNavigationProp<LoginScreens>,
 ): Promise<void> => {
   try {
     loginValidation.parse(credentials); // Validate data
-    if (loginType === 'firebase') {
+    if (loginType === 'FirebaseEmail') {
       loginFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
         .then(user => {
           // Handle successful login
-          dispatch(addUser(cleanFirebaseUser(user)));
+          dispatch(addUser(cleanFirebaseUserResponse(user)));
           Alert.alert('Login Success', 'You have successfully logged in!');
         })
         .catch(error => {
@@ -46,6 +53,15 @@ export const loginService = async (
           );
         });
       Alert.alert('Validation Success', 'Your inputs are valid!');
+    } else if (loginType === 'FirebasePhone') {
+      loginFirebaseWithPhoneNumber(credentials.emailOrPhone).then(
+        confirmation => {
+          // Handle successful login
+          console.log('🚀 ~ confirmation:', confirmation);
+          navigation?.navigate('FirebasePhoneOTP', {confirmation});
+          return confirmation;
+        },
+      );
     }
   } catch (error) {
     if (error instanceof z.ZodError) {

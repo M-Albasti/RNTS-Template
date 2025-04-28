@@ -21,6 +21,7 @@ const Login = (props: LoginProps): React.JSX.Element => {
       <LoginTemplate
         navigation={props.navigation}
         registerType={{key: 'Register', name: 'Register'}}
+        loginType={'Normal'}
       />
     </View>
   );

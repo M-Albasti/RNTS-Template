@@ -20,10 +20,12 @@ const FirebaseEmailLogin = (props: LoginProps): React.JSX.Element => {
     <View style={styles.container}>
       <LoginTemplate
         navigation={props.navigation}
+        loginType={'FirebaseEmail'}
         registerType={{
           key: 'FirebaseEmailRegister',
           name: 'FirebaseEmailRegister',
         }}
+        keyboardType={'email-address'}
       />
     </View>
   );

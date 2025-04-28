@@ -8,6 +8,7 @@ import TouchableText from '@atoms/TouchableText';
 
 //* constants import
 import {appColors} from '@constants/colors';
+
 //* theme import
 import {isDarkTheme} from '@theme/appTheme';
 
@@ -17,18 +18,20 @@ import {useAppSelector} from '@hooks/useAppSelector';
 
 //* translation import
 import {changeLanguage} from '@translation/i18n';
+
+//* types import
 import {AppRouteProp} from '@Types/appNavigation';
+import {RegisterScreens} from '@Types/registerScreens';
 
 interface RegisterButtonProps {
   onRegister: () => void;
-  registerType: AppRouteProp<'Register' | 'FirebaseEmailRegister'>;
+  registerType: AppRouteProp<RegisterScreens>;
 }
 
 const RegisterButton = (props: RegisterButtonProps): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const lang = useAppSelector(state => state?.appSettings?.lang);
-  // console.log('🚀 ~ registerType:', props.registerType);
 
   return (
     <View>

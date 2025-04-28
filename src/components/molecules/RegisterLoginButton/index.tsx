@@ -13,9 +13,10 @@ import {isDarkTheme} from '@theme/appTheme';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
+import {RegisterScreens} from '@Types/registerScreens';
 
 interface RegisterLoginButtonProps {
-  navigation: AppStackNavigationProp<'Register' | 'FirebaseEmailRegister'>;
+  navigation: AppStackNavigationProp<RegisterScreens>;
 }
 
 const RegisterLoginButton = (

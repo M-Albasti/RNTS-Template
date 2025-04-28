@@ -1,6 +1,7 @@
 //* packages import
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
+import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 //* constants import
 import {VideoProps} from '@constants/videos';
@@ -15,10 +16,12 @@ export type RootStackParamList = {
   Login: undefined;
   FirebaseEmailLogin: undefined;
   FirebaseEmailRegister: undefined;
+  FirebasePhoneLogin: undefined;
   Register: undefined;
   ForgetPassword: undefined;
   ResetPassword: undefined;
   OTP: undefined;
+  FirebasePhoneOTP: {confirmation: FirebaseAuthTypes.ConfirmationResult};
   NotFound: undefined;
   Settings: undefined;
   DrawerRoot: undefined;

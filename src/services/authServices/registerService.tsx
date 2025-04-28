@@ -9,7 +9,7 @@ import {addUser} from '@redux/slices/authSlice';
 import {registerFirebaseWithEmail} from '@services/firebaseServices/firebaseEmailService';
 
 //* helpers import
-import {cleanFirebaseUser} from '@helpers/cleanFirebaseUser';
+import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
 
 //* utils import
 import registerValidation from '@utils/registerValidation';
@@ -34,11 +34,11 @@ export const registerService = async (
 ): Promise<void> => {
   try {
     registerValidation.parse(credentials); // Validate data
-    if (registerType === 'firebase') {
+    if (registerType === 'FirebaseEmailRegister') {
       registerFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
         .then(user => {
           // Handle successful register
-          dispatch(addUser(cleanFirebaseUser(user)));
+          dispatch(addUser(cleanFirebaseUserResponse(user)));
           Alert.alert('Register Success', 'You have successfully registered!');
         })
         .catch(error => {

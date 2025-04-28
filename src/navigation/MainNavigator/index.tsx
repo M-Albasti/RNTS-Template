@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 //* navigators import
 import DrawerNavigator from '../DrawerNavigator';
-import AuthStackNavigator from '@navigation/AuthStack';
+import AuthNavigator from '@navigation/AuthNavigator';
 
 //* screens import
 import Settings from '@screens/settings';
@@ -25,14 +25,14 @@ import ErrorBoundary from '@atoms/ErrorBoundary';
 //* styles import
 import {styles} from './styles';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const MainStack = createNativeStackNavigator<RootStackParamList>();
 
-const StackNavigator = (props: any): React.JSX.Element => {
+const MainNavigator = (props: any): React.JSX.Element => {
   const user = useAppSelector(state => state.auth.user);
-  console.log('🚀 ~ StackNavigator user:', user, _.isEmpty(user));
+  console.log('🚀 ~ MainNavigator user:', user, _.isEmpty(user));
 
   return (
-    <Stack.Navigator
+    <MainStack.Navigator
       layout={({children, state, descriptors, navigation}) => (
         <ErrorBoundary>
           <Suspense
@@ -48,29 +48,29 @@ const StackNavigator = (props: any): React.JSX.Element => {
         </ErrorBoundary>
       )}
       screenOptions={{headerShown: false}}>
-      <Stack.Group>
+      <MainStack.Group>
         {/* Auth Navigator */}
         {_.isEmpty(user) ? (
-          <Stack.Screen name="AuthStack">
-            {props => <AuthStackNavigator {...props} />}
-          </Stack.Screen>
+          <MainStack.Screen name="AuthStack">
+            {props => <AuthNavigator {...props} />}
+          </MainStack.Screen>
         ) : (
           // User Navigator
-          <Stack.Screen name="DrawerRoot">
+          <MainStack.Screen name="DrawerRoot">
             {props => <DrawerNavigator {...props} />}
-          </Stack.Screen>
+          </MainStack.Screen>
         )}
-        <Stack.Screen name="NotFound">
+        <MainStack.Screen name="NotFound">
           {props => <NotFound {...props} />}
-        </Stack.Screen>
-      </Stack.Group>
-      <Stack.Group screenOptions={{presentation: 'modal'}}>
-        <Stack.Screen name="Settings">
+        </MainStack.Screen>
+      </MainStack.Group>
+      <MainStack.Group screenOptions={{presentation: 'modal'}}>
+        <MainStack.Screen name="Settings">
           {props => <Settings {...props} />}
-        </Stack.Screen>
-      </Stack.Group>
-    </Stack.Navigator>
+        </MainStack.Screen>
+      </MainStack.Group>
+    </MainStack.Navigator>
   );
 };
 
-export default StackNavigator;
+export default MainNavigator;

@@ -1,37 +1,63 @@
 //* packages import
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {KeyboardTypeOptions, StyleSheet, View} from 'react-native';
 import {ScreenWidth} from '@rneui/base';
 
 //* components import
 import EmailOrPhoneTextInput from '@molecules/EmailOrPhoneTextInput';
 import PasswordTextInput from '@molecules/PasswordTextInput';
+import LoginButton from '@molecules/LoginButton';
+
+//* services import
+import {loginService} from '@services/authServices/loginService';
+
+//* hooks import
+import {useAppDispatch} from '@hooks/useAppDispatch';
 
 //* types import
-import type {Dispatch, SetStateAction} from 'react';
+import {AppStackNavigationProp} from '@Types/appNavigation';
+import {LoginScreens} from '@Types/loginScreens';
+import {LoginTypes} from '@Types/loginTypes';
 
 interface LoginFormProps {
-  emailOrPhone: string;
-  setEmailOrPhone: Dispatch<SetStateAction<string>>;
-  password: string;
-  setPassword: Dispatch<SetStateAction<string>>;
-  showPassword: boolean;
-  toggleShowPassword: () => void;
+  navigation: AppStackNavigationProp<LoginScreens>;
+  loginType: LoginTypes;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const LoginForm = (props: LoginFormProps): React.JSX.Element => {
+  const [emailOrPhone, setEmailOrPhone] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const onLogin = () => {
+    loginService(
+      props.loginType,
+      {emailOrPhone, password},
+      dispatch,
+      props.navigation,
+    );
+  };
+
   return (
     <View style={styles.container}>
       <EmailOrPhoneTextInput
-        emailOrPhone={props.emailOrPhone}
-        setEmailOrPhone={props.setEmailOrPhone}
+        emailOrPhone={emailOrPhone}
+        setEmailOrPhone={setEmailOrPhone}
+        keyboardType={props.keyboardType}
       />
       <PasswordTextInput
-        password={props.password}
-        setPassword={props.setPassword}
-        showPassword={props.showPassword}
-        toggleShowPassword={props.toggleShowPassword}
+        password={password}
+        setPassword={setPassword}
+        showPassword={showPassword}
+        toggleShowPassword={toggleShowPassword}
       />
+      <LoginButton onLogin={onLogin} />
     </View>
   );
 };

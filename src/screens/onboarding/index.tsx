@@ -63,7 +63,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
             subtitle: 'Done with React Native Onboarding Swiper3',
           },
         ]}
-        onDone={() => props.navigation.navigate('AuthMethod')}
+        onDone={() => props.navigation.replace('AuthMethod')}
         containerStyles={styles.onBoardingContainer}
         bottomBarHighlight={false}
         imageContainerStyles={styles.imageOnBoardingContainer}

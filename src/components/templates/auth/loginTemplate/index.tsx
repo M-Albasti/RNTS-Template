@@ -1,55 +1,41 @@
 //* packages import
-import React, {useState} from 'react';
-import {Alert, StyleSheet, View} from 'react-native';
-import {z} from 'zod';
+import React from 'react';
+import {KeyboardTypeOptions, StyleSheet, View} from 'react-native';
 
 //* components import
 import LoginHeader from '@organisms/auth/login/LoginHeader';
 import LoginForm from '@organisms/auth/login/LoginForm';
-import LoginButtons from '@organisms/auth/login/LoginButtons';
+import LoginFooter from '@organisms/auth/login/LoginFooter';
 
 //* types import
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
-
-//* utils import
-import loginValidation from '@utils/loginValidation';
-import {loginService} from '@services/authServices/loginService';
-import {useAppDispatch} from '@hooks/useAppDispatch';
+import {LoginScreens} from '@Types/loginScreens';
+import {RegisterScreens} from '@Types/registerScreens';
+import {LoginTypes} from '@Types/loginTypes';
 
 interface LoginTemplateProps {
-  navigation: AppStackNavigationProp<'Login' | 'FirebaseEmailLogin'>;
-  registerType: AppRouteProp<'Register' | 'FirebaseEmailRegister'>;
+  navigation: AppStackNavigationProp<LoginScreens>;
+  loginType: LoginTypes;
+  otpVerification?: boolean;
+  register?: boolean;
+  registerType?: AppRouteProp<RegisterScreens>;
+  otpVerificationType?: string;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const LoginTemplate = (props: LoginTemplateProps): React.JSX.Element => {
-  const [emailOrPhone, setEmailOrPhone] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
-
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const onLogin = () => {
-    loginService('firebase', {emailOrPhone, password}, dispatch);
-  };
-
   return (
     <View style={styles.container}>
       <LoginHeader />
       <LoginForm
-        emailOrPhone={emailOrPhone}
-        setEmailOrPhone={setEmailOrPhone}
-        password={password}
-        setPassword={setPassword}
-        showPassword={showPassword}
-        toggleShowPassword={toggleShowPassword}
-      />
-      <LoginButtons
         navigation={props.navigation}
+        loginType={props.loginType}
+        keyboardType={props.keyboardType}
+      />
+      <LoginFooter
+        navigation={props.navigation}
+        register={props.register}
         registerType={props.registerType}
-        onLogin={onLogin}
       />
     </View>
   );

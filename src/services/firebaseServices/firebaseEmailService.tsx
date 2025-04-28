@@ -2,6 +2,12 @@
 import {Alert} from 'react-native';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
+/**
+ * register user with Firebase by Email.
+ * @param email - The Email received by the user to register.
+ * @param password - The Password received by the user to register.
+ * @returns The authenticated user.
+ */
 export const registerFirebaseWithEmail = async (
   email: string,
   password: string,
@@ -18,33 +24,41 @@ export const registerFirebaseWithEmail = async (
   }
 };
 
+/**
+ * login user with Firebase by Email.
+ * @param email - The Email received by the user to login.
+ * @param password - The Password received by the user to login.
+ * @returns The authenticated user.
+ */
 export const loginFirebaseWithEmail = async (
   email: string,
   password: string,
 ): Promise<FirebaseAuthTypes.User> => {
-  try {
-    const userCredential = await auth().signInWithEmailAndPassword(
-      email,
-      password,
-    );
-    return userCredential.user;
-  } catch (error: FirebaseAuthTypes.NativeFirebaseAuthError | any) {
-    handleFirebaseError(error);
-    throw new Error(error.message);
-  }
+  return await auth()
+    .signInWithEmailAndPassword(email, password)
+    .then(userCredential => {
+      return userCredential.user;
+    })
+    .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
+      handleFirebaseError(error);
+      throw new Error(error.message);
+    });
 };
 
+/**
+ * logout user from firebase account.
+ */
 export const logoutFirebase = async (): Promise<void> => {
-  try {
-    await auth().signOut();
-  } catch (error: FirebaseAuthTypes.NativeFirebaseAuthError | any) {
-    handleFirebaseError(error);
-    throw new Error(error.message);
-  }
+  await auth()
+    .signOut()
+    .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
+      handleFirebaseError(error);
+      throw new Error(error.message);
+    });
 };
 
 const handleFirebaseError = (
-  error: FirebaseAuthTypes.NativeFirebaseAuthError | any,
+  error: FirebaseAuthTypes.NativeFirebaseAuthError,
 ): void => {
   switch (error.code) {
     case 'auth/email-already-in-use':

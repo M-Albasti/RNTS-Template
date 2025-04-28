@@ -1,7 +1,7 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
-export const cleanFirebaseUser = (user: FirebaseAuthTypes.User) => {
-  if (!user) return {};
+export const cleanFirebaseUserResponse = (user: FirebaseAuthTypes.User | undefined) => {
+  if (!user) return null;
 
   return {
     uid: user.uid,

@@ -1,13 +1,12 @@
 //* packages import
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
+
+//* components import
+import TextView from '@atoms/TextView';
 
 const RegisterHeader = (props: any): React.JSX.Element => {
-  return (
-    <View style={styles.container}>
-      <Text>RegisterHeader</Text>
-    </View>
-  );
+  return <TextView text={'Register Header'} containerStyle={styles.container} />;
 };
 
 export default RegisterHeader;

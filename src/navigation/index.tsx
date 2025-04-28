@@ -3,12 +3,12 @@ import React from 'react';
 
 //* navigators import
 import Navigation from './NavigationContainer';
-import StackNavigator from './StackNavigator';
+import MainNavigator from './MainNavigator';
 
 const NavigationScreens = (): React.JSX.Element => {
   return (
     <Navigation>
-      <StackNavigator />
+      <MainNavigator />
     </Navigation>
   );
 };

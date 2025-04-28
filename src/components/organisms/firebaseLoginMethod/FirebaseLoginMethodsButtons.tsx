@@ -29,6 +29,7 @@ const FirebaseLoginMethodsButtons = (
   const navigateToPhoneLogin = () => {
     // Replace with your navigation logic
     console.log('Navigate to Phone Login');
+    props.navigation.navigate('FirebasePhoneLogin');
   };
 
   const navigateToFacebookLogin = () => {

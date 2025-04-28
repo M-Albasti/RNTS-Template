@@ -7,10 +7,12 @@ import IconView from '@atoms/Icon';
 
 //* types import
 import type {Dispatch, SetStateAction} from 'react';
+import {KeyboardTypeOptions} from 'react-native';
 
 interface EmailOrPhoneTextInputProps {
   emailOrPhone: string;
   setEmailOrPhone: Dispatch<SetStateAction<string>>;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const EmailOrPhoneTextInput = (props: EmailOrPhoneTextInputProps) => {
@@ -19,6 +21,7 @@ const EmailOrPhoneTextInput = (props: EmailOrPhoneTextInputProps) => {
       value={props.emailOrPhone}
       onChangeText={props.setEmailOrPhone}
       leftIcon={<IconView iconType={'Zocial'} name={'email'} size={25} />}
+      keyboardType={props.keyboardType}
     />
   );
 };

@@ -13,17 +13,19 @@ import {isDarkTheme} from '@theme/appTheme';
 
 //* types import
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+import {LoginScreens} from '@Types/loginScreens';
+import {RegisterScreens} from '@Types/registerScreens';
 
 interface LoginRegisterButtonProps {
-  navigation: AppStackNavigationProp<'Login' | 'FirebaseEmailLogin'>;
-  registerType: AppRouteProp<'Register' | 'FirebaseEmailRegister'>;
+  navigation: AppStackNavigationProp<LoginScreens>;
+  registerType: AppRouteProp<RegisterScreens>;
 }
 
 const LoginRegisterButton = (
   props: LoginRegisterButtonProps,
 ): React.JSX.Element => {
   const goToRegister = () => {
-    props.navigation.navigate(props.registerType);
+    props.navigation.navigate(props.registerType.name);
   };
 
   return (

@@ -17,7 +17,7 @@ import TextView from '@atoms/TextView';
 import ErrorBoundary from '@atoms/ErrorBoundary';
 
 //* navigators import
-import FirebaseAuthStackNavigator from '@navigation/FirebaseAuthStack';
+import FirebaseAuthNavigator from '@navigation/FirebaseAuthNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -27,7 +27,7 @@ import {styles} from './styles';
 
 const AuthStack = createNativeStackNavigator<RootStackParamList>();
 
-const AuthStackNavigator = (props: any): React.JSX.Element => {
+const AuthNavigator = (props: any): React.JSX.Element => {
   return (
     <AuthStack.Navigator
       initialRouteName="OnBoarding"
@@ -54,7 +54,7 @@ const AuthStackNavigator = (props: any): React.JSX.Element => {
           {props => <AuthMethod {...props} />}
         </AuthStack.Screen>
         <AuthStack.Screen name="FirebaseAuthStack">
-          {props => <FirebaseAuthStackNavigator {...props} />}
+          {props => <FirebaseAuthNavigator {...props} />}
         </AuthStack.Screen>
         <AuthStack.Screen name="Login">
           {props => <Login {...props} />}
@@ -76,4 +76,4 @@ const AuthStackNavigator = (props: any): React.JSX.Element => {
   );
 };
 
-export default AuthStackNavigator;
+export default AuthNavigator;

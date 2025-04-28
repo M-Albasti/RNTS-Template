@@ -11,7 +11,7 @@ import ErrorBoundary from '@atoms/ErrorBoundary';
 
 const AudioStack = createNativeStackNavigator<RootStackParamList>();
 
-const AudioStackNavigator = (props: any): React.JSX.Element => {
+const AudioNavigator = (props: any): React.JSX.Element => {
   return (
     <AudioStack.Navigator
       initialRouteName="AudiosList"
@@ -45,4 +45,4 @@ const AudioStackNavigator = (props: any): React.JSX.Element => {
   );
 };
 
-export default AudioStackNavigator;
+export default AudioNavigator;

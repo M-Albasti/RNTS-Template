@@ -1,46 +1,79 @@
 //* packages import
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useState} from 'react';
+import {KeyboardTypeOptions, StyleSheet, View} from 'react-native';
 import {ScreenWidth} from '@rneui/base';
 
 //* components import
 import EmailOrPhoneTextInput from '@molecules/EmailOrPhoneTextInput';
 import PasswordTextInput from '@molecules/PasswordTextInput';
+import RegisterButton from '@molecules/RegisterButton';
+
+//* services import
+import {registerService} from '@services/authServices/registerService';
+
+//* hooks import
+import {useAppDispatch} from '@hooks/useAppDispatch';
 
 //* types import
-import type {Dispatch, SetStateAction} from 'react';
+import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
+import {RegisterScreens} from '@Types/registerScreens';
 
 interface RegisterFormProps {
-  emailOrPhone: string;
-  setEmailOrPhone: Dispatch<SetStateAction<string>>;
-  password: string;
-  setPassword: Dispatch<SetStateAction<string>>;
-  confirmPassword: string;
-  setConfirmPassword: Dispatch<SetStateAction<string>>;
-  showPassword: boolean;
-  showConfirmPassword: boolean;
-  toggleShowPassword: () => void;
-  toggleShowConfirmPassword: () => void;
+  navigation: AppStackNavigationProp<RegisterScreens>;
+  registerType: AppRouteProp<RegisterScreens>;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const RegisterForm = (props: RegisterFormProps): React.JSX.Element => {
+  const [emailOrPhone, setEmailOrPhone] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const dispatch = useAppDispatch();
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
+  const onRegister = () => {
+    registerService(
+      props.registerType.name,
+      {
+        emailOrPhone: emailOrPhone,
+        password: password,
+        confirmPassword: confirmPassword,
+      },
+      dispatch,
+    );
+  };
   return (
     <View style={styles.container}>
       <EmailOrPhoneTextInput
-        emailOrPhone={props.emailOrPhone}
-        setEmailOrPhone={props.setEmailOrPhone}
+        emailOrPhone={emailOrPhone}
+        setEmailOrPhone={setEmailOrPhone}
+        keyboardType={props.keyboardType}
       />
       <PasswordTextInput
-        password={props.password}
-        setPassword={props.setPassword}
-        showPassword={props.showPassword}
-        toggleShowPassword={props.toggleShowPassword}
+        password={password}
+        setPassword={setPassword}
+        showPassword={showPassword}
+        toggleShowPassword={toggleShowPassword}
       />
       <PasswordTextInput
-        password={props.confirmPassword}
-        setPassword={props.setConfirmPassword}
-        showPassword={props.showConfirmPassword}
-        toggleShowPassword={props.toggleShowConfirmPassword}
+        password={confirmPassword}
+        setPassword={setConfirmPassword}
+        showPassword={showConfirmPassword}
+        toggleShowPassword={toggleShowConfirmPassword}
+      />
+      <RegisterButton
+        onRegister={onRegister}
+        registerType={props.registerType}
       />
     </View>
   );

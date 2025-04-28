@@ -7,6 +7,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import FirebaseLoginMethod from '@screens/firebaseLoginMethod';
 import FirebaseEmailLogin from '@screens/firebaseAuth/firebaseEmailLogin';
 import FirebaseEmailRegister from '@screens/firebaseAuth/firebaseEmailRegister';
+import FirebasePhoneLogin from '@screens/firebaseAuth/firebasePhoneLogin';
+import FirebasePhoneOTP from '@screens/firebaseAuth/firebasePhoneOTP';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -20,7 +22,7 @@ import {styles} from './styles';
 
 const FirebaseStack = createNativeStackNavigator<RootStackParamList>();
 
-const FirebaseAuthStackNavigator = (props: any): React.JSX.Element => {
+const FirebaseAuthNavigator = (props: any): React.JSX.Element => {
   return (
     <FirebaseStack.Navigator
       initialRouteName="FirebaseLoginMethod"
@@ -49,9 +51,15 @@ const FirebaseAuthStackNavigator = (props: any): React.JSX.Element => {
         <FirebaseStack.Screen name="FirebaseEmailRegister">
           {props => <FirebaseEmailRegister {...props} />}
         </FirebaseStack.Screen>
+        <FirebaseStack.Screen name="FirebasePhoneLogin">
+          {props => <FirebasePhoneLogin {...props} />}
+        </FirebaseStack.Screen>
+        <FirebaseStack.Screen name="FirebasePhoneOTP">
+          {props => <FirebasePhoneOTP {...props} />}
+        </FirebaseStack.Screen>
       </FirebaseStack.Group>
     </FirebaseStack.Navigator>
   );
 };
 
-export default FirebaseAuthStackNavigator;
+export default FirebaseAuthNavigator;

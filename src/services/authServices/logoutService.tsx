@@ -17,7 +17,7 @@ export const logoutService = async (
     if (loginType === 'firebase') {
       logoutFirebase()
         .then(() => {
-          dispatch(addUser({}));
+          dispatch(addUser(null));
           Alert.alert(
             'Logout Successful',
             'You have been logged out successfully.',

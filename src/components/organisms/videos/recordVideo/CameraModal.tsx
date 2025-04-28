@@ -4,7 +4,7 @@ import {Camera, CameraDevice, CameraPosition} from 'react-native-vision-camera';
 
 //* components import
 import ModalLayout from '@atoms/ModalLayout';
-import CameraView from '@molecules/videos/recordVideo/CameraView';
+import CameraView from '@molecules/Videos/recordVideo/CameraView';
 
 interface VideoCameraModalProps {
   device: CameraDevice;
