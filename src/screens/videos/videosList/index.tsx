@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 //* components import
-import ListView from '@templates/videos/videosList/ListView';
+import VideosListTemplate from '@templates/videos/videosListTemplate';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -11,14 +11,14 @@ import {AppStackNavigationProp} from '@Types/appNavigation';
 //* styles import
 import {styles} from './styles';
 
-interface VideosMenuProps {
+interface VideosListProps {
   navigation: AppStackNavigationProp<'VideosList'>;
 }
 
-const VideosList = (props: VideosMenuProps): React.JSX.Element => {
+const VideosList = (props: VideosListProps): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <ListView navigation={props.navigation} />
+      <VideosListTemplate navigation={props.navigation} />
     </View>
   );
 };

@@ -1,3 +1,4 @@
+//@ts-nocheck Mahmoud need to be checked
 //* packages import
 import React, {useRef} from 'react';
 import {Image, View} from 'react-native';

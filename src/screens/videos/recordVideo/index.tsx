@@ -1,11 +1,9 @@
 //* pakages import
-import React, {useState} from 'react';
+import React from 'react';
 import {View} from 'react-native';
-import {VideoFile} from 'react-native-vision-camera';
 
 //* components import
-import Recorder from '@templates/videos/recordVideo/Recorder';
-import Preview from '@templates/videos/recordedVideo/Preview';
+import RecordVideoTemplate from '@templates/videos/recordVideoTemplate';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -18,19 +16,9 @@ interface RecordVideoProps {
 }
 
 const RecordVideo = (props: RecordVideoProps): React.JSX.Element => {
-  const [videoFile, setVideoFile] = useState<VideoFile>();
-
   return (
     <View style={styles.container}>
-      {!!!videoFile ? (
-        <Recorder navigation={props.navigation} setVideoFile={setVideoFile} />
-      ) : (
-        <Preview
-          videoFile={videoFile}
-          navigation={props.navigation}
-          setVideoFile={setVideoFile}
-        />
-      )}
+      <RecordVideoTemplate navigation={props.navigation} />
     </View>
   );
 };

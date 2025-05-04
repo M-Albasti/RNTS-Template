@@ -10,7 +10,7 @@ import AudioRecorderPlayer, {
   AudioSourceAndroidType,
 } from 'react-native-audio-recorder-player';
 import moment from 'moment';
-import _ from 'lodash';
+import {last, isEmpty} from 'lodash';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -175,7 +175,7 @@ const RecordAudio = (props: RecordAudioProps): React.JSX.Element => {
   };
 
   const onUploadAudio = () => {
-    const extension = _.last(recordPath?.split('.')) || '';
+    const extension = last(recordPath?.split('.')) || '';
     const type = `audio/${extension}`;
     const audioFile = {
       uri: recordPath,
@@ -191,7 +191,7 @@ const RecordAudio = (props: RecordAudioProps): React.JSX.Element => {
 
   return (
     <ScrollView style={styles.container}>
-      {_.isEmpty(recordPath) && (
+      {isEmpty(recordPath) && (
         <View style={styles.recordAudioContainer}>
           <TextView text={'Record Audio'} style={styles.headerTextStyle} />
           <TouchableText
@@ -222,7 +222,7 @@ const RecordAudio = (props: RecordAudioProps): React.JSX.Element => {
           <TextView text={`recordTime: ${recordTime}`} />
         </View>
       )}
-      {!_.isEmpty(recordPath) && (
+      {!isEmpty(recordPath) && (
         <View style={styles.recordAudioContainer}>
           <TextView text={'Recorded Audio'} style={styles.headerTextStyle} />
           <TouchableText

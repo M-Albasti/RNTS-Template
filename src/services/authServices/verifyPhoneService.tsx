@@ -1,7 +1,7 @@
 //* packages import
 import {Alert} from 'react-native';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import _ from 'lodash';
+import {isEmpty} from 'lodash';
 import z from 'zod';
 
 //* redux import
@@ -27,8 +27,8 @@ export const confirmPhoneVerificationCode = async (
   try {
     confirmVerificationCode(confirmation, code)
       .then(user => {
-        console.log('🚀 ~ user:', user);
-        if (!!user && !_.isEmpty(user)) {
+        console.log('User: =>', user);
+        if (!!user && !isEmpty(user)) {
           dispatch(addUser(cleanFirebaseUserResponse(user)));
           Alert.alert('Login Success', 'You have successfully logged in!');
         }
@@ -56,7 +56,7 @@ export const verifyLinkPhoneCode = async (
   try {
     linkPhoneWithExistAccount(confirmation, code)
       .then(user => {
-        if (!!user && !_.isEmpty(user)) {
+        if (!!user && !isEmpty(user)) {
           dispatch(addUser(cleanFirebaseUserResponse(user)));
           Alert.alert('Login Success', 'You have successfully logged in!');
         }

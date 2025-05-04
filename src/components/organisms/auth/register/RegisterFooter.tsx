@@ -14,9 +14,13 @@ interface RegisterButtonsProps {
 }
 
 const RegisterButtons = (props: RegisterButtonsProps): React.JSX.Element => {
+  const goToLogin = () => {
+    props.navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
-      <RegisterLoginButton navigation={props.navigation} />
+      <RegisterLoginButton goToLogin={goToLogin} />
     </View>
   );
 };

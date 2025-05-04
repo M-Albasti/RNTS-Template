@@ -1,7 +1,7 @@
 //* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios, {AxiosError} from 'axios';
-import _ from 'lodash';
+import {isEqual} from 'lodash';
 
 interface auth {
   user: object | null;
@@ -63,7 +63,7 @@ const authSlice = createSlice({
           ...action.payload,
         };
         // Use lodash isEqual for deep comparison of objects
-        if (!_.isEqual(updatedUser, state.user)) {
+        if (!isEqual(updatedUser, state.user)) {
           state.user = updatedUser;
         }
       }

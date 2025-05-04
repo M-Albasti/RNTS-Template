@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 //* components import
-import AuthMethodTemplate from '@templates/authMethod';
+import AuthMethodTemplate from '@templates/authMethodTemplate';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';

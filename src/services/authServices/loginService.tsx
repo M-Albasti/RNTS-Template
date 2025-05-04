@@ -2,17 +2,14 @@
 import {Dispatch} from 'redux';
 import {Alert} from 'react-native';
 import {z} from 'zod';
-import _ from 'lodash';
 
 //* redux import
 import {addUser} from '@redux/slices/authSlice';
 
 //* services import
 import {loginFirebaseWithEmail} from '@services/firebaseServices/firebaseEmailService';
-import {
-  confirmVerificationCode,
-  loginFirebaseWithPhoneNumber,
-} from '@services/firebaseServices/firebasePhoneService';
+import {loginFirebaseWithPhoneNumber} from '@services/firebaseServices/firebasePhoneService';
+import {navigate} from '@services/navigationServices/NavigationService';
 
 //* helpers import
 import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
@@ -57,8 +54,8 @@ export const loginService = async (
       loginFirebaseWithPhoneNumber(credentials.emailOrPhone).then(
         confirmation => {
           // Handle successful login
-          console.log('🚀 ~ confirmation:', confirmation);
-          navigation?.navigate('FirebasePhoneOTP', {confirmation});
+          console.log('Confirmation:', confirmation);
+          navigate('FirebasePhoneOTP', {confirmation});
           return confirmation;
         },
       );

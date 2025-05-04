@@ -1,5 +1,5 @@
 //* packages import
-import React, {PropsWithChildren} from 'react';
+import React, {PropsWithChildren, useCallback} from 'react';
 import {useColorScheme} from 'react-native';
 import {
   DarkTheme,
@@ -38,15 +38,15 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
   );
   const lang = useAppSelector(state => state?.appSettings?.lang);
 
-  const onReady = () => {
+  const onNavigationReady = useCallback(() => {
     initLanguage(lang);
-  };
+  }, [lang]);
 
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={theme}
-      onReady={onReady}
+      onReady={onNavigationReady}
       onUnhandledAction={error => {
         console.log('Error Navigation =>', error);
       }}

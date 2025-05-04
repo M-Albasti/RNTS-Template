@@ -1,9 +1,7 @@
 //* packages import
-import React, {useCallback} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
 import Video, {
-  OnProgressData,
-  OnVideoErrorData,
   ReactVideoProps,
   ReactVideoSource,
   VideoRef,
@@ -17,42 +15,20 @@ interface VideoPlayerProps extends ReactVideoProps {
   uri: ReactVideoSource['uri'];
 }
 
-const VideoView = ({
-  uri,
-  onVideoReady,
-  fullscreen,
-  repeat,
-  controls,
-  onReadyForDisplay,
-  renderLoader,
-}: VideoPlayerProps): React.JSX.Element => {
-  const onError = useCallback((error: OnVideoErrorData) => {
-    console.log('Video Error =>', error);
-  }, []);
-
+const VideoView = (props: VideoPlayerProps): React.JSX.Element => {
   return (
     <Video
       // Can be a URL or a local file.
-      source={{uri: uri}}
+      source={{uri: props.uri}}
       // Store reference
-      ref={(ref: VideoRef) => onVideoReady(ref)}
-      // Callback when video cannot be loaded
-      onError={onError}
-      disableFocus
-      repeat={repeat}
-      fullscreen={fullscreen}
-      style={styles.backgroundVideo}
+      ref={(ref: VideoRef) => props.onVideoReady(ref)}
+      style={styles.videoBackground}
       playWhenInactive={false}
       playInBackground={false}
-      renderLoader={renderLoader}
       volume={1.0}
       resizeMode={'contain'}
       ignoreSilentSwitch={'obey'}
-      onReadyForDisplay={onReadyForDisplay}
-      controls={controls}
-      onProgress={(progress: OnProgressData) => {
-        console.log('progress =>', progress);
-      }}
+      {...props}
     />
   );
 };
@@ -60,7 +36,7 @@ const VideoView = ({
 export default VideoView;
 
 const styles = StyleSheet.create({
-  backgroundVideo: {
+  videoBackground: {
     flex: 1,
     backgroundColor: appColors.black,
   },

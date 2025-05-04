@@ -11,27 +11,19 @@ import {appColors} from '@constants/colors';
 //* theme import
 import {isDarkTheme} from '@theme/appTheme';
 
-//* types import
-import {AppStackNavigationProp} from '@Types/appNavigation';
-import {RegisterScreens} from '@Types/registerScreens';
-
 interface RegisterLoginButtonProps {
-  navigation: AppStackNavigationProp<RegisterScreens>;
+  goToLogin: () => void;
 }
 
 const RegisterLoginButton = (
   props: RegisterLoginButtonProps,
 ): React.JSX.Element => {
-  const goToLogin = () => {
-    props.navigation.goBack();
-  };
-
   return (
     <View>
       <TouchableText
         textStyle={styles.textStyle}
         text={'Login'}
-        onPress={goToLogin}
+        onPress={props.goToLogin}
       />
     </View>
   );

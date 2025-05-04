@@ -2,7 +2,7 @@
 import React, {Suspense} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import _ from 'lodash';
+import {isEmpty} from 'lodash';
 
 //* navigators import
 import DrawerNavigator from '../DrawerNavigator';
@@ -12,15 +12,15 @@ import AuthNavigator from '@navigation/AuthNavigator';
 import Settings from '@screens/settings';
 import NotFound from '@screens/notFound';
 
+//* components import
+import TextView from '@atoms/TextView';
+import ErrorBoundary from '@atoms/ErrorBoundary';
+
 //* hooks import
 import {useAppSelector} from '@hooks/useAppSelector';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
-
-//* components import
-import TextView from '@atoms/TextView';
-import ErrorBoundary from '@atoms/ErrorBoundary';
 
 //* styles import
 import {styles} from './styles';
@@ -29,7 +29,7 @@ const MainStack = createNativeStackNavigator<RootStackParamList>();
 
 const MainNavigator = (props: any): React.JSX.Element => {
   const user = useAppSelector(state => state.auth.user);
-  console.log('🚀 ~ MainNavigator user:', user, _.isEmpty(user));
+  console.log('User: =>', user, isEmpty(user));
 
   return (
     <MainStack.Navigator
@@ -50,7 +50,7 @@ const MainNavigator = (props: any): React.JSX.Element => {
       screenOptions={{headerShown: false}}>
       <MainStack.Group>
         {/* Auth Navigator */}
-        {_.isEmpty(user) ? (
+        {isEmpty(user) ? (
           <MainStack.Screen name="AuthStack">
             {props => <AuthNavigator {...props} />}
           </MainStack.Screen>

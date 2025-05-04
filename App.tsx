@@ -7,8 +7,7 @@
 
 //* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import _ from 'lodash';
+import {StyleSheet} from 'react-native';
 import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';

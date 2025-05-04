@@ -7,24 +7,33 @@ import List from '@molecules/Videos/videosList/List';
 import Buttons from '@molecules/Videos/videosList/Buttons';
 
 //* constants import
-import {VideoProps} from '@constants/videos';
+import {videos} from '@constants/videos';
+
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
+import {VideoProps} from '@Types/videoProps';
 
 interface VideosListWithButtonsProps {
-  videosData: VideoProps[];
-  onVideoItemPress: (value: VideoProps) => void;
-  navigateToRecordVideo: () => void;
+  navigation: AppStackNavigationProp<'VideosList'>;
 }
 
 const ListWithButtons = (
   props: VideosListWithButtonsProps,
 ): React.JSX.Element => {
+  const onVideoItemPress = (item: VideoProps) => {
+    props.navigation.navigate('VideoPlayer', {
+      videoDetails: item,
+    });
+  };
+
+  const navigateToRecordVideo = () => {
+    props.navigation.navigate('RecordVideo');
+  };
+
   return (
     <View style={styles.container}>
-      <List
-        videosData={props.videosData}
-        onVideoItemPress={props.onVideoItemPress}
-      />
-      <Buttons navigateToRecordVideo={props.navigateToRecordVideo} />
+      <List videosData={videos} onVideoItemPress={onVideoItemPress} />
+      <Buttons navigateToRecordVideo={navigateToRecordVideo} />
     </View>
   );
 };

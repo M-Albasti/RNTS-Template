@@ -1,6 +1,6 @@
 //* packages import
-import React from 'react';
-import {VirtualizedList} from 'react-native';
+import React, {useCallback} from 'react';
+import {FlashList} from '@shopify/flash-list';
 
 //* components import
 import AudioListItem from '@atoms/AudioListItem';
@@ -19,7 +19,7 @@ interface RenderItemProps {
 }
 
 const List = (props: AudiosListProps): React.JSX.Element => {
-  const renderItem = ({item, index}: RenderItemProps) => {
+  const renderItem = useCallback(({item, index}: RenderItemProps) => {
     return (
       <AudioListItem
         title={item.title}
@@ -28,15 +28,14 @@ const List = (props: AudiosListProps): React.JSX.Element => {
         onAudioItemPress={() => props.onAudioItemPress(item)}
       />
     );
-  };
+  }, []);
 
   return (
-    <VirtualizedList
+    <FlashList
       data={props.audiosData}
       renderItem={renderItem}
-      keyExtractor={(item, index) => index?.toString()}
-      getItemCount={() => props.audiosData?.length}
-      getItem={(item, index) => item[index]}
+      estimatedItemSize={70}
+      keyExtractor={item => item?.id?.toString()}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}
     />

@@ -17,13 +17,16 @@ interface LoginFooterProps {
 }
 
 const LoginFooter = (props: LoginFooterProps): React.JSX.Element => {
+  const goToRegister = () => {
+    if (props.registerType) {
+      props.navigation.navigate(props.registerType.name);
+    }
+  };
+
   return (
     <View style={styles.container}>
       {props.register && props.registerType && (
-        <LoginRegisterButton
-          navigation={props.navigation}
-          registerType={props.registerType}
-        />
+        <LoginRegisterButton goToRegister={goToRegister} />
       )}
     </View>
   );

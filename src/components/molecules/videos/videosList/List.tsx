@@ -1,12 +1,12 @@
 //* packages import
-import React from 'react';
-import {VirtualizedList} from 'react-native';
+import React, {useCallback} from 'react';
+import {FlashList} from '@shopify/flash-list';
 
 //* components import
 import VideoListItem from '@atoms/VideoListItem';
 
-//* constants import
-import {VideoProps} from '@constants/videos';
+//* types import
+import {VideoProps} from '@Types/videoProps';
 
 interface VideosListProps {
   videosData: VideoProps[];
@@ -19,7 +19,7 @@ interface RenderItemProps {
 }
 
 const List = (props: VideosListProps): React.JSX.Element => {
-  const renderItem = ({item, index}: RenderItemProps) => {
+  const renderItem = useCallback(({item, index}: RenderItemProps) => {
     return (
       <VideoListItem
         title={item.title}
@@ -28,15 +28,14 @@ const List = (props: VideosListProps): React.JSX.Element => {
         onVideoItemPress={() => props.onVideoItemPress(item)}
       />
     );
-  };
+  }, []);
 
   return (
-    <VirtualizedList
+    <FlashList
       data={props.videosData}
       renderItem={renderItem}
+      estimatedItemSize={70}
       keyExtractor={(item, index) => index?.toString()}
-      getItemCount={() => props.videosData?.length}
-      getItem={(item, index) => item[index]}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}
     />

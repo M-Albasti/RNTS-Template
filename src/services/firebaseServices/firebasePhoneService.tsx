@@ -34,7 +34,7 @@ export const confirmVerificationCode = async (
   return await confirmation
     .confirm(code)
     .then(userCredential => {
-      console.log("🚀 ~ userCredential:", userCredential)
+      console.log('User Credential:', userCredential);
       return userCredential?.user;
     })
     .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {

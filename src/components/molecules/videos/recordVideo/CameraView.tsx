@@ -16,6 +16,7 @@ interface VideoCameraProps {
   cameraPosition?: CameraPosition;
   cameraFlash?: 'on' | 'off';
   cameraActive: boolean;
+  video: boolean;
   audio: boolean;
   isRecording: boolean;
   startRecording: () => void;
@@ -24,7 +25,7 @@ interface VideoCameraProps {
   changeCameraPosition: () => void;
   flashToggle: () => void;
   audioToggle: () => void;
-  cameraToggle: () => void;
+  closeCamera: () => void;
 }
 
 const CameraView = ({
@@ -32,6 +33,7 @@ const CameraView = ({
   cameraPosition = 'back',
   cameraFlash = 'off',
   cameraActive,
+  video,
   audio,
   isRecording,
   startRecording,
@@ -40,7 +42,7 @@ const CameraView = ({
   changeCameraPosition,
   flashToggle,
   audioToggle,
-  cameraToggle,
+  closeCamera,
 }: VideoCameraProps): React.JSX.Element => {
   return (
     <View style={styles.cameraContainer}>
@@ -49,7 +51,7 @@ const CameraView = ({
         device={device}
         isActive={cameraActive}
         torch={cameraFlash}
-        video={true}
+        video={video}
         audio={audio}
         enableZoomGesture={cameraPosition == 'back'}
       />
@@ -66,7 +68,7 @@ const CameraView = ({
           name={'close-circle-sharp'}
           size={35}
           color={appColors.white}
-          onPress={cameraToggle}
+          onPress={closeCamera}
         />
       </View>
       <View style={styles.bottomButtonsContainer}>

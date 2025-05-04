@@ -3,8 +3,8 @@ import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios, {AxiosError} from 'axios';
 import moment from 'moment';
 
-//* constants import
-import {VideoProps} from '@constants/videos';
+//* types import
+import {VideoProps} from '@Types/videoProps';
 
 interface video {
   videos: object[];

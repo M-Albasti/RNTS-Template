@@ -1,10 +1,5 @@
-export type VideoProps = {
-  description: string;
-  sources: string[];
-  subtitle: string;
-  thumb: string;
-  title: string;
-};
+//* types import
+import {VideoProps} from '@Types/videoProps';
 
 export const videos: VideoProps[] = [
   {

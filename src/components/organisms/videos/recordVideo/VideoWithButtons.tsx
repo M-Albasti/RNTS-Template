@@ -2,40 +2,44 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {VideoFile} from 'react-native-vision-camera';
-import _ from 'lodash';
 import moment from 'moment';
+import {last} from 'lodash';
 
 //* components import
-import ViewWithButtons from '@organisms/videos/recordedVideo/ViewWithButtons';
-
-//* constants import
-import {AppStackNavigationProp} from '@Types/appNavigation';
+import Buttons from '@molecules/Videos/recordedVideo/Buttons';
+import VideoContainer from '@molecules/Videos/recordedVideo/VideoContainer';
 
 //* hooks import
 import {useAppDispatch} from '@hooks/useAppDispatch';
+import {useVideoContainer} from '@hooks/useVideoContainer';
 
-interface PreviewProps {
-  navigation: AppStackNavigationProp<'RecordVideo'>;
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
+
+interface ViewWithButtonsProps {
   videoFile: VideoFile;
-  setVideoFile: (video?: VideoFile) => void;
+  emptyVideoFile: () => void;
+  retakeVideo: () => void;
+  navigation: AppStackNavigationProp<'RecordVideo'>;
 }
 
-const Preview = (props: PreviewProps): React.JSX.Element => {
+const VideoWithButtons = (props: ViewWithButtonsProps): React.JSX.Element => {
+  const {fullscreen, repeat, onVideoReady, onError} = useVideoContainer();
   const dispatch = useAppDispatch();
 
   const onDismiss = () => {
-    props.setVideoFile();
+    props.emptyVideoFile();
     if (props.navigation.canGoBack()) {
       props.navigation.goBack();
     }
   };
 
   const onRetakeVideo = () => {
-    props.setVideoFile();
+    props.retakeVideo();
   };
 
   const onUpload = () => {
-    const extension = _.last(props.videoFile.path?.split('.')) || '';
+    const extension = last(props.videoFile.path?.split('.')) || '';
     const type = `video/${extension}`;
     const videoFile = {
       uri: props.videoFile.path,
@@ -52,8 +56,15 @@ const Preview = (props: PreviewProps): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <ViewWithButtons
-        videoFile={props.videoFile}
+      <VideoContainer
+        videoFileUri={props.videoFile.path}
+        onVideoReady={onVideoReady}
+        onError={onError}
+        fullscreen={fullscreen}
+        repeat={repeat}
+        controls={false}
+      />
+      <Buttons
         onDismiss={onDismiss}
         onRetakeVideo={onRetakeVideo}
         onUpload={onUpload}
@@ -62,7 +73,7 @@ const Preview = (props: PreviewProps): React.JSX.Element => {
   );
 };
 
-export default Preview;
+export default VideoWithButtons;
 
 const styles = StyleSheet.create({
   container: {
