@@ -19,8 +19,6 @@ import loginValidation from '@utils/loginValidation';
 
 //* types import
 import {LoginTypes} from '@Types/loginTypes';
-import {AppStackNavigationProp} from '@Types/appNavigation';
-import {LoginScreens} from '@Types/loginScreens';
 
 interface LoginCredentials {
   emailOrPhone: string;
@@ -31,7 +29,6 @@ export const loginService = async (
   loginType: LoginTypes,
   credentials: LoginCredentials,
   dispatch: Dispatch,
-  navigation?: AppStackNavigationProp<LoginScreens>,
 ): Promise<void> => {
   try {
     loginValidation.parse(credentials); // Validate data

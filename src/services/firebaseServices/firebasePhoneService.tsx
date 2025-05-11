@@ -3,6 +3,8 @@ import {Alert} from 'react-native';
 
 // Enable force reCAPTCHA flow for testing
 // auth().settings.forceRecaptchaFlowForTesting = true;
+// Disable app verification reCAPTCHA flow for testing
+auth().settings.appVerificationDisabledForTesting = true;
 
 /**
  * Sends a verification code to the given phone number.

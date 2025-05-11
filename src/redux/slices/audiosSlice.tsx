@@ -22,7 +22,7 @@ const initialState: audioState = {
   audioNames: [],
   uploadedAudios: [],
   error: null,
-  status: 'idel', //* 'idle' |  'loading' | 'succeeded' | 'failed'
+  status: 'idle', //* 'idle' |  'loading' | 'succeeded' | 'failed'
 };
 
 export const getAudio = createAsyncThunk<

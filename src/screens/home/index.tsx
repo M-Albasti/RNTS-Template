@@ -44,7 +44,7 @@ const Home = (props: any): React.JSX.Element => {
       <TouchableText
         text={'change language'}
         onPress={() => {
-          changeLanguage(lang == 'ar' ? 'en' : 'ar', dispatch);
+          changeLanguage(lang, dispatch);
         }}
       />
 

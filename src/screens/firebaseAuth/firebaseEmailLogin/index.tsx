@@ -21,6 +21,7 @@ const FirebaseEmailLogin = (props: LoginProps): React.JSX.Element => {
       <LoginTemplate
         navigation={props.navigation}
         loginType={'FirebaseEmail'}
+        register={true}
         registerType={{
           key: 'FirebaseEmailRegister',
           name: 'FirebaseEmailRegister',

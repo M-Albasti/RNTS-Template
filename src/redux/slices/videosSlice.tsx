@@ -22,7 +22,7 @@ export const initialState: videoState = {
   videoNames: [],
   uploadedVideos: [],
   error: null,
-  status: 'idel', //* 'idle' |  'loading' | 'succeeded' | 'failed'
+  status: 'idle', //* 'idle' |  'loading' | 'succeeded' | 'failed'
 };
 
 const getVideo = createAsyncThunk<

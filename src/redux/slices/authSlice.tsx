@@ -15,7 +15,7 @@ export type authState = auth;
 const initialState: authState = {
   user: null,
   error: null,
-  status: 'idel', //* 'idle' |  'loading' | 'succeeded' | 'failed'
+  status: 'idle', //* 'idle' |  'loading' | 'succeeded' | 'failed'
 };
 
 const getUser = createAsyncThunk<

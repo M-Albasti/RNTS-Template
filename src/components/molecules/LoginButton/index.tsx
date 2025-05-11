@@ -32,7 +32,7 @@ const LoginButton = (props: LoginButtonProps): React.JSX.Element => {
       <TouchableText
         text={'change language'}
         onPress={() => {
-          changeLanguage(lang == 'ar' ? 'en' : 'ar', dispatch);
+          changeLanguage(lang, dispatch);
         }}
       />
       <TouchableText

@@ -14,7 +14,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'NewProject' do
+target 'RNTS-Template' do
   config = use_native_modules!
   
   use_frameworks! :linkage => :static
@@ -26,11 +26,6 @@ target 'NewProject' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-
-  target 'NewProjectTests' do
-    inherit! :complete
-    # Pods for testing
-  end
   
   pre_install do |installer|
     installer.pod_targets.each do |pod|
