@@ -31,7 +31,7 @@ const resources = {
 export const initLanguage = (lang: Languages) => {
   i18next.use(initReactI18next).init({
     resources,
-    lng: lang ?? RNLocalize.getLocales()[0].languageTag, // Automatically detect the device language
+    lng: lang ?? RNLocalize.getLocales()[0].languageCode, // Automatically detect the device language
     debug: true,
     fallbackLng: 'en', // Fallback language if detected language is not available
     interpolation: {
@@ -41,11 +41,9 @@ export const initLanguage = (lang: Languages) => {
 };
 
 // Function to change the language
-export const changeLanguage = async (
-  lang: Languages,
-  dispatch: AppDispatch,
-) => {
-  const newLang: Languages = lang === 'ar' ? 'en' : 'ar';
+export const changeLanguage = async (dispatch: AppDispatch) => {
+  const newLang: Languages =
+    (i18next.language as Languages) === 'ar' ? 'en' : 'ar';
   try {
     await dispatch(addLanguage(newLang)).then(async res => {
       if (res.meta.requestStatus === 'fulfilled') {

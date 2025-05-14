@@ -1,6 +1,12 @@
 //* packages import
 import {Alert} from 'react-native';
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {
+  FirebaseAuthTypes,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  getAuth,
+} from '@react-native-firebase/auth';
 
 /**
  * register user with Firebase by Email.
@@ -13,7 +19,8 @@ export const registerFirebaseWithEmail = async (
   password: string,
 ): Promise<FirebaseAuthTypes.User> => {
   try {
-    const userCredential = await auth().createUserWithEmailAndPassword(
+    const userCredential = await createUserWithEmailAndPassword(
+      getAuth(),
       email,
       password,
     );
@@ -34,8 +41,7 @@ export const loginFirebaseWithEmail = async (
   email: string,
   password: string,
 ): Promise<FirebaseAuthTypes.User> => {
-  return await auth()
-    .signInWithEmailAndPassword(email, password)
+  return await signInWithEmailAndPassword(getAuth(), email, password)
     .then(userCredential => {
       return userCredential.user;
     })
@@ -49,12 +55,12 @@ export const loginFirebaseWithEmail = async (
  * logout user from firebase account.
  */
 export const logoutFirebase = async (): Promise<void> => {
-  await auth()
-    .signOut()
-    .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
+  await signOut(getAuth()).catch(
+    (error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
       handleFirebaseError(error);
       throw new Error(error.message);
-    });
+    },
+  );
 };
 
 const handleFirebaseError = (

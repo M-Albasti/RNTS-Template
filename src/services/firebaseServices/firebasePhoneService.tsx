@@ -1,10 +1,16 @@
-import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {
+  FirebaseAuthTypes,
+  signInWithPhoneNumber,
+  verifyPhoneNumber,
+  PhoneAuthProvider,
+  getAuth,
+} from '@react-native-firebase/auth';
 import {Alert} from 'react-native';
 
 // Enable force reCAPTCHA flow for testing
-// auth().settings.forceRecaptchaFlowForTesting = true;
+// getAuth().settings.forceRecaptchaFlowForTesting = true;
 // Disable app verification reCAPTCHA flow for testing
-auth().settings.appVerificationDisabledForTesting = true;
+getAuth().settings.appVerificationDisabledForTesting = true;
 
 /**
  * Sends a verification code to the given phone number.
@@ -12,8 +18,7 @@ auth().settings.appVerificationDisabledForTesting = true;
  * @returns A confirmation result to verify the code.
  */
 export const loginFirebaseWithPhoneNumber = async (phoneNumber: string) => {
-  return await auth()
-    .signInWithPhoneNumber(phoneNumber)
+  return await signInWithPhoneNumber(getAuth(), phoneNumber)
     .then(confirmation => {
       return confirmation;
     })
@@ -50,9 +55,8 @@ export const confirmVerificationCode = async (
  * @param phoneNumber - The phone number to send the verification code to.
  * @returns A confirmation result to verify the code.
  */
-export const verifyPhoneNumber = async (phoneNumber: string) => {
-  return await auth()
-    .verifyPhoneNumber(phoneNumber)
+export const handleVerifyPhoneNumber = async (phoneNumber: string) => {
+  return await verifyPhoneNumber(getAuth(), phoneNumber, 60000)
     .then(confirmation => {
       return confirmation;
     })
@@ -64,7 +68,7 @@ export const verifyPhoneNumber = async (phoneNumber: string) => {
 
 /**
  * Confirms the verification code sent to the phone number.
- * @param confirm - The confirm result from verifyPhoneNumber.
+ * @param confirm - The confirm result from handleVerifyPhoneNumber.
  * @param code - The verification code received by the user.
  * @returns The authenticated user.
  */
@@ -72,11 +76,8 @@ export const linkPhoneWithExistAccount = async (
   confirm: FirebaseAuthTypes.ConfirmationResult,
   code: string,
 ) => {
-  const credential = auth.PhoneAuthProvider.credential(
-    confirm.verificationId,
-    code,
-  );
-  return await auth()
+  const credential = PhoneAuthProvider.credential(confirm.verificationId, code);
+  return await getAuth()
     ?.currentUser?.linkWithCredential(credential)
     .then(userData => {
       return userData?.user;

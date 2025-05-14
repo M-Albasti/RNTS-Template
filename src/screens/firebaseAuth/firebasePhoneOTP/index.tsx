@@ -1,6 +1,6 @@
 //* packages import
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 
 //* components import
 import OTPTemplate from '@templates/auth/otpTemplate';

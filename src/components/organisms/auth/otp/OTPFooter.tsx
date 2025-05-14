@@ -23,7 +23,7 @@ const OTPFooter = (props: OTPFormProps): React.JSX.Element => {
   const resendOTP = () => {
     try {
       //   setTimer(60);
-      // Implement resend logic here using auth().signInWithPhoneNumber
+      // Implement resend logic here using getAuth().signInWithPhoneNumber
     } catch (error) {
       Alert.alert('Error', 'Failed to resend code. Please try again.');
       console.error(error);

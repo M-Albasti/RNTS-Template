@@ -11,7 +11,6 @@ import TextView from '@atoms/TextView';
 import {logoutService} from '@services/authServices/logoutService';
 
 //* hooks import
-import {useAppSelector} from '@hooks/useAppSelector';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 
 //* translation import
@@ -22,7 +21,6 @@ import {styles} from './styles';
 
 const Home = (props: any): React.JSX.Element => {
   const dispatch = useAppDispatch();
-  const lang = useAppSelector(state => state?.appSettings?.lang);
 
   const logout = () => {
     logoutService('firebase', dispatch);
@@ -44,7 +42,7 @@ const Home = (props: any): React.JSX.Element => {
       <TouchableText
         text={'change language'}
         onPress={() => {
-          changeLanguage(lang, dispatch);
+          changeLanguage(dispatch);
         }}
       />
 
