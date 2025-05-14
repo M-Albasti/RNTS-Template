@@ -6,6 +6,7 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
+import {reactNavigationIntegration} from '@sentry/react-native';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -29,6 +30,10 @@ import {initLanguage} from '@translation/i18n'; // Import the i18n initializatio
 //* styles import
 import {styles} from '@navigation/TabNavigator/styles';
 
+export const navigationIntegration = reactNavigationIntegration({
+  enableTimeToInitialDisplay: true,
+});
+
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
   const scheme = useColorScheme();
   const theme = createMyTheme(
@@ -39,6 +44,7 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
   const lang = useAppSelector(state => state?.appSettings?.lang);
 
   const onNavigationReady = useCallback(() => {
+    navigationIntegration.registerNavigationContainer(navigationRef);
     initLanguage(lang);
   }, [lang]);
 

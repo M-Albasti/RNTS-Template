@@ -1,7 +1,7 @@
 //* packages import
 import React, {Suspense} from 'react';
+import { View } from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {isEmpty} from 'lodash';
 
 //* navigators import
@@ -43,7 +43,7 @@ const MainNavigator = (props: any): React.JSX.Element => {
                 containerStyle={styles.fallback}
               />
             }>
-            <SafeAreaView style={styles.container}>{children}</SafeAreaView>
+            <View style={styles.container}>{children}</View>
           </Suspense>
         </ErrorBoundary>
       )}

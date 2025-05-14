@@ -54,7 +54,7 @@ PODS:
   - hermes-engine (0.79.2):
     - hermes-engine/Pre-built (= 0.79.2)
   - hermes-engine/Pre-built (0.79.2)
-  - op-sqlite (13.0.1):
+  - op-sqlite (13.0.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2100,10 +2100,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNFBApp (22.1.0):
+  - RNFBApp (22.2.0):
     - Firebase/CoreOnly (= 11.12.0)
     - React-Core
-  - RNFBAuth (22.1.0):
+  - RNFBAuth (22.2.0):
     - Firebase/Auth (= 11.12.0)
     - React-Core
     - RNFBApp
@@ -2388,6 +2388,31 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (6.13.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.49.2)
+    - Yoga
   - RNShare (12.0.11):
     - DoubleConversion
     - glog
@@ -2414,7 +2439,7 @@ PODS:
     - Yoga
   - RNSoundPlayer (0.14.5):
     - React-Core
-  - RNSVG (15.11.2):
+  - RNSVG (15.12.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2437,9 +2462,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNSVG/common (= 15.11.2)
+    - RNSVG/common (= 15.12.0)
     - Yoga
-  - RNSVG/common (15.11.2):
+  - RNSVG/common (15.12.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2487,6 +2512,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - Sentry/HybridSDK (8.49.2)
   - SocketRocket (0.7.1)
   - stream-chat-react-native (7.0.0):
     - DoubleConversion
@@ -2617,6 +2643,7 @@ DEPENDENCIES:
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNShare (from `../node_modules/react-native-share`)
   - RNSoundPlayer (from `../node_modules/react-native-sound-player`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -2638,6 +2665,7 @@ SPEC REPOS:
     - GTMSessionFetcher
     - React-Codegen
     - RecaptchaInterop
+    - Sentry
     - SocketRocket
     - TOCropViewController
 
@@ -2827,6 +2855,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNShare:
     :path: "../node_modules/react-native-share"
   RNSoundPlayer:
@@ -2859,7 +2889,7 @@ SPEC CHECKSUMS:
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
   GTMSessionFetcher: fc75fc972958dceedee61cb662ae1da7a83a91cf
   hermes-engine: 314be5250afa5692b57b4dd1705959e1973a8ebe
-  op-sqlite: 2c2674f538996f5fa23e31d2949f8aaccac691a7
+  op-sqlite: b527e111cbbef2f1ac331aebcdfb5a42ccbc48cb
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
   RCTDeprecation: 83ffb90c23ee5cea353bd32008a7bca100908f8c
   RCTRequired: eb7c0aba998009f47a540bec9e9d69a54f68136e
@@ -2937,8 +2967,8 @@ SPEC CHECKSUMS:
   RNAudioRecorderPlayer: 11df0c7b614e9767ef24d896465c3a758c592de7
   RNCAsyncStorage: 646c1bf2ebfc78d6632a3b0399f471fba8101e73
   RNCClipboard: 055cd8f50702b9ebc5a58f7622e0cda073878d21
-  RNFBApp: ce7a5efbd91af58a736234a90cb158a3f846be94
-  RNFBAuth: 3bb917b10252363d5e97c1113b20a31acf00f0a2
+  RNFBApp: 6e738f1d86520e65e7dc4d5a6e7422ff0c908e6a
+  RNFBAuth: 5098e2f5e1341d9c06994ceeb216093edb67c749
   RNFlashList: 528d0d55ee143bd4ddf1a1b8c0f87c9b55688b18
   RNGestureHandler: 381f81c675883fec9f8f10976aa278babc48d8eb
   RNImageCropPicker: b0afedeefd8655254a15c34103718455fde6ce59
@@ -2946,10 +2976,12 @@ SPEC CHECKSUMS:
   RNReactNativeHapticFeedback: 1597ab4e15cabb38f0f0c62faa17a5e295430170
   RNReanimated: a3f55346df73f35c38bf0b446294d3d0b1ac8cf9
   RNScreens: a25b818417609cbd805474dffd2d28b229704cfc
+  RNSentry: bbdfefdf6bdace7d441f906aa4ad20276054b4b3
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSoundPlayer: 7961678d02c7339d9e9cfb78b9f3e8fde17f9df2
-  RNSVG: 4470464e129f6bc58b78b961850b054dbbea8ef7
+  RNSVG: 45e3c3210465e75ab6374c9f746179e75d76ce48
   RNVectorIcons: fe9afebb925c9ce70f441b611d679e402ecb3f6e
+  Sentry: 47021097466aa130802420d485a34da445963d99
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   stream-chat-react-native: 98cdfdea7a7bee3311b8404dc589bd8a7826ce38
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
