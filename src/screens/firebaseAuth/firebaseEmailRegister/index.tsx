@@ -11,11 +11,13 @@ import {AppStackNavigationProp} from '@Types/appNavigation';
 //* styles import
 import {styles} from './styles';
 
-interface RegisterProps {
+interface FirebaseEmailRegisterProps {
   navigation: AppStackNavigationProp<'FirebaseEmailRegister'>;
 }
 
-const FirebaseEmailRegister = (props: RegisterProps): React.JSX.Element => {
+const FirebaseEmailRegister = (
+  props: FirebaseEmailRegisterProps,
+): React.JSX.Element => {
   return (
     <View style={styles.container}>
       <RegisterTemplate

@@ -1,35 +1,32 @@
 //* packages import
-import {Dispatch} from 'redux';
 import {Alert} from 'react-native';
-import {z} from 'zod';
 
-//* redux import
-import {addUser} from '@redux/slices/authSlice';
+//* services import
+import {firebaseLogout} from './firebaseLogout';
+import {firebaseGoogleLogout} from './firebaseGoogleLogout';
 
 //* types import
-import {logoutFirebase} from '@services/firebaseServices/firebaseEmailService';
+import {AppDispatch} from '@Types/appDispatch';
+import {LoginTypes} from '@Types/loginTypes';
 
 export const logoutService = async (
-  loginType: string,
-  dispatch: Dispatch,
+  loginType: LoginTypes,
+  dispatch: AppDispatch,
 ): Promise<void> => {
+  console.log("🚀 ~ loginType:", loginType)
   try {
-    if (loginType === 'firebase') {
-      logoutFirebase()
-        .then(() => {
-          dispatch(addUser(null));
-          Alert.alert(
-            'Logout Successful',
-            'You have been logged out successfully.',
-          );
-        })
-        .catch(error => {
-          Alert.alert(
-            'Logout Failed',
-            'An error occurred while logging out. Please try again.',
-          );
-          console.error('Logout error:', error);
-        });
+    if (loginType === 'Normal') {
+      /*
+       * logic for user logout by empty
+       * the user data in redux with
+       * dispatch(addUser(null));
+       */
+    }
+    if (loginType === 'FirebaseEmail' || loginType === 'FirebasePhone') {
+      firebaseLogout(dispatch);
+    }
+    if (loginType === 'FirebaseGoogle') {
+      firebaseGoogleLogout(dispatch);
     }
   } catch (error) {
     Alert.alert(

@@ -2,6 +2,7 @@
 import React from 'react';
 import {I18nManager, Text, View} from 'react-native';
 import Swiper from 'react-native-swiper';
+import {isEmpty} from 'lodash';
 
 //* components import
 import TouchableText from '@atoms/TouchableText';
@@ -12,6 +13,7 @@ import {logoutService} from '@services/authServices/logoutService';
 
 //* hooks import
 import {useAppDispatch} from '@hooks/useAppDispatch';
+import {useAppSelector} from '@hooks/useAppSelector';
 
 //* translation import
 import {changeLanguage} from '@translation/i18n';
@@ -20,10 +22,13 @@ import {changeLanguage} from '@translation/i18n';
 import {styles} from './styles';
 
 const Home = (props: any): React.JSX.Element => {
+  const user = useAppSelector(state => state?.auth?.user);
   const dispatch = useAppDispatch();
 
   const logout = () => {
-    logoutService('firebase', dispatch);
+    if (!isEmpty(user)) {
+      logoutService(user?.loginType, dispatch);
+    }
   };
 
   return (

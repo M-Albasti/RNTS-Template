@@ -22,6 +22,7 @@ DerivedData
 *.xcuserstate
 **/.xcode.env.local
 GoogleService-Info.plist
+ios/sentry.properties
 
 # Android/IntelliJ
 #
@@ -36,6 +37,7 @@ local.properties
 !debug.keystore
 google-services.json
 .kotlin/
+android/sentry.properties
 
 # node.js
 #
@@ -75,3 +77,6 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Sentry Config File
+.sentryclirc

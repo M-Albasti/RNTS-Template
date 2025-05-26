@@ -1,4 +1,10 @@
 PODS:
+  - AppAuth (1.7.6):
+    - AppAuth/Core (= 1.7.6)
+    - AppAuth/ExternalUserAgent (= 1.7.6)
+  - AppAuth/Core (1.7.6)
+  - AppAuth/ExternalUserAgent (1.7.6):
+    - AppAuth/Core
   - boost (1.84.0)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
@@ -8,7 +14,7 @@ PODS:
     - FirebaseAuth (~> 11.12.0)
   - Firebase/CoreOnly (11.12.0):
     - FirebaseCore (~> 11.12.0)
-  - FirebaseAppCheckInterop (11.12.0)
+  - FirebaseAppCheckInterop (11.13.0)
   - FirebaseAuth (11.12.0):
     - FirebaseAppCheckInterop (~> 11.0)
     - FirebaseAuthInterop (~> 11.0)
@@ -18,7 +24,7 @@ PODS:
     - GoogleUtilities/Environment (~> 8.0)
     - GTMSessionFetcher/Core (< 5.0, >= 3.4)
     - RecaptchaInterop (~> 101.0)
-  - FirebaseAuthInterop (11.12.0)
+  - FirebaseAuthInterop (11.13.0)
   - FirebaseCore (11.12.0):
     - FirebaseCoreInternal (~> 11.12.0)
     - GoogleUtilities/Environment (~> 8.0)
@@ -29,6 +35,10 @@ PODS:
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
   - fmt (11.0.2)
   - glog (0.3.5)
+  - GoogleSignIn (7.1.0):
+    - AppAuth (< 2.0, >= 1.7.3)
+    - GTMAppAuth (< 5.0, >= 4.1.1)
+    - GTMSessionFetcher/Core (~> 3.3)
   - GoogleUtilities/AppDelegateSwizzler (8.1.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
@@ -50,7 +60,10 @@ PODS:
   - GoogleUtilities/Reachability (8.1.0):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - GTMSessionFetcher/Core (4.5.0)
+  - GTMAppAuth (4.1.1):
+    - AppAuth/Core (~> 1.7)
+    - GTMSessionFetcher/Core (< 4.0, >= 3.3)
+  - GTMSessionFetcher/Core (3.5.0)
   - hermes-engine (0.79.2):
     - hermes-engine/Pre-built (= 0.79.2)
   - hermes-engine/Pre-built (0.79.2)
@@ -1405,7 +1418,7 @@ PODS:
     - React-jsiexecutor
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
-  - react-native-blob-util (0.21.2):
+  - react-native-blob-util (0.21.3):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1529,7 +1542,7 @@ PODS:
     - React-Core
   - react-native-restart (0.0.27):
     - React-Core
-  - react-native-safe-area-context (5.4.0):
+  - react-native-safe-area-context (5.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1544,8 +1557,8 @@ PODS:
     - React-hermes
     - React-ImageManager
     - React-jsi
-    - react-native-safe-area-context/common (= 5.4.0)
-    - react-native-safe-area-context/fabric (= 5.4.0)
+    - react-native-safe-area-context/common (= 5.4.1)
+    - react-native-safe-area-context/fabric (= 5.4.1)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1555,7 +1568,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context/common (5.4.0):
+  - react-native-safe-area-context/common (5.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1579,7 +1592,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context/fabric (5.4.0):
+  - react-native-safe-area-context/fabric (5.4.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1604,7 +1617,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-slider (4.5.6):
+  - react-native-slider (4.5.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1619,7 +1632,7 @@ PODS:
     - React-hermes
     - React-ImageManager
     - React-jsi
-    - react-native-slider/common (= 4.5.6)
+    - react-native-slider/common (= 4.5.7)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1629,7 +1642,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-slider/common (4.5.6):
+  - react-native-slider/common (4.5.7):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2156,6 +2169,31 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNGoogleSignin (14.0.1):
+    - DoubleConversion
+    - glog
+    - GoogleSignIn (~> 7.1)
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNImageCropPicker (0.42.0):
     - React-Core
     - React-RCTImage
@@ -2388,7 +2426,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSentry (6.13.1):
+  - RNSentry (6.14.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2411,7 +2449,7 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - Sentry/HybridSDK (= 8.49.2)
+    - Sentry/HybridSDK (= 8.50.2)
     - Yoga
   - RNShare (12.0.11):
     - DoubleConversion
@@ -2512,9 +2550,9 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - Sentry/HybridSDK (8.49.2)
+  - Sentry/HybridSDK (8.50.2)
   - SocketRocket (0.7.1)
-  - stream-chat-react-native (7.0.0):
+  - stream-chat-react-native (7.0.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2638,6 +2676,7 @@ DEPENDENCIES:
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
@@ -2654,6 +2693,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppAuth
     - Firebase
     - FirebaseAppCheckInterop
     - FirebaseAuth
@@ -2661,7 +2701,9 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreExtension
     - FirebaseCoreInternal
+    - GoogleSignIn
     - GoogleUtilities
+    - GTMAppAuth
     - GTMSessionFetcher
     - React-Codegen
     - RecaptchaInterop
@@ -2845,6 +2887,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@shopify/flash-list"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNGoogleSignin:
+    :path: "../node_modules/@react-native-google-signin/google-signin"
   RNImageCropPicker:
     :path: "../node_modules/react-native-image-crop-picker"
   RNLocalize:
@@ -2873,21 +2917,24 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
+  AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   boost: 7e761d76ca2ce687f7cc98e698152abd03a18f90
   DoubleConversion: cb417026b2400c8f53ae97020b2be961b59470cb
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 84b955f7b4da8b895faf5946f73748267347c975
   Firebase: 735108d2d0b67827cd929bfe8254983907c4479f
-  FirebaseAppCheckInterop: 73b173e5ec45192e2d522ad43f526a82ad10b852
+  FirebaseAppCheckInterop: 72066489c209823649a997132bcd9269bc33a4bb
   FirebaseAuth: 4ce97ceb271fce2b6cec6c53021930841442b15a
-  FirebaseAuthInterop: b583210c039a60ed3f1e48865e1f3da44a796595
+  FirebaseAuthInterop: 4fa327ec3c551a80a6929561f83af80b1dd44937
   FirebaseCore: 9d7a0caf39ec7317fbe13b3c7864c8c2acc60da8
   FirebaseCoreExtension: 5e42645fd3f7c2c59ea5ed7641dd58f02bc565d1
   FirebaseCoreInternal: 480d23e21f699cc7bcbc3d8eaa301f15d1e3ffaf
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
+  GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
   GoogleUtilities: 00c88b9a86066ef77f0da2fab05f65d7768ed8e1
-  GTMSessionFetcher: fc75fc972958dceedee61cb662ae1da7a83a91cf
+  GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
+  GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
   hermes-engine: 314be5250afa5692b57b4dd1705959e1973a8ebe
   op-sqlite: b527e111cbbef2f1ac331aebcdfb5a42ccbc48cb
   RCT-Folly: e78785aa9ba2ed998ea4151e314036f6c49e6d82
@@ -2922,15 +2969,15 @@ SPEC CHECKSUMS:
   React-logger: 8edfcedc100544791cd82692ca5a574240a16219
   React-Mapbuffer: da73f30b000114058d6bc41490dcce204a8ede32
   React-microtasksnativemodule: 444c5701aece79629bb73bd9e7ad8937ae65238c
-  react-native-blob-util: 2e7eebf9b4d5bc5b12414bc3abe56b4db36809d7
+  react-native-blob-util: 42460873e0e8e362ab4e103b342ad428912d04db
   react-native-cameraroll: 23d28040c32ca8b20661e0c41b56ab041779244b
   react-native-document-picker: 1f8a568fcd43ed5ad9e53307d487d1de21c340a4
   react-native-document-viewer: 8ad526c237cfd5e5cee36169e0ba6ce18d44360b
   react-native-image-picker: f6ece66f251f4a17aab08f5add7be6eb9e7f5356
   react-native-netinfo: cec9c4e86083cb5b6aba0e0711f563e2fbbff187
   react-native-restart: 0bc732f4461709022a742bb29bcccf6bbc5b4863
-  react-native-safe-area-context: 5928d84c879db2f9eb6969ca70e68f58623dbf25
-  react-native-slider: 0e7e2039ec199c7241510d8fab1ca3b9f959a13b
+  react-native-safe-area-context: 8cf8caf5fc0f5a5d3581b650579af9c85c16be04
+  react-native-slider: 0c0125010b5299e647eb5d955b58133fb4eb34e4
   react-native-video: f906920a39ad30208bb789bdda7404f510ab422a
   React-NativeModulesApple: df8e5bc59e78ca3040ffbf41336889f3bd0fad68
   React-oscompat: ef5df1c734f19b8003e149317d041b8ce1f7d29c
@@ -2971,19 +3018,20 @@ SPEC CHECKSUMS:
   RNFBAuth: 5098e2f5e1341d9c06994ceeb216093edb67c749
   RNFlashList: 528d0d55ee143bd4ddf1a1b8c0f87c9b55688b18
   RNGestureHandler: 381f81c675883fec9f8f10976aa278babc48d8eb
+  RNGoogleSignin: 878950ffb3e09689b0d65a66c7c363a6d8480047
   RNImageCropPicker: b0afedeefd8655254a15c34103718455fde6ce59
   RNLocalize: 530e4a79bacbc6d7c13df44edb266e805903f656
   RNReactNativeHapticFeedback: 1597ab4e15cabb38f0f0c62faa17a5e295430170
   RNReanimated: a3f55346df73f35c38bf0b446294d3d0b1ac8cf9
   RNScreens: a25b818417609cbd805474dffd2d28b229704cfc
-  RNSentry: bbdfefdf6bdace7d441f906aa4ad20276054b4b3
+  RNSentry: 33bc24cea8f87ab26521a9330549a82c703b5db4
   RNShare: 6300b941668273d502ecee9122cade0d5ea966bd
   RNSoundPlayer: 7961678d02c7339d9e9cfb78b9f3e8fde17f9df2
   RNSVG: 45e3c3210465e75ab6374c9f746179e75d76ce48
   RNVectorIcons: fe9afebb925c9ce70f441b611d679e402ecb3f6e
-  Sentry: 47021097466aa130802420d485a34da445963d99
+  Sentry: d95f5f3b32d01324b3e27d3c52747005302cc026
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  stream-chat-react-native: 98cdfdea7a7bee3311b8404dc589bd8a7826ce38
+  stream-chat-react-native: 2297305e9759ac94366780ea25e38bc5187b2c2f
   TOCropViewController: 80b8985ad794298fb69d3341de183f33d1853654
   VisionCamera: f56eaedde0d3fa095143b78374d29e89e71735f9
   Yoga: aa3de42163965879e7d68a5caaf3e1cedb2cbeb2

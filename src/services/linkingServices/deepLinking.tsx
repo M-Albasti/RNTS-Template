@@ -1,8 +1,8 @@
-//* packages import
-import type {LinkingOptions} from '@react-navigation/native';
-
 //* config import
 import {linkingConfig} from '@config/linkingConfig';
+
+//* packages import
+import type {LinkingOptions} from '@react-navigation/native';
 
 export const linking: LinkingOptions<any> = {
   enabled: true,

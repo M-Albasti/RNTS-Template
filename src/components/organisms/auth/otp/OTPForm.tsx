@@ -17,10 +17,12 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {OTPVerificationScreens} from '@Types/otpVerificationScreen';
 import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {LoginTypes} from '@Types/loginTypes';
 
 interface OTPFormProps {
   navigation: AppStackNavigationProp<OTPVerificationScreens>;
   confirmation: FirebaseAuthTypes.ConfirmationResult;
+  loginType: LoginTypes;
 }
 
 const OTPForm = (props: OTPFormProps): React.JSX.Element => {
@@ -46,7 +48,12 @@ const OTPForm = (props: OTPFormProps): React.JSX.Element => {
   };
 
   const sendOTP = () => {
-    confirmPhoneVerificationCode(props.confirmation, code, dispatch);
+    confirmPhoneVerificationCode(
+      props.confirmation,
+      code,
+      dispatch,
+      props.loginType,
+    );
   };
 
   return (

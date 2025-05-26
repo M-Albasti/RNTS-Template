@@ -1,3 +1,4 @@
+//* config import
 import {mock} from '@config/mockApi';
 
 // Sample array of users

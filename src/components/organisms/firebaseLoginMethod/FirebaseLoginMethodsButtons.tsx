@@ -11,6 +11,8 @@ import {appColors} from '@constants/colors';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
+import {loginService} from '@services/authServices/loginService';
+import {useAppDispatch} from '@hooks/useAppDispatch';
 
 interface FirebaseLoginMethodsButtonsProps {
   // Define any props you need here
@@ -20,6 +22,8 @@ interface FirebaseLoginMethodsButtonsProps {
 const FirebaseLoginMethodsButtons = (
   props: FirebaseLoginMethodsButtonsProps,
 ): React.JSX.Element => {
+  const dispatch = useAppDispatch();
+
   const navigateToEmailLogin = () => {
     // Replace with your navigation logic
     console.log('Navigate to Email Login');
@@ -39,6 +43,7 @@ const FirebaseLoginMethodsButtons = (
 
   const navigateToGoogleLogin = () => {
     // Replace with your navigation logic
+    loginService('FirebaseGoogle', dispatch);
     console.log('Navigate to Google Login');
   };
 

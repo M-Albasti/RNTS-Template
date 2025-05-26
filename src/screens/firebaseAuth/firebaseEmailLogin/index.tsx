@@ -11,11 +11,13 @@ import {AppStackNavigationProp} from '@Types/appNavigation';
 //* styles import
 import {styles} from './styles';
 
-interface LoginProps {
+interface FirebaseEmailLoginProps {
   navigation: AppStackNavigationProp<'FirebaseEmailLogin'>;
 }
 
-const FirebaseEmailLogin = (props: LoginProps): React.JSX.Element => {
+const FirebaseEmailLogin = (
+  props: FirebaseEmailLoginProps,
+): React.JSX.Element => {
   return (
     <View style={styles.container}>
       <LoginTemplate

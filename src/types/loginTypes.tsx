@@ -1,1 +1,5 @@
-export type LoginTypes = 'Normal' | 'FirebaseEmail' | 'FirebasePhone';
+export type LoginTypes =
+  | 'Normal'
+  | 'FirebaseEmail'
+  | 'FirebasePhone'
+  | 'FirebaseGoogle';

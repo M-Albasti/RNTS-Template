@@ -1,5 +1,5 @@
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' // <- Add this line
+apply plugin: 'com.google.gms.google-services'
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
@@ -59,7 +59,7 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -89,6 +89,14 @@ android {
         versionName "1.0"
     }
     signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
@@ -98,7 +106,7 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -106,6 +114,14 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+    splits {
+        abi {
+            reset()
+            enable true
+            universalApk false
+            include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }
     }
 }

@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		06E061C9D55120378DA2741B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D84AA8C85F7EFD2547E02D0C /* PrivacyInfo.xcprivacy */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1D7B01072DAE39DE0047AFFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D7B01062DAE39DE0047AFFE /* GoogleService-Info.plist */; };
+		1D923D232DDDFFA900A45796 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1D923D222DDDFFA900A45796 /* GoogleService-Info.plist */; };
 		6FA6EC1E0D6663E6E4C87A39 /* Pods_RNTS_Template.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B9DBC36B7B29428AA6A8A47 /* Pods_RNTS_Template.framework */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -21,7 +21,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "RNTS-Template/Info.plist"; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = "RNTS-Template/PrivacyInfo.xcprivacy"; sourceTree = "<group>"; };
 		1D01D6D92DB4F3800072DCFB /* RNTS-Template.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "RNTS-Template.entitlements"; path = "RNTS-Template/RNTS-Template.entitlements"; sourceTree = "<group>"; };
-		1D7B01062DAE39DE0047AFFE /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1D923D222DDDFFA900A45796 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2B9DBC36B7B29428AA6A8A47 /* Pods_RNTS_Template.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RNTS_Template.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-RNTS-Template.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNTS-Template.debug.xcconfig"; path = "Target Support Files/Pods-RNTS-Template/Pods-RNTS-Template.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-RNTS-Template.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RNTS-Template.release.xcconfig"; path = "Target Support Files/Pods-RNTS-Template/Pods-RNTS-Template.release.xcconfig"; sourceTree = "<group>"; };
@@ -48,9 +48,9 @@
 			children = (
 				1D01D6D92DB4F3800072DCFB /* RNTS-Template.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				1D923D222DDDFFA900A45796 /* GoogleService-Info.plist */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				1D7B01062DAE39DE0047AFFE /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				D84AA8C85F7EFD2547E02D0C /* PrivacyInfo.xcprivacy */,
@@ -169,7 +169,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
-				1D7B01072DAE39DE0047AFFE /* GoogleService-Info.plist in Resources */,
+				1D923D232DDDFFA900A45796 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				06E061C9D55120378DA2741B /* PrivacyInfo.xcprivacy in Resources */,
 			);

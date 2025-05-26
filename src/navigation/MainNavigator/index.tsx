@@ -1,6 +1,6 @@
 //* packages import
 import React, {Suspense} from 'react';
-import { View } from 'react-native';
+import {View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {isEmpty} from 'lodash';
 
@@ -49,17 +49,10 @@ const MainNavigator = (props: any): React.JSX.Element => {
       )}
       screenOptions={{headerShown: false}}>
       <MainStack.Group>
-        {/* Auth Navigator */}
-        {isEmpty(user) ? (
-          <MainStack.Screen name="AuthStack">
-            {props => <AuthNavigator {...props} />}
-          </MainStack.Screen>
-        ) : (
-          // User Navigator
-          <MainStack.Screen name="DrawerRoot">
-            {props => <DrawerNavigator {...props} />}
-          </MainStack.Screen>
-        )}
+        <MainStack.Screen
+          name={isEmpty(user) ? 'AuthStack' : 'DrawerRoot'}
+          component={isEmpty(user) ? AuthNavigator : DrawerNavigator}
+        />
         <MainStack.Screen name="NotFound">
           {props => <NotFound {...props} />}
         </MainStack.Screen>

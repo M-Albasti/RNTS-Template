@@ -1,64 +1,52 @@
 //* packages import
-import {Dispatch} from 'redux';
 import {Alert} from 'react-native';
-import {z} from 'zod';
-
-//* redux import
-import {addUser} from '@redux/slices/authSlice';
+import {ZodError} from 'zod';
 
 //* services import
-import {loginFirebaseWithEmail} from '@services/firebaseServices/firebaseEmailService';
-import {loginFirebaseWithPhoneNumber} from '@services/firebaseServices/firebasePhoneService';
-import {navigate} from '@services/navigationServices/NavigationService';
-
-//* helpers import
-import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
+import {firebaseEmailLogin} from './firebaseEmailLogin';
+import {firebasePhoneLogin} from './firebasePhoneLogin';
+import {firebaseGoogleLogin} from './firebaseGoogleLogin';
 
 //* utils import
 import loginValidation from '@utils/loginValidation';
 
 //* types import
 import {LoginTypes} from '@Types/loginTypes';
+import {AppDispatch} from '@Types/appDispatch';
+import {isEmpty} from 'lodash';
 
 interface LoginCredentials {
   emailOrPhone: string;
   password: string;
 }
 
+/**
+ * Authenticates a user based on login type and credentials.
+ * @param loginType - The type of login method (Email or Phone).
+ * @param credentials - The login credentials.
+ * @param dispatch - Redux dispatch function.
+ */
 export const loginService = async (
   loginType: LoginTypes,
-  credentials: LoginCredentials,
-  dispatch: Dispatch,
+  dispatch: AppDispatch,
+  credentials?: LoginCredentials,
 ): Promise<void> => {
   try {
-    loginValidation.parse(credentials); // Validate data
-    if (loginType === 'FirebaseEmail') {
-      loginFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
-        .then(user => {
-          // Handle successful login
-          dispatch(addUser(cleanFirebaseUserResponse(user)));
-          Alert.alert('Login Success', 'You have successfully logged in!');
-        })
-        .catch(error => {
-          // Handle login failure
-          Alert.alert(
-            'Login Failed',
-            error.message || 'An error occurred during login.',
-          );
-        });
-      Alert.alert('Validation Success', 'Your inputs are valid!');
-    } else if (loginType === 'FirebasePhone') {
-      loginFirebaseWithPhoneNumber(credentials.emailOrPhone).then(
-        confirmation => {
-          // Handle successful login
-          console.log('Confirmation:', confirmation);
-          navigate('FirebasePhoneOTP', {confirmation});
-          return confirmation;
-        },
-      );
+    // login with credentials
+    if (!isEmpty(credentials)) {
+      loginValidation.parse(credentials); // Validate data
+      if (loginType === 'FirebaseEmail') {
+        firebaseEmailLogin(credentials, dispatch, loginType);
+      } else if (loginType === 'FirebasePhone') {
+        firebasePhoneLogin(credentials, loginType);
+      }
+    } else {
+      if (loginType === 'FirebaseGoogle') {
+        firebaseGoogleLogin(dispatch, loginType);
+      }
     }
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       const errorMessages = error.errors.map(err => err.message).join('\n');
       Alert.alert('Validation Error', errorMessages);
     }

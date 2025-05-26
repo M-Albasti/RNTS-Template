@@ -36,7 +36,7 @@ const LoginForm = (props: LoginFormProps): React.JSX.Element => {
   };
 
   const onLogin = () => {
-    loginService(props.loginType, {emailOrPhone, password}, dispatch);
+    loginService(props.loginType, dispatch, {emailOrPhone, password});
   };
 
   return (

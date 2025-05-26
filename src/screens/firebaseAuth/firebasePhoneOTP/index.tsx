@@ -18,11 +18,15 @@ interface FirebasePhoneOTPProps {
 }
 
 const FirebasePhoneOTP = (props: FirebasePhoneOTPProps) => {
-  const {confirmation} = props.route.params;
+  const {confirmation, loginType} = props.route.params;
 
   return (
     <View style={styles.container}>
-      <OTPTemplate navigation={props.navigation} confirmation={confirmation} />
+      <OTPTemplate
+        navigation={props.navigation}
+        confirmation={confirmation}
+        loginType={loginType}
+      />
     </View>
   );
 };

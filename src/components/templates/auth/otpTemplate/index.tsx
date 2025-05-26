@@ -11,6 +11,7 @@ import OTPFooter from '@organisms/auth/otp/OTPFooter';
 import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {OTPVerificationScreens} from '@Types/otpVerificationScreen';
+import {LoginTypes} from '@Types/loginTypes';
 
 //* constants import
 import {appColors} from '@constants/colors';
@@ -18,6 +19,7 @@ import {appColors} from '@constants/colors';
 interface OTPTemplateProps {
   navigation: AppStackNavigationProp<OTPVerificationScreens>;
   confirmation: FirebaseAuthTypes.ConfirmationResult;
+  loginType: LoginTypes;
 }
 
 const OTPTemplate = (props: OTPTemplateProps) => {
@@ -27,6 +29,7 @@ const OTPTemplate = (props: OTPTemplateProps) => {
       <OTPForm
         navigation={props.navigation}
         confirmation={props.confirmation}
+        loginType={props.loginType}
       />
       <OTPFooter />
     </View>

@@ -1,3 +1,5 @@
+//* packages import
+import {Alert} from 'react-native';
 import {
   FirebaseAuthTypes,
   signInWithPhoneNumber,
@@ -5,7 +7,9 @@ import {
   PhoneAuthProvider,
   getAuth,
 } from '@react-native-firebase/auth';
-import {Alert} from 'react-native';
+
+//* services import
+import {firebaseErrorHandler} from './firebaseErrorHandler';
 
 // Enable force reCAPTCHA flow for testing
 // getAuth().settings.forceRecaptchaFlowForTesting = true;
@@ -17,14 +21,16 @@ getAuth().settings.appVerificationDisabledForTesting = true;
  * @param phoneNumber - The phone number to send the verification code to.
  * @returns A confirmation result to verify the code.
  */
-export const loginFirebaseWithPhoneNumber = async (phoneNumber: string) => {
+export const loginFirebaseWithPhoneNumber = async (
+  phoneNumber: string,
+): Promise<FirebaseAuthTypes.ConfirmationResult> => {
   return await signInWithPhoneNumber(getAuth(), phoneNumber)
     .then(confirmation => {
       return confirmation;
     })
     .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
-      console.error('Error sending verification code:', error);
-      throw error;
+      firebaseErrorHandler(error);
+      throw new Error(error.message);
     });
 };
 
@@ -37,7 +43,7 @@ export const loginFirebaseWithPhoneNumber = async (phoneNumber: string) => {
 export const confirmVerificationCode = async (
   confirmation: FirebaseAuthTypes.ConfirmationResult,
   code: string,
-) => {
+): Promise<FirebaseAuthTypes.User | undefined> => {
   return await confirmation
     .confirm(code)
     .then(userCredential => {
@@ -45,8 +51,8 @@ export const confirmVerificationCode = async (
       return userCredential?.user;
     })
     .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
-      console.error('Error confirming verification code:', error);
-      throw error;
+      firebaseErrorHandler(error);
+      throw new Error(error.message);
     });
 };
 
@@ -55,28 +61,30 @@ export const confirmVerificationCode = async (
  * @param phoneNumber - The phone number to send the verification code to.
  * @returns A confirmation result to verify the code.
  */
-export const handleVerifyPhoneNumber = async (phoneNumber: string) => {
+export const handleVerifyPhoneNumber = async (
+  phoneNumber: string,
+): Promise<FirebaseAuthTypes.ConfirmationResult> => {
   return await verifyPhoneNumber(getAuth(), phoneNumber, 60000)
     .then(confirmation => {
       return confirmation;
     })
     .catch((error: FirebaseAuthTypes.NativeFirebaseAuthError) => {
-      handleFirebaseError(error);
+      firebaseErrorHandler(error);
       throw new Error(error.message);
     });
 };
 
 /**
  * Confirms the verification code sent to the phone number.
- * @param confirm - The confirm result from handleVerifyPhoneNumber.
+ * @param verificationId - The verificationId result from handleVerifyPhoneNumber.
  * @param code - The verification code received by the user.
  * @returns The authenticated user.
  */
 export const linkPhoneWithExistAccount = async (
-  confirm: FirebaseAuthTypes.ConfirmationResult,
+  verificationId: FirebaseAuthTypes.ConfirmationResult['verificationId'],
   code: string,
-) => {
-  const credential = PhoneAuthProvider.credential(confirm.verificationId, code);
+): Promise<FirebaseAuthTypes.User | undefined> => {
+  const credential = PhoneAuthProvider.credential(verificationId, code);
   return await getAuth()
     ?.currentUser?.linkWithCredential(credential)
     .then(userData => {
@@ -87,40 +95,8 @@ export const linkPhoneWithExistAccount = async (
         console.log('Invalid code.');
         Alert.alert('Something Went Wrong', 'Invalid code.');
       } else {
-        handleFirebaseError(error);
-        throw new Error(error.message);
+        firebaseErrorHandler(error);
       }
+      throw new Error(error.message);
     });
-};
-
-const handleFirebaseError = (
-  error: FirebaseAuthTypes.NativeFirebaseAuthError,
-): void => {
-  switch (error.code) {
-    case 'auth/email-already-in-use':
-      console.log('That email address is already in use!');
-      Alert.alert(
-        'Something Went Wrong',
-        'That email address is already in use!\nPlease try another one.',
-      );
-      break;
-    case 'auth/invalid-email':
-      console.log('That email address is invalid!');
-      Alert.alert(
-        'Something Went Wrong',
-        'That email address is invalid!\nPlease try another one.',
-      );
-      break;
-    case 'auth/user-not-found':
-      console.log('No user found with this email!');
-      Alert.alert('Something Went Wrong', 'No user found with this email!');
-      break;
-    case 'auth/wrong-password':
-      console.log('Incorrect password!');
-      Alert.alert('Something Went Wrong', 'Incorrect password!');
-      break;
-    default:
-      console.log('An unknown error occurred:', error.message);
-      Alert.alert('Something Went Wrong', error.message);
-  }
 };

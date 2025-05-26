@@ -3,7 +3,7 @@ import {I18nManager} from 'react-native';
 import i18next from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
-import {delay} from 'lodash';
+import {delay, isEmpty} from 'lodash';
 
 //* redux import
 import {addLanguage} from '@redux/slices/appSettingsSlice';
@@ -29,15 +29,17 @@ const resources = {
 };
 
 export const initLanguage = (lang: Languages) => {
-  i18next.use(initReactI18next).init({
-    resources,
-    lng: lang ?? RNLocalize.getLocales()[0].languageCode, // Automatically detect the device language
-    debug: true,
-    fallbackLng: 'en', // Fallback language if detected language is not available
-    interpolation: {
-      escapeValue: false, // React already escapes values
-    },
-  });
+  if (!i18next.isInitialized && isEmpty(i18next.isInitialized)) {
+    i18next.use(initReactI18next).init({
+      resources,
+      lng: lang ?? RNLocalize.getLocales()[0].languageCode, // Automatically detect the device language
+      debug: true,
+      fallbackLng: 'en', // Fallback language if detected language is not available
+      interpolation: {
+        escapeValue: false, // React already escapes values
+      },
+    });
+  }
 };
 
 // Function to change the language

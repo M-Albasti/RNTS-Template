@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>RNTS-Template</string>
 	<key>CFBundleExecutable</key>
@@ -20,7 +20,7 @@
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
@@ -43,6 +43,14 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>app-1-4965146642-ios-5c5c548dbcc369c11078cb</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.4965146642-8l66fiett2g0jpgmulhcihja46a66ift</string>
 			</array>
 		</dict>
 	</array>

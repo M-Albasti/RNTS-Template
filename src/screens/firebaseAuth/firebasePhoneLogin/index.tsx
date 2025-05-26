@@ -11,11 +11,13 @@ import {AppStackNavigationProp} from '@Types/appNavigation';
 //* styles import
 import {styles} from './styles';
 
-interface LoginProps {
+interface FirebasePhoneLoginProps {
   navigation: AppStackNavigationProp<'FirebasePhoneLogin'>;
 }
 
-const FirebasePhoneLogin = (props: LoginProps): React.JSX.Element => {
+const FirebasePhoneLogin = (
+  props: FirebasePhoneLoginProps,
+): React.JSX.Element => {
   return (
     <View style={styles.container}>
       <LoginTemplate

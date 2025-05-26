@@ -12,7 +12,20 @@
           "package_name": "com.rnts.template"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "4965146642-v4a5cupgfulbalofp73vo5i0obpl0gu0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rnts.template",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "4965146642-dj29f9an3k8nmd745lo1riplqmecoha6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBCnxqCUZLPxMkv7OWh96qntPQ5oa4Pp5I"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4965146642-dj29f9an3k8nmd745lo1riplqmecoha6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "4965146642-8l66fiett2g0jpgmulhcihja46a66ift.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.rnts.template"
+              }
+            }
+          ]
         }
       }
     }

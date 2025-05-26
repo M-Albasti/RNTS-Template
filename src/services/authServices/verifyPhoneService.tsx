@@ -2,7 +2,6 @@
 import {Alert} from 'react-native';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {isEmpty} from 'lodash';
-import z from 'zod';
 
 //* redux import
 import {addUser} from '@redux/slices/authSlice';
@@ -18,60 +17,49 @@ import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
 
 //* types import
 import {AppDispatch} from '@Types/appDispatch';
+import {LoginTypes} from '@Types/loginTypes';
 
 export const confirmPhoneVerificationCode = async (
   confirmation: FirebaseAuthTypes.ConfirmationResult,
   code: string,
   dispatch: AppDispatch,
+  loginType: LoginTypes,
 ): Promise<void> => {
-  try {
-    confirmVerificationCode(confirmation, code)
-      .then(user => {
-        console.log('User: =>', user);
-        if (!!user && !isEmpty(user)) {
-          dispatch(addUser(cleanFirebaseUserResponse(user)));
-          Alert.alert('Login Success', 'You have successfully logged in!');
-        }
-      })
-      .catch(error => {
-        // Handle login failure
-        Alert.alert(
-          'Login Failed',
-          error.message || 'An error occurred during login.',
-        );
-      });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorMessages = error.errors.map(err => err.message).join('\n');
-      Alert.alert('Validation Error', errorMessages);
-    }
-  }
+  confirmVerificationCode(confirmation, code)
+    .then(user => {
+      console.log('User: =>', user);
+      if (!!user && !isEmpty(user)) {
+        dispatch(addUser(cleanFirebaseUserResponse(user, loginType)));
+        Alert.alert('Login Success', 'You have successfully logged in!');
+      }
+    })
+    .catch(error => {
+      // Handle login failure
+      Alert.alert(
+        'Login Failed',
+        error.message || 'An error occurred during login.',
+      );
+    });
 };
 
 export const verifyLinkPhoneCode = async (
-  confirmation: FirebaseAuthTypes.ConfirmationResult,
+  verificationId: FirebaseAuthTypes.ConfirmationResult['verificationId'],
   code: string,
   dispatch: AppDispatch,
+  loginType: LoginTypes,
 ): Promise<void> => {
-  try {
-    linkPhoneWithExistAccount(confirmation, code)
-      .then(user => {
-        if (!!user && !isEmpty(user)) {
-          dispatch(addUser(cleanFirebaseUserResponse(user)));
-          Alert.alert('Login Success', 'You have successfully logged in!');
-        }
-      })
-      .catch(error => {
-        // Handle login failure
-        Alert.alert(
-          'Login Failed',
-          error.message || 'An error occurred during login.',
-        );
-      });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      const errorMessages = error.errors.map(err => err.message).join('\n');
-      Alert.alert('Validation Error', errorMessages);
-    }
-  }
+  linkPhoneWithExistAccount(verificationId, code)
+    .then(user => {
+      if (!!user && !isEmpty(user)) {
+        dispatch(addUser(cleanFirebaseUserResponse(user, loginType)));
+        Alert.alert('Login Success', 'You have successfully logged in!');
+      }
+    })
+    .catch(error => {
+      // Handle login failure
+      Alert.alert(
+        'Login Failed',
+        error.message || 'An error occurred during login.',
+      );
+    });
 };

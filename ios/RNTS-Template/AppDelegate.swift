@@ -4,6 +4,8 @@ import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import Firebase
 import RCTLinking
+import GoogleSignIn
+//import FBSDKCoreKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -33,6 +35,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     )
 
     return true
+  }
+  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+      // Add any other URL handlers you're using (e.g. Facebook SDK)
+      // ApplicationDelegate.shared.application(app, open: url, options: options) ||
+      return GIDSignIn.sharedInstance.handle(url)
   }
 }
 

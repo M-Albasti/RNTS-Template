@@ -1,6 +1,6 @@
 //* packages import
 import {Alert} from 'react-native';
-import {z} from 'zod';
+import {ZodError} from 'zod';
 
 //* redux import
 import {addUser} from '@redux/slices/authSlice';
@@ -16,9 +16,7 @@ import registerValidation from '@utils/registerValidation';
 
 //* types import
 import {AppDispatch} from '@Types/appDispatch';
-
-//* types import
-// import {AppStackNavigationProp} from '@Types/appNavigation';
+import {RegisterScreens} from '@Types/registerScreens';
 
 interface RegisterCredentials {
   emailOrPhone: string;
@@ -27,9 +25,8 @@ interface RegisterCredentials {
 }
 
 export const registerService = async (
-  registerType: string,
+  registerType: RegisterScreens,
   credentials: RegisterCredentials,
-  //   navigation: AppStackNavigationProp<'Register' | 'FirebaseEmailRegister'>,
   dispatch: AppDispatch,
 ): Promise<void> => {
   try {
@@ -38,7 +35,7 @@ export const registerService = async (
       registerFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
         .then(user => {
           // Handle successful register
-          dispatch(addUser(cleanFirebaseUserResponse(user)));
+          dispatch(addUser(cleanFirebaseUserResponse(user, 'FirebaseEmail')));
           Alert.alert('Register Success', 'You have successfully registered!');
         })
         .catch(error => {
@@ -51,7 +48,7 @@ export const registerService = async (
       Alert.alert('Validation Success', 'Your inputs are valid!');
     }
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       const errorMessages = error.errors.map(err => err.message).join('\n');
       Alert.alert('Validation Error', errorMessages);
     }

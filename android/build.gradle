@@ -6,6 +6,7 @@ buildscript {
         targetSdkVersion = 35
         ndkVersion = "27.1.12297006"
         kotlinVersion = "2.0.21"
+        googlePlayServicesAuthVersion = "20.7.0"
     }
     repositories {
         google()
@@ -17,7 +18,6 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
         // ... other dependencies
         classpath('com.google.gms:google-services:4.4.2')
-        // Add me --- /\
     }
 }
 
