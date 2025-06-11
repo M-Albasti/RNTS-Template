@@ -2,7 +2,7 @@
 import {Alert} from 'react-native';
 
 //* services import
-import {loginFirebaseWithGoogle} from '@services/firebaseServices/firebaseGoogleService';
+import {loginFirebaseWithFacebook} from '@services/firebaseServices/firebaseFacebookService';
 
 //* redux import
 import {addUser} from '@redux/slices/authSlice';
@@ -15,11 +15,11 @@ import {AppDispatch} from '@Types/appDispatch';
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {LoginTypes} from '@Types/loginTypes';
 
-export const firebaseGoogleLogin = (
+export const firebaseFacebookLogin = (
   dispatch: AppDispatch,
   loginType: LoginTypes,
 ) => {
-  loginFirebaseWithGoogle()
+  loginFirebaseWithFacebook()
     .then((user: FirebaseAuthTypes.UserCredential) => {
       // Handle successful login
       dispatch(

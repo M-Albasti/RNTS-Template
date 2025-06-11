@@ -5,7 +5,8 @@ import ReactAppDependencyProvider
 import Firebase
 import RCTLinking
 import GoogleSignIn
-//import FBSDKCoreKit
+// import FacebookCore
+import FBSDKCoreKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
     FirebaseApp.configure()
+    ApplicationDelegate.shared.application(
+      application,
+      didFinishLaunchingWithOptions: launchOptions
+    )
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
@@ -36,10 +41,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     return true
   }
-  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-      // Add any other URL handlers you're using (e.g. Facebook SDK)
-      // ApplicationDelegate.shared.application(app, open: url, options: options) ||
-      return GIDSignIn.sharedInstance.handle(url)
+  func application(
+    _ app: UIApplication,
+    open url: URL,
+    options: [UIApplication.OpenURLOptionsKey : Any] = [:]
+  ) -> Bool {
+    // Add any other URL handlers you're using (e.g. Facebook SDK)
+    return ApplicationDelegate.shared.application(
+        app,
+        open: url,
+        sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
+        annotation: options[UIApplication.OpenURLOptionsKey.annotation]
+    ) || GIDSignIn.sharedInstance.handle(url)
   }
 }
 

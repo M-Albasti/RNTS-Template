@@ -4,6 +4,7 @@ import {Alert} from 'react-native';
 //* services import
 import {firebaseLogout} from './firebaseLogout';
 import {firebaseGoogleLogout} from './firebaseGoogleLogout';
+import {firebaseFacebookLogout} from './firebaseFacebookLogout';
 
 //* types import
 import {AppDispatch} from '@Types/appDispatch';
@@ -13,7 +14,6 @@ export const logoutService = async (
   loginType: LoginTypes,
   dispatch: AppDispatch,
 ): Promise<void> => {
-  console.log("🚀 ~ loginType:", loginType)
   try {
     if (loginType === 'Normal') {
       /*
@@ -27,6 +27,9 @@ export const logoutService = async (
     }
     if (loginType === 'FirebaseGoogle') {
       firebaseGoogleLogout(dispatch);
+    }
+    if (loginType === 'FirebaseFacebook') {
+      firebaseFacebookLogout(dispatch);
     }
   } catch (error) {
     Alert.alert(

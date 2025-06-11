@@ -10,10 +10,6 @@ import {isEmpty} from 'lodash';
 //* navigators import
 import {navigationIntegration} from '@navigation/NavigationContainer';
 
-console.log(
-  '🚀 ~ !getClient() && isEmpty(getClient()):',
-  !getClient() && isEmpty(getClient()),
-);
 if (!getClient() && isEmpty(getClient())) {
   init({
     dsn: 'https://f1bb5369b467a106d557661d309a730c@o4509320259764229.ingest.us.sentry.io/4509320267366400',

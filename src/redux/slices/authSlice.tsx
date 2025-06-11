@@ -40,7 +40,7 @@ const initialState: authState = {
 //     const response = await axios.get(`/api/users/${userId}`);
 //     return response.data;
 //   } catch (error) {
-//     console.log('🚀 ~ > ~ error:', error);
+//     console.log('Error:', error);
 //     if (error instanceof AxiosError) {
 //       return error;
 //     }

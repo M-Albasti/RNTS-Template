@@ -6,6 +6,7 @@ import {ZodError} from 'zod';
 import {firebaseEmailLogin} from './firebaseEmailLogin';
 import {firebasePhoneLogin} from './firebasePhoneLogin';
 import {firebaseGoogleLogin} from './firebaseGoogleLogin';
+import {firebaseFacebookLogin} from './firebaseFacebookLogin';
 
 //* utils import
 import loginValidation from '@utils/loginValidation';
@@ -43,6 +44,8 @@ export const loginService = async (
     } else {
       if (loginType === 'FirebaseGoogle') {
         firebaseGoogleLogin(dispatch, loginType);
+      } else if (loginType === 'FirebaseFacebook') {
+        firebaseFacebookLogin(dispatch, loginType);
       }
     }
   } catch (error) {
