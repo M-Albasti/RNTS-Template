@@ -23,6 +23,10 @@ DerivedData
 **/.xcode.env.local
 GoogleService-Info.plist
 ios/sentry.properties
+**/xcuserdata/
+**/project.xcworkspace/xcuserdata/
+**/project.xcworkspace/xcshareddata/
+**/project.xcworkspace/xcuserdata/
 
 # Android/IntelliJ
 #
@@ -38,6 +42,7 @@ local.properties
 google-services.json
 .kotlin/
 android/sentry.properties
+android/gradle.properties
 
 # node.js
 #
@@ -80,3 +85,8 @@ yarn-error.log
 
 # Sentry Config File
 .sentryclirc
+
+# Environment and configuration files
+.env
+.env.*
+*.env

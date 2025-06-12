@@ -1,9 +1,11 @@
 //* packages import
+import {Platform} from 'react-native';
 import {
   FacebookAuthProvider,
   getAuth,
   signInWithCredential,
   FirebaseAuthTypes,
+  signOut,
 } from '@react-native-firebase/auth';
 import {
   LoginManager,
@@ -14,10 +16,12 @@ import {sha256} from 'react-native-sha256';
 
 //* services import
 import {firebaseErrorHandler} from './firebaseErrorHandler';
-import {Platform} from 'react-native';
 
 export const loginFirebaseWithFacebook =
   async (): Promise<FirebaseAuthTypes.UserCredential> => {
+    // Set the login behavior first
+    LoginManager.setLoginBehavior('native_with_fallback');
+
     if (Platform.OS === 'ios') {
       // Create a nonce and the corresponding
       // sha256 hash of the nonce
@@ -81,9 +85,9 @@ export const loginFirebaseWithFacebook =
   };
 
 export const logoutFacebookUser = async (): Promise<void> => {
-  try {
-    LoginManager.logOut();
-  } catch (error) {
-    console.log('Error logoutFacebookUser:', error);
-  }
+  await signOut(getAuth())
+    .then(() => {
+      LoginManager.logOut();
+    })
+    .catch(firebaseErrorHandler);
 };

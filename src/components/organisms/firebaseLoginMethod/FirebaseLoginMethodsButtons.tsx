@@ -13,7 +13,6 @@ import {appColors} from '@constants/colors';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {loginService} from '@services/authServices/loginService';
 import {useAppDispatch} from '@hooks/useAppDispatch';
-import {logoutService} from '@services/authServices/logoutService';
 
 interface FirebaseLoginMethodsButtonsProps {
   // Define any props you need here

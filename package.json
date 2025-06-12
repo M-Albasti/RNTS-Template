@@ -7,8 +7,9 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org rnts-template --project rnts-template package.json && sentry-cli sourcemaps upload --org rnts-template --project rnts-template package.json"
+    "start:development": "APP_ENV=development npx react-native start",
+    "start:production": "APP_ENV=production npx react-native start",
+    "test": "jest"
   },
   "dependencies": {
     "@op-engineering/op-sqlite": "^13.0.1",
@@ -90,6 +91,7 @@
     "eslint": "^9.26.0",
     "jest": "^29.7.0",
     "prettier": "^3.5.3",
+    "react-native-dotenv": "^3.4.11",
     "react-test-renderer": "19.0.0",
     "typescript": "^5.8.3"
   },

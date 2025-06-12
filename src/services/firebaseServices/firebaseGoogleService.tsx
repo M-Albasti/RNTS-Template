@@ -7,6 +7,7 @@ import {
   getAuth,
   signInWithCredential,
   FirebaseAuthTypes,
+  signOut,
 } from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
@@ -38,5 +39,13 @@ export const loginFirebaseWithGoogle =
   };
 
 export const logoutGoogleUser = async (): Promise<void> => {
-  await GoogleSignin.signOut().catch(firebaseErrorHandler);
+  await GoogleSignin.revokeAccess()
+    .then(async () => {
+      await GoogleSignin.signOut()
+        .then(async () => {
+          await signOut(getAuth()).catch(firebaseErrorHandler);
+        })
+        .catch(firebaseErrorHandler);
+    })
+    .catch(firebaseErrorHandler);
 };

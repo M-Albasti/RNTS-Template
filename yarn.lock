@@ -4203,6 +4203,7 @@ __metadata:
     react-native-audio-recorder-player: ^3.6.12
     react-native-blob-util: ^0.21.2
     react-native-country-codes-picker: ^2.3.5
+    react-native-dotenv: ^3.4.11
     react-native-fbsdk-next: ^13.4.1
     react-native-gesture-handler: ^2.25.0
     react-native-haptic-feedback: ^2.3.3
@@ -5619,6 +5620,13 @@ __metadata:
     domelementtype: ^2.3.0
     domhandler: ^5.0.3
   checksum: ae941d56f03d857077d55dde9297e960a625229fc2b933187cc4123084d7c2d2517f58283a7336567127029f1e008449bac8ac8506d44341e29e3bb18e02f906
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.5":
+  version: 16.5.0
+  resolution: "dotenv@npm:16.5.0"
+  checksum: 6543fe87b5ddf2d60dd42df6616eec99148a5fc150cb4530fef5bda655db5204a3afa0e6f25f7cd64b20657ace4d79c0ef974bec32fdb462cad18754191e7a90
   languageName: node
   linkType: hard
 
@@ -9954,6 +9962,17 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 3b07665ecdf3b54ca60233e6e2540b98aa24734970bae920d0c3c9a36727b32b852f01a2ac11a0cebe4e2ef0b9fc61ad10c5bd6eeb7b4c724f0188c07d8b8420
+  languageName: node
+  linkType: hard
+
+"react-native-dotenv@npm:^3.4.11":
+  version: 3.4.11
+  resolution: "react-native-dotenv@npm:3.4.11"
+  dependencies:
+    dotenv: ^16.4.5
+  peerDependencies:
+    "@babel/runtime": ^7.20.6
+  checksum: 3ebac2c2ed79dd7e4920fd3fc2da9187413b7190231618e4858b46c47833677838b96d531afe7bd5c4b0a60454dba40cb8708722210df5d522e30aefbf41da05
   languageName: node
   linkType: hard
 

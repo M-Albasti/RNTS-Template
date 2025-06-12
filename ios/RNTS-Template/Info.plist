@@ -56,14 +56,14 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-			  <string>fb587817630608010</string>
+			  <string>fb$(FACEBOOK_APP_ID)</string>
 			</array>
 		</dict>
 	</array>
 	<key>FacebookAppID</key>
-	<string>587817630608010</string>
+	<string>$(FACEBOOK_APP_ID)</string>
 	<key>FacebookClientToken</key>
-	<string>683470728dbfdadfbded0c8f005a708d</string>
+	<string>$(FACEBOOK_CLIENT_TOKEN)</string>
 	<key>FacebookDisplayName</key>
 	<string>RNTS-Template</string>
 	<key>LSApplicationQueriesSchemes</key>
