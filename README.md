@@ -72,7 +72,7 @@ This project is configured to use **dynamic import routes** (also known as modul
 - **Easier to refactor**: No need to worry about updating relative paths when moving files.
 - **Improves maintainability**: By using aliases, you make it easier for other developers to understand and navigate the codebase.
 
-### **Internationalization (i18n)**
+## **Internationalization (i18n)**
 
 This project uses **i18next** for handling internationalization (i18n), enabling the app to support multiple languages and regions. It provides an easy way to localize content in the app based on the user's preferences.
 
@@ -142,6 +142,6 @@ Stars help the project gain visibility and show your support for open-source dev
 
 To star the project, just click the **star icon** at the top of this repository. Your support is greatly appreciated! 🙌
 
-### Final Thoughts
+## Final Thoughts
 
 **RNTS-Template** is your go-to foundation for building modern, scalable, and feature-rich React Native apps. With built-in authentication methods, social login integrations, and a clean, atomic design structure, this template is ready to kickstart your next project!
