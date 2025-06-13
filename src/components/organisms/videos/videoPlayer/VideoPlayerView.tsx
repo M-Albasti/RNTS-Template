@@ -2,7 +2,7 @@
 import React from 'react';
 
 //* components import
-import VideoContainer from '@molecules/Videos/recordedVideo/VideoContainer';
+import VideoContainer from '@molecules/videos/recordedVideo/videoContainer';
 
 //* hooks import
 import {useVideoContainer} from '@hooks/useVideoContainer';

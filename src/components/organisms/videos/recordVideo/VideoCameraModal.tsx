@@ -14,7 +14,7 @@ import {isEmpty} from 'lodash';
 
 //* components import
 import ModalLayout from '@atoms/ModalLayout';
-import CameraView from '@molecules/Videos/recordVideo/CameraView';
+import CameraView from '@molecules/videos/recordVideo/cameraView';
 import TextView from '@atoms/TextView';
 import VideoWithButtons from './VideoWithButtons';
 
@@ -37,7 +37,7 @@ const VideoCameraModal = (props: VideoCameraModalProps): React.JSX.Element => {
   const device: CameraDevice | undefined = useCameraDevice(cameraPosition);
   const cameraPermission = useCameraPermission();
   const microphonePermission = useMicrophonePermission();
-  const cameraRef = useRef<Camera | null>();
+  const cameraRef = useRef<Camera | null>(null);
 
   useLayoutEffect(() => {
     requestCameraPermission();

@@ -2,7 +2,7 @@
 import React from 'react';
 
 //* components import
-import OTPText from '@molecules/OTPText';
+import OTPText from '@molecules/otpText';
 
 const OTPHeader = (props: any): React.JSX.Element => {
   return <OTPText />;

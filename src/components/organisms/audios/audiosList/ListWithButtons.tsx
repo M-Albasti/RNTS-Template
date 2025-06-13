@@ -3,8 +3,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 //* components import
-import List from '@molecules/Audios/audiosList/List';
-import Buttons from '@molecules/Audios/audiosList/Buttons';
+import List from '@molecules/audios/audiosList/list';
+import Buttons from '@molecules/audios/audiosList/buttons';
 
 //* constants import
 import {SoundProps} from '@constants/sounds';

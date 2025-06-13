@@ -4,8 +4,8 @@ import {StyleSheet, View} from 'react-native';
 import {ScreenWidth} from '@rneui/base';
 
 //* components import
-import OTPTextInput from '@molecules/OTPTextInput';
-import OTPSendButton from '@molecules/OTPSendButton';
+import OTPTextInput from '@molecules/otpTextInput';
+import OTPSendButton from '@molecules/otpSendButton';
 
 //* services import
 import {confirmPhoneVerificationCode} from '@services/authServices/verifyPhoneService';

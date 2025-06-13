@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 //* components import
-import LoginRegisterButton from '@molecules/LoginRegisterButton';
+import LoginRegisterButton from '@molecules/loginRegisterButton';
 
 //* types import
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';

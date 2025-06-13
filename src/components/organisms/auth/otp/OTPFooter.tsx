@@ -4,8 +4,8 @@ import {Alert, StyleSheet, View} from 'react-native';
 import {ScreenWidth} from '@rneui/base';
 
 //* components import
-import OTPResendText from '@molecules/OTPResendText';
-import OTPResendButton from '@molecules/OTPResendButton';
+import OTPResendText from '@molecules/otpResendText';
+import OTPResendButton from '@molecules/otpResendButton';
 
 //* services import
 

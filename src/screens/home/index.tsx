@@ -1,6 +1,7 @@
 //* packages import
 import React from 'react';
 import {I18nManager, Text, View} from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import {isEmpty} from 'lodash';
 
@@ -24,6 +25,8 @@ import {styles} from './styles';
 const Home = (props: any): React.JSX.Element => {
   const user = useAppSelector(state => state?.auth?.user);
   const dispatch = useAppDispatch();
+  const isFocused = useIsFocused();
+  console.log("🚀 ~ isFocused:", isFocused)
 
   const logout = () => {
     if (!isEmpty(user)) {
@@ -55,7 +58,7 @@ const Home = (props: any): React.JSX.Element => {
         style={styles.wrapper}
         showsPagination={false}
         showsButtons={false}
-        autoplay
+        autoplay={isFocused}
         loop
         directionalLockEnabled={true}
         disableIntervalMomentum

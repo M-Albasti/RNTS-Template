@@ -3,8 +3,8 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
 //* components import
-import List from '@molecules/Videos/videosList/List';
-import Buttons from '@molecules/Videos/videosList/Buttons';
+import List from '@molecules/videos/videosList/list';
+import Buttons from '@molecules/videos/videosList/buttons';
 
 //* constants import
 import {videos} from '@constants/videos';

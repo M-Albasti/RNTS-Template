@@ -4,9 +4,9 @@ import {KeyboardTypeOptions, StyleSheet, View} from 'react-native';
 import {ScreenWidth} from '@rneui/base';
 
 //* components import
-import EmailOrPhoneTextInput from '@molecules/EmailOrPhoneTextInput';
-import PasswordTextInput from '@molecules/PasswordTextInput';
-import LoginButton from '@molecules/LoginButton';
+import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
+import PasswordTextInput from '@molecules/passwordTextInput';
+import LoginButton from '@molecules/loginButton';
 
 //* services import
 import {loginService} from '@services/authServices/loginService';
