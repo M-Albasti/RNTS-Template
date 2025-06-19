@@ -15,11 +15,11 @@ interface VideosListProps {
 
 interface RenderItemProps {
   item: VideoProps;
-  index: number;
+  index?: number;
 }
 
 const List = (props: VideosListProps): React.JSX.Element => {
-  const renderItem = useCallback(({item, index}: RenderItemProps) => {
+  const renderItem = useCallback(({item}: RenderItemProps) => {
     return (
       <VideoListItem
         title={item.title}
@@ -35,7 +35,7 @@ const List = (props: VideosListProps): React.JSX.Element => {
       data={props.videosData}
       renderItem={renderItem}
       estimatedItemSize={70}
-      keyExtractor={(item, index) => index?.toString()}
+      keyExtractor={(item: VideoProps) => item?.title?.toString()}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}
     />

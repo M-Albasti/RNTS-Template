@@ -5,6 +5,7 @@ import {Alert} from 'react-native';
 import {firebaseLogout} from './firebaseLogout';
 import {firebaseGoogleLogout} from './firebaseGoogleLogout';
 import {firebaseFacebookLogout} from './firebaseFacebookLogout';
+import {firebaseAppleLogout} from './firebaseAppleLogout';
 
 //* types import
 import {AppDispatch} from '@Types/appDispatch';
@@ -30,6 +31,9 @@ export const logoutService = async (
     }
     if (loginType === 'FirebaseFacebook') {
       firebaseFacebookLogout(dispatch);
+    }
+    if (loginType === 'FirebaseApple') {
+      firebaseAppleLogout(dispatch);
     }
   } catch (error) {
     Alert.alert(

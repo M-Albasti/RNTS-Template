@@ -50,6 +50,7 @@ const FirebaseLoginMethodsButtons = (
 
   const navigateToAppleLogin = () => {
     // Replace with your navigation logic
+    loginService('FirebaseApple', dispatch);
     console.log('Navigate to Apple Login');
   };
 

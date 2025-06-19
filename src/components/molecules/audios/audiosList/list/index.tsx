@@ -15,11 +15,11 @@ interface AudiosListProps {
 
 interface RenderItemProps {
   item: SoundProps;
-  index: number;
+  index?: number;
 }
 
 const List = (props: AudiosListProps): React.JSX.Element => {
-  const renderItem = useCallback(({item, index}: RenderItemProps) => {
+  const renderItem = useCallback(({item}: RenderItemProps) => {
     return (
       <AudioListItem
         title={item.title}
@@ -35,7 +35,7 @@ const List = (props: AudiosListProps): React.JSX.Element => {
       data={props.audiosData}
       renderItem={renderItem}
       estimatedItemSize={70}
-      keyExtractor={item => item?.id?.toString()}
+      keyExtractor={(item: SoundProps) => item?.id?.toString()}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}
     />

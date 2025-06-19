@@ -1,12 +1,14 @@
 //* packages import
 import {Alert} from 'react-native';
 import {ZodError} from 'zod';
+import {isEmpty} from 'lodash';
 
 //* services import
 import {firebaseEmailLogin} from './firebaseEmailLogin';
 import {firebasePhoneLogin} from './firebasePhoneLogin';
 import {firebaseGoogleLogin} from './firebaseGoogleLogin';
 import {firebaseFacebookLogin} from './firebaseFacebookLogin';
+import {firebaseAppleLogin} from './firebaseAppleLogin';
 
 //* utils import
 import loginValidation from '@utils/loginValidation';
@@ -14,7 +16,6 @@ import loginValidation from '@utils/loginValidation';
 //* types import
 import {LoginTypes} from '@Types/loginTypes';
 import {AppDispatch} from '@Types/appDispatch';
-import {isEmpty} from 'lodash';
 
 interface LoginCredentials {
   emailOrPhone: string;
@@ -46,6 +47,8 @@ export const loginService = async (
         firebaseGoogleLogin(dispatch, loginType);
       } else if (loginType === 'FirebaseFacebook') {
         firebaseFacebookLogin(dispatch, loginType);
+      } else if (loginType === 'FirebaseApple') {
+        firebaseAppleLogin(dispatch, loginType);
       }
     }
   } catch (error) {

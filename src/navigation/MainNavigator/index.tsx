@@ -3,6 +3,7 @@ import React, {Suspense} from 'react';
 import {View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {isEmpty} from 'lodash';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 //* navigators import
 import DrawerNavigator from '../DrawerNavigator';
@@ -29,6 +30,7 @@ const MainStack = createNativeStackNavigator<RootStackParamList>();
 
 const MainNavigator = (props: any): React.JSX.Element => {
   const user = useAppSelector(state => state.auth.user);
+  const insets = useSafeAreaInsets();
   console.log('User: =>', user, isEmpty(user));
 
   return (
@@ -43,7 +45,18 @@ const MainNavigator = (props: any): React.JSX.Element => {
                 containerStyle={styles.fallback}
               />
             }>
-            <View style={styles.container}>{children}</View>
+            <View
+              style={[
+                styles.container,
+                {
+                  // paddingTop: insets.top,
+                  paddingBottom: insets.bottom,
+                  paddingLeft: insets.left,
+                  paddingRight: insets.right,
+                },
+              ]}>
+              {children}
+            </View>
           </Suspense>
         </ErrorBoundary>
       )}

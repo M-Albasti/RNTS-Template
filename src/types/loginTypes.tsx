@@ -3,4 +3,5 @@ export type LoginTypes =
   | 'FirebaseEmail'
   | 'FirebasePhone'
   | 'FirebaseGoogle'
-  | 'FirebaseFacebook';
+  | 'FirebaseFacebook'
+  | 'FirebaseApple';
