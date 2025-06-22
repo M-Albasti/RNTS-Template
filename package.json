@@ -9,7 +9,8 @@
     "start": "react-native start",
     "start:development": "APP_ENV=development npx react-native start",
     "start:production": "APP_ENV=production npx react-native start",
-    "test": "jest"
+    "test": "jest",
+    "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081"
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.4.1",
@@ -36,6 +37,7 @@
     "@types/react-redux": "^7.1.34",
     "axios": "^1.9.0",
     "axios-mock-adapter": "^2.1.0",
+    "date-fns": "^4.1.0",
     "i18next": "^25.1.2",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
@@ -52,6 +54,7 @@
     "react-native-image-crop-picker": "^0.42.0",
     "react-native-image-picker": "^8.2.1",
     "react-native-localize": "^3.4.1",
+    "react-native-mmkv": "^3.3.0",
     "react-native-onboarding-swiper": "^1.3.0",
     "react-native-otp-entry": "^1.8.4",
     "react-native-reanimated": "^3.17.5",

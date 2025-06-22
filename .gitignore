@@ -83,6 +83,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+yarn.lock
 
 # Sentry Config File
 .sentryclirc

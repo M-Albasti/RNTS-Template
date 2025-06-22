@@ -10,15 +10,48 @@ import {
   PURGE,
   REGISTER,
 } from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//* storage import
+import {save, load, remove, clear} from './storage/mmkv';
+// import {save, load, remove, clear} from './storage/asyncStorage';
 
 //* reducers import
 import rootReducer from './reducers';
 
+// Create a storage adapter for redux-persist - MMKV (Current)
+const storage = {
+  setItem: (key: string, value: string) => {
+    save(key, value);
+    return Promise.resolve();
+  },
+  getItem: (key: string) => {
+    const result = load<string>(key);
+    return Promise.resolve(result);
+  },
+  removeItem: (key: string) => {
+    remove(key);
+    return Promise.resolve();
+  },
+};
+
+// Create a storage adapter for redux-persist - AsyncStorage (Commented for easy reversion)
+// const storage = {
+//   setItem: async (key: string, value: string) => {
+//     await save(key, value);
+//   },
+//   getItem: async (key: string) => {
+//     const result = await load<string>(key);
+//     return result;
+//   },
+//   removeItem: async (key: string) => {
+//     await remove(key);
+//   },
+// };
+
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage: AsyncStorage,
+  storage,
   blackList: [],
 };
 
@@ -38,3 +71,8 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+// Utility function to clear all persisted data
+export const clearAllStorage = () => {
+  clear();
+};

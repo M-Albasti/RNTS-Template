@@ -30,7 +30,9 @@ const FocusAwareStatusBar = ({
 }: StatusBarProps): React.JSX.Element | null => {
   const isFocused = useIsFocused();
 
-  return isFocused ? (
+  if (!isFocused) return null;
+
+  return (
     <StatusBar
       showHideTransition={showHideTransition}
       animated={animated}
@@ -40,7 +42,7 @@ const FocusAwareStatusBar = ({
       translucent={translucent}
       networkActivityIndicatorVisible={networkActivityIndicatorVisible}
     />
-  ) : null;
+  );
 };
 
 export default FocusAwareStatusBar;
