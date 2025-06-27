@@ -21,7 +21,7 @@ if (!getClient() && isEmpty(getClient())) {
     enableAutoPerformanceTracing: true,
     // enableCaptureFailedRequests: true, //! Android plugin needed
     enableUserInteractionTracing: true,
-    debug: true,
+    debug: __DEV__,
     // Sessions close after app is 10 seconds in the background.
     sessionTrackingIntervalMillis: 10000,
     // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
@@ -39,7 +39,7 @@ if (!getClient() && isEmpty(getClient())) {
       navigationIntegration,
     ],
     // Sentry Env.
-    environment: 'development',
+    environment: process.env.NODE_ENV,
 
     // uncomment the line below to enable Spotlight (https://spotlightjs.com)
     spotlight: __DEV__,

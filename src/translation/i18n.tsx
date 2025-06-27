@@ -76,10 +76,12 @@ export const initLanguage = (lang: Languages) => {
       .then(() => {
         // Set up RTL support for Arabic
         checkAppDirection(languageToUse);
-        loadDateFnsLocale();
       })
       .catch(error => {
         console.log('Error initializing i18next:', error);
+      })
+      .finally(() => {
+        loadDateFnsLocale();
       });
   }
 };
@@ -97,10 +99,12 @@ export const changeLanguage = async (dispatch: AppDispatch) => {
           .changeLanguage(newLang)
           .then(() => {
             checkAppDirection(newLang);
-            loadDateFnsLocale();
           })
           .catch(error => {
             console.log('Error i18n Language =>', error);
+          })
+          .finally(() => {
+            loadDateFnsLocale();
           });
       }
     });
