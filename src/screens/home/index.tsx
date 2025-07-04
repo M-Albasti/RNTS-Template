@@ -26,7 +26,6 @@ const Home = (props: any): React.JSX.Element => {
   const user = useAppSelector(state => state?.auth?.user);
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
-  console.log("🚀 ~ isFocused:", isFocused)
 
   const logout = () => {
     if (!isEmpty(user)) {

@@ -7,7 +7,7 @@ import {OnVideoErrorData, VideoRef} from 'react-native-video';
 export const useVideoContainer = () => {
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<boolean>(false);
-  const videoRef = useRef<VideoRef | null>();
+  const videoRef = useRef<VideoRef | null>(null);
 
   const onVideoReady = useCallback((ref: VideoRef) => {
     videoRef.current = ref;

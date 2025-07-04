@@ -4,10 +4,13 @@ import {StyleSheet, View} from 'react-native';
 
 //* components import
 import ListWithButtons from '@organisms/audios/audiosList/ListWithButtons';
-import {SoundProps, sounds} from '@constants/sounds';
 
 //* constants import
+import {sounds} from '@constants/sounds';
+
+//* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
+import {SoundProps} from '@Types/soundProps';
 
 interface AudiosListViewProps {
   navigation: AppStackNavigationProp<'AudiosList'>;

@@ -1,12 +1,5 @@
-export interface SoundProps {
-  id: string;
-  url: string;
-  title: string;
-  artist: string;
-  artwork: string;
-  album: string;
-  duration?: number;
-}
+//* types import
+import {SoundProps} from '@Types/soundProps';
 
 export const sounds: SoundProps[] = [
   {
