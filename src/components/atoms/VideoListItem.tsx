@@ -1,5 +1,5 @@
 //* packages import
-import React from 'react';
+import React, {memo} from 'react';
 import {Avatar, ListItem, ListItemProps} from '@rneui/themed';
 
 interface VideoListItemProps extends ListItemProps {
@@ -9,7 +9,7 @@ interface VideoListItemProps extends ListItemProps {
   onVideoItemPress: (value: object) => void;
 }
 
-const VideoListItem = (props: VideoListItemProps): React.JSX.Element => {
+const VideoListItem = memo((props: VideoListItemProps): React.JSX.Element => {
   return (
     <ListItem
       bottomDivider
@@ -22,6 +22,6 @@ const VideoListItem = (props: VideoListItemProps): React.JSX.Element => {
       </ListItem.Content>
     </ListItem>
   );
-};
+});
 
 export default VideoListItem;

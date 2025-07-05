@@ -1,5 +1,5 @@
 //* packages import
-import React from 'react';
+import React, {memo} from 'react';
 import {Avatar, ListItem, ListItemProps} from '@rneui/themed';
 
 interface AudioListItemProps extends ListItemProps {
@@ -9,7 +9,7 @@ interface AudioListItemProps extends ListItemProps {
   onAudioItemPress: (value: object) => void;
 }
 
-const AudioListItem = (props: AudioListItemProps): React.JSX.Element => {
+const AudioListItem = memo((props: AudioListItemProps): React.JSX.Element => {
   return (
     <ListItem
       bottomDivider
@@ -22,6 +22,6 @@ const AudioListItem = (props: AudioListItemProps): React.JSX.Element => {
       </ListItem.Content>
     </ListItem>
   );
-};
+});
 
 export default AudioListItem;

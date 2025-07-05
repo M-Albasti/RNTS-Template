@@ -2,10 +2,10 @@
 import {Alert} from 'react-native';
 
 //* services import
-import {firebaseLogout} from './firebaseLogout';
-import {firebaseGoogleLogout} from './firebaseGoogleLogout';
-import {firebaseFacebookLogout} from './firebaseFacebookLogout';
-import {firebaseAppleLogout} from './firebaseAppleLogout';
+import {firebaseLogout} from '@services/authServices/firebaseLogout';
+import {firebaseGoogleLogout} from '@services/authServices/firebaseGoogleLogout';
+import {firebaseFacebookLogout} from '@services/authServices/firebaseFacebookLogout';
+import {firebaseAppleLogout} from '@services/authServices/firebaseAppleLogout';
 
 //* types import
 import {AppDispatch} from '@Types/appDispatch';

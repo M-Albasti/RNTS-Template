@@ -8,7 +8,7 @@ import {
 } from '@react-native-firebase/auth';
 
 //* services import
-import {firebaseErrorHandler} from './firebaseErrorHandler';
+import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
 
 /**
  * register user with Firebase by Email.

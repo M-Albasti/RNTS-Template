@@ -1,6 +1,6 @@
 //* types import
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import {LoginTypes} from './loginTypes';
+import {LoginTypes} from '@Types/loginTypes';
 
 export type User = {
   uid: FirebaseAuthTypes.User['uid'];

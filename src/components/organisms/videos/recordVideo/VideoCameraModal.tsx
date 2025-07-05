@@ -16,7 +16,7 @@ import {isEmpty} from 'lodash';
 import ModalLayout from '@atoms/ModalLayout';
 import CameraView from '@molecules/videos/recordVideo/cameraView';
 import TextView from '@atoms/TextView';
-import VideoWithButtons from './VideoWithButtons';
+import VideoWithButtons from '@organisms/videos/recordVideo/VideoWithButtons';
 
 //* helpers import
 import {permissionsRequest} from '@helpers/permissionsRequest';

@@ -1,13 +1,22 @@
+//* packages import
 import React, {Suspense} from 'react';
+import {View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {RootStackParamList} from '@Types/appNavigation';
+
+//* screens import
 import RecordAudio from '@screens/audios/recordAudio';
 import AudiosList from '@screens/audios/audiosList';
 import AudioPlayer from '@screens/audios/audioPlayer';
-import {View} from 'react-native';
-import {styles} from './styles';
+
+//* components import
 import TextView from '@atoms/TextView';
 import ErrorBoundary from '@atoms/ErrorBoundary';
+
+//* types import
+import {RootStackParamList} from '@Types/appNavigation';
+
+//* styles import
+import {styles} from './styles';
 
 const AudioStack = createNativeStackNavigator<RootStackParamList>();
 

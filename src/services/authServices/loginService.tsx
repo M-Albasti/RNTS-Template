@@ -4,11 +4,11 @@ import {ZodError} from 'zod';
 import {isEmpty} from 'lodash';
 
 //* services import
-import {firebaseEmailLogin} from './firebaseEmailLogin';
-import {firebasePhoneLogin} from './firebasePhoneLogin';
-import {firebaseGoogleLogin} from './firebaseGoogleLogin';
-import {firebaseFacebookLogin} from './firebaseFacebookLogin';
-import {firebaseAppleLogin} from './firebaseAppleLogin';
+import {firebaseEmailLogin} from '@services/authServices/firebaseEmailLogin';
+import {firebasePhoneLogin} from '@services/authServices/firebasePhoneLogin';
+import {firebaseGoogleLogin} from '@services/authServices/firebaseGoogleLogin';
+import {firebaseFacebookLogin} from '@services/authServices/firebaseFacebookLogin';
+import {firebaseAppleLogin} from '@services/authServices/firebaseAppleLogin';
 
 //* utils import
 import loginValidation from '@utils/loginValidation';

@@ -12,11 +12,11 @@ import {
 } from 'redux-persist';
 
 //* storage import
-import {save, load, remove, clear} from './storage/mmkv';
-// import {save, load, remove, clear} from './storage/asyncStorage';
+import {save, load, remove, clear} from '@redux/storage/mmkv';
+// import {save, load, remove, clear} from '@redux/storage/asyncStorage';
 
 //* reducers import
-import rootReducer from './reducers';
+import rootReducer from '@redux/reducers';
 
 // Create a storage adapter for redux-persist - MMKV (Current)
 const storage = {

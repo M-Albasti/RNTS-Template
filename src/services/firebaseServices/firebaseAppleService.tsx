@@ -9,7 +9,7 @@ import {
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 
 //* services import
-import {firebaseErrorHandler} from './firebaseErrorHandler';
+import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
 
 // Export an async function to log in to Firebase using Apple Sign-In
 export const loginFirebaseWithApple =

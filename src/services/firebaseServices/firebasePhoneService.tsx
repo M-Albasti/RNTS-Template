@@ -9,7 +9,7 @@ import {
 } from '@react-native-firebase/auth';
 
 //* services import
-import {firebaseErrorHandler} from './firebaseErrorHandler';
+import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
 
 // Enable force reCAPTCHA flow for testing
 // getAuth().settings.forceRecaptchaFlowForTesting = true;

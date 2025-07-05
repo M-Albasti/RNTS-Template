@@ -1,30 +1,40 @@
 //* packages import
-import React from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 //* components import
 import List from '@molecules/audios/audiosList/list';
 import Buttons from '@molecules/audios/audiosList/buttons';
 
-//* constants import
-import {SoundProps} from '@constants/sounds';
+//* types import
+import {SoundProps} from '@Types/soundProps';
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface AudiosListWithButtonsProps {
+  navigation: AppStackNavigationProp<'AudiosList'>;
   audiosData: SoundProps[];
-  onAudioItemPress: (value: SoundProps) => void;
-  navigateToRecordAudio: () => void;
 }
 
 const ListWithButtons = (
   props: AudiosListWithButtonsProps,
 ): React.JSX.Element => {
+  const onAudioItemPress = useCallback(
+    (item: SoundProps) => {
+      props.navigation.navigate('AudioPlayer', {
+        audioDetails: item,
+      });
+    },
+    [props.navigation],
+  );
+
+  const navigateToRecordAudio = useCallback(() => {
+    props.navigation.navigate('RecordAudio');
+  }, [props.navigation]);
+
   return (
     <View style={styles.container}>
-      <List
-        audiosData={props.audiosData}
-        onAudioItemPress={props.onAudioItemPress}
-      />
-      <Buttons navigateToRecordAudio={props.navigateToRecordAudio} />
+      <List audiosData={props.audiosData} onAudioItemPress={onAudioItemPress} />
+      <Buttons navigateToRecordAudio={navigateToRecordAudio} />
     </View>
   );
 };

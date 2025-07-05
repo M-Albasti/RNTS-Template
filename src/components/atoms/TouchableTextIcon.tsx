@@ -4,8 +4,8 @@ import {TouchableOpacity, TouchableOpacityProps, ViewStyle} from 'react-native';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 
 //* components import
-import Icon from './Icon';
-import TextView from './TextView';
+import Icon from '@atoms/Icon';
+import TextView from '@atoms/TextView';
 
 //* types import
 import {FontsFamily} from '@Types/fontsFamily';

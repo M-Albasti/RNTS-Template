@@ -2,8 +2,8 @@
 import React from 'react';
 
 //* navigators import
-import Navigation from './NavigationContainer';
-import MainNavigator from './MainNavigator';
+import Navigation from '@navigation/NavigationContainer';
+import MainNavigator from '@navigation/MainNavigator';
 
 const NavigationScreens = (): React.JSX.Element => {
   return (

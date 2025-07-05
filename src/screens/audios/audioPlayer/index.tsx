@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 //* components import
-import AudioPlayerTemplate from '@templates/audios/audioPlayer';
+import AudioPlayerTemplate from '@templates/audios/audioPlayerTemplate';
 
 //* types import
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';

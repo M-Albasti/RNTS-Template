@@ -16,7 +16,7 @@ import {
 import {sha256} from 'react-native-sha256';
 
 //* services import
-import {firebaseErrorHandler} from './firebaseErrorHandler';
+import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
 
 // Export an async function to log in to Firebase using Facebook Sign-In
 export const loginFirebaseWithFacebook =

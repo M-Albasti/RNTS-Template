@@ -6,7 +6,7 @@ import {isEmpty} from 'lodash';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 //* navigators import
-import DrawerNavigator from '../DrawerNavigator';
+import DrawerNavigator from '@navigation/DrawerNavigator';
 import AuthNavigator from '@navigation/AuthNavigator';
 
 //* screens import

@@ -19,8 +19,8 @@ import {Languages} from '@Types/languages';
 import {AppDispatch} from '@Types/appDispatch';
 
 //* languages import
-import enTranslate from './en/index.json';
-import arTranslate from './ar/index.json';
+import enTranslate from '@translation/en/index.json';
+import arTranslate from '@translation/ar/index.json';
 
 const resources = {
   en: {

@@ -1,12 +1,12 @@
 //* packages import
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {FlashList} from '@shopify/flash-list';
 
 //* components import
 import AudioListItem from '@atoms/AudioListItem';
 
-//* constants import
-import {SoundProps} from '@constants/sounds';
+//* types import
+import {SoundProps} from '@Types/soundProps';
 
 interface AudiosListProps {
   audiosData: SoundProps[];
@@ -18,17 +18,20 @@ interface RenderItemProps {
   index?: number;
 }
 
-const List = (props: AudiosListProps): React.JSX.Element => {
-  const renderItem = useCallback(({item}: RenderItemProps) => {
-    return (
-      <AudioListItem
-        title={item.title}
-        artist={item.artist}
-        artwork={item.artwork}
-        onAudioItemPress={() => props.onAudioItemPress(item)}
-      />
-    );
-  }, []);
+const List = memo((props: AudiosListProps): React.JSX.Element => {
+  const renderItem = useCallback(
+    ({item}: RenderItemProps) => {
+      return (
+        <AudioListItem
+          title={item.title}
+          artist={item.artist}
+          artwork={item.artwork}
+          onAudioItemPress={() => props.onAudioItemPress(item)}
+        />
+      );
+    },
+    [props.onAudioItemPress],
+  );
 
   return (
     <FlashList
@@ -40,6 +43,6 @@ const List = (props: AudiosListProps): React.JSX.Element => {
       showsVerticalScrollIndicator={false}
     />
   );
-};
+});
 
 export default List;

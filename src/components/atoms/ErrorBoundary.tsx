@@ -3,7 +3,7 @@ import React from 'react';
 import {ErrorBoundary as ReactErrorBoundary} from 'react-error-boundary';
 
 //* components import
-import ErrorFallback from './ErrorFallback';
+import ErrorFallback from '@atoms/ErrorFallback';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;

@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 //* components import
-import FirebaseLoginMethodTemplate from '@templates/firebaseLoginMethod';
+import FirebaseLoginMethodTemplate from '@templates/firebaseLoginMethodTemplate';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';

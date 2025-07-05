@@ -2,7 +2,6 @@
 import {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Platform} from 'react-native';
 import SoundPlayer from 'react-native-sound-player';
-import {useFocusEffect} from '@react-navigation/native';
 
 //* types import
 import {SoundProps} from '@Types/soundProps';

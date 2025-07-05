@@ -11,9 +11,9 @@ import TextView from '@atoms/TextView';
 import ErrorBoundary from '@atoms/ErrorBoundary';
 
 //* navigators import
-import TabNavigator from '../TabNavigator';
-import VideoNavigator from '../VideoNavigator';
-import AudioNavigator from '../AudioNavigator';
+import TabNavigator from '@navigation/TabNavigator';
+import VideoNavigator from '@navigation/VideoNavigator';
+import AudioNavigator from '@navigation/AudioNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';

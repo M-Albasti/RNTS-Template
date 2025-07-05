@@ -1,12 +1,10 @@
-//* constants import
-import {SoundProps} from '@constants/sounds';
-
 //* types import
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {VideoProps} from '@Types/videoProps';
-import {LoginTypes} from './loginTypes';
+import {SoundProps} from '@Types/soundProps';
+import {LoginTypes} from '@Types/loginTypes';
 
 export type RootStackParamList = {
   AuthStack: undefined;

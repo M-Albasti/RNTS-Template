@@ -13,7 +13,7 @@ import {
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 //* services import
-import {firebaseErrorHandler} from './firebaseErrorHandler';
+import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
 
 // Export an async function to log in to Firebase using Google Sign-In
 export const loginFirebaseWithGoogle =

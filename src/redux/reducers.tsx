@@ -2,10 +2,10 @@
 import {combineReducers} from 'redux';
 
 //* reducers import
-import authReducer from './slices/authSlice';
-import videosReducer from './slices/videosSlice';
-import audiosReducer from './slices/audiosSlice';
-import appSettingsReducer from './slices/appSettingsSlice';
+import authReducer from '@redux/slices/authSlice';
+import videosReducer from '@redux/slices/videosSlice';
+import audiosReducer from '@redux/slices/audiosSlice';
+import appSettingsReducer from '@redux/slices/appSettingsSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,

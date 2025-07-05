@@ -1,5 +1,5 @@
 //* packages import
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {FlashList} from '@shopify/flash-list';
 
 //* components import
@@ -18,17 +18,20 @@ interface RenderItemProps {
   index?: number;
 }
 
-const List = (props: VideosListProps): React.JSX.Element => {
-  const renderItem = useCallback(({item}: RenderItemProps) => {
-    return (
-      <VideoListItem
-        title={item.title}
-        subtitle={item.subtitle}
-        thumb={item.thumb}
-        onVideoItemPress={() => props.onVideoItemPress(item)}
-      />
-    );
-  }, []);
+const List = memo((props: VideosListProps): React.JSX.Element => {
+  const renderItem = useCallback(
+    ({item}: RenderItemProps) => {
+      return (
+        <VideoListItem
+          title={item.title}
+          subtitle={item.subtitle}
+          thumb={item.thumb}
+          onVideoItemPress={() => props.onVideoItemPress(item)}
+        />
+      );
+    },
+    [props.onVideoItemPress],
+  );
 
   return (
     <FlashList
@@ -40,6 +43,6 @@ const List = (props: VideosListProps): React.JSX.Element => {
       showsVerticalScrollIndicator={false}
     />
   );
-};
+});
 
 export default List;

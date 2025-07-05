@@ -3,7 +3,7 @@ import React from 'react';
 import {View} from 'react-native';
 
 //* components import
-import ListView from '@templates/audios/audiosList/ListView';
+import AudiosListTemplate from '@templates/audios/audiosListTemplate';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -18,7 +18,7 @@ interface AudiosMenuProps {
 const AudiosList = (props: AudiosMenuProps): React.JSX.Element => {
   return (
     <View style={styles.container}>
-      <ListView navigation={props.navigation} />
+      <AudiosListTemplate navigation={props.navigation} />
     </View>
   );
 };
