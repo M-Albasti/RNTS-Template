@@ -6,8 +6,8 @@ import moment from 'moment';
 import {last} from 'lodash';
 
 //* components import
-import Buttons from '@molecules/videos/recordedVideo/buttons';
-import VideoContainer from '@molecules/videos/recordedVideo/videoContainer';
+import Buttons from '@molecules/videos/videoPlayer/buttons';
+import VideoContainer from '@molecules/videos/videoPlayer/videoContainer';
 
 //* hooks import
 import {useAppDispatch} from '@hooks/useAppDispatch';

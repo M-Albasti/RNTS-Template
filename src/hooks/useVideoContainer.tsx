@@ -48,9 +48,12 @@ export const useVideoContainer = () => {
   };
 
   return {
+    // State
     fullscreen,
     repeat,
     videoRef,
+
+    // Actions
     onVideoReady,
     onError,
     videoPause,

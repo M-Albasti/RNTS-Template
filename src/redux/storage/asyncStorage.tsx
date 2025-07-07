@@ -42,7 +42,7 @@ export async function load<TData>(key: string): Promise<TData | null> {
     almostThere = await loadString(key);
     return JSON.parse(almostThere ?? '') as TData;
   } catch (error) {
-    console.log('load Error =>', error);
+    console.log('AsyncStorage load Error =>', error);
     return (almostThere as TData) ?? null;
   }
 }

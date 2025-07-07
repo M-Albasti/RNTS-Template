@@ -132,10 +132,13 @@ export const useAudioView = (audioDetails: SoundProps) => {
   }, []);
 
   return {
+    // State
     isPlaying,
     repeat,
     currentTime,
     duration,
+
+    // Actions
     playSound,
     pauseSound,
     stopSound,

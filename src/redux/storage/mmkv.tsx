@@ -1,3 +1,4 @@
+import {isEmpty} from 'lodash';
 import {MMKV} from 'react-native-mmkv';
 
 export const storage = new MMKV();
@@ -42,10 +43,16 @@ export function load<TData>(key: string): TData | null {
   let almostThere: string | null = null;
   try {
     almostThere = loadString(key);
-    return JSON.parse(almostThere ?? '') as TData;
+
+    // If almostThere is null or empty, return null
+    if (!almostThere || isEmpty(almostThere)) {
+      return null;
+    }
+
+    return JSON.parse(almostThere) as TData;
   } catch (error) {
-    console.log('load Error =>', error);
-    return (almostThere as TData) ?? null;
+    console.log('MMKV load Error =>', error, key);
+    return null;
   }
 }
 
