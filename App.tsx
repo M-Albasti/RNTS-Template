@@ -10,18 +10,18 @@ import '@config/sentryConfig';
 
 //* packages import
 import React from 'react';
-import {StyleSheet} from 'react-native';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/integration/react';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {wrap} from '@sentry/react-native';
+import { StyleSheet } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { wrap } from '@sentry/react-native';
 
 //* navigators import
 import NavigationScreens from '@navigation/index';
 
 //* redux import
-import {persistor, store} from '@redux/store';
+import { persistor, store } from '@redux/store';
 
 const App = (): React.JSX.Element => {
   return (

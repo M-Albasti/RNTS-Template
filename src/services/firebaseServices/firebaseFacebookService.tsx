@@ -1,5 +1,5 @@
 //* packages import
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import {
   FacebookAuthProvider, // Provides Facebook authentication methods
   getAuth, // Returns the default Firebase Auth instance
@@ -13,10 +13,10 @@ import {
   AccessToken, // Gets the current Facebook access token
   AuthenticationToken, // Gets the current Facebook authentication token (iOS)
 } from 'react-native-fbsdk-next';
-import {sha256} from 'react-native-sha256';
+import QuickCrypto from 'react-native-quick-crypto';
 
 //* services import
-import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
+import { firebaseErrorHandler } from '@services/firebaseServices/firebaseErrorHandler';
 
 // Export an async function to log in to Firebase using Facebook Sign-In
 export const loginFirebaseWithFacebook =
@@ -28,7 +28,9 @@ export const loginFirebaseWithFacebook =
       // Create a nonce string using the current date and time
       const nonce = `RNTS-Template-${new Date().toISOString()}`;
       // Hash the nonce using sha256
-      const nonceSha256 = await sha256(nonce);
+      const nonceSha256 = QuickCrypto.createHash('sha256')
+        .update(nonce)
+        .digest('hex');
       // Attempt Facebook login with permissions and limited login using the hashed nonce
       await LoginManager.logInWithPermissions(
         ['public_profile', 'email'], // Request public profile and email permissions

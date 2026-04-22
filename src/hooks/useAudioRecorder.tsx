@@ -1,14 +1,8 @@
 //* packages import
+import { useState, useCallback, useLayoutEffect, useMemo } from 'react';
+import { Alert } from 'react-native';
 import {
-  useRef,
-  useState,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-} from 'react';
-import {Alert} from 'react-native';
-import AudioRecorderPlayer, {
+  createSound,
   AVEncoderAudioQualityIOSType,
   AVEncodingOption,
   AVModeIOSOption,
@@ -16,19 +10,19 @@ import AudioRecorderPlayer, {
   AudioSet,
   AudioSourceAndroidType,
   RecordBackType,
-} from 'react-native-audio-recorder-player';
-import {last} from 'lodash';
+} from 'react-native-nitro-sound';
+import { last } from 'lodash';
 import moment from 'moment';
 
 //* redux import
-import {addAudio, uploadAudio} from '@redux/slices/audiosSlice';
+import { addAudio, uploadAudio } from '@redux/slices/audiosSlice';
 
 //* helpers import
-import {permissionsRequest} from '@helpers/permissionsRequest';
+import { permissionsRequest } from '@helpers/permissionsRequest';
 
 //* hooks import
-import {useAppDispatch} from '@hooks/useAppDispatch';
-import {useAppSelector} from '@hooks/useAppSelector';
+import { useAppDispatch } from '@hooks/useAppDispatch';
+import { useAppSelector } from '@hooks/useAppSelector';
 
 // Audio state enum for better state management
 export enum AudioState {
@@ -62,8 +56,8 @@ export const useAudioRecorder = () => {
   const [duration, setDuration] = useState<string>();
   const [recordPath, setRecordPath] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
-  const audioRecorderPlayer = useRef(new AudioRecorderPlayer()).current;
-  const {status} = useAppSelector(state => state.audio);
+  const audioRecorderPlayer = createSound();
+  const { status } = useAppSelector(state => state.audio);
 
   useLayoutEffect(() => {
     permissionsRequest('microphone');
@@ -104,7 +98,7 @@ export const useAudioRecorder = () => {
   const handleError = useCallback((error: unknown, operation: string) => {
     console.log(`${operation} Error =>`, error);
     Alert.alert('Audio Error', `Failed to ${operation}. Please try again.`, [
-      {text: 'OK'},
+      { text: 'OK' },
     ]);
   }, []);
 

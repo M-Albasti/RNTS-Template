@@ -1,9 +1,9 @@
 //* packages import
-import {z} from 'zod';
+import { z } from 'zod';
 
 //* utils import
-import {emailValidation} from '@utils/emailValidation';
-import {phoneValidation} from '@utils/phoneValidation';
+import { emailValidation } from '@utils/emailValidation';
+import { phoneValidation } from '@utils/phoneValidation';
 
 // Combine them with a union and dynamic refinement
 const registerValidation = z
@@ -22,53 +22,53 @@ const registerValidation = z
           return false; // Invalid format
         },
         {
-          message: 'Must be a valid email or phone number',
+          error: 'Must be a valid email or phone number',
         },
       ),
     password: z
       .string()
       .min(6, 'Password must be at least 6 characters')
       .refine(value => !/\s/.test(value), {
-        message: 'Password must not contain spaces',
+        error: 'Password must not contain spaces',
       })
       .refine(value => /[A-Z]/.test(value), {
-        message: 'Password must contain at least one uppercase letter',
+        error: 'Password must contain at least one uppercase letter',
       })
       .refine(value => /[a-z]/.test(value), {
-        message: 'Password must contain at least one lowercase letter',
+        error: 'Password must contain at least one lowercase letter',
       })
       .refine(value => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
-        message: 'Password must contain at least one special character',
+        error: 'Password must contain at least one special character',
       }),
     confirmPassword: z
       .string()
       .min(6, 'Confirm password must be at least 6 characters')
       .refine(value => !/\s/.test(value), {
-        message: 'Confirm password must not contain spaces',
+        error: 'Confirm password must not contain spaces',
       })
       .refine(value => /[A-Z]/.test(value), {
-        message: 'Confirm password must contain at least one uppercase letter',
+        error: 'Confirm password must contain at least one uppercase letter',
       })
       .refine(value => /[a-z]/.test(value), {
-        message: 'Confirm password must contain at least one lowercase letter',
+        error: 'Confirm password must contain at least one lowercase letter',
       })
       .refine(value => /[!@#$%^&*(),.?":{}|<>]/.test(value), {
-        message: 'Confirm password must contain at least one special character',
+        error: 'Confirm password must contain at least one special character',
       }),
   })
   .refine(
     registerParams =>
       !registerParams.password.includes(registerParams.emailOrPhone),
     {
-      message: 'Password must not include your email or phone',
+      error: 'Password must not include your email or phone',
     },
   )
   .refine(
     registerParams =>
-    registerParams.password === registerParams.confirmPassword,
+      registerParams.password === registerParams.confirmPassword,
     {
       path: ['confirmPassword'],
-      message: "Password don't match",
+      error: "Password don't match",
     },
   );
 

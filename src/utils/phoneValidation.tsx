@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import { z } from 'zod';
 
 const phoneRegex = /^(00962[0-9]{9}|\+962[0-9]{9}|07[0-9]{8})$/;
 // Define phone schema

@@ -1,7 +1,7 @@
-import {isEmpty} from 'lodash';
-import {MMKV} from 'react-native-mmkv';
+import { isEmpty } from 'lodash';
+import { createMMKV } from 'react-native-mmkv';
 
-export const storage = new MMKV();
+export const storage = createMMKV();
 
 /**
  * Loads a string from storage.
@@ -79,7 +79,9 @@ export function save(key: string, value: unknown): boolean {
  */
 export function remove(key: string): void {
   try {
-    storage.delete(key);
+    if (storage.contains(key)) {
+      storage.remove(key);
+    }
   } catch (error) {
     console.log('remove Error =>', error);
   }

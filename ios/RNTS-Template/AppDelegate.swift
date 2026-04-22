@@ -3,7 +3,6 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import Firebase
-import RCTLinking
 import GoogleSignIn
 // import FacebookCore
 import FBSDKCoreKit
