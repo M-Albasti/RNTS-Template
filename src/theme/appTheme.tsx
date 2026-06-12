@@ -4,27 +4,35 @@ import {Appearance} from 'react-native';
 //* types import
 import type {Theme} from '@react-navigation/native';
 
-export const createMyTheme = (
-  theme: Theme,
-  primary: string = theme.colors.primary,
-  background: string = theme.colors.background,
-  card: string = theme.colors.card,
-  text: string = theme.colors.text,
-  border: string = theme.colors.border,
-  notification: string = theme.colors.notification,
-) => {
+import {getSemanticColors, type ColorScheme} from '@theme/tokens';
+
+/**
+ * Maps semantic tokens to React Navigation theme colors.
+ * NavigationContainer uses this so headers/tabs match app surfaces automatically.
+ */
+export const createNavigationTheme = (
+  baseTheme: Theme,
+  scheme: ColorScheme,
+): Theme => {
+  const colors = getSemanticColors(scheme);
+
   return {
-    ...theme,
+    ...baseTheme,
+    dark: scheme === 'dark',
     colors: {
-      primary,
-      background,
-      card,
-      text,
-      border,
-      notification,
+      ...baseTheme.colors,
+      primary: colors.primary,
+      background: colors.background,
+      card: colors.surface,
+      text: colors.textPrimary,
+      border: colors.border,
+      notification: colors.error,
     },
-    fonts: theme.fonts,
   };
 };
 
+// Legacy alias — same as createNavigationTheme.
+export {createNavigationTheme as createMyTheme};
+
+// Legacy static check — prefer `useThemeTokens()` in new components.
 export const isDarkTheme = Appearance.getColorScheme() === 'dark';

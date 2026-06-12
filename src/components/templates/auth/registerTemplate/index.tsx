@@ -1,13 +1,12 @@
-//* packages import
 import React from 'react';
-import {KeyboardTypeOptions, StyleSheet, View} from 'react-native';
+import {KeyboardTypeOptions, View} from 'react-native';
 
-//* components import
+import ScreenContainer from '@atoms/ScreenContainer';import Spacer from '@atoms/Spacer';
 import RegisterHeader from '@organisms/auth/register/RegisterHeader';
 import RegisterForm from '@organisms/auth/register/RegisterForm';
-import RegisterButtons from '@organisms/auth/register/RegisterFooter';
+import RegisterFooter from '@organisms/auth/register/RegisterFooter';
 
-//* types import
+import {useThemedStyles} from '@theme/createThemedStyles';
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import {RegisterScreens} from '@Types/registerScreens';
 
@@ -18,25 +17,28 @@ interface RegisterTemplateProps {
 }
 
 const RegisterTemplate = (props: RegisterTemplateProps): React.JSX.Element => {
+  const styles = useThemedStyles(tokens => ({
+    formWrap: {
+      width: '100%' as const,
+      maxWidth: 420,
+    },
+  }));
+
   return (
-    <View style={styles.container}>
+    <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
       <RegisterHeader />
-      <RegisterForm
-        navigation={props.navigation}
-        registerType={props.registerType}
-        keyboardType={props.keyboardType}
-      />
-      <RegisterButtons navigation={props.navigation} />
-    </View>
+      <Spacer size="lg" />
+      <View style={styles.formWrap}>
+        <RegisterForm
+          navigation={props.navigation}
+          registerType={props.registerType}
+          keyboardType={props.keyboardType}
+        />
+      </View>
+      <Spacer size="md" />
+      <RegisterFooter navigation={props.navigation} />
+    </ScreenContainer>
   );
 };
 
 export default RegisterTemplate;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

@@ -1,101 +1,68 @@
-//* packages import
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {FallbackProps} from 'react-error-boundary';
+import {StyleSheet, View} from 'react-native';
 
-//* components import
+import Button from '@atoms/Button';
+import Card from '@atoms/Card';
+import Heading from '@atoms/Heading';
+import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
-import TouchableText from '@atoms/TouchableText';
 
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
-interface ErrorFallbackProps {
-  error: Error;
-  resetErrorBoundary: () => void;
-}
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
+};
 
-/**
- * Friendly fallback UI when a navigator/screen crashes.
- * Shows a short message in production; full error text only in __DEV__.
- */
 const ErrorFallback = ({
   error,
   resetErrorBoundary,
-}: ErrorFallbackProps): React.JSX.Element => {
-  const {colors} = useTheme();
+}: FallbackProps): React.JSX.Element => {
+  const styles = useThemedStyles(tokens =>
+    StyleSheet.create({
+      container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: tokens.spacing.xl,
+        backgroundColor: tokens.colors.background,
+      },
+      errorText: {
+        color: tokens.colors.error,
+      },
+    }),
+  );
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <View style={styles.card}>
-        <TextView
-          text="Something went wrong"
-          style={[styles.title, {color: colors.text}]}
-        />
+    <View style={styles.container}>
+      <Card constrained>
+        <Heading text="Something went wrong" level="h2" align="center" />
+        <Spacer size="sm" />
         <TextView
           text="This section ran into a problem. You can try again without restarting the app."
-          style={[styles.subtitle, {color: appColors.gray}]}
+          variant="bodySmall"
+          muted
+          align="center"
         />
-        {__DEV__ && (
-          <TextView
-            text={error.message}
-            style={[styles.errorDetail, {color: appColors.lightCoral}]}
-            numberOfLines={4}
-          />
-        )}
-        <TouchableText
-          text="Try Again"
-          onPress={resetErrorBoundary}
-          textStyle={styles.buttonLabel}
-          touchableStyle={[styles.button, {backgroundColor: appColors.primary}]}
-        />
-      </View>
+        {__DEV__ ? (
+          <>
+            <Spacer size="md" />
+            <TextView
+              text={getErrorMessage(error)}
+              variant="caption"
+              align="center"
+              style={styles.errorText}
+            />
+          </>
+        ) : null}
+        <Spacer size="lg" />
+        <Button label="Try Again" fullWidth onPress={resetErrorBoundary} />
+      </Card>
     </View>
   );
 };
 
 export default ErrorFallback;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-  },
-  card: {
-    width: '100%',
-    maxWidth: 360,
-    padding: 24,
-    borderRadius: 16,
-    backgroundColor: appColors.softWhite,
-    gap: 12,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '700',
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  errorDetail: {
-    fontSize: 12,
-    fontFamily: 'monospace',
-    marginTop: 8,
-  },
-  button: {
-    marginTop: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 10,
-    alignSelf: 'center',
-  },
-  buttonLabel: {
-    color: appColors.white,
-    fontWeight: '600',
-    fontSize: 16,
-  },
-});

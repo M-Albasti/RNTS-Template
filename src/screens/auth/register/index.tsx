@@ -1,18 +1,23 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
 
 //* components import
-import TextView from '@atoms/TextView';
+import RegisterTemplate from '@templates/auth/registerTemplate';
 
-//* styles import
-import {styles} from './styles';
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const Register = (props: any): React.JSX.Element => {
+interface RegisterProps {
+  navigation: AppStackNavigationProp<'Register'>;
+}
+
+const Register = ({navigation}: RegisterProps): React.JSX.Element => {
   return (
-    <View style={styles.container}>
-      <TextView text={'Register'} />
-    </View>
+    <RegisterTemplate
+      navigation={navigation}
+      registerType={{key: 'Register', name: 'Register'}}
+      keyboardType="email-address"
+    />
   );
 };
 

@@ -18,11 +18,16 @@ const ErrorBoundary = ({children}: ErrorBoundaryProps): React.JSX.Element => {
     <ReactErrorBoundary
       FallbackComponent={ErrorFallback}
       onError={(error, info) => {
-        // Report to Sentry (README promises boundary + Sentry integration).
-        Sentry.captureException(error, {
+        const normalizedError =
+          error instanceof Error ? error : new Error(String(error));
+        Sentry.captureException(normalizedError, {
           extra: {componentStack: info.componentStack},
         });
-        logger.error('ErrorBoundary caught:', error.message, info.componentStack);
+        logger.error(
+          'ErrorBoundary caught:',
+          normalizedError.message,
+          info.componentStack,
+        );
       }}
       onReset={() => {
         // User tapped "Try Again" — boundary remounts children without full app restart.

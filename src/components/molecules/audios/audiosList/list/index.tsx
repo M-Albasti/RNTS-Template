@@ -37,7 +37,6 @@ const List = memo((props: AudiosListProps): React.JSX.Element => {
     <FlashList
       data={props.audiosData}
       renderItem={renderItem}
-      estimatedItemSize={70}
       keyExtractor={(item: SoundProps) => item?.id?.toString()}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}

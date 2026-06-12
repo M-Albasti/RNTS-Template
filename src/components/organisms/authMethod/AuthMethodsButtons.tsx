@@ -1,99 +1,62 @@
 //* packages import
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {ScreenWidth} from '@rneui/base';
+import {View} from 'react-native';
 
 //* components import
-import TouchableText from '@atoms/TouchableText';
+import Button from '@atoms/Button';
+import Heading from '@atoms/Heading';
+import Spacer from '@atoms/Spacer';
 
-//* constants import
-import {appColors} from '@constants/colors';
+//* theme import
+import {useThemedStyles} from '@theme/createThemedStyles';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface AuthMethodsButtonsProps {
-  // Define any props you need here
   navigation: AppStackNavigationProp<'AuthMethod'>;
 }
 
-const AuthMethodsButtons = (
-  props: AuthMethodsButtonsProps,
-): React.JSX.Element => {
+const AuthMethodsButtons = ({
+  navigation,
+}: AuthMethodsButtonsProps): React.JSX.Element => {
+  const styles = useThemedStyles(tokens => ({
+    container: {
+      width: '100%' as const,
+      maxWidth: 400,
+      gap: tokens.spacing.sm,
+    },
+  }));
+
   const navigateToFirebaseLogin = () => {
-    console.log('firebase Login');
-    props.navigation.navigate('FirebaseAuthStack');
+    navigation.navigate('FirebaseAuthStack');
   };
 
   return (
     <View style={styles.container}>
-      <TouchableText
-        text="Login with Firebase"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={navigateToFirebaseLogin}
+      <Heading text="Choose sign-in method" level="h2" align="center" />
+      <Spacer size="md" />
+      <Button label="Login with Firebase" fullWidth onPress={navigateToFirebaseLogin} />
+      <Button
+        label="Mock API login"
+        variant="secondary"
+        fullWidth
+        onPress={() => navigation.navigate('Login')}
       />
-      <TouchableText
-        text="Login with SubaBase"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={() => console.log('Login with SubaBase')}
+      <Button
+        label="Mock register"
+        variant="outline"
+        fullWidth
+        onPress={() => navigation.navigate('Register')}
       />
-      <TouchableText
-        text="Login with FastApi"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={() => console.log('Login with FastApi')}
-      />
-      <TouchableText
-        text="Login with Google"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={() => console.log('Login with Google')}
-      />
-      <TouchableText
-        text="Login with Apple"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={() => console.log('Login with Apple')}
-      />
-      <TouchableText
-        text="Login with Facebook"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={() => console.log('Login with Facebook')}
+      <Button
+        label="Forgot password flow"
+        variant="ghost"
+        fullWidth
+        onPress={() => navigation.navigate('ForgetPassword')}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  touchableConatinerStyle: {
-    marginVertical: 10,
-    padding: 20,
-    borderRadius: 15,
-    alignItems: 'center',
-    backgroundColor: appColors.primary,
-    width: ScreenWidth * 0.8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  touchableTextStyle: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
 
 export default AuthMethodsButtons;

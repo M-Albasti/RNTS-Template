@@ -1,25 +1,43 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
 
 //* components import
-import TouchableText from '@atoms/TouchableText';
+import Button from '@atoms/Button';
+import Heading from '@atoms/Heading';
+import ScreenContainer from '@atoms/ScreenContainer';
+import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
-//* styles import
-import {styles} from './styles';
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const NotFound = (props: any): React.JSX.Element => {
+interface NotFoundProps {
+  navigation: AppStackNavigationProp<'NotFound'>;
+}
+
+const NotFound = ({navigation}: NotFoundProps): React.JSX.Element => {
   return (
-    <View style={styles.container}>
-      <TextView text={'Not Found!'} />
-      <TouchableText
-        text={'Go Back To Home'}
+    <ScreenContainer centered alignContent="center">
+      <Heading text="404" level="display" tone="primary" align="center" />
+      <Spacer size="sm" />
+      <Heading text="Page not found" level="h2" tone="muted" align="center" />
+      <Spacer size="md" />
+      <TextView
+        text="The screen you requested does not exist or was moved."
+        variant="body"
+        muted
+        align="center"
+      />
+      <Spacer size="xl" />
+      <Button
+        label="Go back"
         onPress={() => {
-          props.navigation.goBack();
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
         }}
       />
-    </View>
+    </ScreenContainer>
   );
 };
 

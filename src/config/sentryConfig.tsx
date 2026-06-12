@@ -41,7 +41,7 @@ if (!getClient() && isEmpty(getClient()) && sentryDsn) {
       feedbackIntegration(),
       navigationIntegration,
     ],
-    environment: APP_ENV || process.env.NODE_ENV,
+    environment: APP_ENV || (__DEV__ ? 'development' : 'production'),
 
     // uncomment the line below to enable Spotlight (https://spotlightjs.com)
     spotlight: __DEV__,

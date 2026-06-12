@@ -18,11 +18,8 @@ import {linking} from '@services/linkingServices/deepLinking';
 //* hooks import
 import {useAppSelector} from '@hooks/useAppSelector';
 
-//* constants import
-import {appColors} from '@constants/colors';
-
 //* theme import
-import {createMyTheme} from '@theme/appTheme';
+import {createNavigationTheme} from '@theme/appTheme';
 
 //* translation import
 import {initLanguage} from '@translation/i18n'; // Import the i18n initialization file
@@ -38,11 +35,10 @@ export const navigationIntegration = reactNavigationIntegration({
 });
 
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
-  const scheme = useColorScheme();
-  const theme = createMyTheme(
+  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const theme = createNavigationTheme(
     scheme === 'dark' ? DarkTheme : DefaultTheme,
-    appColors.primary,
-    scheme === 'dark' ? appColors.black : appColors.white,
+    scheme,
   );
   const lang = useAppSelector(state => state?.appSettings?.lang);
 

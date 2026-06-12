@@ -3,6 +3,8 @@ import React, {Suspense} from 'react';
 import {Platform, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
+import DrawerMenuContent from '@organisms/drawer/DrawerMenuContent';
+
 //* screens import
 import Profile from '@screens/profile';
 
@@ -48,6 +50,7 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
       screenOptions={{
         drawerType: 'slide',
         popToTopOnBlur: true,
+        headerShown: false,
         ...Platform.select({
           ios: {
             drawerStatusBarAnimation: 'fade',
@@ -55,7 +58,8 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
           },
         }),
         overlayColor: appColors.black40,
-      }}>
+      }}
+      drawerContent={props => <DrawerMenuContent {...props} />}>
       <Drawer.Group>
         <Drawer.Screen name="TabRoot" options={{title: 'Home'}}>
           {props => <TabNavigator {...props} />}

@@ -4,8 +4,6 @@ import { Alert } from 'react-native';
 import {
   createSound,
   AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AVModeIOSOption,
   AudioEncoderAndroidType,
   AudioSet,
   AudioSourceAndroidType,
@@ -88,10 +86,10 @@ export const useAudioRecorder = () => {
     (): AudioSet => ({
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
-      AVModeIOS: AVModeIOSOption.measurement,
+      AVModeIOS: 'measurement',
       AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
       AVNumberOfChannelsKeyIOS: 2,
-      AVFormatIDKeyIOS: AVEncodingOption.aac,
+      AVFormatIDKeyIOS: 'aac',
     }),
     [],
   );

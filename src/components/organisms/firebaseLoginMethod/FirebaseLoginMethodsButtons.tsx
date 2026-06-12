@@ -1,122 +1,97 @@
-//* packages import
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {ScreenWidth} from '@rneui/base';
+import {View} from 'react-native';
 
-//* components import
-import TouchableText from '@atoms/TouchableText';
+import Button from '@atoms/Button';
+import Heading from '@atoms/Heading';
+import Spacer from '@atoms/Spacer';
 
-//* constants import
-import {appColors} from '@constants/colors';
-
-//* types import
-import {AppStackNavigationProp} from '@Types/appNavigation';
 import {loginService} from '@services/authServices/loginService';
 import {useAppDispatch} from '@hooks/useAppDispatch';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {AppStackNavigationProp} from '@Types/appNavigation';
+import { logger } from 'src/utils/logger';
 
 interface FirebaseLoginMethodsButtonsProps {
-  // Define any props you need here
   navigation: AppStackNavigationProp<'FirebaseLoginMethod'>;
 }
 
-const FirebaseLoginMethodsButtons = (
-  props: FirebaseLoginMethodsButtonsProps,
-): React.JSX.Element => {
+const FirebaseLoginMethodsButtons = ({
+  navigation,
+}: FirebaseLoginMethodsButtonsProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
 
   const navigateToEmailLogin = () => {
     // Replace with your navigation logic
-    console.log('Navigate to Email Login');
-    props.navigation.navigate('FirebaseEmailLogin');
+    logger.info('Navigate to Email Login');
+    navigation.navigate('FirebaseEmailLogin');
   };
 
   const navigateToPhoneLogin = () => {
     // Replace with your navigation logic
-    console.log('Navigate to Phone Login');
-    props.navigation.navigate('FirebasePhoneLogin');
+    logger.info('Navigate to Phone Login');
+    navigation.navigate('FirebasePhoneLogin');
   };
 
   const navigateToFacebookLogin = () => {
     // Replace with your navigation logic
     loginService('FirebaseFacebook', dispatch);
-    console.log('Navigate to Facebook Login');
+    logger.info('Navigate to Facebook Login');
   };
 
   const navigateToGoogleLogin = () => {
     // Replace with your navigation logic
     loginService('FirebaseGoogle', dispatch);
-    console.log('Navigate to Google Login');
+    logger.info('Navigate to Google Login');
   };
 
   const navigateToAppleLogin = () => {
     // Replace with your navigation logic
     loginService('FirebaseApple', dispatch);
-    console.log('Navigate to Apple Login');
+    logger.info('Navigate to Apple Login');
   };
+
+  const styles = useThemedStyles(tokens => ({
+    container: {
+      width: '100%' as const,
+      gap: tokens.spacing.sm,
+    },
+  }));
 
   return (
     <View style={styles.container}>
-      <TouchableText
-        text="Login with Email"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
+      <Heading text="Choose provider" level="h3" align="center" />
+      <Spacer size="sm" />
+      <Button
+        label="Email & password"
+        fullWidth
         onPress={navigateToEmailLogin}
       />
-      <TouchableText
-        text="Login with Facebook"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={navigateToFacebookLogin}
-      />
-      <TouchableText
-        text="Login with Google"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
-        onPress={navigateToGoogleLogin}
-      />
-      <TouchableText
-        text="Login with Phone"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
+      <Button
+        label="Phone number"
+        variant="secondary"
+        fullWidth
         onPress={navigateToPhoneLogin}
       />
-      <TouchableText
-        text="Login with Apple"
-        touchableStyle={styles.touchableConatinerStyle}
-        textStyle={styles.touchableTextStyle}
+      <Button
+        label="Google"
+        variant="outline"
+        fullWidth
+        onPress={navigateToGoogleLogin}
+      />
+      <Button
+        label="Facebook"
+        variant="outline"
+        fullWidth
+        onPress={navigateToFacebookLogin}
+      />
+      <Button
+        label="Apple"
+        variant="outline"
+        fullWidth
         onPress={navigateToAppleLogin}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  touchableConatinerStyle: {
-    marginVertical: 10,
-    padding: 20,
-    borderRadius: 15,
-    alignItems: 'center',
-    backgroundColor: appColors.primary,
-    width: ScreenWidth * 0.8,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  touchableTextStyle: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
 
 export default FirebaseLoginMethodsButtons;

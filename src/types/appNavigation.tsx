@@ -1,10 +1,18 @@
 //* types import
+import {NavigatorScreenParams} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RouteProp} from '@react-navigation/native';
 import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {VideoProps} from '@Types/videoProps';
 import {SoundProps} from '@Types/soundProps';
 import {LoginTypes} from '@Types/loginTypes';
+
+export type DrawerParamList = {
+  TabRoot: undefined;
+  Profile: undefined;
+  AudioStack: undefined;
+  VideoStack: undefined;
+};
 
 export type RootStackParamList = {
   AuthStack: undefined;
@@ -27,7 +35,7 @@ export type RootStackParamList = {
   };
   NotFound: undefined;
   Settings: undefined;
-  DrawerRoot: undefined;
+  DrawerRoot: NavigatorScreenParams<DrawerParamList> | undefined;
   TabRoot: undefined;
   Home: undefined;
   Profile: undefined;

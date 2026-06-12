@@ -37,6 +37,53 @@ These changes were applied **without removing features**. Each includes inline c
 | **Logging** | `@utils/logger` (dev-only debug) | Removes production console noise |
 | **i18n** | `debug: __DEV__` | Stops translation debug spam in release builds |
 | **Auth services** | `await` on Firebase login calls | Proper async error propagation |
+| **Design tokens** | `src/theme/tokens/` + `useThemeTokens()` | Semantic colors/spacing replace hard-coded StyleSheet values |
+| **UI atoms** | `Button`, `Card`, `ScreenContainer`, `Heading`, etc. | Consistent layout and actions across screens |
+
+---
+
+## Theme System (Design Tokens)
+
+New structure under `src/theme/`:
+
+```
+src/theme/
+  tokens/
+    colors.ts      # semantic light/dark palettes
+    spacing.ts     # 4px scale (xs → xxxl)
+    typography.ts  # display, h1–h3, body, caption
+    radius.ts      # border radius
+    shadows.ts     # iOS + Android elevation
+  useThemeTokens.tsx       # hook: tokens for current scheme
+  createThemedStyles.tsx   # useThemedStyles(factory) → StyleSheet
+  appTheme.tsx             # React Navigation theme mapping
+  index.ts                 # barrel exports
+```
+
+**New atoms** (`src/components/atoms/`):
+
+| Component | Use for |
+|-----------|---------|
+| `ScreenContainer` | Every screen — safe area, background, scroll |
+| `Button` | Primary/secondary/outline/ghost/danger actions |
+| `Card` | Grouped content surfaces |
+| `Heading` | Titles (display, h1–h3) |
+| `Divider` | Section separators |
+| `Spacer` | Token-based gaps |
+
+**How to style a screen:**
+
+```tsx
+const styles = useThemedStyles(tokens => ({
+  row: {
+    padding: tokens.spacing.lg,
+    backgroundColor: tokens.colors.surface,
+    borderRadius: tokens.radius.lg,
+  },
+}));
+```
+
+**Next:** Migrate remaining screens (register, onboarding, audio/video lists) to `ScreenContainer` + tokens; replace `TouchableText` CTAs with `Button`.
 
 ---
 

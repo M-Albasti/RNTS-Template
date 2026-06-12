@@ -1,34 +1,32 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 
-//* components import
+import ScreenContainer from '@atoms/ScreenContainer';
+import ScreenHeader from '@atoms/ScreenHeader';
 import ListWithButtons from '@organisms/audios/audiosList/ListWithButtons';
 
-//* constants import
 import {sounds} from '@constants/sounds';
-
-//* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface AudiosListTemplateProps {
   navigation: AppStackNavigationProp<'AudiosList'>;
 }
 
-const AudiosListTemplate = (
-  props: AudiosListTemplateProps,
-): React.JSX.Element => {
+const AudiosListTemplate = ({
+  navigation,
+}: AudiosListTemplateProps): React.JSX.Element => {
   return (
-    <View style={styles.container}>
-      <ListWithButtons navigation={props.navigation} audiosData={sounds} />
-    </View>
+    <ScreenContainer>
+      <ScreenHeader
+        title="Audios"
+        onBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}
+      />
+      <ListWithButtons navigation={navigation} audiosData={sounds} />
+    </ScreenContainer>
   );
 };
 
 export default AudiosListTemplate;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

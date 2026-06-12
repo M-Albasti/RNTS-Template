@@ -12,7 +12,7 @@ export const useAudioView = (audioDetails: SoundProps) => {
   const [repeat, setRepeat] = useState<boolean>(false);
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const interval = useRef<NodeJS.Timeout | null>(null);
+  const interval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useLayoutEffect(() => {
     loadSound();
