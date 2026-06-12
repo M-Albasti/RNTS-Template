@@ -48,11 +48,13 @@ const storage = {
 //   },
 // };
 
+// redux-persist v6 uses `blacklist` (not `blackList`). An empty blacklist keeps all slices persisted.
+// When you add Supabase/API tokens, blacklist transient slices here (e.g. ['video', 'audio']).
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blackList: [],
+  blacklist: [] as string[],
 };
 
 // Activate the App storage (AsyncStorage) for the reducers

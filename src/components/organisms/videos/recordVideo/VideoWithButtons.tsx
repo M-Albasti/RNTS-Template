@@ -2,8 +2,10 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {VideoFile} from 'react-native-vision-camera';
-import moment from 'moment';
 import {last} from 'lodash';
+
+//* utils import
+import {uniqueFileName} from '@utils/uniqueFileName';
 
 //* components import
 import Buttons from '@molecules/videos/videoPlayer/buttons';
@@ -44,7 +46,7 @@ const VideoWithButtons = (props: ViewWithButtonsProps): React.JSX.Element => {
     const videoFile = {
       uri: props.videoFile.path,
       type: type,
-      name: `video-${moment().unix()}.${extension}`,
+      name: uniqueFileName('video', extension),
     };
     const formData = new FormData();
     formData.append('file', videoFile);

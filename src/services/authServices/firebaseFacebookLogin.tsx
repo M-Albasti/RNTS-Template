@@ -18,8 +18,8 @@ import {LoginTypes} from '@Types/loginTypes';
 export const firebaseFacebookLogin = (
   dispatch: AppDispatch,
   loginType: LoginTypes,
-) => {
-  loginFirebaseWithFacebook()
+): Promise<void> => {
+  return loginFirebaseWithFacebook()
     .then((user: FirebaseAuthTypes.UserCredential) => {
       // Handle successful login
       dispatch(

@@ -12,6 +12,7 @@ import {registerFirebaseWithEmail} from '@services/firebaseServices/firebaseEmai
 import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
 
 //* utils import
+import {formatZodError} from '@utils/formatZodError';
 import registerValidation from '@utils/registerValidation';
 
 //* types import
@@ -49,8 +50,8 @@ export const registerService = async (
     }
   } catch (error) {
     if (error instanceof ZodError) {
-      const errorMessages = error.errors.map(err => err.message).join('\n');
-      Alert.alert('Validation Error', errorMessages);
+      // Zod v4 exposes validation messages via `issues`, not `errors`.
+      Alert.alert('Validation Error', formatZodError(error));
     }
   }
 };

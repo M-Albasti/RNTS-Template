@@ -12,7 +12,9 @@ import {
   RecordBackType,
 } from 'react-native-nitro-sound';
 import { last } from 'lodash';
-import moment from 'moment';
+
+//* utils import
+import { uniqueFileName } from '@utils/uniqueFileName';
 
 //* redux import
 import { addAudio, uploadAudio } from '@redux/slices/audiosSlice';
@@ -108,7 +110,7 @@ export const useAudioRecorder = () => {
 
     try {
       setIsLoading(true);
-      const path = `audio-${moment().unix()}.m4a`;
+      const path = uniqueFileName('audio', 'm4a');
       const meteringEnabled = false;
 
       const result = await audioRecorderPlayer.startRecorder(
@@ -278,7 +280,7 @@ export const useAudioRecorder = () => {
     const audioFile = {
       uri: recordPath,
       type: type,
-      name: `audio-${moment().unix()}.${extension}`,
+      name: uniqueFileName('audio', extension),
     };
     const formData = new FormData();
     formData.append('file', audioFile);

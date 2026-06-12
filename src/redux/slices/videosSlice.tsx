@@ -1,7 +1,7 @@
 //* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios, {AxiosError} from 'axios';
-import moment from 'moment';
+import {uniqueFileName} from '@utils/uniqueFileName';
 
 //* types import
 import {VideoProps} from '@Types/videoProps';
@@ -118,7 +118,7 @@ const videosSlice = createSlice({
             sources: [
               `https://node-file-apis-2.onrender.com/files/${action.payload.savedFileName}`,
             ],
-            subtitle: `subTitle-${moment().unix()}`,
+            subtitle: uniqueFileName('subTitle'),
             thumb: 'https://picsum.photos/150/150?image=0',
             title: action.payload.savedFileName,
           };

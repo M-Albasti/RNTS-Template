@@ -27,6 +27,9 @@ import {createMyTheme} from '@theme/appTheme';
 //* translation import
 import {initLanguage} from '@translation/i18n'; // Import the i18n initialization file
 
+//* utils import
+import {logger} from '@utils/logger';
+
 //* styles import
 import {styles} from '@navigation/TabNavigator/styles';
 
@@ -54,7 +57,7 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
       theme={theme}
       onReady={onNavigationReady}
       onUnhandledAction={error => {
-        console.log('Error Navigation =>', error);
+        logger.warn('Unhandled navigation action:', error);
       }}
       linking={linking}
       fallback={

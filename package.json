@@ -43,7 +43,6 @@
     "date-fns": "^4.1.0",
     "i18next": "^25.10.10",
     "lodash": "^4.18.1",
-    "moment": "^2.30.1",
     "react": "19.2.3",
     "react-error-boundary": "^6.1.1",
     "react-i18next": "^15.7.4",

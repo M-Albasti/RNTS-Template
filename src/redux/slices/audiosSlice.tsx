@@ -1,7 +1,7 @@
 //* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios, {AxiosError} from 'axios';
-import moment from 'moment';
+import {uniqueFileName} from '@utils/uniqueFileName';
 
 //* types import
 import {SoundProps} from '@Types/soundProps';
@@ -117,10 +117,10 @@ const audiosSlice = createSlice({
           // Same "mutating" update syntax thanks to Immer
           const audioObject: SoundProps = {
             id: action.payload.savedFileName,
-            title: `audio-${moment().unix()}`,
+            title: uniqueFileName('audio'),
             artist: 'artist Name',
             url: `https://node-file-apis-2.onrender.com/files/${action.payload.savedFileName}`,
-            album: `album-${moment().unix()}`,
+            album: uniqueFileName('album'),
             artwork: 'https://picsum.photos/id/1003/200/300',
           };
           state.status = 'succeeded';

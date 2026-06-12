@@ -23,8 +23,9 @@ export const firebaseEmailLogin = (
   credentials: LoginCredentials,
   dispatch: AppDispatch,
   loginType: LoginTypes,
-) => {
-  loginFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
+): Promise<void> => {
+  // Return the promise chain so loginService can `await` and catch failures in one place.
+  return loginFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
     .then(user => {
       // Handle successful login
       dispatch(addUser(cleanFirebaseUserResponse(user, loginType)));

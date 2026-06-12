@@ -67,7 +67,8 @@ export const initLanguage = (lang: Languages) => {
       .init({
         resources,
         lng: languageToUse, // Use normalized language code
-        debug: true,
+        // Only log missing keys in development — avoids console noise in production.
+        debug: __DEV__,
         fallbackLng: 'en', // Fallback language if detected language is not available
         interpolation: {
           escapeValue: false, // React already escapes values
