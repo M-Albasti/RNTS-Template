@@ -11,6 +11,7 @@ import ResetPassword from '@screens/auth/resetPassword';
 import OTP from '@screens/auth/otp';
 import OnBoarding from '@screens/onboarding';
 import AuthMethod from '@screens/authMethod';
+import LoginOptions from '@screens/loginOptions';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -49,6 +50,9 @@ const AuthNavigator = (props: any): React.JSX.Element => {
       <AuthStack.Group>
         <AuthStack.Screen name="OnBoarding">
           {props => <OnBoarding {...props} />}
+        </AuthStack.Screen>
+        <AuthStack.Screen name="LoginOptions">
+          {props => <LoginOptions {...props} />}
         </AuthStack.Screen>
         <AuthStack.Screen name="AuthMethod">
           {props => <AuthMethod {...props} />}

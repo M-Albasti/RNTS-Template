@@ -16,6 +16,12 @@ import ErrorBoundary from '@atoms/ErrorBoundary';
 import TabNavigator from '@navigation/TabNavigator';
 import VideoNavigator from '@navigation/VideoNavigator';
 import AudioNavigator from '@navigation/AudioNavigator';
+import PostNavigator from '@navigation/PostNavigator';
+import TodoNavigator from '@navigation/TodoNavigator';
+import ChatNavigator from '@navigation/ChatNavigator';
+import GameNavigator from '@navigation/GameNavigator';
+import WalletNavigator from '@navigation/WalletNavigator';
+import GalleryNavigator from '@navigation/GalleryNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -72,6 +78,24 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
         </Drawer.Screen>
         <Drawer.Screen name="VideoStack" options={{title: 'Videos'}}>
           {props => <VideoNavigator {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="PostStack" options={{title: 'Social Feed'}}>
+          {() => <PostNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="TodoStack" options={{title: 'Todo List'}}>
+          {() => <TodoNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="ChatStack" options={{title: 'Chat'}}>
+          {() => <ChatNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="GameStack" options={{title: 'Lucky Spinner'}}>
+          {() => <GameNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="WalletStack" options={{title: 'Wallet'}}>
+          {() => <WalletNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="GalleryStack" options={{title: 'Gallery'}}>
+          {() => <GalleryNavigator />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

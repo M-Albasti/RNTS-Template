@@ -22,6 +22,12 @@ type DrawerRoute = keyof DrawerParamList;
 const menuItems: {label: string; route: DrawerRoute}[] = [
   {label: 'Home', route: 'TabRoot'},
   {label: 'Profile', route: 'Profile'},
+  {label: 'Social feed', route: 'PostStack'},
+  {label: 'Todo list', route: 'TodoStack'},
+  {label: 'Chat', route: 'ChatStack'},
+  {label: 'Lucky spinner', route: 'GameStack'},
+  {label: 'Wallet', route: 'WalletStack'},
+  {label: 'Gallery', route: 'GalleryStack'},
   {label: 'Audios', route: 'AudioStack'},
   {label: 'Videos', route: 'VideoStack'},
 ];

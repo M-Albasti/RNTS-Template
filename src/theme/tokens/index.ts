@@ -1,4 +1,5 @@
 import {getSemanticColors, type ColorScheme, type SemanticColors} from './colors';
+import {layout, type LayoutToken} from './layout';
 import {radius, type RadiusToken} from './radius';
 import {shadows, type ShadowToken} from './shadows';
 import {spacing, type SpacingToken} from './spacing';
@@ -12,6 +13,7 @@ export type ThemeTokens = {
   radius: RadiusToken;
   typography: TypographyToken;
   shadows: ShadowToken;
+  layout: LayoutToken;
 };
 
 export const createThemeTokens = (scheme: ColorScheme): ThemeTokens => ({
@@ -21,11 +23,13 @@ export const createThemeTokens = (scheme: ColorScheme): ThemeTokens => ({
   radius,
   typography,
   shadows,
+  layout,
 });
 
-export {getSemanticColors, spacing, radius, typography, shadows};
+export {getSemanticColors, spacing, radius, typography, shadows, layout};
 export type {ColorScheme, SemanticColors} from './colors';
 export type {SpacingToken} from './spacing';
 export type {RadiusToken} from './radius';
 export type {TypographyToken} from './typography';
 export type {ShadowToken} from './shadows';
+export type {LayoutToken} from './layout';

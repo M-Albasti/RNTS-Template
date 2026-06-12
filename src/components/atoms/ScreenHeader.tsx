@@ -20,20 +20,17 @@ const ScreenHeader = ({
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        ...tokens.layout.presets.rowBetween,
         marginBottom: tokens.spacing.md,
         minHeight: 44,
       },
       side: {
         width: 44,
-        alignItems: 'center',
-        justifyContent: 'center',
+        ...tokens.layout.presets.center,
       },
       titleWrap: {
-        flex: 1,
-        alignItems: 'center',
+        flex: tokens.layout.flex.fill,
+        alignItems: tokens.layout.alignItems.center,
       },
     }),
   );

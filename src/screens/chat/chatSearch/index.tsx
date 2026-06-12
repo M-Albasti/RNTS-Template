@@ -1,0 +1,80 @@
+import React, {useMemo} from 'react';
+import {Pressable, StyleSheet, View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
+
+import Card from '@atoms/Card';
+import Heading from '@atoms/Heading';
+import ScreenContainer from '@atoms/ScreenContainer';
+import ScreenHeader from '@atoms/ScreenHeader';
+import Spacer from '@atoms/Spacer';
+import TextInputView from '@atoms/TextInputView';
+import TextView from '@atoms/TextView';
+
+import {useAppDispatch} from '@hooks/useAppDispatch';
+import {useAppSelector} from '@hooks/useAppSelector';
+import {setChatSearchQuery} from '@redux/slices/chatSlice';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import type {AppStackNavigationProp} from '@Types/appNavigation';
+
+interface ChatSearchProps {
+  navigation: AppStackNavigationProp<'ChatSearch'>;
+}
+
+const ChatSearch = ({navigation}: ChatSearchProps): React.JSX.Element => {
+  const query = useAppSelector(state => state.chat.searchQuery);
+  const threads = useAppSelector(state => state.chat.threads);
+  const dispatch = useAppDispatch();
+  const styles = useThemedStyles(tokens =>
+    StyleSheet.create({
+      list: {flex: tokens.layout.flex.fill},
+      hit: {gap: tokens.spacing.xs},
+      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
+    }),
+  );
+
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return threads.flatMap(thread =>
+      thread.messages
+        .filter(m => m.text.toLowerCase().includes(q))
+        .map(m => ({threadName: thread.name, threadId: thread.id, message: m})),
+    );
+  }, [query, threads]);
+
+  return (
+    <ScreenContainer>
+      <ScreenHeader title="Search messages" onBack={() => navigation.goBack()} />
+      <TextInputView
+        placeholder="Search in conversations..."
+        value={query}
+        onChangeText={text => dispatch(setChatSearchQuery(text))}
+      />
+      <Spacer size="md" />
+      {results.length === 0 ? (
+        <View style={styles.empty}>
+          <TextView text="Type to search message history." muted align="center" />
+        </View>
+      ) : (
+        <FlashList
+          data={results}
+          style={styles.list}
+          keyExtractor={item => item.message.id}
+          ItemSeparatorComponent={() => <Spacer size="sm" />}
+          renderItem={({item}) => (
+            <Pressable onPress={() => navigation.navigate('ChatRoom', {threadId: item.threadId})}>
+              <Card>
+                <View style={styles.hit}>
+                  <TextView text={item.threadName} variant="bodySmall" muted />
+                  <TextView text={item.message.text} variant="body" />
+                </View>
+              </Card>
+            </Pressable>
+          )}
+        />
+      )}
+    </ScreenContainer>
+  );
+};
+
+export default ChatSearch;
