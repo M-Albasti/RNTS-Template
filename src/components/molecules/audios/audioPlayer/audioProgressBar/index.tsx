@@ -2,13 +2,13 @@
 import React, {memo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Slider from '@react-native-community/slider';
-import {ScreenHeight} from '@rneui/base';
 
 //* components import
 import TextView from '@atoms/TextView';
 
-//* constants import
-import {appColors} from '@constants/colors';
+//* theme import
+import {useThemeTokens} from '@theme/useThemeTokens';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
 //* utils import
 import {minutesFormat} from '@utils/minutesFormat';
@@ -19,57 +19,58 @@ interface AudioProgressBarProps {
   onSeekSound: (value: number) => void;
 }
 
-const AudioProgressBar = memo((props: AudioProgressBarProps) => {
-  return (
-    <View style={styles.sliderView}>
-      <TextView
-        text={minutesFormat(props.currentTime)}
-        containerStyle={styles.containerSliderTime}
-        style={styles.sliderTime}
-      />
-      <Slider
-        style={styles.sliderStyle}
-        minimumValue={0}
-        step={1}
-        maximumValue={props.duration}
-        minimumTrackTintColor={appColors.primary}
-        maximumTrackTintColor={appColors.black60}
-        tapToSeek={true}
-        onSlidingComplete={props.onSeekSound}
-        thumbTintColor={appColors.primary}
-        value={props.currentTime}
-      />
-      <TextView
-        text={minutesFormat(props.duration)}
-        containerStyle={styles.containerSliderTime}
-        style={styles.sliderTime}
-      />
-    </View>
-  );
-});
+const AudioProgressBar = memo(
+  ({currentTime, duration, onSeekSound}: AudioProgressBarProps) => {
+    const styles = useThemedStyles(tokens =>
+      StyleSheet.create({
+        root: {
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: tokens.spacing.lg,
+          gap: tokens.spacing.sm,
+        },
+        slider: {
+          flex: 1,
+          height: 40,
+        },
+        time: {
+          minWidth: 44,
+          textAlign: 'center',
+        },
+      }),
+    );
+    const {colors} = useThemeTokens();
+
+    return (
+      <View style={styles.root}>
+        <TextView
+          text={minutesFormat(currentTime)}
+          variant="caption"
+          muted
+          style={styles.time}
+        />
+        <Slider
+          style={styles.slider}
+          minimumValue={0}
+          step={1}
+          maximumValue={Math.max(duration, 1)}
+          minimumTrackTintColor={colors.primary}
+          maximumTrackTintColor={colors.borderStrong}
+          tapToSeek
+          onSlidingComplete={onSeekSound}
+          thumbTintColor={colors.primary}
+          value={currentTime}
+        />
+        <TextView
+          text={minutesFormat(duration)}
+          variant="caption"
+          muted
+          style={styles.time}
+        />
+      </View>
+    );
+  },
+);
 
 export default AudioProgressBar;
-
-const styles = StyleSheet.create({
-  sliderView: {
-    height: ScreenHeight * 0.1,
-    width: '100%',
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: '10%',
-  },
-  sliderStyle: {
-    height: '70%',
-    width: '70%',
-  },
-  sliderTime: {
-    fontSize: 15,
-    color: appColors.gray,
-    width: '100%',
-    textAlign: 'center',
-  },
-  containerSliderTime: {
-    width: '15%',
-  },
-});

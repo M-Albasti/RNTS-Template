@@ -1,5 +1,6 @@
 //* packages import
 import {useCallback, useRef, useState} from 'react';
+import {Alert} from 'react-native';
 
 //* types import
 import {OnVideoErrorData, VideoRef} from 'react-native-video';
@@ -7,6 +8,7 @@ import {OnVideoErrorData, VideoRef} from 'react-native-video';
 export const useVideoContainer = () => {
   const [fullscreen, setFullscreen] = useState<boolean>(false);
   const [repeat, setRepeat] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const videoRef = useRef<VideoRef | null>(null);
 
   const onVideoReady = useCallback((ref: VideoRef) => {
@@ -14,46 +16,46 @@ export const useVideoContainer = () => {
   }, []);
 
   const onError = useCallback((error: OnVideoErrorData) => {
+    const message =
+      error.error?.errorString ||
+      error.error?.localizedDescription ||
+      'Unable to play this video.';
+    setErrorMessage(message);
     console.log('Video Error =>', error);
+    Alert.alert('Video error', message);
   }, []);
 
-  const videoPause = () => {
-    if (videoRef?.current) {
-      videoRef?.current?.pause();
-    }
-  };
+  const videoPause = useCallback(() => {
+    videoRef.current?.pause();
+  }, []);
 
-  const videoResume = () => {
-    if (videoRef?.current) {
-      videoRef?.current?.resume();
-    }
-  };
+  const videoResume = useCallback(() => {
+    videoRef.current?.resume();
+  }, []);
 
-  const videoDismissFullScreen = () => {
-    if (videoRef?.current) {
+  const videoDismissFullScreen = useCallback(() => {
+    if (videoRef.current) {
       setFullscreen(false);
-      videoRef?.current?.dismissFullscreenPlayer();
+      videoRef.current.dismissFullscreenPlayer();
     }
-  };
+  }, []);
 
-  const videoPresentFullScreen = () => {
-    if (videoRef?.current) {
+  const videoPresentFullScreen = useCallback(() => {
+    if (videoRef.current) {
       setFullscreen(true);
-      videoRef?.current?.presentFullscreenPlayer();
+      videoRef.current.presentFullscreenPlayer();
     }
-  };
+  }, []);
 
-  const toggleRepeat = () => {
-    setRepeat(!repeat);
-  };
+  const toggleRepeat = useCallback(() => {
+    setRepeat(prev => !prev);
+  }, []);
 
   return {
-    // State
     fullscreen,
     repeat,
+    errorMessage,
     videoRef,
-
-    // Actions
     onVideoReady,
     onError,
     videoPause,

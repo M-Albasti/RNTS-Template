@@ -4,12 +4,21 @@ import {
   mobileReplayIntegration,
   feedbackIntegration,
   getClient,
+  getGlobalScope,
+  getIsolationScope,
 } from '@sentry/react-native';
 import {isEmpty} from 'lodash';
 import {SENTRY_DSN, APP_ENV} from '@env';
 
 //* navigators import
-import {navigationIntegration} from '@navigation/NavigationContainer';
+import {navigationIntegration} from '@navigation/navigationIntegration';
+
+//* utils import
+import {
+  patchScopeNativeBreadcrumbSanitizer,
+  sanitizeBreadcrumb,
+  sanitizeSentryEvent,
+} from '@utils/sentryBreadcrumbSanitizer';
 
 // Guard: init Sentry once. DSN comes from .env (see .env.example) — never commit real keys.
 const sentryDsn =
@@ -19,7 +28,6 @@ const sentryDsn =
 if (!getClient() && isEmpty(getClient()) && sentryDsn) {
   init({
     dsn: sentryDsn,
-
     // Adds more context data to events (IP address, cookies, user, etc.)
     // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
     sendDefaultPii: true,
@@ -27,7 +35,8 @@ if (!getClient() && isEmpty(getClient()) && sentryDsn) {
     enableAutoPerformanceTracing: true,
     // enableCaptureFailedRequests: true, //! Android plugin needed
     enableUserInteractionTracing: true,
-    debug: __DEV__,
+    // Native SDK debug logs are very noisy on Android (breadcrumb deserialize, spotlight, sessions).
+    debug: false,
     // Sessions close after app is 10 seconds in the background.
     sessionTrackingIntervalMillis: 10000,
     // Lower sample rates in production to control quota (1.0 = 100%).
@@ -42,8 +51,12 @@ if (!getClient() && isEmpty(getClient()) && sentryDsn) {
       navigationIntegration,
     ],
     environment: APP_ENV || (__DEV__ ? 'development' : 'production'),
-
-    // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-    spotlight: __DEV__,
+    // Android native bridge requires string values in breadcrumb.data (see sentryBreadcrumbSanitizer).
+    beforeBreadcrumb: breadcrumb => sanitizeBreadcrumb(breadcrumb),
+    beforeSend: event => sanitizeSentryEvent(event),
+    // Spotlight requires a local server on port 8969 — disable unless you run it explicitly.
+    spotlight: false,
   });
+  patchScopeNativeBreadcrumbSanitizer(getGlobalScope());
+  patchScopeNativeBreadcrumbSanitizer(getIsolationScope());
 }

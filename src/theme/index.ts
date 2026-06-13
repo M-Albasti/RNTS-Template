@@ -4,6 +4,7 @@ export {useThemeTokens} from './useThemeTokens';
 export {
   createThemeTokens,
   getSemanticColors,
+  getShadows,
   spacing,
   radius,
   typography,

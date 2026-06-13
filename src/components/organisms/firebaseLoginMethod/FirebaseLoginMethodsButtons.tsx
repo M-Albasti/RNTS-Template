@@ -9,7 +9,7 @@ import {loginService} from '@services/authServices/loginService';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
-import { logger } from 'src/utils/logger';
+import { logger } from '@utils/logger';
 
 interface FirebaseLoginMethodsButtonsProps {
   navigation: AppStackNavigationProp<'FirebaseLoginMethod'>;

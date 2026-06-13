@@ -1,12 +1,10 @@
 //* packages import
 import React, {PropsWithChildren, useCallback} from 'react';
-import {useColorScheme} from 'react-native';
 import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {reactNavigationIntegration} from '@sentry/react-native';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -16,26 +14,26 @@ import {navigationRef} from '@services/navigationServices/NavigationService';
 import {linking} from '@services/linkingServices/deepLinking';
 
 //* hooks import
+import {useAppColorScheme} from '@hooks/useAppColorScheme';
 import {useAppSelector} from '@hooks/useAppSelector';
+
+//* navigators import
+import {navigationIntegration} from '@navigation/navigationIntegration';
 
 //* theme import
 import {createNavigationTheme} from '@theme/appTheme';
 
 //* translation import
-import {initLanguage} from '@translation/i18n'; // Import the i18n initialization file
+import {syncLanguage} from '@translation/i18n';
 
 //* utils import
 import {logger} from '@utils/logger';
 
 //* styles import
-import {styles} from '@navigation/TabNavigator/styles';
-
-export const navigationIntegration = reactNavigationIntegration({
-  enableTimeToInitialDisplay: true,
-});
+import {navigationFallbackStyles} from '@navigation/TabNavigator/styles';
 
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme = useAppColorScheme();
   const theme = createNavigationTheme(
     scheme === 'dark' ? DarkTheme : DefaultTheme,
     scheme,
@@ -44,7 +42,7 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
 
   const onNavigationReady = useCallback(() => {
     navigationIntegration.registerNavigationContainer(navigationRef);
-    initLanguage(lang);
+    syncLanguage(lang);
   }, [lang]);
 
   return (
@@ -59,8 +57,8 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
       fallback={
         <TextView
           text={'Loading...'}
-          style={styles.fallbackText}
-          containerStyle={styles.fallback}
+          style={navigationFallbackStyles.fallbackText}
+          containerStyle={navigationFallbackStyles.fallback}
         />
       }>
       {children}

@@ -152,19 +152,25 @@ const Profile = ({navigation}: ProfileProps): React.JSX.Element => {
       </View>
 
       <Spacer size="lg" />
-      <View style={styles.actions}>
-        <Button
-          label="Open Settings"
-          fullWidth
-          onPress={() => rootNavigate('Settings', undefined)}
-        />
-        <Button
-          label="Open Drawer"
-          variant="secondary"
-          fullWidth
-          onPress={() => navigation.openDrawer?.()}
-        />
-      </View>
+      <Card elevated={false}>
+        <Heading text="Quick actions" level="h3" />
+        <Spacer size="md" />
+        <View style={styles.actions}>
+          <Button
+            label="Open Settings"
+            flat
+            fullWidth
+            onPress={() => rootNavigate('Settings', undefined)}
+          />
+          <Button
+            label="Open Drawer"
+            variant="secondary"
+            flat
+            fullWidth
+            onPress={() => navigation.openDrawer?.()}
+          />
+        </View>
+      </Card>
     </ScreenContainer>
   );
 };

@@ -1,54 +1,58 @@
-import {appColors} from '@constants/colors';
 import {ScreenHeight, ScreenWidth} from '@rneui/base';
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
 
-const TAB_HIGHT = ScreenHeight * 0.07;
+import {useThemedStyles} from '@theme/createThemedStyles';
 
-export const styles = StyleSheet.create({
-  tabBarStyle: {
-    borderRadius: TAB_HIGHT,
-    width: ScreenWidth * 0.8,
-    marginBottom: 10,
-    alignSelf: 'center',
-    backgroundColor: appColors.black,
-    height: TAB_HIGHT,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.6,
-        shadowRadius: 4,
+const TAB_HEIGHT = ScreenHeight * 0.07;
+
+export const useTabNavigatorStyles = () =>
+  useThemedStyles(tokens => ({
+      tabBarStyle: {
+        borderRadius: TAB_HEIGHT,
+        width: ScreenWidth * 0.8,
+        marginBottom: 10,
+        alignSelf: 'center',
+        backgroundColor: tokens.colors.textPrimary,
+        height: TAB_HEIGHT,
+        ...tokens.shadows.lg,
       },
-      android: {
-        elevation: 4, // Shadow on Android
+      tabBarItemStyle: {
+        height: TAB_HEIGHT,
+        alignItems: 'center',
+        justifyContent: 'center',
       },
-    }),
-  },
-  tabBarItemStyle: {
-    height: TAB_HIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconContainerStyle: {
-    width: TAB_HIGHT - 5,
-    height: TAB_HIGHT - 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop:
-      Platform.OS === 'android' ? TAB_HIGHT / 2.7 - 5 : TAB_HIGHT / 2.7 + 4,
-    borderRadius: TAB_HIGHT - 5,
-  },
-  floatingButtonStyle: {
-    borderWidth: 10,
-    height: ScreenHeight * 0.08,
-    borderRadius: ScreenWidth,
-    width: ScreenHeight * 0.08,
-    marginBottom: TAB_HIGHT,
-    backgroundColor: appColors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
+      iconContainerStyle: {
+        width: TAB_HEIGHT - 5,
+        height: TAB_HEIGHT - 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: TAB_HEIGHT / 2.7,
+        borderRadius: TAB_HEIGHT - 5,
+      },
+      floatingButtonStyle: {
+        borderWidth: 10,
+        height: ScreenHeight * 0.08,
+        borderRadius: ScreenWidth,
+        width: ScreenHeight * 0.08,
+        marginBottom: TAB_HEIGHT,
+        backgroundColor: tokens.colors.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        overflow: 'hidden',
+        ...tokens.shadows.lg,
+      },
+      fallback: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      fallbackText: {
+        fontSize: 25,
+      },
+    }));
+
+/** Static fallback styles for navigation loading state. */
+export const navigationFallbackStyles = StyleSheet.create({
   fallback: {
     flex: 1,
     justifyContent: 'center',
@@ -57,18 +61,7 @@ export const styles = StyleSheet.create({
   fallbackText: {
     fontSize: 25,
   },
-  outerBox: {
-    width: 150,
-    height: 150,
-    backgroundColor: '#b58df1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-    margin: 20,
-  },
-  box: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#782aeb',
-  },
 });
+
+/** @deprecated Use `useTabNavigatorStyles()` */
+export const styles = navigationFallbackStyles;

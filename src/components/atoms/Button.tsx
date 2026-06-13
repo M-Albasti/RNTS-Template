@@ -20,9 +20,13 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
   size?: ButtonSize;
   loading?: boolean;
   fullWidth?: boolean;
+  /** Removes elevation — use inside elevated cards or list rows. */
+  flat?: boolean;
   style?: ViewStyle;
   labelStyle?: TextStyle;
 }
+
+const ELEVATED_VARIANTS: ButtonVariant[] = ['primary', 'secondary', 'danger'];
 
 const Button = ({
   label,
@@ -30,6 +34,7 @@ const Button = ({
   size = 'md',
   loading = false,
   fullWidth = false,
+  flat = false,
   disabled,
   style,
   labelStyle,
@@ -41,7 +46,12 @@ const Button = ({
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: 44,
+      },
+      shadowSm: {
         ...tokens.shadows.sm,
+      },
+      shadowNone: {
+        ...tokens.shadows.none,
       },
       fullWidth: {
         alignSelf: 'stretch',
@@ -109,6 +119,9 @@ const Button = ({
   const sizeStyle =
     size === 'sm' ? styles.sizeSm : size === 'lg' ? styles.sizeLg : styles.sizeMd;
 
+  const usesShadow =
+    !flat && ELEVATED_VARIANTS.includes(variant);
+
   const getContainerStyles = (pressed: boolean): ViewStyle[] => {
     switch (variant) {
       case 'secondary':
@@ -148,6 +161,7 @@ const Button = ({
       {...pressableProps}
       style={({pressed}) => [
         styles.base,
+        usesShadow ? styles.shadowSm : styles.shadowNone,
         sizeStyle,
         ...getContainerStyles(pressed),
         fullWidth && styles.fullWidth,

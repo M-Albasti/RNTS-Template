@@ -37,6 +37,10 @@ const FeatureHubCard = ({
         borderColor: tokens.colors.border,
         ...tokens.shadows.sm,
       },
+      cardPressed: {
+        backgroundColor: tokens.colors.surfaceSecondary,
+        ...tokens.shadows.none,
+      },
       iconWrap: {
         width: 44,
         height: 44,
@@ -49,7 +53,9 @@ const FeatureHubCard = ({
   );
 
   return (
-    <Pressable style={styles.card} onPress={onPress}>
+    <Pressable
+      style={({pressed}) => [styles.card, pressed && styles.cardPressed]}
+      onPress={onPress}>
       <View style={styles.iconWrap}>
         <IconView iconType={iconType} name={iconName} size={22} />
       </View>

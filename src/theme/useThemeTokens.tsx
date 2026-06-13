@@ -1,6 +1,6 @@
 import {useMemo} from 'react';
-import {useColorScheme} from 'react-native';
 
+import {useAppColorScheme} from '@hooks/useAppColorScheme';
 import {createThemeTokens, type ThemeTokens} from '@theme/tokens';
 
 /**
@@ -8,7 +8,7 @@ import {createThemeTokens, type ThemeTokens} from '@theme/tokens';
  * Use in components instead of importing raw colors or hard-coded StyleSheet values.
  */
 export const useThemeTokens = (): ThemeTokens => {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const scheme = useAppColorScheme();
 
   return useMemo(() => createThemeTokens(scheme), [scheme]);
 };

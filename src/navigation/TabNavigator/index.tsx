@@ -24,7 +24,7 @@ import ErrorBoundary from '@atoms/ErrorBoundary';
 import {appColors} from '@constants/colors';
 
 //* styles import
-import {styles} from './styles';
+import {useTabNavigatorStyles} from './styles';
 
 interface TabBarIconProps {
   focused: boolean;
@@ -36,6 +36,7 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const TabNavigator = (props: any): React.JSX.Element => {
   const {colors} = useTheme();
+  const styles = useTabNavigatorStyles();
 
   const EmptyComponent = () => {
     return <View />;
@@ -68,6 +69,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
       <Tab.Group>
         <Tab.Screen
           name="Home"
+          component={Home}
           options={{
             tabBarItemStyle: styles.tabBarItemStyle,
             tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
@@ -88,9 +90,8 @@ const TabNavigator = (props: any): React.JSX.Element => {
                 />
               );
             },
-          }}>
-          {props => <Home {...props} />}
-        </Tab.Screen>
+          }}
+        />
         <Tab.Screen
           name="PopUp"
           options={{
@@ -115,6 +116,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
         </Tab.Screen>
         <Tab.Screen
           name="Profile"
+          component={Profile}
           options={{
             tabBarItemStyle: styles.tabBarItemStyle,
             tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
@@ -135,9 +137,8 @@ const TabNavigator = (props: any): React.JSX.Element => {
                 />
               );
             },
-          }}>
-          {props => <Profile {...props} />}
-        </Tab.Screen>
+          }}
+        />
       </Tab.Group>
     </Tab.Navigator>
   );

@@ -1,35 +1,58 @@
 import {ViewStyle} from 'react-native';
 
-/** Elevation presets — use `shadow` on iOS and `elevation` on Android together. */
-export const shadows = {
-  none: {
-    shadowColor: 'transparent',
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0,
-    shadowRadius: 0,
-    elevation: 0,
-  },
-  sm: {
-    shadowColor: '#0F172A',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  md: {
-    shadowColor: '#0F172A',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  lg: {
-    shadowColor: '#0F172A',
-    shadowOffset: {width: 0, height: 8},
-    shadowOpacity: 0.16,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-} as const satisfies Record<string, ViewStyle>;
+import type {ColorScheme} from './colors';
 
-export type ShadowToken = typeof shadows;
+type ShadowPreset = Pick<
+  ViewStyle,
+  | 'shadowColor'
+  | 'shadowOffset'
+  | 'shadowOpacity'
+  | 'shadowRadius'
+  | 'elevation'
+>;
+
+const createShadowPreset = (
+  shadowColor: string,
+  shadowOffset: {width: number; height: number},
+  shadowOpacity: number,
+  shadowRadius: number,
+  elevation: number,
+): ShadowPreset => ({
+  shadowColor,
+  shadowOffset,
+  shadowOpacity,
+  shadowRadius,
+  elevation,
+});
+
+/** Elevation presets — use `shadow` on iOS and `elevation` on Android together. */
+export const getShadows = (scheme: ColorScheme) =>
+  ({
+    none: createShadowPreset('transparent', {width: 0, height: 0}, 0, 0, 0),
+    sm: createShadowPreset(
+      scheme === 'dark' ? '#000000' : '#0F172A',
+      {width: 0, height: 1},
+      scheme === 'dark' ? 0.28 : 0.06,
+      4,
+      2,
+    ),
+    md: createShadowPreset(
+      scheme === 'dark' ? '#000000' : '#0F172A',
+      {width: 0, height: 3},
+      scheme === 'dark' ? 0.32 : 0.08,
+      8,
+      4,
+    ),
+    lg: createShadowPreset(
+      scheme === 'dark' ? '#000000' : '#0F172A',
+      {width: 0, height: 6},
+      scheme === 'dark' ? 0.38 : 0.1,
+      14,
+      8,
+    ),
+  }) as const;
+
+export type ShadowToken = ReturnType<typeof getShadows>;
+
+/** @deprecated Use `getShadows(scheme)` via theme tokens */
+export const shadows = getShadows('light');

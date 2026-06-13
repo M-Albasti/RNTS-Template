@@ -3,9 +3,11 @@ import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 
 //* types import
 import {Languages} from '@Types/languages';
+import {ThemeMode} from '@Types/themeMode';
 
 interface appSettings {
   lang: Languages;
+  themeMode: ThemeMode;
   error: object | string | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
 }
@@ -15,6 +17,7 @@ export type appSettingsState = appSettings;
 
 const initialState: appSettingsState = {
   lang: 'en',
+  themeMode: 'system',
   error: null,
   status: 'idle', //* 'idle' |  'loading' | 'succeeded' | 'failed'
 };
@@ -39,6 +42,9 @@ const appSettingsSlice = createSlice({
     resetLanguage: () => {
       return initialState;
     },
+    setThemeMode: (state, action: PayloadAction<ThemeMode>) => {
+      state.themeMode = action.payload;
+    },
   },
   extraReducers: builder => {
     // Use `extraReducers` to handle actions that were generated
@@ -61,5 +67,5 @@ const appSettingsSlice = createSlice({
   },
 });
 
-export const {resetLanguage} = appSettingsSlice.actions;
+export const {resetLanguage, setThemeMode} = appSettingsSlice.actions;
 export default appSettingsSlice.reducer;

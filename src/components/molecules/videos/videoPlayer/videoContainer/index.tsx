@@ -5,8 +5,9 @@ import {ActivityIndicator, StyleSheet} from 'react-native';
 //* components import
 import VideoView from '@atoms/VideoView';
 
-//* constants import
-import {appColors} from '@constants/colors';
+//* theme import
+import {useThemeTokens} from '@theme/useThemeTokens';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
 //* types import
 import {VideoRef, ReactVideoSource, OnVideoErrorData} from 'react-native-video';
@@ -21,6 +22,16 @@ interface VideoViewProps {
 }
 
 const VideoContainer = (props: VideoViewProps): React.JSX.Element => {
+  const styles = useThemedStyles(tokens =>
+    StyleSheet.create({
+      loader: {
+        ...StyleSheet.absoluteFill,
+        backgroundColor: tokens.colors.overlay,
+      },
+    }),
+  );
+  const {colors} = useThemeTokens();
+
   return (
     <VideoView
       uri={props.videoFileUri}
@@ -28,9 +39,9 @@ const VideoContainer = (props: VideoViewProps): React.JSX.Element => {
       onError={props.onError}
       renderLoader={
         <ActivityIndicator
-          color={appColors.green}
-          size={'large'}
-          style={StyleSheet.absoluteFill}
+          color={colors.primary}
+          size="large"
+          style={styles.loader}
         />
       }
       fullscreen={props.fullscreen}

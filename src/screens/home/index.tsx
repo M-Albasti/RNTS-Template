@@ -1,6 +1,6 @@
 //* packages import
 import React, {useCallback} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useTranslation} from 'react-i18next';
 import {isEmpty} from 'lodash';
@@ -64,32 +64,30 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
   const coins = useAppSelector(state => state.game.coins);
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
-
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        backgroundColor: tokens.colors.primary,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-        ...tokens.layout.presets.columnCenter,
-        borderWidth: tokens.layout.borderWidth.none,
-      },
-      heroText: {color: tokens.colors.textInverse},
-      statsRow: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      statPill: {
-        backgroundColor: tokens.colors.surface,
-        borderRadius: tokens.radius.md,
-        paddingVertical: tokens.spacing.sm,
-        paddingHorizontal: tokens.spacing.md,
-        minWidth: '46%' as const,
-        flex: tokens.layout.flex.fill,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      actions: {gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(tokens => ({
+    hero: {
+      backgroundColor: tokens.colors.primary,
+      borderRadius: tokens.radius.lg,
+      padding: tokens.spacing.lg,
+      ...tokens.layout.presets.columnCenter,
+      ...tokens.shadows.md,
+    },
+    heroText: {color: tokens.colors.textInverse},
+    statsRow: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
+    statPill: {
+      backgroundColor: tokens.colors.surface,
+      borderRadius: tokens.radius.md,
+      paddingVertical: tokens.spacing.sm,
+      paddingHorizontal: tokens.spacing.md,
+      minWidth: '46%' as const,
+      flex: tokens.layout.flex.fill,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
+      ...tokens.shadows.sm,
+    },
+    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
+    actions: {gap: tokens.spacing.sm},
+  }));
 
   const drawerNav = navigation.getParent<DrawerNavigationProp<DrawerParamList>>();
 
@@ -165,15 +163,15 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
 
       <Spacer size="lg" />
 
-      <Card>
+      <Card elevated={false}>
         <Heading text="Quick actions" level="h3" />
         <Spacer size="md" />
         <View style={styles.actions}>
-          <Button label="Open menu" variant="secondary" fullWidth onPress={() => drawerNav?.openDrawer()} />
-          <Button label="Profile" fullWidth onPress={() => openModule('Profile')} />
+          <Button label="Open menu" variant="secondary" flat fullWidth onPress={() => drawerNav?.openDrawer()} />
+          <Button label="Profile" flat fullWidth onPress={() => openModule('Profile')} />
           <Button label="Settings" variant="outline" fullWidth onPress={() => rootNavigate('Settings', undefined)} />
           <Button label="Change language" variant="ghost" fullWidth onPress={() => changeLanguage(dispatch)} />
-          <Button label="Logout" variant="danger" fullWidth onPress={logout} />
+          <Button label="Logout" variant="danger" flat fullWidth onPress={logout} />
         </View>
       </Card>
     </ScreenContainer>
