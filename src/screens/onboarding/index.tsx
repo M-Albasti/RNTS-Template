@@ -6,14 +6,14 @@ import Onboarding from 'react-native-onboarding-swiper';
 import {ScreenHeight, ScreenWidth} from '@rneui/base';
 import {useTranslation} from 'react-i18next';
 
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemeTokens} from '@theme/useThemeTokens';
 
 //* styles import
 import {styles} from './styles';
 
 const OnBoarding = (props: any): React.JSX.Element => {
   const {t} = useTranslation();
+  const {colors} = useThemeTokens();
   const onBoardingRef = useRef<Onboarding>();
 
   const onOnboardingReady = (ref: Onboarding) => {
@@ -30,7 +30,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
         }}
         pages={[
           {
-            backgroundColor: appColors.transparent,
+            backgroundColor: colors.transparent,
             image: (
               <Image
                 source={require('@assets/images/onboarding1.jpg')}
@@ -42,7 +42,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
             subtitle: t('onboarding.slide1Subtitle'),
           },
           {
-            backgroundColor: appColors.transparent,
+            backgroundColor: colors.transparent,
             image: (
               <Image
                 source={require('@assets/images/onboarding2.jpg')}
@@ -54,7 +54,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
             subtitle: t('onboarding.slide2Subtitle'),
           },
           {
-            backgroundColor: appColors.transparent,
+            backgroundColor: colors.transparent,
             image: (
               <Image
                 source={require('@assets/images/onboarding3.jpg')}

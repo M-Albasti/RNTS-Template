@@ -1,6 +1,6 @@
 //* packages import
 import React, {memo} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
 //* components import
 import TouchableIcon from '@atoms/TouchableIcon';
@@ -27,49 +27,44 @@ const AudioControllers = memo(
     stopSound,
     repeatSound,
   }: AudioControllersProps) => {
-    const styles = useThemedStyles(tokens =>
-      StyleSheet.create({
-        root: {
-          width: '100%',
-          flexDirection: tokens.layout.flexDirection.row,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: tokens.spacing.xl,
-          paddingTop: tokens.spacing.md,
-        },
-        playButton: {
-          width: 64,
-          height: 64,
-          borderRadius: tokens.radius.full,
-          backgroundColor: tokens.colors.primaryMuted,
-          alignItems: 'center',
-          justifyContent: 'center',
-          ...tokens.shadows.sm,
-        },
-      }),
-    );
-    const {colors} = useThemeTokens();
+    const {colors, sizes} = useThemeTokens();
+    const styles = useThemedStyles(tokens => ({
+      root: {
+        width: '100%',
+        ...tokens.layout.presets.rowBetween,
+        paddingHorizontal: tokens.spacing.xl,
+        paddingTop: tokens.spacing.md,
+      },
+      playButton: {
+        width: tokens.sizes.audioControl,
+        height: tokens.sizes.audioControl,
+        borderRadius: tokens.radius.full,
+        backgroundColor: tokens.colors.primaryMuted,
+        ...tokens.layout.presets.center,
+        ...tokens.shadows.sm,
+      },
+    }));
 
     return (
       <View style={styles.root}>
         <TouchableIcon
           iconType="FontAwesome"
           name="stop-circle"
-          size={32}
+          size={sizes.iconMd}
           color={colors.primary}
           onPress={stopSound}
         />
         <TouchableIcon
           iconType="Entypo"
           name="controller-fast-backward"
-          size={24}
+          size={sizes.iconSm}
           color={colors.primary}
         />
         <View style={styles.playButton}>
           <TouchableIcon
             iconType="AntDesign"
             name={isPlaying ? 'pausecircle' : 'play'}
-            size={42}
+            size={sizes.iconMd}
             color={colors.primary}
             onPress={isPlaying ? pauseSound : playSound}
           />
@@ -77,13 +72,13 @@ const AudioControllers = memo(
         <TouchableIcon
           iconType="Entypo"
           name="controller-fast-forward"
-          size={24}
+          size={sizes.iconSm}
           color={colors.primary}
         />
         <TouchableIcon
           iconType="MaterialCommunityIcons"
           name={repeat ? 'repeat' : 'repeat-off'}
-          size={26}
+          size={sizes.iconSm}
           color={colors.primary}
           onPress={repeatSound}
         />

@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 
 import {useThemeTokens} from '@theme/useThemeTokens';
-import type {ThemeTokens} from '@theme/tokens';
+import type {ThemeTokens} from '@theme/types';
 
 type NamedStyles<T> = {
   [P in keyof T]: ViewStyle | TextStyle;

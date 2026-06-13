@@ -5,9 +5,10 @@ import RecordAudioView from '@organisms/audios/recordAudio/RecordAudioView';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {recordAudioShowcaseNavigation} from '../shared/showcaseHelpers';
+import {sizes} from '@theme/tokens/sizes';
 
 const RecordAudioContent = (): React.JSX.Element => (
-  <View style={{minHeight: 480}}>
+  <View style={{minHeight: sizes.showcaseRecordMin}}>
     <RecordAudioView navigation={recordAudioShowcaseNavigation} />
   </View>
 );

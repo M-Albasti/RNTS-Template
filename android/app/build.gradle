@@ -4,6 +4,10 @@ apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+apply from: file("../loadEnv.gradle")
+
+def dotEnv = loadDotEnv()
+def googleMapsApiKey = dotEnv.get("GOOGLE_MAPS_API_KEY", "YOUR_GOOGLE_MAPS_API_KEY")
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -90,6 +94,7 @@ android {
         versionName "1.0"
         resValue "string", "facebook_app_id", FACEBOOK_APP_ID
         resValue "string", "facebook_client_token", FACEBOOK_CLIENT_TOKEN
+        resValue "string", "google_maps_api_key", googleMapsApiKey
     }
     signingConfigs {
         release {

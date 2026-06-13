@@ -1,23 +1,18 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-//* components import
 import TouchableText from '@atoms/TouchableText';
-
-//* constants import
-import {appColors} from '@constants/colors';
-
-//* theme import
-import {isDarkTheme} from '@theme/appTheme';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
 interface LoginRegisterButtonProps {
   goToRegister: () => void;
 }
 
-const LoginRegisterButton = (
-  props: LoginRegisterButtonProps,
-): React.JSX.Element => {
+const LoginRegisterButton = (props: LoginRegisterButtonProps): React.JSX.Element => {
+  const styles = useThemedStyles(t => ({
+    textStyle: {color: t.colors.textPrimary},
+  }));
+
   return (
     <View>
       <TouchableText
@@ -30,9 +25,3 @@ const LoginRegisterButton = (
 };
 
 export default LoginRegisterButton;
-
-const styles = StyleSheet.create({
-  textStyle: {
-    color: isDarkTheme ? appColors.white : appColors.black,
-  },
-});

@@ -23,8 +23,7 @@ import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
 import ErrorBoundary from '@atoms/ErrorBoundary';
 
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemeTokens} from '@theme/useThemeTokens';
 
 //* styles import
 import {useTabNavigatorStyles} from './styles';
@@ -40,6 +39,7 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 const TabNavigator = (props: any): React.JSX.Element => {
   const {t} = useTranslation();
   const {colors} = useTheme();
+  const {colors: themeColors} = useThemeTokens();
   const styles = useTabNavigatorStyles();
 
   const EmptyComponent = () => {
@@ -83,7 +83,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
                   iconType={'Ionicons'}
                   name="home"
                   size={size + 5}
-                  color={focused ? appColors.black : appColors.white}
+                  color={focused ? themeColors.textPrimary : themeColors.textInverse}
                   iconContainerStyle={
                     focused
                       ? {
@@ -131,7 +131,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
                   iconType={'Ionicons'}
                   name="person-circle-sharp"
                   size={size + 5}
-                  color={focused ? appColors.black : appColors.white}
+                  color={focused ? themeColors.textPrimary : themeColors.textInverse}
                   iconContainerStyle={
                     focused
                       ? {

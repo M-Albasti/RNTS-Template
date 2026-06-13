@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {Animated, StyleSheet, View} from 'react-native';
+import {Animated, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -27,36 +27,34 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
   const {coins, lastReward, spinCount} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
   const rotation = useRef(new Animated.Value(0)).current;
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      wheel: {
-        width: 220,
-        height: 220,
-        borderRadius: tokens.radius.full,
-        borderWidth: tokens.layout.borderWidth.lg,
-        borderColor: tokens.colors.primary,
-        ...tokens.layout.presets.selfCenter,
-        ...tokens.layout.presets.center,
-        backgroundColor: tokens.colors.surfaceSecondary,
-      },
-      segmentRow: {
-        ...tokens.layout.presets.wrapRow,
-        ...tokens.layout.presets.rowCenter,
-        gap: tokens.spacing.xs,
-      },
-      segment: {
-        paddingHorizontal: tokens.spacing.sm,
-        paddingVertical: tokens.spacing.xs,
-        borderRadius: tokens.radius.sm,
-        backgroundColor: tokens.colors.primaryMuted,
-      },
-      stats: {
-        ...tokens.layout.presets.columnCenter,
-        gap: tokens.spacing.xs,
-      },
-      links: {gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(tokens => ({
+    wheel: {
+      width: tokens.sizes.spinner,
+      height: tokens.sizes.spinner,
+      borderRadius: tokens.radius.full,
+      borderWidth: tokens.layout.borderWidth.lg,
+      borderColor: tokens.colors.primary,
+      ...tokens.layout.presets.selfCenter,
+      ...tokens.layout.presets.center,
+      backgroundColor: tokens.colors.surfaceSecondary,
+    },
+    segmentRow: {
+      ...tokens.layout.presets.wrapRow,
+      ...tokens.layout.presets.rowCenter,
+      gap: tokens.spacing.xs,
+    },
+    segment: {
+      paddingHorizontal: tokens.spacing.sm,
+      paddingVertical: tokens.spacing.xs,
+      borderRadius: tokens.radius.sm,
+      backgroundColor: tokens.colors.primaryMuted,
+    },
+    stats: {
+      ...tokens.layout.presets.columnCenter,
+      gap: tokens.spacing.xs,
+    },
+    links: {gap: tokens.spacing.sm},
+  }));
 
   const onSpin = () => {
     rotation.setValue(0);

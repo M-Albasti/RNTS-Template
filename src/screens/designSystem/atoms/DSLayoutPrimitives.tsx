@@ -7,6 +7,8 @@ import TextView from '@atoms/TextView';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useShowcaseStack} from '../shared/showcaseHelpers';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 
 const DIVIDER_SPACING = ['none', 'sm', 'md', 'lg'] as const;
 const SPACER_SIZES = ['xs', 'sm', 'md', 'lg', 'xl'] as const;
@@ -27,14 +29,22 @@ const DividerSection = (): React.JSX.Element => {
 
 const SpacerSection = (): React.JSX.Element => {
   const styles = useShowcaseStack();
+  const {colors} = useThemeTokens();
+  const markerStyles = useThemedStyles(tokens => ({
+    marker: {
+      backgroundColor: colors.primary,
+      height: tokens.sizes.markerLine,
+    },
+  }));
+
   return (
     <View style={styles.stack}>
       {SPACER_SIZES.map(size => (
         <View key={size}>
           <TextView text={`Spacer size="${size}"`} variant="caption" />
-          <View style={{backgroundColor: '#38BDF8', height: 2}} />
+          <View style={markerStyles.marker} />
           <Spacer size={size} />
-          <View style={{backgroundColor: '#38BDF8', height: 2}} />
+          <View style={markerStyles.marker} />
         </View>
       ))}
     </View>

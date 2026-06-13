@@ -97,4 +97,5 @@ bun.lockb
 # Environment and configuration files
 .env
 .env.*
+!.env.example
 *.env

@@ -5,6 +5,42 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
+def load_dotenv_key(key_name)
+  env_path = File.expand_path('../.env', __dir__)
+  return nil unless File.exist?(env_path)
+
+  File.foreach(env_path) do |line|
+    next if line.strip.start_with?('#') || !line.include?('=')
+
+    key, value = line.split('=', 2)
+    next unless key.strip == key_name
+
+    return value.strip.gsub(/\A["']|["']\z/, '')
+  end
+  nil
+end
+
+def sync_google_maps_api_key_to_info_plist
+  api_key = load_dotenv_key('GOOGLE_MAPS_API_KEY')
+  return if api_key.nil? || api_key.empty?
+
+  info_plist_path = File.expand_path('RNTS-Template/Info.plist', __dir__)
+  return unless File.exist?(info_plist_path)
+
+  content = File.read(info_plist_path)
+  replacement = "<key>GMSApiKey</key>\n\t<string>#{api_key}</string>"
+
+  if content.include?('<key>GMSApiKey</key>')
+    content.gsub!(/<key>GMSApiKey<\/key>\s*<string>.*?<\/string>/m, replacement)
+  else
+    content.sub!(/<\/dict>\s*<\/plist>/m, "\t#{replacement}\n</dict>\n</plist>")
+  end
+
+  File.write(info_plist_path, content)
+end
+
+sync_google_maps_api_key_to_info_plist
+
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
@@ -28,7 +64,9 @@ target 'RNTS-Template' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-  
+
+  pod 'GoogleMaps'
+
   pre_install do |installer|
     installer.pod_targets.each do |pod|
       if pod.name.eql?('op-sqlite')

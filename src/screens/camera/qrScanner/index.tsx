@@ -41,17 +41,17 @@ const QrScanner = ({navigation}: QrScannerProps): React.JSX.Element => {
   );
 
   const styles = useThemedStyles(tokens => ({
-    root: {flex: tokens.layout.flex.fill, backgroundColor: '#000'},
+    root: {flex: tokens.layout.flex.fill, backgroundColor: tokens.colors.cameraBackground},
     header: {
-      position: 'absolute' as const,
+      position: tokens.layout.position.absolute,
       top: 0,
       left: 0,
       right: 0,
-      zIndex: 2,
+      zIndex: tokens.layout.zIndex.sticky,
       paddingHorizontal: tokens.spacing.lg,
     },
     frame: {
-      position: 'absolute' as const,
+      position: tokens.layout.position.absolute,
       top: '30%' as const,
       left: '15%' as const,
       width: '70%' as const,
@@ -61,11 +61,11 @@ const QrScanner = ({navigation}: QrScannerProps): React.JSX.Element => {
       borderRadius: tokens.radius.lg,
     },
     hint: {
-      position: 'absolute' as const,
+      position: tokens.layout.position.absolute,
       left: tokens.spacing.lg,
       right: tokens.spacing.lg,
     },
-    hintText: {color: '#fff'},
+    hintText: {color: tokens.colors.cameraForeground},
   }));
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import VideosListList from '@molecules/videos/videosList/list';
 
 import {videos} from '@constants/videos';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
+import {sizes} from '@theme/tokens/sizes';
 
 export default createShowcaseScreen({
   title: 'Videos List',
@@ -12,7 +13,7 @@ export default createShowcaseScreen({
     {
       title: 'FlashList sample',
       content: (
-        <View style={{height: 280}}>
+        <View style={{height: sizes.mapPreview}}>
           <VideosListList
             videosData={videos.slice(0, 4)}
             onVideoItemPress={() => {}}

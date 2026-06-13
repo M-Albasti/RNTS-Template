@@ -1,0 +1,27 @@
+/**
+ * Loads KEY=VALUE pairs from the project root `.env` file for native Android builds.
+ * JS uses `react-native-dotenv` (`@env`); Gradle reads the same file here.
+ */
+ext.loadDotEnv = { ->
+    def env = [:]
+    def envFile = rootProject.file("../.env")
+    if (!envFile.exists()) {
+        return env
+    }
+    envFile.readLines().each { line ->
+        if (!line || line.trim().startsWith("#")) {
+            return
+        }
+        def separatorIndex = line.indexOf("=")
+        if (separatorIndex <= 0) {
+            return
+        }
+        def key = line.substring(0, separatorIndex).trim()
+        def value = line.substring(separatorIndex + 1).trim()
+        if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.substring(1, value.length() - 1)
+        }
+        env[key] = value
+    }
+    return env
+}

@@ -32,6 +32,7 @@ import {
 } from '@services/firebaseServices/firebaseAnalyticsService';
 import {recordCrashError} from '@services/firebaseServices/firebaseCrashlyticsService';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type SnapCameraProps = {
@@ -49,51 +50,52 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
   const [capturing, setCapturing] = useState(false);
   const [layout, setLayout] = useState({width: 0, height: 0});
 
+  const {spacing} = useThemeTokens();
   const styles = useThemedStyles(tokens => ({
-    root: {flex: tokens.layout.flex.fill, backgroundColor: '#000'},
+    root: {flex: tokens.layout.flex.fill, backgroundColor: tokens.colors.cameraBackground},
     topBar: {
-      position: 'absolute' as const,
+      position: tokens.layout.position.absolute,
       left: tokens.spacing.lg,
       right: tokens.spacing.lg,
-      zIndex: 2,
+      zIndex: tokens.layout.zIndex.sticky,
       ...tokens.layout.presets.rowBetween,
     },
     filterRail: {
-      position: 'absolute' as const,
+      position: tokens.layout.position.absolute,
       left: 0,
       right: 0,
       paddingHorizontal: tokens.spacing.md,
     },
     filterChip: {
-      width: 64,
-      height: 64,
+      width: tokens.sizes.filterChip,
+      height: tokens.sizes.filterChip,
       borderRadius: tokens.radius.full,
       ...tokens.layout.presets.center,
       marginRight: tokens.spacing.sm,
-      backgroundColor: 'rgba(255,255,255,0.15)',
+      backgroundColor: tokens.colors.cameraControlSurface,
       borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: 'transparent',
+      borderColor: tokens.colors.transparent,
     },
     filterChipActive: {
       borderColor: tokens.colors.primary,
-      backgroundColor: 'rgba(56,189,248,0.35)',
+      backgroundColor: tokens.colors.cameraControlActive,
     },
     shutterRow: {
-      position: 'absolute' as const,
+      position: tokens.layout.position.absolute,
       left: 0,
       right: 0,
       ...tokens.layout.presets.rowCenter,
     },
     shutter: {
-      width: 78,
-      height: 78,
-      borderRadius: 39,
-      borderWidth: 5,
-      borderColor: '#fff',
-      backgroundColor: 'rgba(255,255,255,0.25)',
+      width: tokens.sizes.shutterOuter,
+      height: tokens.sizes.shutterOuter,
+      borderRadius: tokens.sizes.shutterOuter / 2,
+      borderWidth: tokens.layout.borderWidth.lg,
+      borderColor: tokens.colors.cameraShutterBorder,
+      backgroundColor: tokens.colors.cameraShutterFill,
     },
     shutterDisabled: {opacity: 0.5},
-    overlayText: {color: '#fff'},
+    overlayText: {color: tokens.colors.cameraForeground},
   }));
 
   useEffect(() => {
@@ -135,8 +137,8 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
     await cameraPermission.requestPermission();
   }, [cameraPermission]);
 
-  const filterRailBottom = insets.bottom + 120;
-  const shutterBottom = insets.bottom + 24;
+  const filterRailBottom = insets.bottom + spacing.xxxl * 2 + spacing.xxl;
+  const shutterBottom = insets.bottom + spacing.xl;
 
   if (!device) {
     return (
@@ -167,8 +169,8 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
           />
         ) : null}
 
-        <View style={[styles.topBar, {top: insets.top + 8}]}>
-          <Pressable onPress={() => navigation.goBack()} hitSlop={12}>
+        <View style={[styles.topBar, {top: insets.top + spacing.sm}]}>
+          <Pressable onPress={() => navigation.goBack()} hitSlop={spacing.md}>
             <TextView text={t('common.goBack')} style={styles.overlayText} />
           </Pressable>
           <TextView text={t('camera.snapTitle')} style={styles.overlayText} />

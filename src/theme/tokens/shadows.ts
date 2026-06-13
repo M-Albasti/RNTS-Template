@@ -1,6 +1,6 @@
 import {ViewStyle} from 'react-native';
 
-import type {ColorScheme} from './colors';
+import type {ColorScheme, ShadowToken} from '@theme/types';
 
 type ShadowPreset = Pick<
   ViewStyle,
@@ -26,7 +26,7 @@ const createShadowPreset = (
 });
 
 /** Elevation presets — use `shadow` on iOS and `elevation` on Android together. */
-export const getShadows = (scheme: ColorScheme) =>
+export const getShadows = (scheme: ColorScheme): ShadowToken =>
   ({
     none: createShadowPreset('transparent', {width: 0, height: 0}, 0, 0, 0),
     sm: createShadowPreset(
@@ -50,9 +50,7 @@ export const getShadows = (scheme: ColorScheme) =>
       14,
       8,
     ),
-  }) as const;
-
-export type ShadowToken = ReturnType<typeof getShadows>;
+  }) as const satisfies ShadowToken;
 
 /** @deprecated Use `getShadows(scheme)` via theme tokens */
 export const shadows = getShadows('light');

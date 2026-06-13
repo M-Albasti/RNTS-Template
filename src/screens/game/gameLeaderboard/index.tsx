@@ -29,7 +29,7 @@ const GameLeaderboard = ({navigation}: GameLeaderboardProps): React.JSX.Element 
     StyleSheet.create({
       row: {...tokens.layout.presets.rowBetween},
       rank: {
-        width: 32,
+        width: tokens.sizes.leaderboardRank,
         ...tokens.layout.presets.textCenter,
         ...tokens.typography.h3,
       },

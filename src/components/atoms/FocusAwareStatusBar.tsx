@@ -1,12 +1,9 @@
-//* packages import
 import React from 'react';
 import {StatusBar} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemeTokens} from '@theme/useThemeTokens';
 
-//* types import
 import type {StatusBarStyle} from 'react-native';
 
 interface StatusBarProps {
@@ -20,23 +17,26 @@ interface StatusBarProps {
 }
 
 const FocusAwareStatusBar = ({
-  showHideTransition = 'fade', // fade, slide and none
+  showHideTransition = 'fade',
   animated = true,
-  backgroundColor = appColors.primary,
-  barStyle = 'default', // default, dark-content and light-content
+  backgroundColor,
+  barStyle = 'default',
   hidden = false,
   translucent = false,
   networkActivityIndicatorVisible = true,
 }: StatusBarProps): React.JSX.Element | null => {
+  const {colors} = useThemeTokens();
   const isFocused = useIsFocused();
 
-  if (!isFocused) return null;
+  if (!isFocused) {
+    return null;
+  }
 
   return (
     <StatusBar
       showHideTransition={showHideTransition}
       animated={animated}
-      backgroundColor={backgroundColor}
+      backgroundColor={backgroundColor ?? colors.primary}
       barStyle={barStyle}
       hidden={hidden}
       translucent={translucent}

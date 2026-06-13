@@ -1,12 +1,7 @@
-//* packages import
 import React from 'react';
-import {StyleSheet} from 'react-native';
 
-//* components import
 import OTPInput from '@atoms/OTPInput';
-
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
 interface OTPTextInputProps {
   onFocus: () => void;
@@ -15,7 +10,51 @@ interface OTPTextInputProps {
   onFilled: (text: string) => void;
 }
 
-const OTPTextInput = (props: OTPTextInputProps) => {
+const OTPTextInput = (props: OTPTextInputProps): React.JSX.Element => {
+  const styles = useThemedStyles(t => ({
+    pinContainer: {
+      width: '100%' as const,
+      alignItems: t.layout.alignItems.center,
+      marginVertical: t.spacing.xl,
+    },
+    pinCodeContainer: {
+      width: t.sizes.otpCell,
+      height: t.sizes.otpCell,
+      borderRadius: t.radius.sm,
+      borderWidth: t.layout.borderWidth.sm,
+      borderColor: t.colors.borderStrong,
+      alignItems: t.layout.alignItems.center,
+      justifyContent: t.layout.justifyContent.center,
+      marginHorizontal: t.spacing.xs,
+    },
+    pinCodeText: {
+      ...t.typography.input,
+      color: t.colors.textPrimary,
+    },
+    focusStick: {
+      width: t.sizes.otpCaretWidth,
+      height: t.sizes.otpCaretHeight,
+      backgroundColor: t.colors.textPrimary,
+    },
+    activePinCodeContainer: {
+      borderColor: t.colors.primary,
+      borderWidth: t.layout.borderWidth.md,
+    },
+    placeholderText: {
+      ...t.typography.input,
+      color: t.colors.textMuted,
+    },
+    filledPinCodeContainer: {
+      backgroundColor: t.colors.surfaceSecondary,
+      borderColor: t.colors.borderStrong,
+    },
+    disabledPinCodeContainer: {
+      backgroundColor: t.colors.surfaceSecondary,
+      borderColor: t.colors.borderStrong,
+      opacity: 0.5,
+    },
+  }));
+
   return (
     <OTPInput
       numberOfDigits={6}
@@ -55,47 +94,3 @@ const OTPTextInput = (props: OTPTextInputProps) => {
 };
 
 export default OTPTextInput;
-
-const styles = StyleSheet.create({
-  pinContainer: {
-    width: '100%',
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  pinCodeContainer: {
-    width: 45,
-    height: 45,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: appColors.silver,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 5,
-  },
-  pinCodeText: {
-    fontSize: 20,
-    color: appColors.black,
-  },
-  focusStick: {
-    width: 2,
-    height: 20,
-    backgroundColor: appColors.black,
-  },
-  activePinCodeContainer: {
-    borderColor: appColors.primary,
-    borderWidth: 2,
-  },
-  placeholderText: {
-    fontSize: 20,
-    color: appColors.gray,
-  },
-  filledPinCodeContainer: {
-    backgroundColor: appColors.softWhite,
-    borderColor: appColors.silver,
-  },
-  disabledPinCodeContainer: {
-    backgroundColor: appColors.softWhite,
-    borderColor: appColors.silver,
-    opacity: 0.5,
-  },
-});

@@ -28,7 +28,7 @@ const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
     StyleSheet.create({
       row: {...tokens.layout.presets.rowBetween},
       bar: {
-        height: 8,
+        height: tokens.spacing.sm,
         backgroundColor: tokens.colors.surfaceSecondary,
         borderRadius: tokens.radius.full,
         overflow: tokens.layout.overflow.hidden,

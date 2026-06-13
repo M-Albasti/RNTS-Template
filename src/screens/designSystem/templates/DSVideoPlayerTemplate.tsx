@@ -14,14 +14,15 @@ const VideoPlayerContent = (): React.JSX.Element => {
     player: {
       flex: tokens.layout.flex.fill,
       borderRadius: tokens.radius.lg,
-      overflow: 'hidden' as const,
+      overflow: tokens.layout.overflow.hidden,
+      height: tokens.sizes.videoPlayer,
     },
   }));
 
   return (
     <>
       <ScreenHeader title={videos[0].title} onBack={() => {}} />
-      <View style={[styles.player, {height: 240}]}>
+      <View style={styles.player}>
         <VideoPlayerView
           navigation={videoPlayerShowcaseNavigation}
           videoDetails={videos[0]}

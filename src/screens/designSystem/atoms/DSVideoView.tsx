@@ -5,12 +5,13 @@ import TextView from '@atoms/TextView';
 import VideoView from '@atoms/VideoView';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
+import {sizes} from '@theme/tokens/sizes';
 
 const SAMPLE_URI =
   'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
 
 const VideoSection = (): React.JSX.Element => (
-  <View style={{height: 200}}>
+  <View style={{height: sizes.videoPreview}}>
     <VideoView uri={SAMPLE_URI} onVideoReady={() => {}} paused controls />
   </View>
 );

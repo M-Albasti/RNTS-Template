@@ -39,8 +39,8 @@ const Profile = ({navigation}: ProfileProps): React.JSX.Element => {
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       avatar: {
-        width: 72,
-        height: 72,
+        width: tokens.sizes.profileAvatar,
+        height: tokens.sizes.profileAvatar,
         borderRadius: tokens.radius.full,
         backgroundColor: tokens.colors.primaryMuted,
         ...tokens.layout.presets.selfCenter,

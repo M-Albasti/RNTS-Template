@@ -6,4 +6,5 @@ declare module '@env' {
   export const API_BASE_URL: string;
   export const API_USE_MOCKS: string;
   export const MEDIA_API_BASE_URL: string;
+  export const GOOGLE_MAPS_API_KEY: string;
 }

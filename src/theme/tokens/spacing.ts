@@ -10,5 +10,3 @@ export const spacing = {
   xxl: 32,
   xxxl: 48,
 } as const;
-
-export type SpacingToken = typeof spacing;

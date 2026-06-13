@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -28,17 +28,15 @@ const ChatInfo = ({navigation, route}: ChatInfoProps): React.JSX.Element => {
     state.chat.threads.find(t => t.id === threadId),
   );
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      avatar: {
-        width: 88,
-        height: 88,
-        borderRadius: tokens.radius.full,
-        ...tokens.layout.presets.selfCenter,
-      },
-      row: {...tokens.layout.presets.rowBetween},
-    }),
-  );
+  const styles = useThemedStyles(tokens => ({
+    avatar: {
+      width: tokens.sizes.avatarLg,
+      height: tokens.sizes.avatarLg,
+      borderRadius: tokens.radius.full,
+      ...tokens.layout.presets.selfCenter,
+    },
+    row: {...tokens.layout.presets.rowBetween},
+  }));
 
   if (!thread) {
     return (

@@ -75,7 +75,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['todos'] as string[],
+  blacklist: ['todos', 'delivery'] as string[],
 };
 
 // Activate the App storage (AsyncStorage) for the reducers

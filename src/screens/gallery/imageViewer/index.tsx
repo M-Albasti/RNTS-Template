@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
+import {Image} from 'react-native';
 
 import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
@@ -27,18 +27,16 @@ const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element =
   const {imageId} = route.params;
   const image = useAppSelector(state => state.gallery.images.find(img => img.id === imageId));
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      image: {
-        width: '100%',
-        height: 360,
-        borderRadius: tokens.radius.lg,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      actions: {gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(tokens => ({
+    image: {
+      width: '100%',
+      height: tokens.sizes.videoPreviewLg,
+      borderRadius: tokens.radius.lg,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
+    },
+    actions: {gap: tokens.spacing.sm},
+  }));
 
   if (!image) {
     return (

@@ -6,11 +6,12 @@ import VideosListWithButtons from '@organisms/videos/videosList/ListWithButtons'
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {videosListShowcaseNavigation} from '../shared/showcaseHelpers';
+import {sizes} from '@theme/tokens/sizes';
 
 const VideosListContent = (): React.JSX.Element => (
   <>
     <ScreenHeader title="Videos" onBack={() => {}} />
-    <View style={{height: 360}}>
+    <View style={{height: sizes.videoPreviewLg}}>
       <VideosListWithButtons navigation={videosListShowcaseNavigation} />
     </View>
   </>

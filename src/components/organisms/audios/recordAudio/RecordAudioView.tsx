@@ -1,31 +1,29 @@
 import {layout} from '@theme/tokens';
 
-//* packages import
 import React, {Fragment} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
-import {isEmpty} from 'lodash';
+import {ScrollView} from 'react-native';
 
-//* components import
 import AudioRecording from '@molecules/audios/recordAudio/audioRecording';
 import AudioPlayback from '@molecules/audios/recordAudio/audioPlayback';
 import AudioControllers from '@molecules/audios/recordAudio/audioSubmit';
-
-//* hooks import
 import {useAudioRecorder} from '@hooks/useAudioRecorder';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
-//* constants import
-import {appColors} from '@constants/colors';
-
-//* types import
-import {AppStackNavigationProp} from '@Types/appNavigation';
+import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface RecordAudioViewProps {
   navigation: AppStackNavigationProp<'RecordAudio'>;
 }
 
-const RecordAudioView = (props: RecordAudioViewProps): React.JSX.Element => {
+const RecordAudioView = (_props: RecordAudioViewProps): React.JSX.Element => {
+  const styles = useThemedStyles(t => ({
+    container: {
+      flex: layout.flex.fill,
+      backgroundColor: t.colors.background,
+    },
+  }));
+
   const {
-    audioState,
     recordSecs,
     recordTime,
     currentPositionSec,
@@ -33,7 +31,6 @@ const RecordAudioView = (props: RecordAudioViewProps): React.JSX.Element => {
     playTime,
     duration,
     recordPath,
-    isLoading,
     status,
     startRecord,
     pauseRecord,
@@ -47,9 +44,11 @@ const RecordAudioView = (props: RecordAudioViewProps): React.JSX.Element => {
     uploadAudio,
   } = useAudioRecorder();
 
+  const hasRecording = Boolean(recordPath);
+
   return (
     <ScrollView style={styles.container}>
-      {isEmpty(recordPath) && (
+      {!hasRecording ? (
         <AudioRecording
           startRecord={startRecord}
           pauseRecord={pauseRecord}
@@ -58,8 +57,7 @@ const RecordAudioView = (props: RecordAudioViewProps): React.JSX.Element => {
           recordSecs={recordSecs}
           recordTime={recordTime}
         />
-      )}
-      {!isEmpty(recordPath) && (
+      ) : (
         <Fragment>
           <AudioPlayback
             startPlay={startPlay}
@@ -84,28 +82,3 @@ const RecordAudioView = (props: RecordAudioViewProps): React.JSX.Element => {
 };
 
 export default RecordAudioView;
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: layout.flex.fill,
-  },
-  recordAudioContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  headerTextStyle: {
-    color: appColors.black,
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-  buttonContainerStyle: {
-    padding: 10,
-    margin: 10,
-    borderWidth: 1,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 200,
-  },
-});

@@ -1,35 +1,37 @@
-import {layout} from '@theme/tokens';
+import {layout, typography} from '@theme/tokens';
+import {lightColors} from '@theme/tokens/colors.light';
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
     flex: layout.flex.fill,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: layout.justifyContent.center,
+    alignItems: layout.alignItems.center,
   },
   wrapper: {},
   slide1: {
     flex: layout.flex.fill,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#9DD6EB'
+    justifyContent: layout.justifyContent.center,
+    alignItems: layout.alignItems.center,
+    backgroundColor: lightColors.accent1,
   },
   slide2: {
     flex: layout.flex.fill,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#97CAE5'
+    justifyContent: layout.justifyContent.center,
+    alignItems: layout.alignItems.center,
+    backgroundColor: lightColors.accent2,
   },
   slide3: {
     flex: layout.flex.fill,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#92BBD9'
+    justifyContent: layout.justifyContent.center,
+    alignItems: layout.alignItems.center,
+    backgroundColor: lightColors.accent3,
   },
   text: {
-    color: '#fff',
-    fontSize: 30,
-    fontWeight: 'bold'
-  }
+    color: lightColors.textInverse,
+    fontSize: typography.display.fontSize,
+    lineHeight: typography.display.lineHeight,
+    fontWeight: typography.display.fontWeight,
+  },
 });

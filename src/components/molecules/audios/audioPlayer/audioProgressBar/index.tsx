@@ -1,6 +1,6 @@
 //* packages import
 import React, {memo} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import Slider from '@react-native-community/slider';
 
 //* components import
@@ -21,26 +21,23 @@ interface AudioProgressBarProps {
 
 const AudioProgressBar = memo(
   ({currentTime, duration, onSeekSound}: AudioProgressBarProps) => {
-    const styles = useThemedStyles(tokens =>
-      StyleSheet.create({
-        root: {
-          width: '100%',
-          flexDirection: tokens.layout.flexDirection.row,
-          alignItems: 'center',
-          paddingHorizontal: tokens.spacing.lg,
-          gap: tokens.spacing.sm,
-        },
-        slider: {
-          flex: tokens.layout.flex.fill,
-          height: 40,
-        },
-        time: {
-          minWidth: 44,
-          textAlign: 'center',
-        },
-      }),
-    );
     const {colors} = useThemeTokens();
+    const styles = useThemedStyles(tokens => ({
+      root: {
+        width: '100%',
+        ...tokens.layout.presets.row,
+        paddingHorizontal: tokens.spacing.lg,
+        gap: tokens.spacing.sm,
+      },
+      slider: {
+        flex: tokens.layout.flex.fill,
+        height: tokens.sizes.progressBar,
+      },
+      time: {
+        minWidth: tokens.sizes.touchTarget,
+        textAlign: tokens.layout.textAlign.center,
+      },
+    }));
 
     return (
       <View style={styles.root}>

@@ -19,6 +19,7 @@ const AudioPlayerContent = (): React.JSX.Element => {
       backgroundColor: tokens.colors.surface,
       borderRadius: tokens.radius.xl,
       paddingVertical: tokens.spacing.lg,
+      minHeight: tokens.sizes.audioPlayerMin,
       ...tokens.shadows.md,
     },
   }));
@@ -27,7 +28,7 @@ const AudioPlayerContent = (): React.JSX.Element => {
     <>
       <ScreenHeader title={sounds[0].title} onBack={() => {}} />
       <Spacer size="md" />
-      <View style={[styles.playerCard, {minHeight: 420}]}>
+      <View style={styles.playerCard}>
         <AudioPlayerView
           audioDetails={sounds[0]}
           loadError={null}

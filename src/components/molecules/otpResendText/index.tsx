@@ -1,31 +1,21 @@
-//* packages import
 import React from 'react';
-import {StyleSheet} from 'react-native';
 
-//* components import
 import TextView from '@atoms/TextView';
-
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemedStyles} from '@theme/createThemedStyles';
 
 interface OTPResendTextProps {
   timer: string | number;
 }
 
-const OTPResendText = (props: OTPResendTextProps) => {
-  return (
-    <TextView
-      text={`Resend code in ${props.timer}s`}
-      style={styles.timerText}
-    />
-  );
+const OTPResendText = (props: OTPResendTextProps): React.JSX.Element => {
+  const styles = useThemedStyles(t => ({
+    timerText: {
+      marginTop: 20,
+      color: t.colors.textMuted,
+    },
+  }));
+
+  return <TextView text={`Resend code in ${props.timer}s`} style={styles.timerText} />;
 };
 
 export default OTPResendText;
-
-const styles = StyleSheet.create({
-  timerText: {
-    marginTop: 20,
-    color: appColors.gray,
-  },
-});

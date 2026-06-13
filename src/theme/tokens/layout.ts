@@ -1,5 +1,7 @@
 import {StyleSheet} from 'react-native';
 
+import type {LayoutToken} from '@theme/types';
+
 /**
  * Layout & flexbox tokens — use instead of raw strings/numbers in StyleSheet.
  * @example tokens.layout.presets.rowBetween
@@ -95,6 +97,14 @@ export const overflow = {
   scroll: 'scroll',
 } as const;
 
+export const zIndex = {
+  base: 0,
+  raised: 1,
+  sticky: 2,
+  overlay: 3,
+  max: 4,
+} as const;
+
 /** Reusable layout combinations built from tokens above. */
 export const presets = {
   fill: {flex: flex.fill},
@@ -165,24 +175,14 @@ export const presets = {
     bottom: 0,
     left: 0,
   },
+  /** Clips overflowing content from the top-left — used by Rating partial star fill. */
+  clipOverlayTopLeft: {
+    position: position.absolute,
+    left: 0,
+    top: 0,
+    overflow: overflow.hidden,
+  },
 } as const;
-
-export type LayoutToken = {
-  flex: typeof flex;
-  flexGrow: typeof flexGrow;
-  flexShrink: typeof flexShrink;
-  borderWidth: typeof borderWidth;
-  justifyContent: typeof justifyContent;
-  alignItems: typeof alignItems;
-  alignSelf: typeof alignSelf;
-  alignContent: typeof alignContent;
-  textAlign: typeof textAlign;
-  flexDirection: typeof flexDirection;
-  flexWrap: typeof flexWrap;
-  position: typeof position;
-  overflow: typeof overflow;
-  presets: typeof presets;
-};
 
 export const layout: LayoutToken = {
   flex,
@@ -198,5 +198,6 @@ export const layout: LayoutToken = {
   flexWrap,
   position,
   overflow,
+  zIndex,
   presets,
 };

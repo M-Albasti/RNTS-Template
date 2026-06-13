@@ -27,7 +27,11 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
   const albumId = route.params?.albumId;
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
-      cover: {width: 64, height: 64, borderRadius: tokens.radius.md},
+      cover: {
+        width: tokens.sizes.galleryCover,
+        height: tokens.sizes.galleryCover,
+        borderRadius: tokens.radius.md,
+      },
       row: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
       meta: {flex: tokens.layout.flex.fill},
       tile: {

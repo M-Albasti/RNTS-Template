@@ -9,9 +9,11 @@ import ModalLayout from '@atoms/ModalLayout';
 import TextView from '@atoms/TextView';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
+import {useThemeTokens} from '@theme/useThemeTokens';
 
 const ModalDemo = (): React.JSX.Element => {
   const [visible, setVisible] = useState(false);
+  const {colors, spacing} = useThemeTokens();
 
   return (
     <View>
@@ -26,8 +28,8 @@ const ModalDemo = (): React.JSX.Element => {
             flex: layout.flex.fill,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            padding: 24,
+            backgroundColor: colors.overlay,
+            padding: spacing.lg,
           }}>
           <Card constrained>
             <TextView text="Modal content inside Card" variant="body" />

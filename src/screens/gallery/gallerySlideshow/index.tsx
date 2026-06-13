@@ -28,7 +28,7 @@ const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX
     StyleSheet.create({
       image: {
         width: '100%',
-        height: 400,
+        height: tokens.sizes.gallerySlide,
         borderRadius: tokens.radius.lg,
       },
       controls: {...tokens.layout.presets.rowBetween},

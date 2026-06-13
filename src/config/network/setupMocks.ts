@@ -3,6 +3,7 @@ import {getMockAdapter} from '@config/mockApi';
 import {registerAuthMocks} from '@api/mocks/authMocks';
 import {registerDashboardMocks} from '@api/mocks/dashboardMocks';
 import {registerFeedMocks} from '@api/mocks/feedMocks';
+import {registerDeliveryMocks} from '@api/mocks/deliveryMocks';
 
 let mocksRegistered = false;
 
@@ -14,5 +15,6 @@ export const setupApiMocks = (): void => {
   registerAuthMocks(mock);
   registerDashboardMocks(mock);
   registerFeedMocks(mock);
+  registerDeliveryMocks(mock);
   mocksRegistered = true;
 };

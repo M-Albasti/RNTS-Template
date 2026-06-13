@@ -1,6 +1,7 @@
 import {TextStyle} from 'react-native';
 
 import type {FontSet} from '@theme/fonts';
+import type {TypographyToken} from '@theme/types';
 
 type TypographyStyle = Pick<TextStyle, 'fontSize' | 'lineHeight' | 'fontWeight' | 'fontFamily'>;
 
@@ -10,6 +11,9 @@ export const typography: Record<
   | 'h1'
   | 'h2'
   | 'h3'
+  | 'title'
+  | 'input'
+  | 'subtitle'
   | 'body'
   | 'bodySmall'
   | 'caption'
@@ -36,6 +40,21 @@ export const typography: Record<
     lineHeight: 24,
     fontWeight: '600' as TextStyle['fontWeight'],
   },
+  title: {
+    fontSize: 25,
+    lineHeight: 30,
+    fontWeight: '700' as TextStyle['fontWeight'],
+  },
+  input: {
+    fontSize: 20,
+    lineHeight: 24,
+    fontWeight: '600' as TextStyle['fontWeight'],
+  },
+  subtitle: {
+    fontSize: 19,
+    lineHeight: 24,
+    fontWeight: '600' as TextStyle['fontWeight'],
+  },
   body: {
     fontSize: 16,
     lineHeight: 24,
@@ -57,8 +76,6 @@ export const typography: Record<
     fontWeight: '600' as TextStyle['fontWeight'],
   },
 };
-
-export type TypographyToken = typeof typography;
 
 const weightToFont = (
   fonts: FontSet,
@@ -90,6 +107,18 @@ export const applyFontFamilies = (
   h3: {
     ...base.h3,
     fontFamily: weightToFont(fonts, base.h3.fontWeight),
+  },
+  title: {
+    ...base.title,
+    fontFamily: fonts.bold ?? fonts.semiBold ?? fonts.regular,
+  },
+  input: {
+    ...base.input,
+    fontFamily: weightToFont(fonts, base.input.fontWeight),
+  },
+  subtitle: {
+    ...base.subtitle,
+    fontFamily: weightToFont(fonts, base.subtitle.fontWeight),
   },
   body: {
     ...base.body,

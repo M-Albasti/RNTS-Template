@@ -4,6 +4,7 @@ import type {DesignSystemRouteName} from '@Types/designSystemNavigation';
 
 import DSAppSvgIcon from './atoms/DSAppSvgIcon';
 import DSAudioListItem from './atoms/DSAudioListItem';
+import DSRating from './atoms/DSRating';
 import DSButton from './atoms/DSButton';
 import DSCard from './atoms/DSCard';
 import DSErrorFallback from './atoms/DSErrorFallback';
@@ -107,6 +108,7 @@ const designSystemRegistryUnsorted: DesignSystemRegistryItem[] = [
   {route: 'DSLayoutPrimitives', title: 'Layout Primitives', category: 'atoms', component: DSLayoutPrimitives},
   {route: 'DSModalLayout', title: 'Modal Layout', category: 'atoms', component: DSModalLayout},
   {route: 'DSOTPInput', title: 'OTP Input', category: 'atoms', component: DSOTPInput},
+  {route: 'DSRating', title: 'Rating', category: 'atoms', component: DSRating},
   {route: 'DSScreenHeader', title: 'Screen Header', category: 'atoms', component: DSScreenHeader},
   {route: 'DSTextInputView', title: 'Text Input View', category: 'atoms', component: DSTextInputView},
   {route: 'DSTouchableIcon', title: 'Touchable Icon', category: 'atoms', component: DSTouchableIcon},

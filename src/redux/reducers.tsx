@@ -12,6 +12,8 @@ import chatReducer from '@redux/slices/chatSlice';
 import walletReducer from '@redux/slices/walletSlice';
 import galleryReducer from '@redux/slices/gallerySlice';
 import gameReducer from '@redux/slices/gameSlice';
+import deliveryReducer from '@redux/slices/deliverySlice';
+import marketplaceReducer from '@redux/slices/marketplaceSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
   wallet: walletReducer,
   gallery: galleryReducer,
   game: gameReducer,
+  delivery: deliveryReducer,
+  marketplace: marketplaceReducer,
 });
 
 export default rootReducer;

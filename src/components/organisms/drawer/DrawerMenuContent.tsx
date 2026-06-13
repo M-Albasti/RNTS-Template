@@ -32,6 +32,8 @@ const menuItems: {labelKey: string; route: DrawerRoute}[] = [
   {labelKey: 'drawer.audios', route: 'AudioStack'},
   {labelKey: 'drawer.videos', route: 'VideoStack'},
   {labelKey: 'drawer.camera', route: 'CameraStack'},
+  {labelKey: 'drawer.delivery', route: 'DeliveryStack'},
+  {labelKey: 'drawer.marketplace', route: 'MarketplaceStack'},
   {labelKey: 'drawer.designSystem', route: 'DesignSystemStack'},
 ];
 

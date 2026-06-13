@@ -108,6 +108,20 @@ const MODULES: HubModule[] = [
     iconType: 'Ionicons',
     iconName: 'musical-notes-outline',
   },
+  {
+    titleKey: 'home.modules.delivery.title',
+    subtitleKey: 'home.modules.delivery.subtitle',
+    route: 'DeliveryStack',
+    iconType: 'MaterialCommunityIcons',
+    iconName: 'truck-delivery-outline',
+  },
+  {
+    titleKey: 'home.modules.marketplace.title',
+    subtitleKey: 'home.modules.marketplace.subtitle',
+    route: 'MarketplaceStack',
+    iconType: 'Ionicons',
+    iconName: 'storefront-outline',
+  },
 ];
 
 const Home = ({navigation}: HomeProps): React.JSX.Element => {

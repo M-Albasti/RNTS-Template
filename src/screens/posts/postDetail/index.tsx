@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -29,15 +29,21 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
   const saved = useAppSelector(state => state.posts.savedIds.includes(postId));
   const dispatch = useAppDispatch();
   const [commentText, setCommentText] = useState('');
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      avatar: {width: 48, height: 48, borderRadius: tokens.radius.full},
-      header: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-      media: {width: '100%', height: 200, borderRadius: tokens.radius.md},
-      comment: {gap: tokens.spacing.xs},
-      actions: {gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(tokens => ({
+    avatar: {
+      width: tokens.sizes.avatarMd,
+      height: tokens.sizes.avatarMd,
+      borderRadius: tokens.radius.full,
+    },
+    header: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
+    media: {
+      width: '100%',
+      height: tokens.sizes.postMediaHeight,
+      borderRadius: tokens.radius.md,
+    },
+    comment: {gap: tokens.spacing.xs},
+    actions: {gap: tokens.spacing.sm},
+  }));
 
   const comments = useMemo(() => post?.comments ?? [], [post?.comments]);
 

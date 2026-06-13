@@ -24,12 +24,13 @@ import WalletNavigator from '@navigation/WalletNavigator';
 import GalleryNavigator from '@navigation/GalleryNavigator';
 import DesignSystemNavigator from '@navigation/DesignSystemNavigator';
 import CameraNavigator from '@navigation/CameraNavigator';
+import DeliveryNavigator from '@navigation/DeliveryNavigator';
+import MarketplaceNavigator from '@navigation/MarketplaceNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
 
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemeTokens} from '@theme/useThemeTokens';
 
 //* styles import
 import {styles} from './styles';
@@ -37,6 +38,8 @@ import {styles} from './styles';
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
 const DrawerNavigator = (props: any): React.JSX.Element => {
+  const {colors} = useThemeTokens();
+
   return (
     <Drawer.Navigator
       backBehavior="history"
@@ -65,7 +68,7 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
             drawerHideStatusBarOnOpen: true,
           },
         }),
-        overlayColor: appColors.black40,
+        overlayColor: colors.scrim,
       }}
       drawerContent={props => <DrawerMenuContent {...props} />}>
       <Drawer.Group>
@@ -106,6 +109,12 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
         </Drawer.Screen>
         <Drawer.Screen name="CameraStack" options={{title: 'Camera'}}>
           {() => <CameraNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="DeliveryStack" options={{title: 'Delivery'}}>
+          {() => <DeliveryNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="MarketplaceStack" options={{title: 'Marketplace'}}>
+          {() => <MarketplaceNavigator />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -14,6 +14,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {ChatThread} from '@Types/chatTypes';
 
@@ -23,32 +24,34 @@ interface ChatListProps {
 
 const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
   const {t} = useTranslation();
+  const {sizes} = useThemeTokens();
   const threads = useAppSelector(state =>
     [...state.chat.threads].sort((a, b) => Number(b.pinned) - Number(a.pinned)),
   );
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      row: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-      avatar: {width: 48, height: 48, borderRadius: tokens.radius.full},
-      meta: {flex: tokens.layout.flex.fill},
-      badge: {
-        minWidth: 24,
-        height: 24,
-        borderRadius: tokens.radius.full,
-        backgroundColor: tokens.colors.primary,
-        ...tokens.layout.presets.center,
-        paddingHorizontal: tokens.spacing.xs,
-      },
-      badgeText: {
-        color: tokens.colors.textInverse,
-        fontSize: 12,
-        fontWeight: '700',
-        ...tokens.layout.presets.textCenter,
-      },
-      mutedIcon: {opacity: 0.5},
-    }),
-  );
+  const styles = useThemedStyles(tokens => ({
+    list: {flex: tokens.layout.flex.fill},
+    row: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
+    avatar: {
+      width: tokens.sizes.avatarMd,
+      height: tokens.sizes.avatarMd,
+      borderRadius: tokens.radius.full,
+    },
+    meta: {flex: tokens.layout.flex.fill},
+    badge: {
+      minWidth: tokens.sizes.iconSm,
+      height: tokens.sizes.iconSm,
+      borderRadius: tokens.radius.full,
+      backgroundColor: tokens.colors.primary,
+      ...tokens.layout.presets.center,
+      paddingHorizontal: tokens.spacing.xs,
+    },
+    badgeText: {
+      ...tokens.typography.caption,
+      color: tokens.colors.textInverse,
+      ...tokens.layout.presets.textCenter,
+    },
+    mutedIcon: {opacity: 0.5},
+  }));
 
   const renderItem = ({item}: {item: ChatThread}) => (
     <Card>
@@ -75,7 +78,7 @@ const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
             <TouchableIcon
               iconType="Ionicons"
               name="information-circle-outline"
-              size={22}
+              size={sizes.iconSm}
               onPress={() => navigation.navigate('ChatInfo', {threadId: item.id})}
             />
           )}

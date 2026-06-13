@@ -1,6 +1,7 @@
 export {authClient} from '@api/clients/authClient';
 export {dashboardClient} from '@api/clients/dashboardClient';
 export {feedClient} from '@api/clients/feedClient';
+export {deliveryClient} from '@api/clients/deliveryClient';
 
 export {queryKeys} from '@api/query/queryKeys';
 export {queryClient} from '@api/query/queryClient';

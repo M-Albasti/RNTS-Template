@@ -5,6 +5,7 @@ import RecordAudioView from '@organisms/audios/recordAudio/RecordAudioView';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {recordAudioShowcaseNavigation} from '../shared/showcaseHelpers';
+import {sizes} from '@theme/tokens/sizes';
 
 export default createShowcaseScreen({
   title: 'Record Audio View',
@@ -13,7 +14,7 @@ export default createShowcaseScreen({
     {
       title: 'Full recorder UI',
       content: (
-        <View style={{minHeight: 400}}>
+        <View style={{minHeight: sizes.gallerySlide}}>
           <RecordAudioView navigation={recordAudioShowcaseNavigation} />
         </View>
       ),

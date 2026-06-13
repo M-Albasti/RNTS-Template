@@ -8,6 +8,7 @@ export type DesignSystemStackParamList = {
   DSLayoutPrimitives: undefined;
   DSTextInputView: undefined;
   DSOTPInput: undefined;
+  DSRating: undefined;
   DSIcon: undefined;
   DSAppSvgIcon: undefined;
   DSTouchableText: undefined;
