@@ -17,6 +17,14 @@ import {clearAccessToken, setAccessToken} from '@config/network/tokenStorage';
 //* translation import
 import i18n from '@translation/i18n';
 
+//* firebase import
+import {
+  trackLoginFailure,
+  trackLoginSuccess,
+  trackRegisterFailure,
+  trackRegisterSuccess,
+} from '@services/firebaseServices/firebaseAuthAnalytics';
+
 //* types import
 import {AppDispatch} from '@Types/appDispatch';
 import {LoginTypes} from '@Types/loginTypes';
@@ -46,9 +54,11 @@ export const apiLoginService = async (
     dispatch(addUser(mapLoginResponseToUser(response, loginType)));
     queryClient.invalidateQueries({queryKey: queryKeys.dashboard()});
     queryClient.invalidateQueries({queryKey: queryKeys.all});
+    await trackLoginSuccess(loginType);
     Alert.alert(i18n.t('auth.loginSuccess'), i18n.t('auth.loginSuccessMessage'));
   } catch (error) {
     const apiError = error as ApiError;
+    await trackLoginFailure(loginType, apiError.message || i18n.t('auth.invalidCredentials'));
     Alert.alert(
       i18n.t('auth.loginFailed'),
       apiError.message || i18n.t('auth.invalidCredentials'),
@@ -69,9 +79,14 @@ export const apiRegisterService = async (
     setAccessToken(response.token);
     dispatch(addUser(mapLoginResponseToUser(response, 'Normal')));
     queryClient.invalidateQueries({queryKey: queryKeys.dashboard()});
+    await trackRegisterSuccess('Normal');
     Alert.alert(i18n.t('auth.registerSuccess'), i18n.t('auth.registerSuccessMessage'));
   } catch (error) {
     const apiError = error as ApiError;
+    await trackRegisterFailure(
+      'Normal',
+      apiError.message || i18n.t('auth.registrationFailed'),
+    );
     Alert.alert(
       i18n.t('auth.registerFailed'),
       apiError.message || i18n.t('auth.registrationFailed'),

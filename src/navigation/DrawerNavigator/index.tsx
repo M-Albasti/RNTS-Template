@@ -23,6 +23,7 @@ import GameNavigator from '@navigation/GameNavigator';
 import WalletNavigator from '@navigation/WalletNavigator';
 import GalleryNavigator from '@navigation/GalleryNavigator';
 import DesignSystemNavigator from '@navigation/DesignSystemNavigator';
+import CameraNavigator from '@navigation/CameraNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -102,6 +103,9 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
           name="DesignSystemStack"
           options={{title: 'Design System'}}>
           {() => <DesignSystemNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="CameraStack" options={{title: 'Camera'}}>
+          {() => <CameraNavigator />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

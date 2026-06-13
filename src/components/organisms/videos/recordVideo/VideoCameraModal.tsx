@@ -50,7 +50,7 @@ const VideoCameraModal = (props: VideoCameraModalProps): React.JSX.Element => {
       !cameraPermission.hasPermission ||
       !microphonePermission.hasPermission
     ) {
-      await permissionsRequest('camera');
+      await permissionsRequest('cameraWithMic');
     }
   };
 

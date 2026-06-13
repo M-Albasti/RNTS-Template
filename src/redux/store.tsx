@@ -17,6 +17,7 @@ import {save, load, remove, clear} from '@redux/storage/mmkv';
 // import {save, load, remove, clear} from '@redux/storage/asyncStorage';
 import {clearSQLiteData} from '@redux/storage/sqlite/init';
 import {sqliteMiddleware} from '@redux/storage/sqlite/middleware/sqliteMiddleware';
+import {firebaseAuthMiddleware} from '@redux/middleware/firebaseAuthMiddleware';
 
 //* reducers import
 import rootReducer from '@redux/reducers';
@@ -89,7 +90,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(sqliteMiddleware),
+    }).concat(sqliteMiddleware, firebaseAuthMiddleware),
 });
 
 export const persistor = persistStore(store);

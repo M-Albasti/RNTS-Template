@@ -12,6 +12,12 @@ import {registerFirebaseWithEmail} from '@services/firebaseServices/firebaseEmai
 //* helpers import
 import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
 
+//* firebase import
+import {
+  trackRegisterFailure,
+  trackRegisterSuccess,
+} from '@services/firebaseServices/firebaseAuthAnalytics';
+
 //* utils import
 import {formatZodError} from '@utils/formatZodError';
 import registerValidation from '@utils/registerValidation';
@@ -40,10 +46,15 @@ export const registerService = async (
         .then(user => {
           // Handle successful register
           dispatch(addUser(cleanFirebaseUserResponse(user, 'FirebaseEmail')));
+          void trackRegisterSuccess('FirebaseEmail');
           Alert.alert('Register Success', 'You have successfully registered!');
         })
         .catch(error => {
           // Handle register failure
+          void trackRegisterFailure(
+            'FirebaseEmail',
+            error.message || 'An error occurred during register.',
+          );
           Alert.alert(
             'Register Failed',
             error.message || 'An error occurred during register.',

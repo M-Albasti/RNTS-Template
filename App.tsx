@@ -26,6 +26,7 @@ import NavigationScreens from '@navigation/index';
 
 //* redux import
 import {bootstrapSQLite} from '@redux/storage/sqlite';
+import {initFirebaseServices} from '@config/firebaseInit';
 import {persistor, store} from '@redux/store';
 
 //* translation import
@@ -36,15 +37,18 @@ const App = (): React.JSX.Element => {
   const [sqliteReady, setSqliteReady] = useState(false);
 
   useEffect(() => {
-    try {
-      // Must run before UI reads todo state from Redux.
-      // See: src/redux/storage/sqlite/README.md
-      bootstrapSQLite(store.dispatch, store.getState);
-    } catch (error) {
-      console.log('SQLite bootstrap Error =>', error);
-    } finally {
-      setSqliteReady(true);
-    }
+    const boot = async () => {
+      try {
+        bootstrapSQLite(store.dispatch, store.getState);
+        await initFirebaseServices();
+      } catch (error) {
+        console.log('App bootstrap Error =>', error);
+      } finally {
+        setSqliteReady(true);
+      }
+    };
+
+    boot();
   }, []);
 
   if (!sqliteReady) {

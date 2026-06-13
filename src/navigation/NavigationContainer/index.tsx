@@ -20,6 +20,7 @@ import {useAppSelector} from '@hooks/useAppSelector';
 
 //* navigators import
 import {navigationIntegration} from '@navigation/navigationIntegration';
+import {trackNavigationScreenChange} from '@navigation/firebaseNavigationAnalytics';
 
 //* theme import
 import {createNavigationTheme} from '@theme/appTheme';
@@ -45,13 +46,19 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
   const onNavigationReady = useCallback(() => {
     navigationIntegration.registerNavigationContainer(navigationRef);
     syncLanguage(lang);
+    trackNavigationScreenChange(() => navigationRef.getRootState());
   }, [lang]);
+
+  const onNavigationStateChange = useCallback(() => {
+    trackNavigationScreenChange(() => navigationRef.getRootState());
+  }, []);
 
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={theme}
       onReady={onNavigationReady}
+      onStateChange={onNavigationStateChange}
       onUnhandledAction={error => {
         logger.warn('Unhandled navigation action:', error);
       }}

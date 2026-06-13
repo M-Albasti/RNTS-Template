@@ -18,6 +18,7 @@ export type DrawerParamList = {
   WalletStack: undefined;
   GalleryStack: undefined;
   DesignSystemStack: undefined;
+  CameraStack: undefined;
 };
 
 export type RootStackParamList = {
@@ -55,6 +56,11 @@ export type RootStackParamList = {
   WalletStack: undefined;
   GalleryStack: undefined;
   DesignSystemStack: undefined;
+  CameraStack: undefined;
+  CameraHub: undefined;
+  SnapCamera: undefined;
+  QrScanner: undefined;
+  BarcodeScanner: undefined;
   PostHub: undefined;
   Feed: undefined;
   PostDetail: {postId: string};

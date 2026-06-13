@@ -113,8 +113,48 @@
     "gallery": "المعرض",
     "audios": "الصوت",
     "videos": "الفيديو",
+    "camera": "الكاميرا",
     "designSystem": "نظام التصميم",
     "settings": "الإعدادات"
+  },
+  "camera": {
+    "title": "الكاميرا",
+    "hubTitle": "استوديو الكاميرا",
+    "hubSubtitle": "التقط سيلفي مع فلاتر، امسح QR، أو اقرأ الباركود.",
+    "snapTitle": "كاميرا سnap",
+    "snapSubtitle": "سيلفي مع فلاتر وجهية",
+    "qrTitle": "ماسح QR",
+    "qrSubtitle": "امسح رموز QR فوراً",
+    "barcodeTitle": "ماسح الباركود",
+    "barcodeSubtitle": "EAN و UPC و Code 128 وغيرها",
+    "permissionTitle": "مطلوب إذن الكاميرا",
+    "permissionBody": "اسمح بالكاميرا لاستخدام أوضاع Snap وQR والباركود.",
+    "grantPermission": "السماح بالكاميرا",
+    "noDevice": "لم يتم العثور على كاميرا.",
+    "savedTitle": "تم الحفظ",
+    "savedBody": "تم حفظ الصورة في المعرض.",
+    "errorTitle": "خطأ في الكاميرا",
+    "captureFailed": "تعذر التقاط الصورة. حاول مرة أخرى.",
+    "qrHint": "ضع رمز QR داخل الإطار",
+    "barcodeHint": "ضع الباركود على الخط الأحمر",
+    "qrResult": "تم مسح QR",
+    "barcodeResult": "تم مسح الباركود",
+    "copiedTitle": "تم النسخ",
+    "copiedBody": "تم نسخ القيمة.",
+    "copy": "نسخ",
+    "scanAgain": "مسح مرة أخرى",
+    "noFeatures": "ميزات الكاميرا غير متاحة مؤقتاً.",
+    "permissionDenied": "تم رفض إذن الكاميرا. فعّله من الإعدادات للمتابعة.",
+    "openSettings": "فتح الإعدادات",
+    "filters": {
+      "none": "عادي",
+      "dog": "كلب",
+      "cat": "قطة",
+      "bunny": "أرنب",
+      "crown": "تاج",
+      "hearts": "قلوب",
+      "glasses": "نظارات"
+    }
   },
   "designSystem": {
     "hubTitle": "نظام التصميم",
@@ -136,6 +176,11 @@
     "notFoundCode": "404",
     "pageNotFound": "الصفحة غير موجودة",
     "pageNotFoundMessage": "الشاشة المطلوبة غير موجودة أو تم نقلها."
+  },
+  "maintenance": {
+    "title": "قيد الصيانة",
+    "message": "نجري صيانة مجدولة. يرجى المحاولة مرة أخرى قريباً.",
+    "retry": "إعادة المحاولة"
   },
   "onboarding": {
     "slide1Title": "مرحباً بك في RNTS",

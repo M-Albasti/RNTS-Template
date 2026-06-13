@@ -113,8 +113,48 @@
     "gallery": "Gallery",
     "audios": "Audios",
     "videos": "Videos",
+    "camera": "Camera",
     "designSystem": "Design system",
     "settings": "Settings"
+  },
+  "camera": {
+    "title": "Camera",
+    "hubTitle": "Camera studio",
+    "hubSubtitle": "Snap selfies with fun overlays, scan QR codes, or read product barcodes.",
+    "snapTitle": "Snap camera",
+    "snapSubtitle": "Selfie camera with face-style filters",
+    "qrTitle": "QR scanner",
+    "qrSubtitle": "Scan QR codes instantly",
+    "barcodeTitle": "Barcode scanner",
+    "barcodeSubtitle": "Scan EAN, UPC, Code 128 and more",
+    "permissionTitle": "Camera access needed",
+    "permissionBody": "Allow camera permission to use snap, QR, and barcode modes.",
+    "grantPermission": "Allow camera",
+    "noDevice": "No camera device found on this phone.",
+    "savedTitle": "Saved",
+    "savedBody": "Photo saved to your gallery.",
+    "errorTitle": "Camera error",
+    "captureFailed": "Could not capture photo. Try again.",
+    "qrHint": "Align the QR code inside the frame",
+    "barcodeHint": "Align the barcode on the red line",
+    "qrResult": "QR code scanned",
+    "barcodeResult": "Barcode scanned",
+    "copiedTitle": "Copied",
+    "copiedBody": "Value copied to clipboard.",
+    "copy": "Copy",
+    "scanAgain": "Scan again",
+    "noFeatures": "Camera features are temporarily unavailable.",
+    "permissionDenied": "Camera permission was denied. Enable it in Settings to continue.",
+    "openSettings": "Open Settings",
+    "filters": {
+      "none": "Normal",
+      "dog": "Dog",
+      "cat": "Cat",
+      "bunny": "Bunny",
+      "crown": "Crown",
+      "hearts": "Hearts",
+      "glasses": "Glasses"
+    }
   },
   "designSystem": {
     "hubTitle": "Design System",
@@ -136,6 +176,11 @@
     "notFoundCode": "404",
     "pageNotFound": "Page not found",
     "pageNotFoundMessage": "The screen you requested does not exist or was moved."
+  },
+  "maintenance": {
+    "title": "Under maintenance",
+    "message": "We're performing scheduled maintenance. Please check back shortly.",
+    "retry": "Try again"
   },
   "onboarding": {
     "slide1Title": "Welcome to RNTS",

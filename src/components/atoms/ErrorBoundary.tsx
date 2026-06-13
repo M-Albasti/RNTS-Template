@@ -8,6 +8,7 @@ import ErrorFallback from '@atoms/ErrorFallback';
 
 //* utils import
 import {logger} from '@utils/logger';
+import {recordCrashError} from '@services/firebaseServices/firebaseCrashlyticsService';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ const ErrorBoundary = ({children}: ErrorBoundaryProps): React.JSX.Element => {
           normalizedError.message,
           info.componentStack,
         );
+        recordCrashError(normalizedError, info.componentStack ?? 'ErrorBoundary');
       }}
       onReset={() => {
         // User tapped "Try Again" — boundary remounts children without full app restart.
