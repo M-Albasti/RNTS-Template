@@ -13,7 +13,10 @@ import {
 
 //* storage import
 import {save, load, remove, clear} from '@redux/storage/mmkv';
+// import {save, load, remove, clear} from '@redux/storage/sqliteStorage';
 // import {save, load, remove, clear} from '@redux/storage/asyncStorage';
+import {clearSQLiteData} from '@redux/storage/sqlite/init';
+import {sqliteMiddleware} from '@redux/storage/sqlite/middleware/sqliteMiddleware';
 
 //* reducers import
 import rootReducer from '@redux/reducers';
@@ -34,6 +37,23 @@ const storage = {
   },
 };
 
+// Create a storage adapter for redux-persist - SQLite kv_store (optional)
+// Requires initializeSQLite() before the store hydrates.
+// const storage = {
+//   setItem: (key: string, value: string) => {
+//     save(key, value);
+//     return Promise.resolve();
+//   },
+//   getItem: (key: string) => {
+//     const result = load<string>(key);
+//     return Promise.resolve(result);
+//   },
+//   removeItem: (key: string) => {
+//     remove(key);
+//     return Promise.resolve();
+//   },
+// };
+
 // Create a storage adapter for redux-persist - AsyncStorage (Commented for easy reversion)
 // const storage = {
 //   setItem: async (key: string, value: string) => {
@@ -48,13 +68,13 @@ const storage = {
 //   },
 // };
 
-// redux-persist v6 uses `blacklist` (not `blackList`). An empty blacklist keeps all slices persisted.
-// When you add Supabase/API tokens, blacklist transient slices here (e.g. ['video', 'audio']).
+// redux-persist v6 uses `blacklist` (not `blackList`).
+// `todos` is persisted in SQLite (see src/redux/storage/sqlite/README.md) — exclude from MMKV.
 const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: [] as string[],
+  blacklist: ['todos'] as string[],
 };
 
 // Activate the App storage (AsyncStorage) for the reducers
@@ -69,7 +89,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(sqliteMiddleware),
 });
 
 export const persistor = persistStore(store);
@@ -77,4 +97,5 @@ export const persistor = persistStore(store);
 // Utility function to clear all persisted data
 export const clearAllStorage = () => {
   clear();
+  clearSQLiteData();
 };

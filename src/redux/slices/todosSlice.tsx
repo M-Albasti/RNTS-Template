@@ -77,9 +77,11 @@ const todosSlice = createSlice({
     setFocusMinutes: (state, action: PayloadAction<number>) => {
       state.focusMinutes = action.payload;
     },
+    hydrateTodos: (_state, action: PayloadAction<TodosState>) => action.payload,
+    // ^ Called once on startup by hydrateReduxFromSQLite — replaces entire todos slice from SQLite.
   },
 });
 
-export const {addTodo, toggleTodo, removeTodo, setPriority, setTodoFilter, setFocusMinutes} =
+export const {addTodo, toggleTodo, removeTodo, setPriority, setTodoFilter, setFocusMinutes, hydrateTodos} =
   todosSlice.actions;
 export default todosSlice.reducer;
