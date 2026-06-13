@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
 import Heading from '@atoms/Heading';
@@ -21,6 +22,7 @@ interface GameLeaderboardProps {
 }
 
 const GameLeaderboard = ({navigation}: GameLeaderboardProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {leaderboard, coins} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -46,15 +48,15 @@ const GameLeaderboard = ({navigation}: GameLeaderboardProps): React.JSX.Element 
     <Card style={item.name === 'You' ? styles.highlight : undefined}>
       <View style={styles.row}>
         <TextView text={`#${item.rank}`} style={styles.rank} />
-        <Heading text={item.name} level="h3" />
-        <TextView text={`${item.coins} coins`} variant="bodySmall" />
+        <Heading text={item.name === 'You' ? t('game.you') : item.name} level="h3" />
+        <TextView text={t('game.playerCoins', {count: item.coins})} variant="bodySmall" />
       </View>
     </Card>
   );
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Leaderboard" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.leaderboard')} onBack={() => navigation.goBack()} />
       <FlashList
         data={leaderboard}
         renderItem={renderItem}

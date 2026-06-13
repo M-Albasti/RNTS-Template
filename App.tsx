@@ -18,6 +18,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { I18nextProvider } from 'react-i18next';
 import { wrap } from '@sentry/react-native';
 
+//* config import
+import AppProviders from '@config/AppProviders';
+
 //* navigators import
 import NavigationScreens from '@navigation/index';
 
@@ -32,11 +35,13 @@ const App = (): React.JSX.Element => {
     <I18nextProvider i18n={i18n}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <SafeAreaProvider>
-            <GestureHandlerRootView style={styles.container}>
-              <NavigationScreens />
-            </GestureHandlerRootView>
-          </SafeAreaProvider>
+          <AppProviders>
+            <SafeAreaProvider>
+              <GestureHandlerRootView style={styles.container}>
+                <NavigationScreens />
+              </GestureHandlerRootView>
+            </SafeAreaProvider>
+          </AppProviders>
         </PersistGate>
       </Provider>
     </I18nextProvider>

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -17,6 +18,7 @@ interface GalleryFavoritesProps {
 }
 
 const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const favorites = useAppSelector(state => state.gallery.images.filter(i => i.favorite));
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -35,9 +37,9 @@ const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Elemen
   if (favorites.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title="Favorites" onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('gallery.favorites')} onBack={() => navigation.goBack()} />
         <View style={styles.empty}>
-          <TextView text="No favorite photos yet." muted align="center" />
+          <TextView text={t('gallery.noFavoritePhotos')} muted align="center" />
         </View>
       </ScreenContainer>
     );
@@ -45,7 +47,7 @@ const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Elemen
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Favorites" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.favorites')} onBack={() => navigation.goBack()} />
       <FlashList
         data={favorites}
         numColumns={2}

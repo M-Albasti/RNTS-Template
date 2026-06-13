@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import TouchableIcon from '@atoms/TouchableIcon';
 import Button from '@atoms/Button';
@@ -21,6 +22,7 @@ interface ChatListProps {
 }
 
 const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const threads = useAppSelector(state =>
     [...state.chat.threads].sort((a, b) => Number(b.pinned) - Number(a.pinned)),
   );
@@ -56,7 +58,11 @@ const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
           <View style={styles.meta}>
             <Heading text={item.name} level="h3" />
             <TextView
-              text={item.muted ? `${item.lastMessage} · muted` : item.lastMessage}
+              text={
+                item.muted
+                  ? `${item.lastMessage}${t('common.mutedSuffix')}`
+                  : item.lastMessage
+              }
               variant="bodySmall"
               muted
             />
@@ -80,8 +86,8 @@ const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Messages" onBack={() => navigation.goBack()} />
-      <Button label="New chat" fullWidth onPress={() => navigation.navigate('NewChat')} />
+      <ScreenHeader title={t('chat.messages')} onBack={() => navigation.goBack()} />
+      <Button label={t('chat.newChat')} fullWidth onPress={() => navigation.navigate('NewChat')} />
       <Spacer size="md" />
       <FlashList
         data={threads}

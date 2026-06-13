@@ -1,4 +1,5 @@
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -14,10 +15,12 @@ interface AudiosListTemplateProps {
 const AudiosListTemplate = ({
   navigation,
 }: AudiosListTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
     <ScreenContainer>
       <ScreenHeader
-        title="Audios"
+        title={t('media.audios')}
         onBack={() => {
           if (navigation.canGoBack()) {
             navigation.goBack();

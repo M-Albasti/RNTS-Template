@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -19,6 +20,7 @@ interface LoginOptionsTemplateProps {
 const LoginOptionsTemplate = ({
   navigation,
 }: LoginOptionsTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       hero: {
@@ -28,8 +30,8 @@ const LoginOptionsTemplate = ({
         alignItems: 'center',
       },
       grid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: tokens.layout.flexDirection.row,
+        flexWrap: tokens.layout.flexWrap.wrap,
         gap: tokens.spacing.sm,
         width: '100%',
       },
@@ -44,44 +46,40 @@ const LoginOptionsTemplate = ({
   return (
     <ScreenContainer scroll alignContent="center" bottomPadding="xxl">
       <View style={styles.hero}>
-        <Heading text="Welcome to RNTS" level="h1" align="center" />
+        <Heading text={t('loginOptions.welcomeTitle')} level="h1" align="center" />
         <Spacer size="sm" />
-        <TextView
-          text="Pick how you want to sign in and start exploring the app hub."
-          align="center"
-          muted
-        />
+        <TextView text={t('loginOptions.subtitle')} align="center" muted />
       </View>
 
       <Spacer size="lg" />
-      <Heading text="Sign in options" level="h2" />
+      <Heading text={t('loginOptions.signInOptions')} level="h2" />
       <Spacer size="md" />
 
       <View style={styles.grid}>
         <FeatureHubCard
-          title="Firebase"
-          subtitle="Google, Apple, email & phone"
+          title={t('loginOptions.firebase')}
+          subtitle={t('loginOptions.firebaseSubtitle')}
           iconType="MaterialCommunityIcons"
           iconName="firebase"
           onPress={() => navigation.navigate('FirebaseAuthStack')}
         />
         <FeatureHubCard
-          title="Mock login"
-          subtitle="Email/password demo API"
+          title={t('loginOptions.mockLogin')}
+          subtitle={t('loginOptions.mockLoginSubtitle')}
           iconType="Ionicons"
           iconName="log-in-outline"
           onPress={() => navigation.navigate('Login')}
         />
         <FeatureHubCard
-          title="Register"
-          subtitle="Create a mock account"
+          title={t('Register')}
+          subtitle={t('loginOptions.registerSubtitle')}
           iconType="Ionicons"
           iconName="person-add-outline"
           onPress={() => navigation.navigate('Register')}
         />
         <FeatureHubCard
-          title="Forgot password"
-          subtitle="Reset via mock OTP flow"
+          title={t('loginOptions.forgotPasswordTitle')}
+          subtitle={t('loginOptions.forgotPasswordSubtitle')}
           iconType="Ionicons"
           iconName="key-outline"
           onPress={() => navigation.navigate('ForgetPassword')}
@@ -91,14 +89,10 @@ const LoginOptionsTemplate = ({
       <Spacer size="lg" />
       <Card constrained>
         <View style={styles.footer}>
-          <TextView
-            text="Already know your path? Jump straight to the classic auth screen."
-            variant="bodySmall"
-            muted
-          />
+          <TextView text={t('loginOptions.jumpHint')} variant="bodySmall" muted />
           <Spacer size="sm" />
           <Button
-            label="Classic auth menu"
+            label={t('loginOptions.classicAuthMenu')}
             variant="outline"
             fullWidth
             onPress={() => navigation.navigate('AuthMethod')}

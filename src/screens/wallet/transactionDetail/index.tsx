@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,9 +23,10 @@ const TransactionDetail = ({
   navigation,
   route,
 }: TransactionDetailProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {transactionId} = route.params;
   const tx = useAppSelector(state =>
-    state.wallet.transactions.find(t => t.id === transactionId),
+    state.wallet.transactions.find(item => item.id === transactionId),
   );
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -41,16 +43,16 @@ const TransactionDetail = ({
   if (!tx) {
     return (
       <ScreenContainer centered>
-        <TextView text="Transaction not found" />
+        <TextView text={t('wallet.transactionNotFound')} />
         <Spacer size="md" />
-        <Button label="Go back" onPress={() => navigation.goBack()} />
+        <Button label={t('common.goBack')} onPress={() => navigation.goBack()} />
       </ScreenContainer>
     );
   }
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title="Transaction" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.transactionTitle')} onBack={() => navigation.goBack()} />
       <Card>
         <Heading text={tx.title} level="h2" align="center" />
         <Spacer size="md" />
@@ -60,23 +62,23 @@ const TransactionDetail = ({
         />
         <Spacer size="lg" />
         <View style={styles.row}>
-          <TextView text="Date" muted />
+          <TextView text={t('wallet.date')} muted />
           <TextView text={tx.date} />
         </View>
         <Spacer size="sm" />
         <View style={styles.row}>
-          <TextView text="Category" muted />
+          <TextView text={t('wallet.category')} muted />
           <TextView text={tx.category} />
         </View>
         <Spacer size="sm" />
         <View style={styles.row}>
-          <TextView text="Type" muted />
+          <TextView text={t('wallet.type')} muted />
           <TextView text={tx.type} />
         </View>
         {tx.note ? (
           <>
             <Spacer size="md" />
-            <TextView text="Note" muted />
+            <TextView text={t('wallet.note')} muted />
             <Spacer size="xs" />
             <TextView text={tx.note} variant="bodySmall" />
           </>

@@ -1,5 +1,6 @@
 //* packages import
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import Button from '@atoms/Button';
@@ -16,21 +17,23 @@ interface NotFoundProps {
 }
 
 const NotFound = ({navigation}: NotFoundProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
     <ScreenContainer centered alignContent="center">
-      <Heading text="404" level="display" tone="primary" align="center" />
+      <Heading text={t('navigation.notFoundCode')} level="display" tone="primary" align="center" />
       <Spacer size="sm" />
-      <Heading text="Page not found" level="h2" tone="muted" align="center" />
+      <Heading text={t('navigation.pageNotFound')} level="h2" tone="muted" align="center" />
       <Spacer size="md" />
       <TextView
-        text="The screen you requested does not exist or was moved."
+        text={t('navigation.pageNotFoundMessage')}
         variant="body"
         muted
         align="center"
       />
       <Spacer size="xl" />
       <Button
-        label="Go back"
+        label={t('common.goBack')}
         onPress={() => {
           if (navigation.canGoBack()) {
             navigation.goBack();

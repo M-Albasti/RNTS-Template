@@ -1,6 +1,7 @@
 //* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import Button from '@atoms/Button';
@@ -21,10 +22,11 @@ const Buttons = ({
   onUpload,
   uploading = false,
 }: ButtonsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       container: {
-        flexDirection: 'row',
+        flexDirection: tokens.layout.flexDirection.row,
         justifyContent: 'space-between',
         alignItems: 'center',
         gap: tokens.spacing.sm,
@@ -33,7 +35,7 @@ const Buttons = ({
         backgroundColor: tokens.colors.overlay,
       },
       action: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
       },
     }),
   );
@@ -41,7 +43,7 @@ const Buttons = ({
   return (
     <View style={styles.container}>
       <Button
-        label="Dismiss"
+        label={t('common.dismiss')}
         variant="ghost"
         size="sm"
         flat
@@ -49,14 +51,14 @@ const Buttons = ({
         onPress={onDismiss}
       />
       <Button
-        label="Retake"
+        label={t('common.retake')}
         variant="outline"
         size="sm"
         style={styles.action}
         onPress={onRetakeVideo}
       />
       <Button
-        label={uploading ? 'Uploading…' : 'Upload'}
+        label={uploading ? t('common.uploading') : t('common.upload')}
         size="sm"
         flat
         style={styles.action}

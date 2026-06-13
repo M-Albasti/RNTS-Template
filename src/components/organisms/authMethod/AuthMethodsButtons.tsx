@@ -1,6 +1,7 @@
 //* packages import
 import React from 'react';
 import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import Button from '@atoms/Button';
@@ -20,6 +21,7 @@ interface AuthMethodsButtonsProps {
 const AuthMethodsButtons = ({
   navigation,
 }: AuthMethodsButtonsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const styles = useThemedStyles(tokens => ({
     container: {
       width: '100%' as const,
@@ -34,23 +36,27 @@ const AuthMethodsButtons = ({
 
   return (
     <View style={styles.container}>
-      <Heading text="Choose sign-in method" level="h2" align="center" />
+      <Heading text={t('auth.chooseSignInMethod')} level="h2" align="center" />
       <Spacer size="md" />
-      <Button label="Login with Firebase" fullWidth onPress={navigateToFirebaseLogin} />
       <Button
-        label="Mock API login"
+        label={t('auth.loginWithFirebase')}
+        fullWidth
+        onPress={navigateToFirebaseLogin}
+      />
+      <Button
+        label={t('auth.mockApiLogin')}
         variant="secondary"
         fullWidth
         onPress={() => navigation.navigate('Login')}
       />
       <Button
-        label="Mock register"
+        label={t('auth.mockRegister')}
         variant="outline"
         fullWidth
         onPress={() => navigation.navigate('Register')}
       />
       <Button
-        label="Forgot password flow"
+        label={t('auth.forgotPasswordFlow')}
         variant="ghost"
         fullWidth
         onPress={() => navigation.navigate('ForgetPassword')}

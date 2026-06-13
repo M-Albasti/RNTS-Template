@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,6 +23,7 @@ interface GameShopProps {
 }
 
 const GameShop = ({navigation}: GameShopProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {coins, shopItems} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -38,10 +40,10 @@ const GameShop = ({navigation}: GameShopProps): React.JSX.Element => {
           <Heading text={item.title} level="h3" />
           <TextView text={item.description} variant="bodySmall" muted />
           <Spacer size="xs" />
-          <TextView text={`${item.cost} coins`} variant="caption" />
+          <TextView text={t('game.playerCoins', {count: item.cost})} variant="caption" />
         </View>
         <Button
-          label="Buy"
+          label={t('game.buy')}
           size="sm"
           disabled={coins < item.cost}
           onPress={() => dispatch(purchaseItem(item.id))}
@@ -52,8 +54,8 @@ const GameShop = ({navigation}: GameShopProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Coin shop" onBack={() => navigation.goBack()} />
-      <TextView text={`Balance: ${coins} coins`} variant="bodySmall" muted />
+      <ScreenHeader title={t('game.coinShop')} onBack={() => navigation.goBack()} />
+      <TextView text={t('game.balanceCoins', {count: coins})} variant="bodySmall" muted />
       <Spacer size="md" />
       <FlashList
         data={shopItems}

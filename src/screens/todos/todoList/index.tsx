@@ -1,6 +1,7 @@
 import React, {useMemo, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -31,11 +32,19 @@ interface TodoListProps {
 const FILTERS: TodoFilter[] = ['all', 'active', 'done', 'high'];
 const PRIORITIES: TodoPriority[] = ['low', 'medium', 'high'];
 
+const FILTER_KEYS: Record<TodoFilter, string> = {
+  all: 'todos.filterAll',
+  active: 'todos.filterActive',
+  done: 'todos.filterDone',
+  high: 'todos.filterHigh',
+};
+
 const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {items, filter} = useAppSelector(state => state.todos);
   const dispatch = useAppDispatch();
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState('Personal');
+  const [category, setCategory] = useState(t('todos.personal'));
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       list: {flex: tokens.layout.flex.fill},
@@ -63,7 +72,7 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
         title: title.trim(),
         done: false,
         priority: 'medium',
-        category: category.trim() || 'Personal',
+        category: category.trim() || t('todos.personal'),
         dueDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10),
         createdAt: new Date().toISOString(),
       }),
@@ -88,15 +97,23 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
         <View style={styles.meta}>
           <TextView text={item.title} variant="body" style={item.done ? styles.done : undefined} />
           <TextView
-            text={`${item.category}${item.dueDate ? ` · due ${item.dueDate}` : ''}`}
+            text={`${item.category}${
+              item.dueDate ? ` · ${t('todos.due', {date: item.dueDate})}` : ''
+            }`}
             variant="caption"
             muted
           />
           <Pressable onPress={() => cyclePriority(item.id, item.priority)}>
             <TextView
-              text={`Priority: ${item.priority}`}
+              text={t('todos.priority', {priority: item.priority})}
               variant="caption"
-              style={item.priority === 'high' ? styles.high : item.priority === 'medium' ? styles.medium : undefined}
+              style={
+                item.priority === 'high'
+                  ? styles.high
+                  : item.priority === 'medium'
+                    ? styles.medium
+                    : undefined
+              }
             />
           </Pressable>
         </View>
@@ -112,12 +129,12 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Task list" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('todos.taskListScreen')} onBack={() => navigation.goBack()} />
       <View style={styles.filters}>
         {FILTERS.map(f => (
           <Button
             key={f}
-            label={f}
+            label={t(FILTER_KEYS[f])}
             size="sm"
             variant={filter === f ? 'primary' : 'outline'}
             onPress={() => dispatch(setTodoFilter(f))}
@@ -125,11 +142,19 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
         ))}
       </View>
       <Spacer size="md" />
-      <TextInputView placeholder="Add a task..." value={title} onChangeText={setTitle} />
+      <TextInputView
+        placeholder={t('todos.addTaskPlaceholder')}
+        value={title}
+        onChangeText={setTitle}
+      />
       <Spacer size="xs" />
-      <TextInputView placeholder="Category" value={category} onChangeText={setCategory} />
+      <TextInputView
+        placeholder={t('todos.category')}
+        value={category}
+        onChangeText={setCategory}
+      />
       <Spacer size="sm" />
-      <Button label="Add task" fullWidth onPress={createTodo} />
+      <Button label={t('todos.addTask')} fullWidth onPress={createTodo} />
       <Spacer size="md" />
       <FlashList
         data={filtered}

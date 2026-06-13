@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -22,6 +23,7 @@ interface ChatRoomProps {
 }
 
 const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {threadId} = route.params;
   const thread = useAppSelector(state => state.chat.threads.find(t => t.id === threadId));
   const dispatch = useAppDispatch();
@@ -66,9 +68,9 @@ const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
   if (!thread) {
     return (
       <ScreenContainer centered>
-        <TextView text="Chat not found" />
+        <TextView text={t('chat.chatNotFound')} />
         <Spacer size="md" />
-        <Button label="Go back" onPress={() => navigation.goBack()} />
+        <Button label={t('common.goBack')} onPress={() => navigation.goBack()} />
       </ScreenContainer>
     );
   }
@@ -95,7 +97,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
       <TextView text={item.text} variant="bodySmall" />
       {item.senderId === 'me' ? (
         <TextView
-          text={item.read ? 'Read' : 'Delivered'}
+          text={item.read ? t('common.read') : t('common.delivered')}
           variant="caption"
           muted
           align="right"
@@ -103,7 +105,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
       ) : null}
       {item.senderId === 'me' ? (
         <Button
-          label="Delete"
+          label={t('common.delete')}
           variant="ghost"
           size="sm"
           onPress={() => dispatch(deleteMessage({threadId, messageId: item.id}))}
@@ -117,7 +119,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
       <ScreenHeader title={thread.name} onBack={() => navigation.goBack()} />
       <View style={styles.headerActions}>
         <Button
-          label="Info"
+          label={t('common.info')}
           variant="ghost"
           size="sm"
           onPress={() => navigation.navigate('ChatInfo', {threadId})}
@@ -133,9 +135,13 @@ const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
       <Spacer size="md" />
       <View style={styles.inputRow}>
         <View style={styles.input}>
-          <TextInputView placeholder="Type a message..." value={text} onChangeText={setText} />
+          <TextInputView
+            placeholder={t('chat.typeMessage')}
+            value={text}
+            onChangeText={setText}
+          />
         </View>
-        <Button label="Send" onPress={send} />
+        <Button label={t('common.send')} onPress={send} />
       </View>
     </ScreenContainer>
   );

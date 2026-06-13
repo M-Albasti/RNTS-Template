@@ -1,6 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
 import Heading from '@atoms/Heading';
@@ -21,6 +22,7 @@ interface WalletTransactionsProps {
 const WalletTransactions = ({
   navigation,
 }: WalletTransactionsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const transactions = useAppSelector(state => state.wallet.transactions);
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -51,7 +53,7 @@ const WalletTransactions = ({
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Transactions" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.transactionsTitle')} onBack={() => navigation.goBack()} />
       <FlashList
         data={transactions}
         renderItem={renderItem}

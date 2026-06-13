@@ -41,7 +41,7 @@ const ScreenContainer = ({
   const insets = useSafeAreaInsets();
   const styles = useThemedStyles(tokens => ({
     root: {
-      flex: 1,
+      flex: tokens.layout.flex.fill,
       backgroundColor: tokens.colors.background,
     },
     content: {
@@ -53,7 +53,7 @@ const ScreenContainer = ({
         : tokens.spacing.lg,
     },
     contentCentered: {
-      flexGrow: 1,
+      flexGrow: tokens.layout.flexGrow.fill,
       justifyContent: 'center' as const,
     },
   }));

@@ -2,6 +2,7 @@
 import {Alert} from 'react-native';
 
 //* services import
+import {apiLogoutService} from '@services/authServices/apiLoginService';
 import {firebaseLogout} from '@services/authServices/firebaseLogout';
 import {firebaseGoogleLogout} from '@services/authServices/firebaseGoogleLogout';
 import {firebaseFacebookLogout} from '@services/authServices/firebaseFacebookLogout';
@@ -17,11 +18,8 @@ export const logoutService = async (
 ): Promise<void> => {
   try {
     if (loginType === 'Normal') {
-      /*
-       * logic for user logout by empty
-       * the user data in redux with
-       * dispatch(addUser(null));
-       */
+      apiLogoutService(dispatch);
+      return;
     }
     if (loginType === 'FirebaseEmail' || loginType === 'FirebasePhone') {
       firebaseLogout(dispatch);

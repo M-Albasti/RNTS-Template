@@ -12,6 +12,16 @@ export const flex = {
   double: 2,
 } as const;
 
+export const flexGrow = {
+  none: 0,
+  fill: 1,
+} as const;
+
+export const flexShrink = {
+  none: 0,
+  fill: 1,
+} as const;
+
 export const borderWidth = {
   none: 0,
   hairline: StyleSheet.hairlineWidth,
@@ -88,8 +98,8 @@ export const overflow = {
 /** Reusable layout combinations built from tokens above. */
 export const presets = {
   fill: {flex: flex.fill},
-  shrink: {flexShrink: 1},
-  grow: {flexGrow: 1},
+  shrink: {flexShrink: flexShrink.fill},
+  grow: {flexGrow: flexGrow.fill},
   row: {
     flexDirection: flexDirection.row,
     alignItems: alignItems.center,
@@ -159,6 +169,8 @@ export const presets = {
 
 export type LayoutToken = {
   flex: typeof flex;
+  flexGrow: typeof flexGrow;
+  flexShrink: typeof flexShrink;
   borderWidth: typeof borderWidth;
   justifyContent: typeof justifyContent;
   alignItems: typeof alignItems;
@@ -174,6 +186,8 @@ export type LayoutToken = {
 
 export const layout: LayoutToken = {
   flex,
+  flexGrow,
+  flexShrink,
   borderWidth,
   justifyContent,
   alignItems,

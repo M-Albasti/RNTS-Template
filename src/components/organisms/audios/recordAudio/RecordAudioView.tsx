@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {Fragment} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
@@ -85,7 +87,7 @@ export default RecordAudioView;
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: layout.flex.fill,
   },
   recordAudioContainer: {
     justifyContent: 'center',

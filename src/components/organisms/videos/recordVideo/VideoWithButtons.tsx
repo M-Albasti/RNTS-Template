@@ -40,11 +40,11 @@ const VideoWithButtons = (props: ViewWithButtonsProps): React.JSX.Element => {
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       container: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
         backgroundColor: tokens.colors.background,
       },
       player: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
       },
     }),
   );

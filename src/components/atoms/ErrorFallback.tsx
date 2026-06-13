@@ -1,6 +1,7 @@
 import React from 'react';
 import {FallbackProps} from 'react-error-boundary';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -21,10 +22,11 @@ const ErrorFallback = ({
   error,
   resetErrorBoundary,
 }: FallbackProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       container: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
         justifyContent: 'center',
         alignItems: 'center',
         padding: tokens.spacing.xl,
@@ -39,14 +41,9 @@ const ErrorFallback = ({
   return (
     <View style={styles.container}>
       <Card constrained>
-        <Heading text="Something went wrong" level="h2" align="center" />
+        <Heading text={t('errors.somethingWentWrong')} level="h2" align="center" />
         <Spacer size="sm" />
-        <TextView
-          text="This section ran into a problem. You can try again without restarting the app."
-          variant="bodySmall"
-          muted
-          align="center"
-        />
+        <TextView text={t('errors.sectionProblem')} variant="bodySmall" muted align="center" />
         {__DEV__ ? (
           <>
             <Spacer size="md" />
@@ -59,7 +56,7 @@ const ErrorFallback = ({
           </>
         ) : null}
         <Spacer size="lg" />
-        <Button label="Try Again" fullWidth onPress={resetErrorBoundary} />
+        <Button label={t('errors.tryAgain')} fullWidth onPress={resetErrorBoundary} />
       </Card>
     </View>
   );

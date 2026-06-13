@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 
 import {Share} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Heading from '@atoms/Heading';
@@ -22,6 +23,7 @@ interface ImageViewerProps {
 }
 
 const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {imageId} = route.params;
   const image = useAppSelector(state => state.gallery.images.find(img => img.id === imageId));
   const dispatch = useAppDispatch();
@@ -41,9 +43,9 @@ const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element =
   if (!image) {
     return (
       <ScreenContainer centered>
-        <TextView text="Image not found" />
+        <TextView text={t('gallery.imageNotFound')} />
         <Spacer size="md" />
-        <Button label="Go back" onPress={() => navigation.goBack()} />
+        <Button label={t('common.goBack')} onPress={() => navigation.goBack()} />
       </ScreenContainer>
     );
   }
@@ -56,28 +58,28 @@ const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element =
       <Heading text={image.title} level="h2" align="center" />
       <Spacer size="md" />
       <Button
-        label={image.favorite ? 'Remove from favorites' : 'Add to favorites'}
+        label={image.favorite ? t('gallery.removeFavorite') : t('gallery.addFavorite')}
         variant={image.favorite ? 'secondary' : 'outline'}
         fullWidth
         onPress={() => dispatch(toggleFavorite(image.id))}
       />
       <Spacer size="sm" />
       <Button
-        label={image.hidden ? 'Unhide from vault' : 'Move to private vault'}
+        label={image.hidden ? t('gallery.unhideVault') : t('gallery.moveVault')}
         variant="outline"
         fullWidth
         onPress={() => dispatch(toggleHidden(image.id))}
       />
       <Spacer size="sm" />
       <Button
-        label="Share image"
+        label={t('gallery.shareImage')}
         variant="ghost"
         fullWidth
         onPress={() => Share.share({message: image.uri, title: image.title})}
       />
       <Spacer size="sm" />
       <Button
-        label="Start slideshow"
+        label={t('gallery.startSlideshow')}
         variant="secondary"
         fullWidth
         onPress={() => navigation.navigate('GallerySlideshow', {imageId: image.id})}

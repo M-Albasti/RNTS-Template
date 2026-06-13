@@ -4,6 +4,7 @@ import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Divider from '@atoms/Divider';
@@ -19,27 +20,29 @@ import type {DrawerParamList} from '@Types/appNavigation';
 
 type DrawerRoute = keyof DrawerParamList;
 
-const menuItems: {label: string; route: DrawerRoute}[] = [
-  {label: 'Home', route: 'TabRoot'},
-  {label: 'Profile', route: 'Profile'},
-  {label: 'Social feed', route: 'PostStack'},
-  {label: 'Todo list', route: 'TodoStack'},
-  {label: 'Chat', route: 'ChatStack'},
-  {label: 'Lucky spinner', route: 'GameStack'},
-  {label: 'Wallet', route: 'WalletStack'},
-  {label: 'Gallery', route: 'GalleryStack'},
-  {label: 'Audios', route: 'AudioStack'},
-  {label: 'Videos', route: 'VideoStack'},
+const menuItems: {labelKey: string; route: DrawerRoute}[] = [
+  {labelKey: 'drawer.home', route: 'TabRoot'},
+  {labelKey: 'drawer.profile', route: 'Profile'},
+  {labelKey: 'drawer.socialFeed', route: 'PostStack'},
+  {labelKey: 'drawer.todoList', route: 'TodoStack'},
+  {labelKey: 'drawer.chat', route: 'ChatStack'},
+  {labelKey: 'drawer.luckySpinner', route: 'GameStack'},
+  {labelKey: 'drawer.wallet', route: 'WalletStack'},
+  {labelKey: 'drawer.gallery', route: 'GalleryStack'},
+  {labelKey: 'drawer.audios', route: 'AudioStack'},
+  {labelKey: 'drawer.videos', route: 'VideoStack'},
+  {labelKey: 'drawer.designSystem', route: 'DesignSystemStack'},
 ];
 
 const DrawerMenuContent = (
   props: DrawerContentComponentProps,
 ): React.JSX.Element => {
+  const {t} = useTranslation();
   const user = useAppSelector(state => state.auth.user);
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       container: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
         paddingTop: tokens.spacing.xxl,
         paddingHorizontal: tokens.spacing.lg,
         backgroundColor: tokens.colors.background,
@@ -59,13 +62,9 @@ const DrawerMenuContent = (
 
   return (
     <DrawerContentScrollView contentContainerStyle={styles.container}>
-      <Heading text="RNTS Menu" level="h2" />
+      <Heading text={t('drawer.menuTitle')} level="h2" />
       <Spacer size="xs" />
-      <TextView
-        text={user?.email || 'Guest'}
-        variant="bodySmall"
-        muted
-      />
+      <TextView text={user?.email || t('common.guest')} variant="bodySmall" muted />
       <Spacer size="lg" />
       <Divider spacing="sm" />
 
@@ -73,7 +72,7 @@ const DrawerMenuContent = (
         <View key={item.route}>
           <Spacer size="sm" />
           <Button
-            label={item.label}
+            label={t(item.labelKey)}
             variant="ghost"
             fullWidth
             onPress={() => navigateTo(item.route)}
@@ -85,7 +84,7 @@ const DrawerMenuContent = (
         <Divider spacing="sm" />
         <Spacer size="sm" />
         <Button
-          label="Settings"
+          label={t('drawer.settings')}
           variant="secondary"
           fullWidth
           onPress={() => {

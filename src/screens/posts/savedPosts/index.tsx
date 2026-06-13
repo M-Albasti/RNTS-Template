@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import PostCard from '@molecules/posts/PostCard';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -20,6 +21,7 @@ interface SavedPostsProps {
 }
 
 const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const posts = useAppSelector(state =>
     state.posts.posts.filter(p => state.posts.savedIds.includes(p.id)),
   );
@@ -44,9 +46,9 @@ const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
   if (posts.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title="Saved posts" onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('posts.savedPosts')} onBack={() => navigation.goBack()} />
         <View style={styles.empty}>
-          <TextView text="No saved posts yet." muted align="center" />
+          <TextView text={t('posts.noSavedPosts')} muted align="center" />
         </View>
       </ScreenContainer>
     );
@@ -54,7 +56,7 @@ const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Saved posts" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.savedPosts')} onBack={() => navigation.goBack()} />
       <FlashList
         data={posts}
         renderItem={renderItem}

@@ -1,1 +1,32 @@
-"Empty Folder"
+{
+  "directory": "src/assets/icons/svg/",
+  "barrel": "src/assets/icons/svg/index.ts",
+  "wrapper": "src/components/atoms/AppSvgIcon.tsx",
+  "vectorIcons": "src/constants/vectorIcons.tsx",
+  "standaloneFiles": [
+    "HomeIcon.tsx",
+    "UserIcon.tsx",
+    "SettingsIcon.tsx",
+    "ChatIcon.tsx",
+    "WalletIcon.tsx",
+    "FeedIcon.tsx",
+    "TodoIcon.tsx",
+    "GameIcon.tsx",
+    "GalleryIcon.tsx",
+    "AudioIcon.tsx",
+    "VideoIcon.tsx",
+    "SearchIcon.tsx",
+    "BackIcon.tsx",
+    "MenuIcon.tsx",
+    "HeartIcon.tsx",
+    "SendIcon.tsx",
+    "LogoutIcon.tsx",
+    "SunIcon.tsx",
+    "MoonIcon.tsx"
+  ],
+  "registry": {
+    "home": "HomeIcon",
+    "user": "UserIcon",
+    "settings": "SettingsIcon"
+  }
+}

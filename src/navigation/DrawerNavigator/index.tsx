@@ -22,6 +22,7 @@ import ChatNavigator from '@navigation/ChatNavigator';
 import GameNavigator from '@navigation/GameNavigator';
 import WalletNavigator from '@navigation/WalletNavigator';
 import GalleryNavigator from '@navigation/GalleryNavigator';
+import DesignSystemNavigator from '@navigation/DesignSystemNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -96,6 +97,11 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
         </Drawer.Screen>
         <Drawer.Screen name="GalleryStack" options={{title: 'Gallery'}}>
           {() => <GalleryNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen
+          name="DesignSystemStack"
+          options={{title: 'Design System'}}>
+          {() => <DesignSystemNavigator />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

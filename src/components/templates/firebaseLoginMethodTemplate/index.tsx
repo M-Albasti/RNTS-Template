@@ -1,5 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Heading from '@atoms/Heading';
@@ -17,6 +18,7 @@ interface FirebaseLoginMethodTemplateProps {
 const FirebaseLoginMethodTemplate = ({
   navigation,
 }: FirebaseLoginMethodTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const styles = useThemedStyles(tokens => ({
     wrap: {
       width: '100%' as const,
@@ -27,13 +29,13 @@ const FirebaseLoginMethodTemplate = ({
 
   return (
     <ScreenContainer scroll centered alignContent="center">
-      <Heading text="Firebase sign-in" level="h1" align="center" />
+      <Heading text={t('auth.firebaseSignIn')} level="h1" align="center" />
       <Spacer size="sm" />
       <View style={styles.wrap}>
         <FirebaseLoginMethodButtons navigation={navigation} />
         <Spacer size="md" />
         <Button
-          label="Back"
+          label={t('common.goBack')}
           variant="ghost"
           fullWidth
           onPress={() => navigation.goBack()}

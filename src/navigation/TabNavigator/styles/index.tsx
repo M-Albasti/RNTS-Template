@@ -2,6 +2,7 @@ import {ScreenHeight, ScreenWidth} from '@rneui/base';
 import {StyleSheet} from 'react-native';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {layout} from '@theme/tokens';
 
 const TAB_HEIGHT = ScreenHeight * 0.07;
 
@@ -42,7 +43,7 @@ export const useTabNavigatorStyles = () =>
         ...tokens.shadows.lg,
       },
       fallback: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
         justifyContent: 'center',
         alignItems: 'center',
       },
@@ -54,7 +55,7 @@ export const useTabNavigatorStyles = () =>
 /** Static fallback styles for navigation loading state. */
 export const navigationFallbackStyles = StyleSheet.create({
   fallback: {
-    flex: 1,
+    flex: layout.flex.fill,
     justifyContent: 'center',
     alignItems: 'center',
   },

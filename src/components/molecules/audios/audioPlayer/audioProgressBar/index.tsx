@@ -25,13 +25,13 @@ const AudioProgressBar = memo(
       StyleSheet.create({
         root: {
           width: '100%',
-          flexDirection: 'row',
+          flexDirection: tokens.layout.flexDirection.row,
           alignItems: 'center',
           paddingHorizontal: tokens.spacing.lg,
           gap: tokens.spacing.sm,
         },
         slider: {
-          flex: 1,
+          flex: tokens.layout.flex.fill,
           height: 40,
         },
         time: {

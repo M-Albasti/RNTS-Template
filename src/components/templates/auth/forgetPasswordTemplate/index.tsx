@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Alert, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -19,6 +20,7 @@ interface ForgetPasswordTemplateProps {
 const ForgetPasswordTemplate = ({
   navigation,
 }: ForgetPasswordTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const styles = useThemedStyles(tokens => ({
     form: {
@@ -30,31 +32,22 @@ const ForgetPasswordTemplate = ({
 
   const onSendResetLink = () => {
     if (!emailOrPhone.trim()) {
-      Alert.alert('Validation', 'Please enter your email or phone number.');
+      Alert.alert(t('auth.validationError'), t('auth.enterEmailOrPhone'));
       return;
     }
-    Alert.alert(
-      'Reset link sent',
-      'This is a mock flow. Continue to set a new password.',
-      [
-        {
-          text: 'Continue',
-          onPress: () => navigation.navigate('ResetPassword'),
-        },
-      ],
-    );
+    Alert.alert(t('auth.resetLinkSent'), t('auth.resetLinkSentMessage'), [
+      {
+        text: t('auth.continue'),
+        onPress: () => navigation.navigate('ResetPassword'),
+      },
+    ]);
   };
 
   return (
     <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <Heading text="Forgot password?" level="h1" align="center" />
+      <Heading text={t('auth.forgotPassword')} level="h1" align="center" />
       <Spacer size="sm" />
-      <TextView
-        text="Enter your email or phone and we will send reset instructions."
-        variant="bodySmall"
-        muted
-        align="center"
-      />
+      <TextView text={t('auth.resetInstructions')} variant="bodySmall" muted align="center" />
       <Spacer size="lg" />
       <View style={styles.form}>
         <Card>
@@ -64,10 +57,10 @@ const ForgetPasswordTemplate = ({
             keyboardType="email-address"
           />
           <Spacer size="md" />
-          <Button label="Send reset link" fullWidth onPress={onSendResetLink} />
+          <Button label={t('auth.sendResetLink')} fullWidth onPress={onSendResetLink} />
           <Spacer size="sm" />
           <Button
-            label="Back to login"
+            label={t('auth.backToLogin')}
             variant="ghost"
             fullWidth
             onPress={() => navigation.goBack()}

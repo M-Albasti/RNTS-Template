@@ -3,7 +3,9 @@ import {layout, type LayoutToken} from './layout';
 import {radius, type RadiusToken} from './radius';
 import {getShadows, type ShadowToken} from './shadows';
 import {spacing, type SpacingToken} from './spacing';
-import {typography, type TypographyToken} from './typography';
+import {applyFontFamilies, typography, type TypographyToken} from './typography';
+import {getFontFamilies} from '@theme/fonts';
+import type {Languages} from '@Types/languages';
 
 /** Full design token set for one color scheme. Pass to `createThemedStyles` or `useThemeTokens`. */
 export type ThemeTokens = {
@@ -16,12 +18,15 @@ export type ThemeTokens = {
   layout: LayoutToken;
 };
 
-export const createThemeTokens = (scheme: ColorScheme): ThemeTokens => ({
+export const createThemeTokens = (
+  scheme: ColorScheme,
+  lang: Languages = 'en',
+): ThemeTokens => ({
   scheme,
   colors: getSemanticColors(scheme),
   spacing,
   radius,
-  typography,
+  typography: applyFontFamilies(typography, getFontFamilies(lang)),
   shadows: getShadows(scheme),
   layout,
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
 import Heading from '@atoms/Heading';
@@ -17,6 +18,7 @@ interface WalletHomeProps {
 }
 
 const WalletHome = ({navigation}: WalletHomeProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {balance, cardLast4, transactions, cards} = useAppSelector(state => state.wallet);
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -34,14 +36,14 @@ const WalletHome = ({navigation}: WalletHomeProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Wallet" showBack={false} />
+      <ScreenHeader title={t('wallet.title')} showBack={false} />
       <View style={styles.hero}>
-        <TextView text="Available balance" variant="bodySmall" style={styles.heroText} />
+        <TextView text={t('wallet.availableBalance')} variant="bodySmall" style={styles.heroText} />
         <Spacer size="xs" />
         <Heading text={`$${balance.toFixed(2)}`} level="h1" align="center" />
         <Spacer size="xs" />
         <TextView
-          text={`Card •••• ${cardLast4} · ${cards.length} cards`}
+          text={t('wallet.cardSummary', {last4: cardLast4, count: cards.length})}
           variant="caption"
           align="center"
           style={styles.heroText}
@@ -49,68 +51,68 @@ const WalletHome = ({navigation}: WalletHomeProps): React.JSX.Element => {
         <Spacer size="md" />
         <View style={styles.stats}>
           <TextView
-            text={`${transactions.length} transactions`}
+            text={t('wallet.transactionsCount', {count: transactions.length})}
             variant="caption"
             style={styles.heroText}
           />
         </View>
       </View>
       <Spacer size="lg" />
-      <Heading text="Banking" level="h3" />
+      <Heading text={t('wallet.banking')} level="h3" />
       <Spacer size="md" />
       <View style={styles.grid}>
         <FeatureHubCard
-          title="Send"
-          subtitle="Transfer money"
+          title={t('wallet.send')}
+          subtitle={t('wallet.sendSubtitle')}
           iconType="Ionicons"
           iconName="send-outline"
           onPress={() => navigation.navigate('WalletSend')}
         />
         <FeatureHubCard
-          title="Top up"
-          subtitle="Add funds"
+          title={t('wallet.topUp')}
+          subtitle={t('wallet.topUpSubtitle')}
           iconType="Ionicons"
           iconName="add-outline"
           onPress={() => navigation.navigate('WalletTopUp')}
         />
         <FeatureHubCard
-          title="Cards"
-          subtitle="Manage payment cards"
+          title={t('wallet.cards')}
+          subtitle={t('wallet.cardsSubtitle')}
           iconType="Ionicons"
           iconName="card-outline"
           onPress={() => navigation.navigate('WalletCards')}
         />
         <FeatureHubCard
-          title="History"
-          subtitle="All transactions"
+          title={t('wallet.history')}
+          subtitle={t('wallet.historySubtitle')}
           iconType="Ionicons"
           iconName="list-outline"
           onPress={() => navigation.navigate('WalletTransactions')}
         />
         <FeatureHubCard
-          title="Budget"
-          subtitle="Spending & savings"
+          title={t('wallet.budget')}
+          subtitle={t('wallet.budgetSubtitle')}
           iconType="Ionicons"
           iconName="pie-chart-outline"
           onPress={() => navigation.navigate('WalletBudget')}
         />
         <FeatureHubCard
-          title="QR Pay"
-          subtitle="Scan to pay"
+          title={t('wallet.qrPay')}
+          subtitle={t('wallet.qrPaySubtitle')}
           iconType="Ionicons"
           iconName="qr-code-outline"
           onPress={() => navigation.navigate('WalletQRPay')}
         />
         <FeatureHubCard
-          title="Bills"
-          subtitle="Pay utilities & rent"
+          title={t('wallet.bills')}
+          subtitle={t('wallet.billsSubtitle')}
           iconType="Ionicons"
           iconName="receipt-outline"
           onPress={() => navigation.navigate('WalletBills')}
         />
         <FeatureHubCard
-          title="Request"
-          subtitle="Accept money requests"
+          title={t('wallet.request')}
+          subtitle={t('wallet.requestSubtitle')}
           iconType="Ionicons"
           iconName="download-outline"
           onPress={() => navigation.navigate('WalletRequest')}

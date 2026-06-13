@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,6 +23,7 @@ interface PostDetailProps {
 }
 
 const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {postId} = route.params;
   const post = useAppSelector(state => state.posts.posts.find(p => p.id === postId));
   const saved = useAppSelector(state => state.posts.savedIds.includes(postId));
@@ -42,9 +44,9 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
   if (!post) {
     return (
       <ScreenContainer centered>
-        <TextView text="Post not found" />
+        <TextView text={t('posts.postNotFound')} />
         <Spacer size="md" />
-        <Button label="Go back" onPress={() => navigation.goBack()} />
+        <Button label={t('common.goBack')} onPress={() => navigation.goBack()} />
       </ScreenContainer>
     );
   }
@@ -67,7 +69,7 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Post" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.postTitle')} onBack={() => navigation.goBack()} />
       <Card>
         <View style={styles.header}>
           <Image source={{uri: post.avatar}} style={styles.avatar} />
@@ -84,19 +86,23 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
         <Spacer size="md" />
         <View style={styles.actions}>
           <Button
-            label={post.likedByMe ? `Liked (${post.likes})` : `Like (${post.likes})`}
+            label={
+              post.likedByMe
+                ? t('posts.liked', {count: post.likes})
+                : t('posts.like', {count: post.likes})
+            }
             variant={post.likedByMe ? 'primary' : 'outline'}
             onPress={() => dispatch(toggleLike(post.id))}
           />
           <Button
-            label={saved ? 'Saved' : 'Save post'}
+            label={saved ? t('posts.savedLabel') : t('posts.savePost')}
             variant={saved ? 'secondary' : 'outline'}
             onPress={() => dispatch(toggleSave(post.id))}
           />
         </View>
       </Card>
       <Spacer size="lg" />
-      <Heading text="Comments" level="h3" />
+      <Heading text={t('posts.comments')} level="h3" />
       <Spacer size="sm" />
       {comments.map(comment => (
         <View key={comment.id}>
@@ -111,12 +117,12 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
       ))}
       <Spacer size="md" />
       <TextInputView
-        placeholder="Write a comment..."
+        placeholder={t('posts.writeComment')}
         value={commentText}
         onChangeText={setCommentText}
       />
       <Spacer size="sm" />
-      <Button label="Post comment" fullWidth onPress={submitComment} />
+      <Button label={t('posts.postComment')} fullWidth onPress={submitComment} />
     </ScreenContainer>
   );
 };

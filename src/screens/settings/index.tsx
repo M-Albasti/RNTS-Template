@@ -34,10 +34,10 @@ interface SettingsProps {
   navigation: AppStackNavigationProp<'Settings'>;
 }
 
-const THEME_OPTIONS: {mode: ThemeMode; label: string}[] = [
-  {mode: 'light', label: 'Light'},
-  {mode: 'dark', label: 'Dark'},
-  {mode: 'system', label: 'System'},
+const THEME_OPTIONS: {mode: ThemeMode; labelKey: string}[] = [
+  {mode: 'light', labelKey: 'settings.light'},
+  {mode: 'dark', labelKey: 'settings.dark'},
+  {mode: 'system', labelKey: 'settings.system'},
 ];
 
 const Settings = (_props: SettingsProps): React.JSX.Element => {
@@ -62,16 +62,16 @@ const Settings = (_props: SettingsProps): React.JSX.Element => {
 
   const appearanceHint =
     themeMode === 'system'
-      ? `Using your device setting (${activeScheme}).`
-      : `Using ${themeMode} mode.`;
+      ? t('settings.appearanceSystem', {scheme: activeScheme})
+      : t('settings.appearanceFixed', {mode: themeMode});
 
   return (
     <ScreenContainer scroll>
-      <Heading text="Settings" level="h1" />
+      <Heading text={t('settings.title')} level="h1" />
       <Spacer size="lg" />
 
       <Card>
-        <Heading text="Appearance" level="h3" />
+        <Heading text={t('settings.appearance')} level="h3" />
         <Spacer size="sm" />
         <TextView text={appearanceHint} variant="bodySmall" muted />
         <Spacer size="md" />
@@ -79,7 +79,7 @@ const Settings = (_props: SettingsProps): React.JSX.Element => {
           {THEME_OPTIONS.map(option => (
             <Button
               key={option.mode}
-              label={option.label}
+              label={t(option.labelKey)}
               variant={themeMode === option.mode ? 'primary' : 'outline'}
               flat={themeMode !== option.mode}
               style={styles.modeButton}
@@ -93,9 +93,9 @@ const Settings = (_props: SettingsProps): React.JSX.Element => {
 
       <Card>
         <View style={styles.row}>
-          <TextView text="Language" variant="body" />
+          <TextView text={t('settings.language')} variant="body" />
           <TextView
-            text={lang === 'ar' ? 'العربية' : 'English'}
+            text={lang === 'ar' ? t('common.arabic') : t('common.english')}
             variant="bodySmall"
             muted
           />
@@ -104,7 +104,7 @@ const Settings = (_props: SettingsProps): React.JSX.Element => {
         <Divider spacing="sm" />
         <Spacer size="md" />
         <Button
-          label={t('change language', {defaultValue: 'Switch language'})}
+          label={t('settings.switchLanguage')}
           variant="secondary"
           fullWidth
           onPress={() => changeLanguage(dispatch)}

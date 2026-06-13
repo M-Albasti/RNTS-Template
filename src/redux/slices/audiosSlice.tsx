@@ -1,6 +1,12 @@
 //* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import axios, {AxiosError} from 'axios';
+import {AxiosError} from 'axios';
+
+//* config import
+import {apiConfig} from '@config/apiConfig';
+import {mediaClient} from '@config/network/mediaClient';
+
+//* utils import
 import {uniqueFileName} from '@utils/uniqueFileName';
 
 //* types import
@@ -35,13 +41,9 @@ export const getAudio = createAsyncThunk<
   // This will automatically dispatch a `pending` action first,
   // and then `fulfilled` or `rejected` actions based on the promise.
   // as needed based on the
-  return await axios({
-    method: 'GET',
-    url: `https://node-file-apis-2.onrender.com/files/${audioName}`,
-  })
-    .then(response => {
-      return response.data;
-    })
+  return mediaClient
+    .get(`/files/${audioName}`)
+    .then(response => response.data)
     .catch(error => {
       console.log('Error =>', error);
       throw error;
@@ -58,17 +60,11 @@ export const uploadAudio = createAsyncThunk<
   // This will automatically dispatch a `pending` action first,
   // and then `fulfilled` or `rejected` actions based on the promise.
   // as needed based on the
-  return await axios({
-    method: 'POST',
-    url: 'https://node-file-apis-2.onrender.com/upload',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: audioFile,
-  })
-    .then(response => {
-      return response.data;
+  return mediaClient
+    .post('/upload', audioFile, {
+      headers: {'Content-Type': 'multipart/form-data'},
     })
+    .then(response => response.data)
     .catch(error => {
       console.log('Error =>', error);
       throw error;
@@ -119,7 +115,7 @@ const audiosSlice = createSlice({
             id: action.payload.savedFileName,
             title: uniqueFileName('audio'),
             artist: 'artist Name',
-            url: `https://node-file-apis-2.onrender.com/files/${action.payload.savedFileName}`,
+            url: `${apiConfig.mediaBaseURL}/files/${action.payload.savedFileName}`,
             album: uniqueFileName('album'),
             artwork: 'https://picsum.photos/id/1003/200/300',
           };

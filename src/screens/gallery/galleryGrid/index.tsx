@@ -1,8 +1,8 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
-import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
@@ -18,6 +18,7 @@ interface GalleryGridProps {
 }
 
 const GalleryGrid = ({navigation}: GalleryGridProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -57,7 +58,7 @@ const GalleryGrid = ({navigation}: GalleryGridProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="All photos" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.allPhotos')} onBack={() => navigation.goBack()} />
       <FlashList
         data={images}
         numColumns={2}

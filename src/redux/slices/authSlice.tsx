@@ -1,6 +1,5 @@
 //* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import axios, {AxiosError} from 'axios';
 import {isEqual} from 'lodash';
 
 //* types import

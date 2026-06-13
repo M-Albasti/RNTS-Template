@@ -4,6 +4,7 @@ import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {LoginTypes} from '@Types/loginTypes';
 import {SoundProps} from '@Types/soundProps';
 import {VideoProps} from '@Types/videoProps';
+import type {DesignSystemStackParamList} from '@Types/designSystemNavigation';
 
 export type DrawerParamList = {
   TabRoot: undefined;
@@ -16,6 +17,7 @@ export type DrawerParamList = {
   GameStack: undefined;
   WalletStack: undefined;
   GalleryStack: undefined;
+  DesignSystemStack: undefined;
 };
 
 export type RootStackParamList = {
@@ -52,6 +54,7 @@ export type RootStackParamList = {
   GameStack: undefined;
   WalletStack: undefined;
   GalleryStack: undefined;
+  DesignSystemStack: undefined;
   PostHub: undefined;
   Feed: undefined;
   PostDetail: {postId: string};
@@ -101,7 +104,7 @@ export type RootStackParamList = {
   RecordAudio: undefined;
   AudioPlayer: {audioDetails: SoundProps};
   AudiosList: undefined;
-};
+} & DesignSystemStackParamList;
 
 // Define a global type for StackNavigationProp
 export type AppStackNavigationProp<

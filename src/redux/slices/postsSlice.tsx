@@ -158,6 +158,9 @@ const postsSlice = createSlice({
     addPost: (state, action: PayloadAction<PostItem>) => {
       state.posts.unshift(action.payload);
     },
+    hydratePosts: (state, action: PayloadAction<PostItem[]>) => {
+      state.posts = action.payload;
+    },
   },
 });
 
@@ -171,6 +174,7 @@ export const {
   setSearchQuery,
   addComment,
   addPost,
+  hydratePosts,
 } = postsSlice.actions;
 export default postsSlice.reducer;
 

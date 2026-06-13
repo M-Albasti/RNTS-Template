@@ -1,5 +1,6 @@
 import React, {useRef} from 'react';
 import {Animated, StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,6 +23,7 @@ interface LuckySpinnerProps {
 }
 
 const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {coins, lastReward, spinCount} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
   const rotation = useRef(new Animated.Value(0)).current;
@@ -72,15 +74,20 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll centered alignContent="center" bottomPadding="xxl">
-      <ScreenHeader title="Lucky Spinner" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.luckySpinner')} onBack={() => navigation.goBack()} />
       <Card constrained>
         <View style={styles.stats}>
-          <Heading text={`${coins} coins`} level="h2" align="center" />
-          <TextView text={`Spins: ${spinCount}`} variant="bodySmall" muted align="center" />
+          <Heading text={t('game.coinsCount', {count: coins})} level="h2" align="center" />
+          <TextView
+            text={t('game.spinsCount', {count: spinCount})}
+            variant="bodySmall"
+            muted
+            align="center"
+          />
         </View>
         <Spacer size="lg" />
         <Animated.View style={[styles.wheel, {transform: [{rotate: spinInterpolate}]}]}>
-          <Heading text="SPIN" level="h2" align="center" />
+          <Heading text={t('game.spinLabel')} level="h2" align="center" />
         </Animated.View>
         <Spacer size="md" />
         <View style={styles.segmentRow}>
@@ -93,16 +100,31 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
         <Spacer size="lg" />
         {lastReward ? (
           <>
-            <TextView text={`Last reward: ${lastReward}`} align="center" />
+            <TextView text={t('game.lastReward', {reward: lastReward})} align="center" />
             <Spacer size="md" />
           </>
         ) : null}
-        <Button label="Spin the wheel" fullWidth onPress={onSpin} />
+        <Button label={t('game.spinTheWheel')} fullWidth onPress={onSpin} />
         <Spacer size="md" />
         <View style={styles.links}>
-          <Button label="Coin shop" variant="secondary" fullWidth onPress={() => navigation.navigate('GameShop')} />
-          <Button label="Leaderboard" variant="outline" fullWidth onPress={() => navigation.navigate('GameLeaderboard')} />
-          <Button label="Reward history" variant="ghost" fullWidth onPress={() => navigation.navigate('GameHistory')} />
+          <Button
+            label={t('game.coinShop')}
+            variant="secondary"
+            fullWidth
+            onPress={() => navigation.navigate('GameShop')}
+          />
+          <Button
+            label={t('game.leaderboard')}
+            variant="outline"
+            fullWidth
+            onPress={() => navigation.navigate('GameLeaderboard')}
+          />
+          <Button
+            label={t('game.rewardHistory')}
+            variant="ghost"
+            fullWidth
+            onPress={() => navigation.navigate('GameHistory')}
+          />
         </View>
       </Card>
     </ScreenContainer>

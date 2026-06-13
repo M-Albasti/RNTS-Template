@@ -1,8 +1,16 @@
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-// Create an instance of Axios
-export const api = axios.create();
+import {apiClient} from '@config/network/client';
 
-// Create an instance of MockAdapter and attach it to the Axios instance
-export const mock = new MockAdapter(api, {delayResponse: 1000}); // Simulate a 1-second delay
+let mockAdapter: MockAdapter | null = null;
+
+/** Lazily attach axios-mock-adapter to the shared API client. */
+export const getMockAdapter = (): MockAdapter => {
+  if (!mockAdapter) {
+    mockAdapter = new MockAdapter(apiClient, {
+      delayResponse: 400,
+      onNoMatch: 'passthrough',
+    });
+  }
+  return mockAdapter;
+};

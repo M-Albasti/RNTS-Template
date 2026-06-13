@@ -1,5 +1,6 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {FlashList} from '@shopify/flash-list';
 
 import Button from '@atoms/Button';
@@ -7,10 +8,14 @@ import PostCard from '@molecules/posts/PostCard';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
+import TextView from '@atoms/TextView';
 
+import {useFeedQuery} from '@api/query/hooks/useFeedQuery';
+import {queryKeys} from '@api/query/queryKeys';
+import {queryClient} from '@api/query/queryClient';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
-import {setFeedSort, toggleLike, toggleSave} from '@redux/slices/postsSlice';
+import {hydratePosts, setFeedSort, toggleLike, toggleSave} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {FeedSort, PostItem} from '@Types/postTypes';
@@ -20,10 +25,12 @@ interface FeedProps {
 }
 
 const Feed = ({navigation}: FeedProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const posts = useAppSelector(state => state.posts.posts);
   const savedIds = useAppSelector(state => state.posts.savedIds);
   const feedSort = useAppSelector(state => state.posts.feedSort);
   const dispatch = useAppDispatch();
+  const feedQuery = useFeedQuery(feedSort);
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       list: {flex: tokens.layout.flex.fill},
@@ -31,6 +38,12 @@ const Feed = ({navigation}: FeedProps): React.JSX.Element => {
       sortRow: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
     }),
   );
+
+  useEffect(() => {
+    if (feedQuery.data) {
+      dispatch(hydratePosts(feedQuery.data));
+    }
+  }, [dispatch, feedQuery.data]);
 
   const sortedPosts = useMemo(() => {
     const copy = [...posts];
@@ -52,29 +65,38 @@ const Feed = ({navigation}: FeedProps): React.JSX.Element => {
     />
   );
 
-  const setSort = (sort: FeedSort) => dispatch(setFeedSort(sort));
+  const setSort = (sort: FeedSort) => {
+    dispatch(setFeedSort(sort));
+    queryClient.invalidateQueries({queryKey: queryKeys.feed(sort)});
+  };
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Social Feed" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('feed.title')} onBack={() => navigation.goBack()} />
+      {feedQuery.isFetching ? (
+        <>
+          <TextView text={t('feed.syncing')} variant="bodySmall" muted />
+          <Spacer size="sm" />
+        </>
+      ) : null}
       <View style={styles.sortRow}>
         <Button
-          label="Recent"
+          label={t('feed.recent')}
           size="sm"
           variant={feedSort === 'recent' ? 'primary' : 'outline'}
           onPress={() => setSort('recent')}
         />
         <Button
-          label="Popular"
+          label={t('feed.popular')}
           size="sm"
           variant={feedSort === 'popular' ? 'primary' : 'outline'}
           onPress={() => setSort('popular')}
         />
       </View>
       <Spacer size="sm" />
-      <Button label="Create post" fullWidth onPress={() => navigation.navigate('CreatePost')} />
+      <Button label={t('feed.createPost')} fullWidth onPress={() => navigation.navigate('CreatePost')} />
       <Spacer size="xs" />
-      <Button label="Create poll" variant="secondary" fullWidth onPress={() => navigation.navigate('CreatePoll')} />
+      <Button label={t('feed.createPoll')} variant="secondary" fullWidth onPress={() => navigation.navigate('CreatePoll')} />
       <Spacer size="md" />
       <FlashList
         data={sortedPosts}

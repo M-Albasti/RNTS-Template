@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
 import Heading from '@atoms/Heading';
@@ -20,6 +21,7 @@ interface GalleryAlbumsProps {
 }
 
 const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const albums = useAppSelector(state => state.gallery.albums);
   const images = useAppSelector(state => state.gallery.images);
   const albumId = route.params?.albumId;
@@ -49,7 +51,7 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
     return (
       <ScreenContainer>
         <ScreenHeader
-          title={album?.title || 'Album'}
+          title={album?.title || t('gallery.albumFallback')}
           onBack={() => navigation.navigate('GalleryAlbums', undefined)}
         />
         <FlashList
@@ -70,7 +72,7 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Albums" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.albums')} onBack={() => navigation.goBack()} />
       <FlashList
         data={albums}
         keyExtractor={item => item.id}
@@ -82,7 +84,11 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
                 <Image source={{uri: item.coverUri}} style={styles.cover} />
                 <View style={styles.meta}>
                   <Heading text={item.title} level="h3" />
-                  <TextView text={`${item.count} photos`} variant="caption" muted />
+                  <TextView
+                    text={t('gallery.photosCount', {count: item.count})}
+                    variant="caption"
+                    muted
+                  />
                 </View>
               </View>
             </Card>

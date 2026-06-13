@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Alert, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -19,6 +20,7 @@ interface MockOtpTemplateProps {
 const MockOtpTemplate = ({
   navigation,
 }: MockOtpTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const [code, setCode] = useState('');
   const styles = useThemedStyles(tokens => ({
     form: {
@@ -29,24 +31,19 @@ const MockOtpTemplate = ({
 
   const verifyCode = () => {
     if (code.length < 4) {
-      Alert.alert('Validation', 'Enter the verification code.');
+      Alert.alert(t('auth.validationError'), t('auth.enterVerificationCode'));
       return;
     }
-    Alert.alert('Verified', 'Mock OTP accepted.', [
-      {text: 'Continue', onPress: () => navigation.navigate('Login')},
+    Alert.alert(t('auth.otpVerified'), t('auth.otpVerifiedMessage'), [
+      {text: t('auth.continue'), onPress: () => navigation.navigate('Login')},
     ]);
   };
 
   return (
     <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <Heading text="Verification code" level="h1" align="center" />
+      <Heading text={t('auth.verificationCode')} level="h1" align="center" />
       <Spacer size="sm" />
-      <TextView
-        text="Enter the code sent to your phone (mock flow uses any 4+ digits)."
-        variant="bodySmall"
-        muted
-        align="center"
-      />
+      <TextView text={t('auth.otpHint')} variant="bodySmall" muted align="center" />
       <Spacer size="lg" />
       <View style={styles.form}>
         <Card>
@@ -57,10 +54,10 @@ const MockOtpTemplate = ({
             onFilled={setCode}
           />
           <Spacer size="md" />
-          <Button label="Verify" fullWidth onPress={verifyCode} />
+          <Button label={t('auth.verify')} fullWidth onPress={verifyCode} />
           <Spacer size="sm" />
           <Button
-            label="Back"
+            label={t('common.goBack')}
             variant="ghost"
             fullWidth
             onPress={() => navigation.goBack()}

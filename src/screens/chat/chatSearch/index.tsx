@@ -1,9 +1,9 @@
 import React, {useMemo} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
-import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
@@ -21,6 +21,7 @@ interface ChatSearchProps {
 }
 
 const ChatSearch = ({navigation}: ChatSearchProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const query = useAppSelector(state => state.chat.searchQuery);
   const threads = useAppSelector(state => state.chat.threads);
   const dispatch = useAppDispatch();
@@ -44,16 +45,16 @@ const ChatSearch = ({navigation}: ChatSearchProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Search messages" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('chat.searchMessages')} onBack={() => navigation.goBack()} />
       <TextInputView
-        placeholder="Search in conversations..."
+        placeholder={t('chat.searchInConversations')}
         value={query}
         onChangeText={text => dispatch(setChatSearchQuery(text))}
       />
       <Spacer size="md" />
       {results.length === 0 ? (
         <View style={styles.empty}>
-          <TextView text="Type to search message history." muted align="center" />
+          <TextView text={t('chat.typeToSearch')} muted align="center" />
         </View>
       ) : (
         <FlashList

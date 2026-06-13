@@ -14,7 +14,7 @@ type NamedStyles<T> = {
  *
  * @example
  * const styles = useThemedStyles(tokens => ({
- *   container: { flex: 1, backgroundColor: tokens.colors.background },
+ *   container: { flex: tokens.layout.flex.fill, backgroundColor: tokens.colors.background },
  * }));
  */
 export const useThemedStyles = <T extends NamedStyles<T>>(

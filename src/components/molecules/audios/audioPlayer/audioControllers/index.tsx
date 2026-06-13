@@ -31,7 +31,7 @@ const AudioControllers = memo(
       StyleSheet.create({
         root: {
           width: '100%',
-          flexDirection: 'row',
+          flexDirection: tokens.layout.flexDirection.row,
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: tokens.spacing.xl,

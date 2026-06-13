@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -18,6 +19,7 @@ interface GameHistoryProps {
 }
 
 const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const history = useAppSelector(state => state.game.history);
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -31,9 +33,9 @@ const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
   if (history.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title="Reward history" onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('game.rewardHistory')} onBack={() => navigation.goBack()} />
         <View style={styles.empty}>
-          <TextView text="Spin the wheel to start earning rewards." muted align="center" />
+          <TextView text={t('game.spinToEarn')} muted align="center" />
         </View>
       </ScreenContainer>
     );
@@ -54,7 +56,7 @@ const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Reward history" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.rewardHistory')} onBack={() => navigation.goBack()} />
       <FlashList
         data={history}
         renderItem={renderItem}

@@ -19,7 +19,7 @@ const VideoView = (props: VideoPlayerProps): React.JSX.Element => {
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
       videoBackground: {
-        flex: 1,
+        flex: tokens.layout.flex.fill,
         backgroundColor: tokens.colors.textPrimary,
         borderRadius: tokens.radius.lg,
       },

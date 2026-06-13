@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
@@ -42,7 +44,7 @@ export default OTPFooter;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: layout.flex.fill,
     width: ScreenWidth,
   },
 });

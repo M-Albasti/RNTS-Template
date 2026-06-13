@@ -1,6 +1,7 @@
 //* packages import
 import React, {useState} from 'react';
 import {KeyboardTypeOptions, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import Card from '@atoms/Card';
@@ -9,6 +10,9 @@ import LoginButton from '@molecules/loginButton';
 import PasswordTextInput from '@molecules/passwordTextInput';
 import Button from '@atoms/Button';
 import Spacer from '@atoms/Spacer';
+import TextView from '@atoms/TextView';
+
+import {apiConfig} from '@config/apiConfig';
 
 import {navigate as rootNavigate} from '@services/navigationServices/NavigationService';
 import {loginService} from '@services/authServices/loginService';
@@ -31,6 +35,7 @@ interface LoginFormProps {
 }
 
 const LoginForm = (props: LoginFormProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const [emailOrPhone, setEmailOrPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -76,9 +81,20 @@ const LoginForm = (props: LoginFormProps): React.JSX.Element => {
           />
         </View>
         <LoginButton onLogin={onLogin} loading={loading} />
+        {props.loginType === 'Normal' && apiConfig.useMocks ? (
+          <>
+            <Spacer size="sm" />
+            <TextView
+              text={t('auth.mockLoginHint')}
+              variant="caption"
+              muted
+              align="center"
+            />
+          </>
+        ) : null}
         <Spacer size="sm" />
         <Button
-          label="Forgot password?"
+          label={t('auth.forgotPassword')}
           variant="ghost"
           fullWidth
           onPress={() => rootNavigate('ForgetPassword', undefined)}

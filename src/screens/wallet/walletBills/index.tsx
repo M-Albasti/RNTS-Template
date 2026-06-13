@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -20,6 +21,7 @@ interface WalletBillsProps {
 }
 
 const WalletBills = ({navigation}: WalletBillsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const bills = useAppSelector(state => state.wallet.bills);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -31,7 +33,7 @@ const WalletBills = ({navigation}: WalletBillsProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title="Bill pay" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.billPay')} onBack={() => navigation.goBack()} />
       {bills.map(bill => (
         <View key={bill.id}>
           <Card style={bill.paid ? styles.paid : undefined}>
@@ -39,7 +41,9 @@ const WalletBills = ({navigation}: WalletBillsProps): React.JSX.Element => {
               <View>
                 <Heading text={bill.payee} level="h3" />
                 <TextView
-                  text={`Due ${bill.dueDate}${bill.recurring ? ' · recurring' : ''}`}
+                  text={`${t('wallet.dueDate', {date: bill.dueDate})}${
+                    bill.recurring ? ` ${t('wallet.recurringSuffix')}` : ''
+                  }`}
                   variant="caption"
                   muted
                 />
@@ -48,7 +52,7 @@ const WalletBills = ({navigation}: WalletBillsProps): React.JSX.Element => {
             </View>
             <Spacer size="sm" />
             <Button
-              label={bill.paid ? 'Paid' : 'Pay now'}
+              label={bill.paid ? t('wallet.paid') : t('wallet.payNow')}
               variant={bill.paid ? 'ghost' : 'primary'}
               fullWidth
               disabled={bill.paid}

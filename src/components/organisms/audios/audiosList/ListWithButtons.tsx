@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -43,6 +45,6 @@ export default ListWithButtons;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: layout.flex.fill,
   },
 });

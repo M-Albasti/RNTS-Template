@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
 import {Platform, StyleSheet} from 'react-native';
@@ -193,7 +195,7 @@ export default VideoCameraModal;
 
 const styles = StyleSheet.create({
   permissionContainer: {
-    flex: 1,
+    flex: layout.flex.fill,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -203,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   noDeviceContainer: {
-    flex: 1,
+    flex: layout.flex.fill,
     justifyContent: 'center',
     alignItems: 'center',
   },

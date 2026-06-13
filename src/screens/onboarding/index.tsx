@@ -4,6 +4,7 @@ import React, {useRef} from 'react';
 import {Image, View} from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
 import {ScreenHeight, ScreenWidth} from '@rneui/base';
+import {useTranslation} from 'react-i18next';
 
 //* constants import
 import {appColors} from '@constants/colors';
@@ -12,6 +13,7 @@ import {appColors} from '@constants/colors';
 import {styles} from './styles';
 
 const OnBoarding = (props: any): React.JSX.Element => {
+  const {t} = useTranslation();
   const onBoardingRef = useRef<Onboarding>();
 
   const onOnboardingReady = (ref: Onboarding) => {
@@ -36,8 +38,8 @@ const OnBoarding = (props: any): React.JSX.Element => {
                 style={{width: ScreenWidth, height: ScreenHeight / 2}}
               />
             ),
-            title: 'Onboarding1',
-            subtitle: 'Done with React Native Onboarding Swiper1',
+            title: t('onboarding.slide1Title'),
+            subtitle: t('onboarding.slide1Subtitle'),
           },
           {
             backgroundColor: appColors.transparent,
@@ -48,8 +50,8 @@ const OnBoarding = (props: any): React.JSX.Element => {
                 style={{width: ScreenWidth, height: ScreenHeight / 2}}
               />
             ),
-            title: 'Onboarding2',
-            subtitle: 'Done with React Native Onboarding Swiper2',
+            title: t('onboarding.slide2Title'),
+            subtitle: t('onboarding.slide2Subtitle'),
           },
           {
             backgroundColor: appColors.transparent,
@@ -60,8 +62,8 @@ const OnBoarding = (props: any): React.JSX.Element => {
                 style={{width: ScreenWidth, height: ScreenHeight / 2}}
               />
             ),
-            title: 'Onboarding3',
-            subtitle: 'Done with React Native Onboarding Swiper3',
+            title: t('onboarding.slide3Title'),
+            subtitle: t('onboarding.slide3Subtitle'),
           },
         ]}
         onDone={() => props.navigation.replace('LoginOptions')}

@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
 import Heading from '@atoms/Heading';
@@ -17,6 +18,7 @@ interface GameHubProps {
 }
 
 const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {coins, spinCount, history} = useAppSelector(state => state.game);
   const styles = useThemedStyles(tokens =>
     StyleSheet.create({
@@ -34,11 +36,15 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Game center" showBack={false} />
+      <ScreenHeader title={t('game.center')} showBack={false} />
       <View style={styles.hero}>
-        <Heading text="Lucky arcade" level="h2" align="center" />
+        <Heading text={t('game.luckyArcade')} level="h2" align="center" />
         <Spacer size="xs" />
-        <TextView text={`${coins} coins · ${spinCount} spins played`} align="center" style={styles.heroText} />
+        <TextView
+          text={t('game.coinsSpins', {coins, spins: spinCount})}
+          align="center"
+          style={styles.heroText}
+        />
         <Spacer size="md" />
         <View style={styles.stats}>
           <TextView text={`${history.length} rewards logged`} variant="caption" style={styles.heroText} />
@@ -47,36 +53,36 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
       <Spacer size="lg" />
       <View style={styles.grid}>
         <FeatureHubCard
-          title="Spinner"
-          subtitle="Spin the lucky wheel"
+          title={t('game.spinner')}
+          subtitle={t('game.spinnerSubtitle')}
           iconType="MaterialCommunityIcons"
           iconName="slot-machine"
           onPress={() => navigation.navigate('LuckySpinner')}
         />
         <FeatureHubCard
-          title="Shop"
-          subtitle="Spend coins on boosts"
+          title={t('game.shop')}
+          subtitle={t('game.shopSubtitle')}
           iconType="Ionicons"
           iconName="cart-outline"
           onPress={() => navigation.navigate('GameShop')}
         />
         <FeatureHubCard
-          title="Leaderboard"
-          subtitle="Top players ranking"
+          title={t('game.leaderboard')}
+          subtitle={t('game.leaderboardSubtitle')}
           iconType="Ionicons"
           iconName="podium-outline"
           onPress={() => navigation.navigate('GameLeaderboard')}
         />
         <FeatureHubCard
-          title="History"
-          subtitle="Your reward log"
+          title={t('game.history')}
+          subtitle={t('game.historySubtitle')}
           iconType="Ionicons"
           iconName="time-outline"
           onPress={() => navigation.navigate('GameHistory')}
         />
         <FeatureHubCard
-          title="Achievements"
-          subtitle="Badges & daily bonus"
+          title={t('game.achievements')}
+          subtitle={t('game.achievementsSubtitle')}
           iconType="Ionicons"
           iconName="ribbon-outline"
           onPress={() => navigation.navigate('GameAchievements')}

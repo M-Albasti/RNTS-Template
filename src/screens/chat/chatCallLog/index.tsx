@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,6 +23,7 @@ interface ChatCallLogProps {
 }
 
 const ChatCallLog = ({navigation}: ChatCallLogProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const logs = useAppSelector(state => state.chat.callLogs);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -36,7 +38,7 @@ const ChatCallLog = ({navigation}: ChatCallLogProps): React.JSX.Element => {
     dispatch(
       addCallLog({
         id: Date.now().toString(),
-        name: 'Quick contact',
+        name: t('chat.quickContact'),
         type,
         direction: 'outgoing',
         createdAt: new Date().toISOString(),
@@ -63,10 +65,15 @@ const ChatCallLog = ({navigation}: ChatCallLogProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Call log" onBack={() => navigation.goBack()} />
-      <Button label="Start audio call" fullWidth onPress={() => startCall('audio')} />
+      <ScreenHeader title={t('chat.callLog')} onBack={() => navigation.goBack()} />
+      <Button label={t('chat.startAudioCall')} fullWidth onPress={() => startCall('audio')} />
       <Spacer size="sm" />
-      <Button label="Start video call" variant="secondary" fullWidth onPress={() => startCall('video')} />
+      <Button
+        label={t('chat.startVideoCall')}
+        variant="secondary"
+        fullWidth
+        onPress={() => startCall('video')}
+      />
       <Spacer size="md" />
       <FlashList
         data={logs}

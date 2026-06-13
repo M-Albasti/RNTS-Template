@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
 import Heading from '@atoms/Heading';
@@ -17,6 +18,7 @@ interface GalleryHubProps {
 }
 
 const GalleryHub = ({navigation}: GalleryHubProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const images = useAppSelector(state => state.gallery.images);
   const albums = useAppSelector(state => state.gallery.albums);
   const favorites = images.filter(i => i.favorite).length;
@@ -37,58 +39,58 @@ const GalleryHub = ({navigation}: GalleryHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Gallery" showBack={false} />
+      <ScreenHeader title={t('gallery.title')} showBack={false} />
       <View style={styles.hero}>
-        <Heading text="Your photos" level="h2" align="center" />
+        <Heading text={t('gallery.yourPhotos')} level="h2" align="center" />
         <Spacer size="xs" />
-        <TextView text="Browse albums, favorites and full-resolution images." align="center" muted />
+        <TextView text={t('gallery.hubSubtitle')} align="center" muted />
         <Spacer size="md" />
         <View style={styles.stats}>
           <TextView text={`${images.length} photos`} variant="bodySmall" />
-          <TextView text={`${albums.length} albums`} variant="bodySmall" />
-          <TextView text={`${favorites} favorites`} variant="bodySmall" />
+          <TextView text={`${albums.length} ${t('gallery.albums')}`} variant="bodySmall" />
+          <TextView text={`${favorites} ${t('gallery.favorites')}`} variant="bodySmall" />
         </View>
       </View>
       <Spacer size="lg" />
       <View style={styles.grid}>
         <FeatureHubCard
-          title="All photos"
-          subtitle="Full library grid"
+          title={t('gallery.allPhotos')}
+          subtitle={t('gallery.allPhotosSubtitle')}
           iconType="Ionicons"
           iconName="grid-outline"
           onPress={() => navigation.navigate('GalleryGrid')}
         />
         <FeatureHubCard
-          title="Albums"
-          subtitle="Organized collections"
+          title={t('gallery.albums')}
+          subtitle={t('gallery.albumsSubtitle')}
           iconType="Ionicons"
           iconName="albums-outline"
           onPress={() => navigation.navigate('GalleryAlbums', undefined)}
         />
         <FeatureHubCard
-          title="Favorites"
-          subtitle="Starred images"
+          title={t('gallery.favorites')}
+          subtitle={t('gallery.favoritesSubtitle')}
           iconType="Ionicons"
           iconName="heart-outline"
           onPress={() => navigation.navigate('GalleryFavorites')}
         />
         <FeatureHubCard
-          title="Search"
-          subtitle="Find by title"
+          title={t('common.search')}
+          subtitle={t('gallery.searchSubtitle')}
           iconType="Ionicons"
           iconName="search-outline"
           onPress={() => navigation.navigate('GallerySearch')}
         />
         <FeatureHubCard
-          title="Slideshow"
-          subtitle="Auto-play gallery"
+          title={t('gallery.slideshow')}
+          subtitle={t('gallery.slideshowSubtitle')}
           iconType="Ionicons"
           iconName="play-outline"
           onPress={() => navigation.navigate('GallerySlideshow', {imageId: images[0]?.id || '1'})}
         />
         <FeatureHubCard
-          title="Private vault"
-          subtitle="Hidden photos"
+          title={t('gallery.privateVault')}
+          subtitle={t('gallery.vaultSubtitle')}
           iconType="Ionicons"
           iconName="lock-closed-outline"
           onPress={() => navigation.navigate('GalleryHidden')}

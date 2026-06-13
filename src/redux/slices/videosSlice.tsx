@@ -1,6 +1,12 @@
 //* packages import
 import {PayloadAction, createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import axios, {AxiosError} from 'axios';
+import {AxiosError} from 'axios';
+
+//* config import
+import {apiConfig} from '@config/apiConfig';
+import {mediaClient} from '@config/network/mediaClient';
+
+//* utils import
 import {uniqueFileName} from '@utils/uniqueFileName';
 
 //* types import
@@ -35,13 +41,9 @@ const getVideo = createAsyncThunk<
   // This will automatically dispatch a `pending` action first,
   // and then `fulfilled` or `rejected` actions based on the promise.
   // as needed based on the
-  return await axios({
-    method: 'GET',
-    url: `https://node-file-apis-2.onrender.com/files/${videoName}`,
-  })
-    .then(response => {
-      return response.data;
-    })
+  return mediaClient
+    .get(`/files/${videoName}`)
+    .then(response => response.data)
     .catch(error => {
       throw error;
     });
@@ -57,17 +59,11 @@ export const uploadVideo = createAsyncThunk<
   // This will automatically dispatch a `pending` action first,
   // and then `fulfilled` or `rejected` actions based on the promise.
   // as needed based on the
-  return await axios({
-    method: 'POST',
-    url: 'https://node-file-apis-2.onrender.com/upload',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-    data: videoFile,
-  })
-    .then(response => {
-      return response.data;
+  return mediaClient
+    .post('/upload', videoFile, {
+      headers: {'Content-Type': 'multipart/form-data'},
     })
+    .then(response => response.data)
     .catch(error => {
       throw error;
     });
@@ -116,7 +112,7 @@ const videosSlice = createSlice({
           const videoObject: VideoProps = {
             description: 'description',
             sources: [
-              `https://node-file-apis-2.onrender.com/files/${action.payload.savedFileName}`,
+              `${apiConfig.mediaBaseURL}/files/${action.payload.savedFileName}`,
             ],
             subtitle: uniqueFileName('subTitle'),
             thumb: 'https://picsum.photos/150/150?image=0',

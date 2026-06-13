@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import PostCard from '@molecules/posts/PostCard';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -21,6 +22,7 @@ interface PostSearchProps {
 }
 
 const PostSearch = ({navigation}: PostSearchProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const posts = useAppSelector(state => state.posts.posts);
   const savedIds = useAppSelector(state => state.posts.savedIds);
   const query = useAppSelector(state => state.posts.searchQuery);
@@ -55,16 +57,16 @@ const PostSearch = ({navigation}: PostSearchProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Search posts" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.searchPosts')} onBack={() => navigation.goBack()} />
       <TextInputView
-        placeholder="Search by author or content..."
+        placeholder={t('posts.searchPlaceholder')}
         value={query}
         onChangeText={text => dispatch(setSearchQuery(text))}
       />
       <Spacer size="md" />
       {results.length === 0 ? (
         <View style={styles.empty}>
-          <TextView text="No posts match your search." muted align="center" />
+          <TextView text={t('posts.noSearchResults')} muted align="center" />
         </View>
       ) : (
         <FlashList

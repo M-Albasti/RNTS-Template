@@ -5,6 +5,7 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -33,6 +34,7 @@ import {logger} from '@utils/logger';
 import {navigationFallbackStyles} from '@navigation/TabNavigator/styles';
 
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
+  const {t} = useTranslation();
   const scheme = useAppColorScheme();
   const theme = createNavigationTheme(
     scheme === 'dark' ? DarkTheme : DefaultTheme,
@@ -56,7 +58,7 @@ const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
       linking={linking}
       fallback={
         <TextView
-          text={'Loading...'}
+          text={t('common.loading')}
           style={navigationFallbackStyles.fallbackText}
           containerStyle={navigationFallbackStyles.fallback}
         />

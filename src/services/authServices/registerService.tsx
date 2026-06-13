@@ -6,6 +6,7 @@ import {ZodError} from 'zod';
 import {addUser} from '@redux/slices/authSlice';
 
 //* services import
+import {apiRegisterService} from '@services/authServices/apiLoginService';
 import {registerFirebaseWithEmail} from '@services/firebaseServices/firebaseEmailService';
 
 //* helpers import
@@ -32,7 +33,9 @@ export const registerService = async (
 ): Promise<void> => {
   try {
     registerValidation.parse(credentials); // Validate data
-    if (registerType === 'FirebaseEmailRegister') {
+    if (registerType === 'Register') {
+      await apiRegisterService(credentials, dispatch);
+    } else if (registerType === 'FirebaseEmailRegister') {
       registerFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
         .then(user => {
           // Handle successful register

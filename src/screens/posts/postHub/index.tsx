@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
 import Heading from '@atoms/Heading';
@@ -17,6 +18,7 @@ interface PostHubProps {
 }
 
 const PostHub = ({navigation}: PostHubProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const posts = useAppSelector(state => state.posts.posts);
   const savedIds = useAppSelector(state => state.posts.savedIds);
   const styles = useThemedStyles(tokens =>
@@ -42,56 +44,56 @@ const PostHub = ({navigation}: PostHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Social" showBack={false} />
+      <ScreenHeader title={t('posts.hubTitle')} showBack={false} />
       <View style={styles.hero}>
-        <Heading text="Community feed" level="h2" align="center" />
+        <Heading text={t('posts.communityFeed')} level="h2" align="center" />
         <Spacer size="xs" />
         <TextView
-          text="Share text, images, audio and video. Like, comment and save posts."
+          text={t('posts.communitySubtitle')}
           align="center"
           muted
         />
         <Spacer size="md" />
         <View style={styles.stats}>
-          <TextView text={`${posts.length} posts`} variant="bodySmall" />
-          <TextView text={`${savedIds.length} saved`} variant="bodySmall" />
+          <TextView text={t('home.postsCount', {count: posts.length})} variant="bodySmall" />
+          <TextView text={`${savedIds.length} ${t('posts.saved')}`} variant="bodySmall" />
         </View>
       </View>
       <Spacer size="lg" />
-      <Heading text="Explore" level="h3" />
+      <Heading text={t('posts.explore')} level="h3" />
       <Spacer size="md" />
       <View style={styles.grid}>
         <FeatureHubCard
-          title="Feed"
-          subtitle="Browse all posts"
+          title={t('posts.feed')}
+          subtitle={t('posts.feedSubtitle')}
           iconType="Ionicons"
           iconName="newspaper-outline"
           onPress={() => navigation.navigate('Feed')}
         />
         <FeatureHubCard
-          title="Create"
-          subtitle="Publish a new post"
+          title={t('posts.create')}
+          subtitle={t('posts.createSubtitle')}
           iconType="Ionicons"
           iconName="create-outline"
           onPress={() => navigation.navigate('CreatePost')}
         />
         <FeatureHubCard
-          title="Saved"
-          subtitle="Your bookmarked posts"
+          title={t('posts.saved')}
+          subtitle={t('posts.savedSubtitle')}
           iconType="Ionicons"
           iconName="bookmark-outline"
           onPress={() => navigation.navigate('SavedPosts')}
         />
         <FeatureHubCard
-          title="Search"
-          subtitle="Find posts & authors"
+          title={t('common.search')}
+          subtitle={t('posts.searchSubtitle')}
           iconType="Ionicons"
           iconName="search-outline"
           onPress={() => navigation.navigate('PostSearch')}
         />
         <FeatureHubCard
-          title="Polls"
-          subtitle="Create interactive polls"
+          title={t('posts.polls')}
+          subtitle={t('posts.pollsSubtitle')}
           iconType="Ionicons"
           iconName="bar-chart-outline"
           onPress={() => navigation.navigate('CreatePoll')}

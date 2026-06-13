@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -106,19 +108,19 @@ export default CameraView;
 
 const styles = StyleSheet.create({
   cameraContainer: {
-    flex: 1,
+    flex: layout.flex.fill,
   },
   topButtonsContainer: {
     padding: 10,
     justifyContent: 'space-between',
-    flexDirection: 'row',
+    flexDirection: layout.flexDirection.row,
     width: ScreenWidth,
     backgroundColor: appColors.black60,
   },
   bottomButtonsContainer: {
     padding: 10,
     justifyContent: 'space-between',
-    flexDirection: 'row',
+    flexDirection: layout.flexDirection.row,
     width: ScreenWidth,
     backgroundColor: appColors.black60,
     position: 'absolute',

@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
 import Heading from '@atoms/Heading';
@@ -17,6 +18,7 @@ interface TodoHubProps {
 }
 
 const TodoHub = ({navigation}: TodoHubProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const items = useAppSelector(state => state.todos.items);
   const open = items.filter(i => !i.done).length;
   const high = items.filter(i => !i.done && i.priority === 'high').length;
@@ -35,27 +37,27 @@ const TodoHub = ({navigation}: TodoHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Tasks" showBack={false} />
+      <ScreenHeader title={t('todos.title')} showBack={false} />
       <View style={styles.hero}>
-        <Heading text="Stay organized" level="h2" align="center" />
+        <Heading text={t('todos.stayOrganized')} level="h2" align="center" />
         <Spacer size="xs" />
         <View style={styles.stats}>
-          <TextView text={`${open} open`} variant="bodySmall" />
+          <TextView text={t('home.openTasks', {count: open})} variant="bodySmall" />
           <TextView text={`${high} high priority`} variant="bodySmall" />
         </View>
       </View>
       <Spacer size="lg" />
       <View style={styles.grid}>
         <FeatureHubCard
-          title="Task list"
-          subtitle="Add, filter & complete"
+          title={t('todos.taskList')}
+          subtitle={t('todos.taskListSubtitle')}
           iconType="Ionicons"
           iconName="list-outline"
           onPress={() => navigation.navigate('TodoList')}
         />
         <FeatureHubCard
-          title="Focus timer"
-          subtitle="Pomodoro sessions"
+          title={t('todos.focusTimer')}
+          subtitle={t('todos.focusSubtitle')}
           iconType="Ionicons"
           iconName="timer-outline"
           onPress={() => navigation.navigate('TodoFocus')}

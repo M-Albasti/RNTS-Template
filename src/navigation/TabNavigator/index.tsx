@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {Suspense} from 'react';
 import {View} from 'react-native';
@@ -6,6 +8,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {useTheme} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 //* screens import
 import Home from '@screens/home';
@@ -35,6 +38,7 @@ interface TabBarIconProps {
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const TabNavigator = (props: any): React.JSX.Element => {
+  const {t} = useTranslation();
   const {colors} = useTheme();
   const styles = useTabNavigatorStyles();
 
@@ -57,12 +61,12 @@ const TabNavigator = (props: any): React.JSX.Element => {
           <Suspense
             fallback={
               <TextView
-                text={'Loading...'}
+                text={t('common.loading')}
                 style={styles.fallbackText}
                 containerStyle={styles.fallback}
               />
             }>
-            <View style={{flex: 1}}>{children}</View>
+            <View style={{flex: layout.flex.fill}}>{children}</View>
           </Suspense>
         </ErrorBoundary>
       )}>
@@ -71,6 +75,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
           name="Home"
           component={Home}
           options={{
+            tabBarLabel: t('tabs.home'),
             tabBarItemStyle: styles.tabBarItemStyle,
             tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
               return (
@@ -104,7 +109,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
                     ...styles.floatingButtonStyle,
                     borderColor: colors.background,
                   }}
-                  text={'hello'}
+                  text={t('common.hello')}
                   onPress={e => {
                     e.preventDefault();
                   }}
@@ -118,6 +123,7 @@ const TabNavigator = (props: any): React.JSX.Element => {
           name="Profile"
           component={Profile}
           options={{
+            tabBarLabel: t('tabs.profile'),
             tabBarItemStyle: styles.tabBarItemStyle,
             tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
               return (

@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* package imports
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -34,13 +36,13 @@ export default Buttons;
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: layout.flexDirection.row,
     justifyContent: 'center',
     alignItems: 'center',
   },
   recordTouchableContainer: {
     alignSelf: 'center',
-    flexDirection: 'row',
+    flexDirection: layout.flexDirection.row,
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',

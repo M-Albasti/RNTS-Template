@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -21,6 +22,7 @@ interface CreatePollProps {
 }
 
 const CreatePoll = ({navigation}: CreatePollProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const user = useAppSelector(state => state.auth.user);
   const dispatch = useAppDispatch();
   const [question, setQuestion] = useState('');
@@ -67,19 +69,23 @@ const CreatePoll = ({navigation}: CreatePollProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title="Create poll" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.createPollTitle')} onBack={() => navigation.goBack()} />
       <Card>
-        <Heading text="Ask a question" level="h3" />
+        <Heading text={t('posts.askQuestion')} level="h3" />
         <Spacer size="md" />
-        <TextInputView placeholder="What do you want to ask?" value={question} onChangeText={setQuestion} />
+        <TextInputView
+          placeholder={t('posts.pollQuestionPlaceholder')}
+          value={question}
+          onChangeText={setQuestion}
+        />
         <Spacer size="md" />
-        <TextView text="Options" variant="bodySmall" muted />
+        <TextView text={t('posts.options')} variant="bodySmall" muted />
         <Spacer size="sm" />
         {options.map((opt, index) => (
           <View key={index} style={styles.optionRow}>
             <View style={styles.optionInput}>
               <TextInputView
-                placeholder={`Option ${index + 1}`}
+                placeholder={t('posts.optionN', {n: index + 1})}
                 value={opt}
                 onChangeText={text => {
                   const next = [...options];
@@ -91,9 +97,9 @@ const CreatePoll = ({navigation}: CreatePollProps): React.JSX.Element => {
           </View>
         ))}
         <Spacer size="sm" />
-        <Button label="Add option" variant="ghost" onPress={addOption} />
+        <Button label={t('posts.addOption')} variant="ghost" onPress={addOption} />
         <Spacer size="md" />
-        <Button label="Publish poll" fullWidth onPress={publish} />
+        <Button label={t('posts.publishPoll')} fullWidth onPress={publish} />
       </Card>
     </ScreenContainer>
   );

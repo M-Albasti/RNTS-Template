@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -29,6 +31,6 @@ export default RegisterButtons;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: layout.flex.fill,
   },
 });

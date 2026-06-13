@@ -1,5 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Heading from '@atoms/Heading';
@@ -18,6 +19,7 @@ interface GallerySlideshowProps {
 }
 
 const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {imageId} = route.params;
   const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
   const startIndex = Math.max(0, images.findIndex(i => i.id === imageId));
@@ -45,23 +47,34 @@ const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX
   if (!current) {
     return (
       <ScreenContainer centered>
-        <TextView text="No photos for slideshow" />
-        <Button label="Go back" onPress={() => navigation.goBack()} />
+        <TextView text={t('gallery.noSlideshowPhotos')} />
+        <Button label={t('common.goBack')} onPress={() => navigation.goBack()} />
       </ScreenContainer>
     );
   }
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Slideshow" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.slideshow')} onBack={() => navigation.goBack()} />
       <Image source={{uri: current.uri}} style={styles.image} resizeMode="cover" />
       <Spacer size="md" />
       <Heading text={current.title} level="h2" align="center" />
-      <TextView text={`${index + 1} / ${images.length}`} align="center" muted />
+      <TextView
+        text={t('gallery.slideCounter', {current: index + 1, total: images.length})}
+        align="center"
+        muted
+      />
       <Spacer size="md" />
       <View style={styles.controls}>
-        <Button label="Previous" variant="outline" onPress={() => setIndex((index - 1 + images.length) % images.length)} />
-        <Button label="Next" onPress={() => setIndex((index + 1) % images.length)} />
+        <Button
+          label={t('gallery.previous')}
+          variant="outline"
+          onPress={() => setIndex((index - 1 + images.length) % images.length)}
+        />
+        <Button
+          label={t('gallery.next')}
+          onPress={() => setIndex((index + 1) % images.length)}
+        />
       </View>
     </ScreenContainer>
   );

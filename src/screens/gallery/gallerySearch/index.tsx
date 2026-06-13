@@ -1,6 +1,7 @@
 import React, {useMemo} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -20,6 +21,7 @@ interface GallerySearchProps {
 }
 
 const GallerySearch = ({navigation}: GallerySearchProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const query = useAppSelector(state => state.gallery.searchQuery);
   const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
   const dispatch = useAppDispatch();
@@ -40,16 +42,16 @@ const GallerySearch = ({navigation}: GallerySearchProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Search photos" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.searchPhotos')} onBack={() => navigation.goBack()} />
       <TextInputView
-        placeholder="Search by title or caption..."
+        placeholder={t('gallery.searchPlaceholder')}
         value={query}
         onChangeText={text => dispatch(setGallerySearchQuery(text))}
       />
       <Spacer size="md" />
       {results.length === 0 ? (
         <View style={styles.empty}>
-          <TextView text="No photos found." muted align="center" />
+          <TextView text={t('gallery.noPhotosFound')} muted align="center" />
         </View>
       ) : (
         <FlashList

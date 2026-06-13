@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,6 +23,7 @@ interface GameAchievementsProps {
 }
 
 const GameAchievements = ({navigation}: GameAchievementsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const achievements = useAppSelector(state => state.game.achievements);
   const lastDaily = useAppSelector(state => state.game.lastDailyClaim);
   const dispatch = useAppDispatch();
@@ -41,16 +43,19 @@ const GameAchievements = ({navigation}: GameAchievementsProps): React.JSX.Elemen
           <Heading text={item.title} level="h3" />
           <TextView text={item.description} variant="bodySmall" muted />
         </View>
-        <TextView text={item.unlocked ? 'Unlocked' : 'Locked'} variant="caption" />
+        <TextView
+          text={item.unlocked ? t('game.unlocked') : t('game.locked')}
+          variant="caption"
+        />
       </View>
     </Card>
   );
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="Achievements" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.achievements')} onBack={() => navigation.goBack()} />
       <Button
-        label={lastDaily === today ? 'Daily reward claimed' : 'Claim daily +15 coins'}
+        label={lastDaily === today ? t('game.dailyClaimed') : t('game.claimDaily')}
         fullWidth
         disabled={lastDaily === today}
         onPress={() => dispatch(claimDailyReward())}

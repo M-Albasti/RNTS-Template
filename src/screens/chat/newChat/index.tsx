@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
 import Heading from '@atoms/Heading';
@@ -21,6 +22,7 @@ interface NewChatProps {
 }
 
 const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const contacts = useAppSelector(state => state.chat.contacts);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -45,7 +47,7 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
         id: threadId,
         name: contact.name,
         avatar: contact.avatar,
-        lastMessage: 'Chat started',
+        lastMessage: t('chat.chatStarted'),
         unread: 0,
         online: contact.online,
         muted: false,
@@ -53,7 +55,7 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
         messages: [
           {
             id: `${threadId}-m0`,
-            text: `Hi ${contact.name}, let's connect!`,
+            text: t('chat.greetingConnect', {name: contact.name}),
             senderId: 'me',
             createdAt: new Date().toISOString(),
             read: true,
@@ -71,7 +73,11 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
           <Image source={{uri: item.avatar}} style={styles.avatar} />
           <View style={styles.meta}>
             <Heading text={item.name} level="h3" />
-            <TextView text={item.online ? 'Online' : 'Offline'} variant="caption" muted />
+            <TextView
+              text={item.online ? t('common.online') : t('common.offline')}
+              variant="caption"
+              muted
+            />
           </View>
           <View style={[styles.dot, !item.online && styles.offline]} />
         </View>
@@ -81,7 +87,7 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="New chat" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('chat.newChat')} onBack={() => navigation.goBack()} />
       <FlashList
         data={contacts}
         renderItem={renderItem}

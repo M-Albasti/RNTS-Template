@@ -2,6 +2,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {isEmpty} from 'lodash';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import Button from '@atoms/Button';
@@ -28,6 +29,7 @@ interface RecordAudioTemplateProps {
 const RecordAudioTemplate = ({
   navigation,
 }: RecordAudioTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {
     audioState,
     recordTime,
@@ -77,21 +79,21 @@ const RecordAudioTemplate = ({
   const isPlaybackPaused = audioState === AudioState.PLAYING_PAUSED;
 
   const statusLabel = isRecording
-    ? 'Recording'
+    ? t('media.recordingStatus')
     : isRecordingPaused
-      ? 'Paused'
+      ? t('media.paused')
       : isPlaying
-        ? 'Playing preview'
+        ? t('media.playingPreview')
         : isPlaybackPaused
-          ? 'Playback paused'
+          ? t('media.playbackPaused')
           : isEmpty(recordPath)
-            ? 'Ready to record'
-            : 'Recording saved';
+            ? t('media.readyToRecord')
+            : t('media.recordingSaved');
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
-        title="Record audio"
+        title={t('media.recordAudio')}
         onBack={() => {
           if (navigation.canGoBack()) {
             navigation.goBack();
@@ -114,8 +116,8 @@ const RecordAudioTemplate = ({
         <TextView
           text={
             isEmpty(recordPath)
-              ? 'Tap record when you are ready. Pause or stop anytime.'
-              : `Duration ${duration || '00:00:00'}`
+              ? t('media.tapRecordHint')
+              : t('media.duration', {time: duration || '00:00:00'})
           }
           variant="bodySmall"
           muted
@@ -127,18 +129,18 @@ const RecordAudioTemplate = ({
 
       {isEmpty(recordPath) ? (
         <Card elevated={false}>
-          <Heading text="Recording controls" level="h3" />
+          <Heading text={t('media.recordingControls')} level="h3" />
           <Spacer size="md" />
           <View style={styles.actions}>
             <Button
-              label={isRecording ? 'Recording…' : 'Start recording'}
+              label={isRecording ? t('media.recording') : t('media.startRecording')}
               fullWidth
               loading={isLoading && !isRecording && !isRecordingPaused}
               disabled={isRecording || isRecordingPaused}
               onPress={startRecord}
             />
             <Button
-              label="Pause"
+              label={t('common.pause')}
               variant="secondary"
               flat
               fullWidth
@@ -146,14 +148,14 @@ const RecordAudioTemplate = ({
               onPress={pauseRecord}
             />
             <Button
-              label="Resume"
+              label={t('common.resume')}
               variant="outline"
               fullWidth
               disabled={!isRecordingPaused || isLoading}
               onPress={resumeRecord}
             />
             <Button
-              label="Stop & save"
+              label={t('media.stopAndSave')}
               variant="danger"
               flat
               fullWidth
@@ -164,18 +166,18 @@ const RecordAudioTemplate = ({
         </Card>
       ) : (
         <Card elevated={false}>
-          <Heading text="Preview & upload" level="h3" />
+          <Heading text={t('media.previewUpload')} level="h3" />
           <Spacer size="md" />
           <View style={styles.actions}>
             <Button
-              label={isPlaying ? 'Playing…' : 'Play preview'}
+              label={isPlaying ? t('media.playing') : t('media.playPreview')}
               fullWidth
               loading={isLoading && !isPlaying && !isPlaybackPaused}
               disabled={isPlaying || isPlaybackPaused}
               onPress={startPlay}
             />
             <Button
-              label="Pause preview"
+              label={t('media.pausePreview')}
               variant="secondary"
               flat
               fullWidth
@@ -183,27 +185,27 @@ const RecordAudioTemplate = ({
               onPress={pausePlay}
             />
             <Button
-              label="Resume preview"
+              label={t('media.resumePreview')}
               variant="outline"
               fullWidth
               disabled={!isPlaybackPaused || isLoading}
               onPress={resumePlay}
             />
             <Button
-              label="Stop preview"
+              label={t('media.stopPreview')}
               variant="ghost"
               fullWidth
               disabled={(!isPlaying && !isPlaybackPaused) || isLoading}
               onPress={stopPlay}
             />
             <Button
-              label="Retake"
+              label={t('common.retake')}
               variant="outline"
               fullWidth
               onPress={retakeAudio}
             />
             <Button
-              label={status === 'loading' ? 'Uploading…' : 'Upload audio'}
+              label={status === 'loading' ? t('common.uploading') : t('media.uploadAudio')}
               fullWidth
               loading={status === 'loading'}
               disabled={status === 'loading'}

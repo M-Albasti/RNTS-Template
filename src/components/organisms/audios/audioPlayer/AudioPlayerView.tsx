@@ -45,7 +45,7 @@ const AudioPlayerView = memo(
     const styles = useThemedStyles(tokens =>
       StyleSheet.create({
         container: {
-          flex: 1,
+          flex: tokens.layout.flex.fill,
           justifyContent: 'space-between',
         },
         errorBanner: {

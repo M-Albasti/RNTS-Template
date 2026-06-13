@@ -4,6 +4,7 @@ import {ZodError} from 'zod';
 import {isEmpty} from 'lodash';
 
 //* services import
+import {apiLoginService} from '@services/authServices/apiLoginService';
 import {firebaseEmailLogin} from '@services/authServices/firebaseEmailLogin';
 import {firebasePhoneLogin} from '@services/authServices/firebasePhoneLogin';
 import {firebaseGoogleLogin} from '@services/authServices/firebaseGoogleLogin';
@@ -38,7 +39,9 @@ export const loginService = async (
     // login with credentials
     if (!isEmpty(credentials)) {
       loginValidation.parse(credentials); // Validate data
-      if (loginType === 'FirebaseEmail') {
+      if (loginType === 'Normal') {
+        await apiLoginService(credentials, dispatch, loginType);
+      } else if (loginType === 'FirebaseEmail') {
         await firebaseEmailLogin(credentials, dispatch, loginType);
       } else if (loginType === 'FirebasePhone') {
         await firebasePhoneLogin(credentials, loginType);

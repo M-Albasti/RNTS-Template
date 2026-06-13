@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Alert, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -19,6 +20,7 @@ interface ResetPasswordTemplateProps {
 const ResetPasswordTemplate = ({
   navigation,
 }: ResetPasswordTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -36,24 +38,19 @@ const ResetPasswordTemplate = ({
 
   const onResetPassword = () => {
     if (!password || password !== confirmPassword) {
-      Alert.alert('Validation', 'Passwords must match and not be empty.');
+      Alert.alert(t('auth.validationError'), t('auth.passwordsMustMatch'));
       return;
     }
-    Alert.alert('Success', 'Password updated (mock flow).', [
-      {text: 'Go to login', onPress: () => navigation.navigate('Login')},
+    Alert.alert(t('auth.success'), t('auth.passwordUpdated'), [
+      {text: t('auth.goToLogin'), onPress: () => navigation.navigate('Login')},
     ]);
   };
 
   return (
     <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <Heading text="Reset password" level="h1" align="center" />
+      <Heading text={t('auth.resetPasswordTitle')} level="h1" align="center" />
       <Spacer size="sm" />
-      <TextView
-        text="Choose a strong new password for your account."
-        variant="bodySmall"
-        muted
-        align="center"
-      />
+      <TextView text={t('auth.resetPasswordHint')} variant="bodySmall" muted align="center" />
       <Spacer size="lg" />
       <View style={styles.form}>
         <Card>
@@ -72,7 +69,7 @@ const ResetPasswordTemplate = ({
             />
           </View>
           <Spacer size="md" />
-          <Button label="Update password" fullWidth onPress={onResetPassword} />
+          <Button label={t('auth.updatePassword')} fullWidth onPress={onResetPassword} />
         </Card>
       </View>
     </ScreenContainer>

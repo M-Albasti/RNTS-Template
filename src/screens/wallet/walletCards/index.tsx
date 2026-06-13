@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -22,6 +23,7 @@ interface WalletCardsProps {
 }
 
 const WalletCards = ({navigation}: WalletCardsProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const cards = useAppSelector(state => state.wallet.cards);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -45,11 +47,11 @@ const WalletCards = ({navigation}: WalletCardsProps): React.JSX.Element => {
         </View>
         {item.isDefault ? (
           <View style={styles.badge}>
-            <TextView text="Default" variant="caption" />
+            <TextView text={t('wallet.defaultCard')} variant="caption" />
           </View>
         ) : (
           <Button
-            label="Set default"
+            label={t('wallet.setDefault')}
             size="sm"
             variant="outline"
             onPress={() => dispatch(setDefaultCard(item.id))}
@@ -61,7 +63,7 @@ const WalletCards = ({navigation}: WalletCardsProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title="My cards" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.myCards')} onBack={() => navigation.goBack()} />
       <FlashList
         data={cards}
         renderItem={renderItem}

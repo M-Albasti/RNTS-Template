@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -20,6 +21,7 @@ interface WalletBudgetProps {
 }
 
 const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {budgetCategories, savingsGoals, balance} = useAppSelector(state => state.wallet);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(tokens =>
@@ -39,8 +41,8 @@ const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title="Budget & goals" onBack={() => navigation.goBack()} />
-      <Heading text="Monthly budgets" level="h3" />
+      <ScreenHeader title={t('wallet.budgetAndGoals')} onBack={() => navigation.goBack()} />
+      <Heading text={t('wallet.monthlyBudgets')} level="h3" />
       <Spacer size="sm" />
       {budgetCategories.map(cat => {
         const pct = Math.min(100, (cat.spent / cat.limit) * 100);
@@ -61,7 +63,7 @@ const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
         );
       })}
       <Spacer size="lg" />
-      <Heading text="Savings goals" level="h3" />
+      <Heading text={t('wallet.savingsGoals')} level="h3" />
       <Spacer size="sm" />
       {savingsGoals.map(goal => (
         <View key={goal.id}>
@@ -72,7 +74,7 @@ const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
             </View>
             <Spacer size="sm" />
             <Button
-              label="Add $50"
+              label={t('wallet.addFifty')}
               size="sm"
               disabled={balance < 50}
               onPress={() => dispatch(contributeToGoal({goalId: goal.id, amount: 50}))}

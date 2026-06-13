@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -19,6 +20,7 @@ interface WalletQRPayProps {
 }
 
 const WalletQRPay = ({navigation}: WalletQRPayProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const balance = useAppSelector(state => state.wallet.balance);
   const dispatch = useAppDispatch();
   const [merchant, setMerchant] = useState('Coffee Corner');
@@ -27,26 +29,38 @@ const WalletQRPay = ({navigation}: WalletQRPayProps): React.JSX.Element => {
   const pay = () => {
     const value = parseFloat(amount);
     if (Number.isNaN(value) || value <= 0) return;
-    dispatch(qrPay({merchant: merchant.trim() || 'Merchant', amount: value}));
+    dispatch(qrPay({merchant: merchant.trim() || t('wallet.merchant'), amount: value}));
     navigation.goBack();
   };
 
   return (
     <ScreenContainer scroll centered alignContent="center">
-      <ScreenHeader title="QR Pay" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.qrPay')} onBack={() => navigation.goBack()} />
       <Card constrained>
-        <Heading text="Scan & pay" level="h2" align="center" />
+        <Heading text={t('wallet.scanAndPay')} level="h2" align="center" />
         <Spacer size="md" />
-        <TextView text="━━━━ QR CODE ━━━━" align="center" muted />
-        <TextView text="(Demo scanner)" align="center" variant="caption" muted />
+        <TextView text={t('wallet.qrCodeDemo')} align="center" muted />
+        <TextView text={t('wallet.demoScanner')} align="center" variant="caption" muted />
         <Spacer size="lg" />
-        <TextView text={`Balance: $${balance.toFixed(2)}`} align="center" />
+        <TextView
+          text={t('wallet.balanceLabel', {balance: balance.toFixed(2)})}
+          align="center"
+        />
         <Spacer size="md" />
-        <TextInputView placeholder="Merchant" value={merchant} onChangeText={setMerchant} />
+        <TextInputView
+          placeholder={t('wallet.merchant')}
+          value={merchant}
+          onChangeText={setMerchant}
+        />
         <Spacer size="sm" />
-        <TextInputView placeholder="Amount" keyboardType="decimal-pad" value={amount} onChangeText={setAmount} />
+        <TextInputView
+          placeholder={t('wallet.amount')}
+          keyboardType="decimal-pad"
+          value={amount}
+          onChangeText={setAmount}
+        />
         <Spacer size="md" />
-        <Button label="Confirm payment" fullWidth onPress={pay} />
+        <Button label={t('wallet.confirmPayment')} fullWidth onPress={pay} />
       </Card>
     </ScreenContainer>
   );

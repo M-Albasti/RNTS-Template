@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {memo} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
   mainbar: {
     height: ScreenHeight * 0.1,
     width: '100%',
-    flexDirection: 'row',
+    flexDirection: layout.flexDirection.row,
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: '10%',

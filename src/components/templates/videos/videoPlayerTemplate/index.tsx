@@ -20,7 +20,7 @@ const VideoPlayerTemplate = ({
 }: VideoPlayerTemplateProps): React.JSX.Element => {
   const styles = useThemedStyles(tokens => ({
     player: {
-      flex: 1,
+      flex: tokens.layout.flex.fill,
       borderRadius: tokens.radius.lg,
       overflow: 'hidden' as const,
     },

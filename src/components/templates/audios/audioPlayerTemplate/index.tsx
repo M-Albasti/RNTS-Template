@@ -1,9 +1,9 @@
 import React from 'react';
 import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
-import TextView from '@atoms/TextView';
 import Spacer from '@atoms/Spacer';
 import AudioPlayerView from '@organisms/audios/audioPlayer/AudioPlayerView';
 
@@ -21,6 +21,7 @@ const AudioPlayerTemplate = ({
   navigation,
   audioDetails,
 }: AudioPlayerTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const {
     isPlaying,
     loadError,
@@ -36,7 +37,7 @@ const AudioPlayerTemplate = ({
 
   const styles = useThemedStyles(tokens => ({
     playerCard: {
-      flex: 1,
+      flex: tokens.layout.flex.fill,
       backgroundColor: tokens.colors.surface,
       borderRadius: tokens.radius.xl,
       paddingVertical: tokens.spacing.lg,
@@ -47,7 +48,7 @@ const AudioPlayerTemplate = ({
   return (
     <ScreenContainer>
       <ScreenHeader
-        title={audioDetails.title || 'Now playing'}
+        title={audioDetails.title || t('media.nowPlaying')}
         onBack={() => {
           if (navigation.canGoBack()) {
             navigation.goBack();

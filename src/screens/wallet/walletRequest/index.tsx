@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -17,6 +18,7 @@ interface WalletRequestProps {
 }
 
 const WalletRequest = ({navigation}: WalletRequestProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const [from, setFrom] = useState('');
   const [amount, setAmount] = useState('');
@@ -30,15 +32,20 @@ const WalletRequest = ({navigation}: WalletRequestProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title="Request money" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.requestMoneyTitle')} onBack={() => navigation.goBack()} />
       <Card>
-        <Heading text="Accept a money request" level="h3" />
+        <Heading text={t('wallet.acceptMoneyRequest')} level="h3" />
         <Spacer size="md" />
-        <TextInputView placeholder="From (name)" value={from} onChangeText={setFrom} />
+        <TextInputView placeholder={t('wallet.fromName')} value={from} onChangeText={setFrom} />
         <Spacer size="sm" />
-        <TextInputView placeholder="Amount" keyboardType="decimal-pad" value={amount} onChangeText={setAmount} />
+        <TextInputView
+          placeholder={t('wallet.amount')}
+          keyboardType="decimal-pad"
+          value={amount}
+          onChangeText={setAmount}
+        />
         <Spacer size="md" />
-        <Button label="Accept request" fullWidth onPress={accept} />
+        <Button label={t('wallet.acceptRequest')} fullWidth onPress={accept} />
       </Card>
     </ScreenContainer>
   );

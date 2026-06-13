@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
-import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
@@ -20,6 +20,7 @@ interface TodoFocusProps {
 }
 
 const TodoFocus = ({navigation}: TodoFocusProps): React.JSX.Element => {
+  const {t} = useTranslation();
   const focusMinutes = useAppSelector(state => state.todos.focusMinutes);
   const openTasks = useAppSelector(state => state.todos.items.filter(i => !i.done).length);
   const dispatch = useAppDispatch();
@@ -49,9 +50,9 @@ const TodoFocus = ({navigation}: TodoFocusProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll centered alignContent="center">
-      <ScreenHeader title="Focus mode" onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('todos.focusMode')} onBack={() => navigation.goBack()} />
       <Card constrained>
-        <TextView text={`${openTasks} tasks waiting`} align="center" muted />
+        <TextView text={t('todos.tasksWaiting', {count: openTasks})} align="center" muted />
         <Spacer size="lg" />
         <View style={styles.timer}>
           <TextView
@@ -61,10 +62,28 @@ const TodoFocus = ({navigation}: TodoFocusProps): React.JSX.Element => {
         </View>
         <Spacer size="md" />
         <View style={styles.actions}>
-          <Button label={running ? 'Pause' : 'Start focus'} fullWidth onPress={() => setRunning(!running)} />
-          <Button label="Reset" variant="outline" fullWidth onPress={reset} />
-          <Button label="25 min" variant="ghost" onPress={() => { dispatch(setFocusMinutes(25)); setSecondsLeft(25 * 60); }} />
-          <Button label="15 min" variant="ghost" onPress={() => { dispatch(setFocusMinutes(15)); setSecondsLeft(15 * 60); }} />
+          <Button
+            label={running ? t('common.pause') : t('todos.startFocus')}
+            fullWidth
+            onPress={() => setRunning(!running)}
+          />
+          <Button label={t('common.reset')} variant="outline" fullWidth onPress={reset} />
+          <Button
+            label={t('todos.minutes25')}
+            variant="ghost"
+            onPress={() => {
+              dispatch(setFocusMinutes(25));
+              setSecondsLeft(25 * 60);
+            }}
+          />
+          <Button
+            label={t('todos.minutes15')}
+            variant="ghost"
+            onPress={() => {
+              dispatch(setFocusMinutes(15));
+              setSecondsLeft(15 * 60);
+            }}
+          />
         </View>
       </Card>
     </ScreenContainer>
