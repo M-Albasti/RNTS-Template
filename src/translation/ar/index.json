@@ -116,6 +116,7 @@
     "camera": "الكاميرا",
     "delivery": "التوصيل",
     "marketplace": "السوق",
+    "islamic": "إسلامي",
     "designSystem": "نظام التصميم",
     "settings": "الإعدادات"
   },
@@ -550,6 +551,10 @@
       "marketplace": {
         "title": "السوق",
         "subtitle": "شراء، بيع، ودفع"
+      },
+      "islamic": {
+        "title": "إسلامي",
+        "subtitle": "القرآن والأذكار والأحاديث"
       }
     },
     "workflow": {
@@ -871,5 +876,110 @@
   "tabs": {
     "home": "الرئيسية",
     "profile": "الملف"
+  },
+  "islamic": {
+    "title": "إسلامي",
+    "hubTitle": "رفيقك الروحي",
+    "hubSubtitle": "القرآن والأذكار والأحاديث الصحيحة وأوقات الصلاة — من مصادر موثوقة.",
+    "errors": {
+      "loadFailed": "تعذر تحميل المحتوى. تحقق من الاتصال وحاول مرة أخرى."
+    },
+    "common": {
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "modules": {
+      "quran": {
+        "title": "القرآن الكريم",
+        "subtitle": "اقرأ السور الـ114"
+      },
+      "adhkar": {
+        "title": "الأذكار",
+        "subtitle": "حصن المسلم"
+      },
+      "hadith": {
+        "title": "الأحاديث",
+        "subtitle": "كتب صحيحة ودرجات العلماء"
+      },
+      "prayer": {
+        "title": "أوقات الصلاة",
+        "subtitle": "جدول الصلوات اليومي"
+      },
+      "settings": {
+        "title": "التذكير",
+        "subtitle": "إشعارات إسلامية كل ساعة"
+      }
+    },
+    "quran": {
+      "title": "القرآن",
+      "search": "بحث في القرآن",
+      "searchPlaceholder": "ابحث بالكلمة أو اسم السورة...",
+      "searchHint": "اكتب حرفين على الأقل للبحث في الترجمات.",
+      "noResults": "لم يتم العثور على آيات مطابقة.",
+      "ayahs": "آية"
+    },
+    "adhkar": {
+      "title": "الأذكار",
+      "featured": "أقسام مميزة",
+      "allCategories": "كل الأقسام",
+      "openCategory": "اضغط للفتح",
+      "source": "المصدر: حصن المسلم (hisnmuslim.com)",
+      "repeat": "كرر {{count}} مرة",
+      "morningEvening": "أذكار الصباح والمساء",
+      "morningEveningSubtitle": "Hisn al-Muslim",
+      "sleep": "أذكار النوم",
+      "sleepSubtitle": "قبل النوم",
+      "afterPrayer": "أذكار بعد الصلاة",
+      "afterPrayerSubtitle": "أذكار الصلاة",
+      "travel": "أدعية السفر",
+      "travelSubtitle": "أذكار السفر"
+    },
+    "hadith": {
+      "title": "الأحاديث",
+      "subtitle": "تصفح الكتب الصحيحة مع درجات العلماء",
+      "hubTitle": "مكتبة الأحاديث",
+      "sahih": "الأحاديث الصحيحة",
+      "sahihSubtitle": "البخاري ومسلم والنووي",
+      "weak": "الضعيفة والموضوعة",
+      "weakSubtitle": "السنن مع درجات الضعف",
+      "allCollections": "كل الكتب",
+      "allCollectionsSubtitle": "جميع المجموعات المتاحة",
+      "search": "بحث في الأحاديث",
+      "searchSubtitle": "بحث نصي كامل",
+      "searchPlaceholder": "ابحث في نص الحديث...",
+      "searchHint": "اكتب حرفين على الأقل للبحث.",
+      "noResults": "لم يتم العثور على أحاديث مطابقة.",
+      "hadithCount": "{{count}} حديث",
+      "grades": "الدرجات",
+      "filters": {
+        "all": "الكل",
+        "sahih": "صحيح",
+        "weak": "ضعيف"
+      }
+    },
+    "prayer": {
+      "title": "أوقات الصلاة",
+      "fajr": "الفجر",
+      "sunrise": "الشروق",
+      "dhuhr": "الظهر",
+      "asr": "العصر",
+      "maghrib": "المغرب",
+      "isha": "العشاء",
+      "source": "المصدر: Aladhan.com · طريقة أم القرى"
+    },
+    "settings": {
+      "title": "التذكير الإسلامي",
+      "notifications": "تفعيل التذكير",
+      "notificationsDescription": "استلم تذكيرات إسلامية كل ساعة على هذا الجهاز.",
+      "hourly": "جدول كل ساعة",
+      "hourlyDescription": "إرسال تذكير كل ساعة بمحتوى متنوع.",
+      "includeAdhkar": "تضمين الأذكار",
+      "includeAdhkarDescription": "أذكار الصباح والمساء من حصن المسلم.",
+      "includeQuran": "تضمين القرآن",
+      "includeQuranDescription": "آية عشوائية مع الترجمة.",
+      "includeHadith": "تضمين الأحاديث",
+      "includeHadithDescription": "مقتطفات من الأحاديث الصحيحة.",
+      "previewNotification": "معاينة الإشعار"
+    }
   }
 }

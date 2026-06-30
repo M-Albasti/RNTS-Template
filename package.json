@@ -21,6 +21,7 @@
     "@expo-google-fonts/cairo": "^0.4.2",
     "@expo-google-fonts/inter": "^0.4.2",
     "@invertase/react-native-apple-authentication": "^2.5.1",
+    "@notifee/react-native": "^9.1.8",
     "@op-engineering/op-sqlite": "^15.2.11",
     "@react-native-camera-roll/camera-roll": "^7.10.2",
     "@react-native-clipboard/clipboard": "^1.16.3",

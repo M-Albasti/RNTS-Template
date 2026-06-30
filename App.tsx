@@ -32,6 +32,7 @@ import {persistor, store} from '@redux/store';
 //* translation import
 import i18n from '@translation/i18n';
 import DriverBackgroundTrackingHost from '@organisms/delivery/DriverBackgroundTrackingHost';
+import IslamicNotificationHost from '@organisms/islamic/IslamicNotificationHost';
 
 const App = (): React.JSX.Element => {
   // Wait until SQLite is opened, migrated, and todos are loaded/seeded.
@@ -64,6 +65,7 @@ const App = (): React.JSX.Element => {
             <SafeAreaProvider>
               <GestureHandlerRootView style={styles.container}>
                 <DriverBackgroundTrackingHost />
+                <IslamicNotificationHost />
                 <NavigationScreens />
               </GestureHandlerRootView>
             </SafeAreaProvider>

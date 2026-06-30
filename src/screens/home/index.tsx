@@ -122,6 +122,13 @@ const MODULES: HubModule[] = [
     iconType: 'Ionicons',
     iconName: 'storefront-outline',
   },
+  {
+    titleKey: 'home.modules.islamic.title',
+    subtitleKey: 'home.modules.islamic.subtitle',
+    route: 'IslamicStack',
+    iconType: 'Ionicons',
+    iconName: 'moon-outline',
+  },
 ];
 
 const Home = ({navigation}: HomeProps): React.JSX.Element => {
