@@ -3,19 +3,42 @@ import {
   mapSurahDetail,
   mapSurahSummary,
 } from '@api/mappers/islamic.mapper';
+import {DEFAULT_TAFSIR_EDITION_ID} from '@constants/quranTafsirEditions';
 import type {
   AlQuranApiResponse,
+  AyahDto,
   QuranSearchResponseDto,
   SurahDetailDto,
   SurahSummaryDto,
 } from '@api/server/islamic.dto';
 import {quranHttpClient} from '@config/network/islamicHttpClient';
-import type {QuranSearchMatch, QuranSurahDetail, QuranSurahSummary} from '@Types/islamicTypes';
+import {parseAyahReference} from '@helpers/quranAudioHelpers';
+import type {
+  QuranJuzSummary,
+  QuranSearchMatch,
+  QuranSurahDetail,
+  QuranSurahSummary,
+} from '@Types/islamicTypes';
 
-const quranEdition = 'quran-uthmani';
+const arabicEdition = 'quran-uthmani';
 const translationEdition = 'en.sahih';
-const tafsirEdition = 'ar.muyassar';
-const audioEdition = 'ar.alafasy';
+
+const mergeSurahEditions = (
+  arabic: SurahDetailDto,
+  tafsir?: SurahDetailDto,
+  translation?: SurahDetailDto,
+): QuranSurahDetail => {
+  const base = mapSurahDetail(arabic);
+  return {
+    ...base,
+    ayahs: base.ayahs.map(ayah => ({
+      ...ayah,
+      tafsir: tafsir?.ayahs.find(item => item.numberInSurah === ayah.numberInSurah)?.text,
+      translation: translation?.ayahs.find(item => item.numberInSurah === ayah.numberInSurah)
+        ?.text,
+    })),
+  };
+};
 
 export const quranClient = {
   getSurahList: async (): Promise<QuranSurahSummary[]> => {
@@ -23,20 +46,84 @@ export const quranClient = {
     return data.data.map(mapSurahSummary);
   },
 
-  getSurah: async (
+  getSurahReading: async (
     surahNumber: number,
+    tafsirEditionId = DEFAULT_TAFSIR_EDITION_ID,
     withTranslation = true,
   ): Promise<QuranSurahDetail> => {
-    const editions = withTranslation
-      ? `${quranEdition},${translationEdition},${audioEdition}`
-      : quranEdition;
-    const {data} = await quranHttpClient.get<AlQuranApiResponse<SurahDetailDto>>(
-      `/surah/${surahNumber}/${editions}`,
-    );
-    return mapSurahDetail(data.data);
+    const requests = [
+      quranHttpClient.get<AlQuranApiResponse<SurahDetailDto>>(
+        `/surah/${surahNumber}/${arabicEdition}`,
+      ),
+      quranHttpClient.get<AlQuranApiResponse<SurahDetailDto>>(
+        `/surah/${surahNumber}/${tafsirEditionId}`,
+      ),
+    ];
+
+    if (withTranslation) {
+      requests.push(
+        quranHttpClient.get<AlQuranApiResponse<SurahDetailDto>>(
+          `/surah/${surahNumber}/${translationEdition}`,
+        ),
+      );
+    }
+
+    const responses = await Promise.all(requests);
+    const arabic = responses[0].data.data;
+    const tafsir = responses[1].data.data;
+    const translation = withTranslation ? responses[2]?.data.data : undefined;
+
+    return mergeSurahEditions(arabic, tafsir, translation);
   },
 
-  getAyahWithTafsir: async (surahNumber: number, ayahNumber: number) => {
+  /** @deprecated use getSurahReading */
+  getSurah: async (surahNumber: number, withTranslation = true): Promise<QuranSurahDetail> =>
+    quranClient.getSurahReading(surahNumber, DEFAULT_TAFSIR_EDITION_ID, withTranslation),
+
+  getJuzList: async (): Promise<QuranJuzSummary[]> => {
+    const summaries = await Promise.all(
+      Array.from({length: 30}, (_, index) => quranClient.getJuzSummary(index + 1)),
+    );
+    return summaries;
+  },
+
+  getJuzSummary: async (juzNumber: number): Promise<QuranJuzSummary> => {
+    const {data} = await quranHttpClient.get<
+      AlQuranApiResponse<{
+        number: number;
+        ayahs: Array<AyahDto & {surah: SurahSummaryDto}>;
+      }>
+    >(`/juz/${juzNumber}/${arabicEdition}`);
+    const first = data.data.ayahs[0];
+    return {
+      number: juzNumber,
+      firstAyahRef: `${first.surah.englishName} ${first.numberInSurah}`,
+      firstSurahName: first.surah.name,
+      ayahCount: data.data.ayahs.length,
+    };
+  },
+
+  getJuzReading: async (juzNumber: number): Promise<{surahNumber: number; ayahNumber: number} | null> => {
+    const {data} = await quranHttpClient.get<
+      AlQuranApiResponse<{
+        ayahs: Array<AyahDto & {surah: SurahSummaryDto}>;
+      }>
+    >(`/juz/${juzNumber}/${arabicEdition}`);
+    const first = data.data.ayahs[0];
+    if (!first?.surah) {
+      return null;
+    }
+    return {
+      surahNumber: first.surah.number,
+      ayahNumber: first.numberInSurah,
+    };
+  },
+
+  getAyahWithTafsir: async (
+    surahNumber: number,
+    ayahNumber: number,
+    tafsirEditionId = DEFAULT_TAFSIR_EDITION_ID,
+  ) => {
     const {data} = await quranHttpClient.get<
       AlQuranApiResponse<{
         number: number;
@@ -44,7 +131,9 @@ export const quranClient = {
         numberInSurah: number;
         surah: SurahSummaryDto;
       }>
-    >(`/ayah/${surahNumber}:${ayahNumber}/${quranEdition},${translationEdition},${tafsirEdition}`);
+    >(
+      `/ayah/${surahNumber}:${ayahNumber}/${arabicEdition},${translationEdition},${tafsirEditionId}`,
+    );
 
     return {
       surahNumber,
@@ -54,7 +143,7 @@ export const quranClient = {
     };
   },
 
-  getRandomAyah: async () => {
+  getRandomAyah: async (tafsirEditionId = DEFAULT_TAFSIR_EDITION_ID) => {
     const {data} = await quranHttpClient.get<
       AlQuranApiResponse<{
         number: number;
@@ -62,7 +151,7 @@ export const quranClient = {
         numberInSurah: number;
         surah: SurahSummaryDto;
       }>
-    >(`/ayah/random/${quranEdition},${translationEdition},${tafsirEdition}`);
+    >(`/ayah/random/${arabicEdition},${translationEdition},${tafsirEditionId}`);
 
     const ayah = data.data;
     return {
@@ -74,10 +163,32 @@ export const quranClient = {
     };
   },
 
-  searchQuran: async (query: string, language = 'en'): Promise<QuranSearchMatch[]> => {
+  searchQuranText: async (query: string, language = 'ar'): Promise<QuranSearchMatch[]> => {
+    const edition = language === 'ar' ? 'quran-simple' : language;
     const {data} = await quranHttpClient.get<AlQuranApiResponse<QuranSearchResponseDto>>(
-      `/search/${encodeURIComponent(query)}/all/${language}`,
+      `/search/${encodeURIComponent(query)}/all/${edition}`,
     );
     return data.data.matches.map(mapQuranSearchMatch);
   },
+
+  /** @deprecated */
+  searchQuran: async (query: string, language = 'en'): Promise<QuranSearchMatch[]> =>
+    quranClient.searchQuranText(query, language),
+
+  searchSurahByName: async (query: string): Promise<QuranSurahSummary[]> => {
+    const surahs = await quranClient.getSurahList();
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) {
+      return surahs;
+    }
+    return surahs.filter(
+      surah =>
+        surah.name.includes(query.trim()) ||
+        surah.englishName.toLowerCase().includes(normalized) ||
+        surah.englishNameTranslation.toLowerCase().includes(normalized) ||
+        String(surah.number) === normalized,
+    );
+  },
+
+  resolveAyahReference: (input: string) => parseAyahReference(input),
 };

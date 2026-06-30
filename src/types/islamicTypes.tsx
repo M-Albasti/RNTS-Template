@@ -33,6 +33,29 @@ export type QuranAyah = {
   juz: number;
   page: number;
   sajda: boolean;
+  tafsir?: string;
+  translation?: string;
+};
+
+export type QuranJuzSummary = {
+  number: number;
+  firstAyahRef: string;
+  firstSurahName: string;
+  ayahCount: number;
+};
+
+export type QuranSearchMode = 'surah' | 'ayah' | 'text';
+
+export type QuranPreferences = {
+  reciterId: string;
+  tafsirEditionId: string;
+  showTafsir: boolean;
+  showTranslation: boolean;
+};
+
+export type QuranLastRead = {
+  surahNumber: number;
+  ayahNumber: number;
 };
 
 export type QuranSurahDetail = QuranSurahSummary & {

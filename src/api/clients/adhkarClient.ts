@@ -44,6 +44,15 @@ export const adhkarClient = {
     const item = items[Math.floor(Math.random() * items.length)];
     return item;
   },
+
+  searchCategories: async (query: string, lang: AdhkarLanguage = 'ar'): Promise<AdhkarCategory[]> => {
+    const categories = await adhkarClient.getCategories(lang);
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) {
+      return categories;
+    }
+    return categories.filter(category => category.title.toLowerCase().includes(normalized));
+  },
 };
 
 export const ADHKAR_FEATURED_CATEGORY_IDS = {

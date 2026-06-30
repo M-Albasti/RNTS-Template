@@ -12,14 +12,19 @@ export const queryKeys = {
   },
   islamic: {
     quranSurahs: () => [...queryKeys.all, 'islamic', 'quran', 'surahs'] as const,
-    quranSurah: (surahNumber: number) =>
-      [...queryKeys.all, 'islamic', 'quran', 'surah', surahNumber] as const,
+    quranSurah: (surahNumber: number, tafsirEditionId: string) =>
+      [...queryKeys.all, 'islamic', 'quran', 'surah', surahNumber, tafsirEditionId] as const,
+    quranJuzList: () => [...queryKeys.all, 'islamic', 'quran', 'juz'] as const,
+    quranSurahSearch: (query: string) =>
+      [...queryKeys.all, 'islamic', 'quran', 'surah-search', query] as const,
     quranSearch: (query: string) =>
       [...queryKeys.all, 'islamic', 'quran', 'search', query] as const,
     adhkarCategories: (lang: AdhkarLanguage) =>
       [...queryKeys.all, 'islamic', 'adhkar', 'categories', lang] as const,
     adhkarCategory: (categoryId: number, lang: AdhkarLanguage) =>
       [...queryKeys.all, 'islamic', 'adhkar', 'category', categoryId, lang] as const,
+    adhkarSearch: (query: string, lang: AdhkarLanguage) =>
+      [...queryKeys.all, 'islamic', 'adhkar', 'search', query, lang] as const,
     hadithEditions: () => [...queryKeys.all, 'islamic', 'hadith', 'editions'] as const,
     hadithBooks: (slug: string) =>
       [...queryKeys.all, 'islamic', 'hadith', 'books', slug] as const,

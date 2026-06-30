@@ -14,18 +14,36 @@ export const useQuranSurahsQuery = () =>
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-export const useQuranSurahQuery = (surahNumber: number) =>
+export const useQuranSurahQuery = (
+  surahNumber: number,
+  tafsirEditionId = 'ar.muyassar',
+  withTranslation = false,
+) =>
   useQuery({
-    queryKey: queryKeys.islamic.quranSurah(surahNumber),
-    queryFn: () => quranClient.getSurah(surahNumber),
+    queryKey: queryKeys.islamic.quranSurah(surahNumber, tafsirEditionId),
+    queryFn: () => quranClient.getSurahReading(surahNumber, tafsirEditionId, withTranslation),
     enabled: surahNumber > 0,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-export const useQuranSearchQuery = (query: string) =>
+export const useQuranJuzListQuery = () =>
+  useQuery({
+    queryKey: queryKeys.islamic.quranJuzList(),
+    queryFn: () => quranClient.getJuzList(),
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
+export const useQuranSurahNameSearchQuery = (query: string) =>
+  useQuery({
+    queryKey: queryKeys.islamic.quranSurahSearch(query),
+    queryFn: () => quranClient.searchSurahByName(query),
+    enabled: query.trim().length >= 1,
+  });
+
+export const useQuranSearchQuery = (query: string, language = 'ar') =>
   useQuery({
     queryKey: queryKeys.islamic.quranSearch(query),
-    queryFn: () => quranClient.searchQuran(query),
+    queryFn: () => quranClient.searchQuranText(query, language),
     enabled: query.trim().length >= 2,
   });
 
@@ -41,6 +59,14 @@ export const useAdhkarCategoryQuery = (categoryId: number, lang: AdhkarLanguage)
     queryKey: queryKeys.islamic.adhkarCategory(categoryId, lang),
     queryFn: () => adhkarClient.getCategoryItems(categoryId, lang),
     enabled: categoryId > 0,
+    staleTime: 1000 * 60 * 60 * 12,
+  });
+
+export const useAdhkarSearchQuery = (query: string, lang: AdhkarLanguage) =>
+  useQuery({
+    queryKey: queryKeys.islamic.adhkarSearch(query, lang),
+    queryFn: () => adhkarClient.searchCategories(query, lang),
+    enabled: query.trim().length >= 1,
     staleTime: 1000 * 60 * 60 * 12,
   });
 

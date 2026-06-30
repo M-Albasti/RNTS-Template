@@ -891,7 +891,7 @@
     "modules": {
       "quran": {
         "title": "القرآن الكريم",
-        "subtitle": "اقرأ السور الـ114"
+        "subtitle": "مصحف بأسلوب آيات مع التفسير والقراء"
       },
       "adhkar": {
         "title": "الأذكار",
@@ -912,11 +912,59 @@
     },
     "quran": {
       "title": "القرآن",
+      "hubTitle": "المصحف والتلاوة",
+      "hubSubtitle": "قراءة بأسلوب آيات مع التفسير والقراء والفهرس",
+      "continueReading": "متابعة القراءة",
+      "continueReadingRef": "سورة {{surah}} · آية {{ayah}}",
+      "index": "الفهرس",
+      "indexSubtitle": "تصفح بالسورة أو الجزء",
+      "indexTabs": {
+        "surah": "سورة",
+        "juz": "جزء"
+      },
+      "juzTitle": "الجزء {{number}}",
+      "juzAyahCount": "{{count}} آية",
+      "allSurahs": "كل السور",
+      "allSurahsSubtitle": "قائمة السور الـ114",
+      "searchModesSubtitle": "بحث بالسورة أو الآية أو النص",
+      "showTafsir": "التفسير",
+      "showTranslation": "الترجمة",
+      "tafsirLabel": "التفسير",
       "search": "بحث في القرآن",
       "searchPlaceholder": "ابحث بالكلمة أو اسم السورة...",
       "searchHint": "اكتب حرفين على الأقل للبحث في الترجمات.",
       "noResults": "لم يتم العثور على آيات مطابقة.",
       "ayahs": "آية"
+    },
+    "search": {
+      "title": "البحث الإسلامي",
+      "hubSubtitle": "ابحث في القرآن والأذكار والأحاديث من مكان واحد",
+      "scopes": {
+        "all": "الكل",
+        "quran": "القرآن",
+        "adhkar": "الأذكار",
+        "hadith": "الأحاديث"
+      },
+      "quranModes": {
+        "surah": "سورة",
+        "ayah": "آية",
+        "text": "نص"
+      },
+      "kinds": {
+        "quran": "قرآن",
+        "adhkar": "أذكار",
+        "hadith": "حديث"
+      },
+      "surahPlaceholder": "ابحث باسم السورة أو رقمها...",
+      "ayahPlaceholder": "أدخل المرجع مثل 2:255",
+      "textPlaceholder": "ابحث في نص الآيات...",
+      "surahHint": "اكتب اسم السورة أو رقمها.",
+      "ayahHint": "أدخل سورة:آية مثل 2:255 أو 2 255.",
+      "textHint": "اكتب حرفين على الأقل للبحث في النص.",
+      "noResults": "لا توجد نتائج مطابقة.",
+      "openAyah": "افتح هذه الآية في القارئ",
+      "surahAyahs": "{{count}} آية",
+      "adhkarCategory": "قسم أذكار"
     },
     "adhkar": {
       "title": "الأذكار",

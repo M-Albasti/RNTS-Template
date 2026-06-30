@@ -11,12 +11,14 @@ interface ScreenHeaderProps {
   title: string;
   onBack?: () => void;
   showBack?: boolean;
+  rightAccessory?: React.ReactNode;
 }
 
 const ScreenHeader = ({
   title,
   onBack,
   showBack = true,
+  rightAccessory,
 }: ScreenHeaderProps): React.JSX.Element => {
   const {sizes} = useThemeTokens();
   const styles = useThemedStyles(tokens => ({
@@ -50,7 +52,7 @@ const ScreenHeader = ({
       <View style={styles.titleWrap}>
         <Heading text={title} level="h3" align="center" />
       </View>
-      <View style={styles.side} />
+      <View style={styles.side}>{rightAccessory}</View>
     </View>
   );
 };

@@ -66,9 +66,12 @@ export type RootStackParamList = {
   MarketplaceStack: undefined;
   IslamicStack: undefined;
   IslamicHub: undefined;
+  QuranHub: undefined;
+  QuranIndex: undefined;
   QuranList: undefined;
-  QuranReader: {surahNumber: number};
+  QuranReader: {surahNumber: number; ayahNumber?: number};
   QuranSearch: undefined;
+  IslamicUnifiedSearch: undefined;
   AdhkarCategories: undefined;
   AdhkarDetail: {categoryId: number; title: string};
   HadithHub: undefined;

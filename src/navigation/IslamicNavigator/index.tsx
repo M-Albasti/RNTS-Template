@@ -3,6 +3,9 @@ import {View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import IslamicHub from '@screens/islamic/islamicHub';
+import IslamicUnifiedSearch from '@screens/islamic/islamicUnifiedSearch';
+import QuranHub from '@screens/islamic/quran/quranHub';
+import QuranIndex from '@screens/islamic/quran/quranIndex';
 import QuranList from '@screens/islamic/quran/quranList';
 import QuranReader from '@screens/islamic/quran/quranReader';
 import QuranSearch from '@screens/islamic/quran/quranSearch';
@@ -44,9 +47,12 @@ const IslamicNavigator = (): React.JSX.Element => (
     )}
     screenOptions={{headerShown: false}}>
     <IslamicStack.Screen name="IslamicHub" component={IslamicHub} />
+    <IslamicStack.Screen name="QuranHub" component={QuranHub} />
+    <IslamicStack.Screen name="QuranIndex" component={QuranIndex} />
     <IslamicStack.Screen name="QuranList" component={QuranList} />
     <IslamicStack.Screen name="QuranReader" component={QuranReader} />
     <IslamicStack.Screen name="QuranSearch" component={QuranSearch} />
+    <IslamicStack.Screen name="IslamicUnifiedSearch" component={IslamicUnifiedSearch} />
     <IslamicStack.Screen name="AdhkarCategories" component={AdhkarCategories} />
     <IslamicStack.Screen name="AdhkarDetail" component={AdhkarDetail} />
     <IslamicStack.Screen name="HadithHub" component={HadithHub} />

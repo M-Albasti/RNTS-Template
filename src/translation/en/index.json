@@ -891,7 +891,7 @@
     "modules": {
       "quran": {
         "title": "Holy Quran",
-        "subtitle": "Read all 114 surahs"
+        "subtitle": "Ayat-style mushaf with tafsir & reciters"
       },
       "adhkar": {
         "title": "Adhkar",
@@ -912,11 +912,59 @@
     },
     "quran": {
       "title": "Quran",
+      "hubTitle": "Mushaf & recitation",
+      "hubSubtitle": "Ayat-style reading with tafsir, reciters, and index",
+      "continueReading": "Continue reading",
+      "continueReadingRef": "Surah {{surah}} · Ayah {{ayah}}",
+      "index": "Index (Fahras)",
+      "indexSubtitle": "Browse by surah or juz",
+      "indexTabs": {
+        "surah": "Surah",
+        "juz": "Juz"
+      },
+      "juzTitle": "Juz {{number}}",
+      "juzAyahCount": "{{count}} ayahs",
+      "allSurahs": "All surahs",
+      "allSurahsSubtitle": "Complete list of 114 surahs",
+      "searchModesSubtitle": "Surah, ayah, or text search",
+      "showTafsir": "Tafsir",
+      "showTranslation": "Translation",
+      "tafsirLabel": "Tafsir",
       "search": "Search Quran",
       "searchPlaceholder": "Search by keyword or surah name...",
       "searchHint": "Type at least 2 characters to search translations.",
       "noResults": "No verses matched your search.",
       "ayahs": "ayahs"
+    },
+    "search": {
+      "title": "Islamic search",
+      "hubSubtitle": "Search Quran, adhkar, and hadith in one place",
+      "scopes": {
+        "all": "All",
+        "quran": "Quran",
+        "adhkar": "Adhkar",
+        "hadith": "Hadith"
+      },
+      "quranModes": {
+        "surah": "Surah",
+        "ayah": "Ayah",
+        "text": "Text"
+      },
+      "kinds": {
+        "quran": "Quran",
+        "adhkar": "Adhkar",
+        "hadith": "Hadith"
+      },
+      "surahPlaceholder": "Search surah name or number...",
+      "ayahPlaceholder": "Enter reference e.g. 2:255",
+      "textPlaceholder": "Search verse text...",
+      "surahHint": "Type a surah name or number.",
+      "ayahHint": "Enter surah:ayah like 2:255 or 2 255.",
+      "textHint": "Type at least 2 characters to search verse text.",
+      "noResults": "No results matched your search.",
+      "openAyah": "Open this ayah in the reader",
+      "surahAyahs": "{{count}} ayahs",
+      "adhkarCategory": "Adhkar category"
     },
     "adhkar": {
       "title": "Adhkar",

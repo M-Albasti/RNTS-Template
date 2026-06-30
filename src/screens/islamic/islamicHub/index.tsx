@@ -40,7 +40,12 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
     {
       title: t('islamic.modules.quran.title'),
       subtitle: t('islamic.modules.quran.subtitle'),
-      route: 'QuranList' as const,
+      route: 'QuranHub' as const,
+    },
+    {
+      title: t('islamic.search.title'),
+      subtitle: t('islamic.search.hubSubtitle'),
+      route: 'IslamicUnifiedSearch' as const,
     },
     {
       title: t('islamic.modules.adhkar.title'),
