@@ -10,6 +10,7 @@
     "start:development": "APP_ENV=development bunx react-native start",
     "start:production": "APP_ENV=production bunx react-native start",
     "test": "jest",
+    "typecheck": "tsc --noEmit",
     "copy-fonts": "node scripts/copy-fonts.js",
     "link-assets": "npx react-native-asset",
     "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081",

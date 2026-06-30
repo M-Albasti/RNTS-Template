@@ -20,7 +20,7 @@ import {styles} from './styles';
 
 const AudioStack = createNativeStackNavigator<RootStackParamList>();
 
-const AudioNavigator = (props: any): React.JSX.Element => {
+const AudioNavigator = (): React.JSX.Element => {
   return (
     <AudioStack.Navigator
       initialRouteName="AudiosList"

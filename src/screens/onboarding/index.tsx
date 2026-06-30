@@ -1,4 +1,3 @@
-//@ts-nocheck Mahmoud need to be checked
 //* packages import
 import React, {useRef} from 'react';
 import {Image, View} from 'react-native';
@@ -11,10 +10,16 @@ import {useThemeTokens} from '@theme/useThemeTokens';
 //* styles import
 import {styles} from './styles';
 
-const OnBoarding = (props: any): React.JSX.Element => {
+import type {AppStackNavigationProp} from '@Types/appNavigation';
+
+interface OnBoardingProps {
+  navigation: AppStackNavigationProp<'OnBoarding'>;
+}
+
+const OnBoarding = ({navigation}: OnBoardingProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {colors} = useThemeTokens();
-  const onBoardingRef = useRef<Onboarding>();
+  const onBoardingRef = useRef<Onboarding | null>(null);
 
   const onOnboardingReady = (ref: Onboarding) => {
     onBoardingRef.current = ref;
@@ -66,7 +71,7 @@ const OnBoarding = (props: any): React.JSX.Element => {
             subtitle: t('onboarding.slide3Subtitle'),
           },
         ]}
-        onDone={() => props.navigation.replace('LoginOptions')}
+        onDone={() => navigation.replace('LoginOptions')}
         containerStyles={styles.onBoardingContainer}
         bottomBarHighlight={false}
         imageContainerStyles={styles.imageOnBoardingContainer}
