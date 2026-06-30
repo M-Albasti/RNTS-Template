@@ -21,18 +21,22 @@ export type WordPuzzleClue =
       type: 'image_riddle';
       emojis: string[];
       captionKey?: string;
+      text?: string;
     }
   | {
       type: 'quran_ayah';
-      textKey: string;
+      textKey?: string;
+      text?: string;
     }
   | {
       type: 'quran_ayah_count';
-      textKey: string;
+      textKey?: string;
+      text?: string;
     }
   | {
       type: 'text_riddle';
-      textKey: string;
+      textKey?: string;
+      text?: string;
     };
 
 export type WordPuzzleItem = {
@@ -42,22 +46,41 @@ export type WordPuzzleItem = {
   answers: string[];
   grid: HexLetterCell[];
   solutionPath: HexCoord[];
+  sourceUrl?: string;
+};
+
+export type WordPuzzleStageSummary = {
+  id: string;
+  number: number;
+  title: string;
 };
 
 export type WordPuzzleStage = {
   id: string;
   number: number;
-  titleKey: string;
+  title: string;
   puzzles: WordPuzzleItem[];
 };
 
-export type WordPuzzleBook = {
+export type WordPuzzleBookSummary = {
   id: string;
   language: WordPuzzleLanguage;
-  titleKey: string;
-  landKey: string;
+  title: string;
+  description?: string;
   bookmarkNumber: number;
-  stages: WordPuzzleStage[];
+  stageCount: number;
+  source: 'islamicquiz' | 'riddles-api' | 'alquran';
+  sourceMeta?: {
+    categoryId?: number;
+    category?: string;
+  };
+};
+
+/** @deprecated books are loaded from API summaries */
+export type WordPuzzleBook = WordPuzzleBookSummary & {
+  landKey?: string;
+  titleKey?: string;
+  stages?: WordPuzzleStage[];
 };
 
 export type WordPuzzleProgress = {

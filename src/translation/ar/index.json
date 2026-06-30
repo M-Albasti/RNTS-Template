@@ -889,6 +889,16 @@
     "englishWorld": "العالم الإنجليزي",
     "englishWorldSubtitle": "ألغاز إنجليزية فقط",
     "libraryHint": "اختر كتاباً. كل أرض فيها 50 موقعاً بألغاز صغيرة.",
+    "libraryHintApi": "الكتب والألغاز تُحمّل مباشرة من واجهات برمجة عامة.",
+    "loadingBooks": "جاري تحميل الكتب من API…",
+    "loadingStage": "جاري تحميل ألغاز الموقع…",
+    "landTitle": "الأرض {{number}}",
+    "retry": "إعادة المحاولة",
+    "apiSourceArabic": "العربية: IslamicQuizAPI (islamicquiz.i8x.net) — أسئلة من الدرر السنية",
+    "apiSourceEnglish": "الإنجليزية: Riddles API (riddles-api-eight.vercel.app)",
+    "errors": {
+      "loadFailed": "تعذر تحميل الألغاز. تحقق من الاتصال وحاول مرة أخرى."
+    },
     "bookmark": "كتاب",
     "stageCount": "{{count}} موقع",
     "separateLanguagesNote": "لا تختلط الألغاز العربية مع الإنجليزية في نفس الشاشة.",

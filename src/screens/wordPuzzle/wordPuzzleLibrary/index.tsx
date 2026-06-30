@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
@@ -9,12 +9,13 @@ import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
-import {ARABIC_BOOKS, ENGLISH_BOOKS} from '@constants/wordPuzzle/wordPuzzleCatalog';
+import {useWordPuzzleBooksQuery} from '@api/query/hooks/useWordPuzzleQueries';
+import {ARABIC_LAND_GROUPS, ENGLISH_LAND_GROUPS} from '@constants/wordPuzzle/wordPuzzleConfig';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {setActiveBook} from '@redux/slices/wordPuzzleSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
-import type {WordPuzzleBook} from '@Types/wordPuzzleTypes';
+import type {WordPuzzleBookSummary} from '@Types/wordPuzzleTypes';
 
 type Props = {
   navigation: AppStackNavigationProp<'WordPuzzleLibrary'>;
@@ -25,10 +26,11 @@ const WordPuzzleLibrary = ({navigation, route}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const {language} = route.params;
-  const books: WordPuzzleBook[] = language === 'ar' ? ARABIC_BOOKS : ENGLISH_BOOKS;
+  const {data: books, isLoading, isError, refetch, isFetching} = useWordPuzzleBooksQuery(language);
 
   const styles = useThemedStyles(tokens => ({
     list: {gap: tokens.spacing.md},
+    landTitle: {marginTop: tokens.spacing.md, marginBottom: tokens.spacing.sm},
     row: {
       padding: tokens.spacing.md,
       borderRadius: tokens.radius.lg,
@@ -45,12 +47,31 @@ const WordPuzzleLibrary = ({navigation, route}: Props): React.JSX.Element => {
       paddingVertical: tokens.spacing.xxs,
       marginBottom: tokens.spacing.xs,
     },
+    center: {...tokens.layout.presets.center, padding: tokens.spacing.xl},
   }));
 
-  const openBook = (book: WordPuzzleBook) => {
+  const openBook = (book: WordPuzzleBookSummary) => {
     dispatch(setActiveBook(book.id));
     navigation.navigate('WordPuzzleStageMap', {bookId: book.id});
   };
+
+  const landGroups = language === 'ar' ? ARABIC_LAND_GROUPS : ENGLISH_LAND_GROUPS;
+
+  const booksByLand = landGroups.map(group => {
+    const landBooks =
+      books?.filter(book => {
+        if (language === 'ar' && 'categoryIds' in group) {
+          const categoryId = book.sourceMeta?.categoryId;
+          return categoryId != null && (group.categoryIds as readonly number[]).includes(categoryId);
+        }
+        if ('categories' in group) {
+          const category = book.sourceMeta?.category;
+          return Boolean(category && group.categories.includes(category as (typeof group.categories)[number]));
+        }
+        return false;
+      }) ?? [];
+    return {group, landBooks};
+  });
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
@@ -59,36 +80,76 @@ const WordPuzzleLibrary = ({navigation, route}: Props): React.JSX.Element => {
         onBack={() => navigation.goBack()}
       />
       <TextView
-        text={t('wordPuzzle.libraryHint')}
+        text={t('wordPuzzle.libraryHintApi')}
         variant="body"
         muted
         style={{textAlign: language === 'ar' ? 'right' : 'left'}}
       />
       <Spacer size="md" />
-      <View style={styles.list}>
-        {books.map(book => (
-          <Pressable
-            key={book.id}
-            style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
-            onPress={() => openBook(book)}>
-            <View style={styles.badge}>
-              <TextView text={`${t('wordPuzzle.bookmark')} ${book.bookmarkNumber}`} variant="caption" />
-            </View>
-            <Heading text={t(book.titleKey)} level="h3" />
-            <Spacer size="xs" />
-            <TextView text={t(book.landKey)} variant="bodySmall" muted />
-            <Spacer size="xs" />
-            <TextView
-              text={t('wordPuzzle.stageCount', {count: book.stages.length})}
-              variant="caption"
-              muted
-            />
+      {isLoading || isFetching ? (
+        <View style={styles.center}>
+          <ActivityIndicator size="large" />
+          <Spacer size="sm" />
+          <TextView text={t('wordPuzzle.loadingBooks')} variant="caption" muted />
+        </View>
+      ) : isError ? (
+        <Card>
+          <TextView text={t('wordPuzzle.errors.loadFailed')} variant="body" muted />
+          <Spacer size="sm" />
+          <Pressable onPress={() => refetch()}>
+            <TextView text={t('wordPuzzle.retry')} variant="bodySmall" />
           </Pressable>
-        ))}
-      </View>
+        </Card>
+      ) : (
+        booksByLand.map(({group, landBooks}) => (
+          <View key={`land-${group.landIndex}`}>
+            <Heading
+              text={t('wordPuzzle.landTitle', {number: group.landIndex})}
+              level="h3"
+              style={styles.landTitle}
+            />
+            <View style={styles.list}>
+              {landBooks.map(book => (
+                <Pressable
+                  key={book.id}
+                  style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
+                  onPress={() => openBook(book)}>
+                  <View style={styles.badge}>
+                    <TextView
+                      text={`${t('wordPuzzle.bookmark')} ${book.bookmarkNumber}`}
+                      variant="caption"
+                    />
+                  </View>
+                  <Heading text={book.title} level="h3" />
+                  <Spacer size="xs" />
+                  {book.description ? (
+                    <TextView text={book.description} variant="bodySmall" muted numberOfLines={2} />
+                  ) : null}
+                  <Spacer size="xs" />
+                  <TextView
+                    text={t('wordPuzzle.stageCount', {count: book.stageCount})}
+                    variant="caption"
+                    muted
+                  />
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        ))
+      )}
       <Spacer size="md" />
       <Card>
         <TextView text={t('wordPuzzle.separateLanguagesNote')} variant="bodySmall" muted />
+        <Spacer size="xs" />
+        <TextView
+          text={
+            language === 'ar'
+              ? t('wordPuzzle.apiSourceArabic')
+              : t('wordPuzzle.apiSourceEnglish')
+          }
+          variant="caption"
+          muted
+        />
       </Card>
     </ScreenContainer>
   );

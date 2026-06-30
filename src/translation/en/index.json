@@ -889,6 +889,16 @@
     "englishWorld": "English lands",
     "englishWorldSubtitle": "English riddles only",
     "libraryHint": "Pick a book. Each land has 50 locations with mini riddles.",
+    "libraryHintApi": "Books and riddles are loaded live from trusted public APIs.",
+    "loadingBooks": "Loading books from API…",
+    "loadingStage": "Loading location puzzles…",
+    "landTitle": "Land {{number}}",
+    "retry": "Retry",
+    "apiSourceArabic": "Arabic: IslamicQuizAPI (islamicquiz.i8x.net) — Dorar.net questions",
+    "apiSourceEnglish": "English: Riddles API (riddles-api-eight.vercel.app)",
+    "errors": {
+      "loadFailed": "Could not load puzzles. Check your connection and try again."
+    },
     "bookmark": "Book",
     "stageCount": "{{count}} locations",
     "separateLanguagesNote": "Arabic and English puzzles never mix on the same screen.",

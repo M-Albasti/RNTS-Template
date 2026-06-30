@@ -1,8 +1,9 @@
 import React, {useCallback, useMemo, useState} from 'react';
-import {Pressable, View} from 'react-native';
+import {ActivityIndicator, Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
+import Card from '@atoms/Card';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
@@ -11,7 +12,10 @@ import TextView from '@atoms/TextView';
 import HexLetterGrid from '@organisms/wordPuzzle/HexLetterGrid';
 import PuzzleCluePanel from '@organisms/wordPuzzle/PuzzleCluePanel';
 import WordAnswerSlots from '@organisms/wordPuzzle/WordAnswerSlots';
-import {getBookById, getStageById} from '@constants/wordPuzzle/wordPuzzleCatalog';
+import {
+  useWordPuzzleBookQuery,
+  useWordPuzzleStageQuery,
+} from '@api/query/hooks/useWordPuzzleQueries';
 import {isAnswerMatch, normalizeWord} from '@helpers/hexGridHelpers';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
@@ -30,8 +34,12 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const gems = useAppSelector(state => state.wordPuzzle.gems);
   const {bookId, stageId} = route.params;
-  const book = getBookById(bookId);
-  const stage = getStageById(bookId, stageId);
+  const {data: book} = useWordPuzzleBookQuery(bookId);
+  const {data: stage, isLoading, isError, refetch, isFetching} = useWordPuzzleStageQuery(
+    bookId,
+    stageId,
+  );
+
   const [puzzleIndex, setPuzzleIndex] = useState(0);
   const [filledWord, setFilledWord] = useState('');
   const [solved, setSolved] = useState(false);
@@ -39,8 +47,8 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
   const [hintPath, setHintPath] = useState<HexCoord[] | undefined>();
   const [message, setMessage] = useState('');
 
-  const puzzle = stage?.puzzles[puzzleIndex];
   const language = book?.language ?? 'ar';
+  const puzzle = stage?.puzzles[puzzleIndex];
 
   const styles = useThemedStyles(tokens => ({
     toolbar: {...tokens.layout.presets.rowBetween, alignItems: 'center' as const},
@@ -60,6 +68,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
     },
     dotActive: {backgroundColor: tokens.colors.primary, width: 16},
     success: {color: tokens.colors.success},
+    center: {...tokens.layout.presets.center, padding: tokens.spacing.xl},
   }));
 
   const levelLabel = useMemo(() => {
@@ -68,7 +77,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
     }
     return t('wordPuzzle.levelLabel', {
       stage: stage.number,
-      book: t(book.landKey),
+      book: book.title,
       puzzle: puzzleIndex + 1,
       total: stage.puzzles.length,
     });
@@ -119,11 +128,30 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
     setMessage(t('wordPuzzle.hintUsed'));
   };
 
-  if (!book || !stage || !puzzle) {
+  if (isLoading || isFetching) {
     return (
       <ScreenContainer>
         <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
-        <TextView text={t('wordPuzzle.stageNotFound')} muted />
+        <View style={styles.center}>
+          <ActivityIndicator size="large" />
+          <Spacer size="sm" />
+          <TextView text={t('wordPuzzle.loadingStage')} variant="caption" muted />
+        </View>
+      </ScreenContainer>
+    );
+  }
+
+  if (isError || !book || !stage || !puzzle) {
+    return (
+      <ScreenContainer>
+        <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
+        <Card>
+          <TextView text={t('wordPuzzle.stageNotFound')} muted />
+          <Spacer size="sm" />
+          <Pressable onPress={() => refetch()}>
+            <TextView text={t('wordPuzzle.retry')} />
+          </Pressable>
+        </Card>
       </ScreenContainer>
     );
   }

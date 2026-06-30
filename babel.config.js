@@ -44,6 +44,6 @@ module.exports = {
     ],
     '@babel/plugin-transform-export-namespace-from',
     'react-native-worklets/plugin',
-    // 'react-native-reanimated/plugin',
+    'react-native-reanimated/plugin',
   ],
 };

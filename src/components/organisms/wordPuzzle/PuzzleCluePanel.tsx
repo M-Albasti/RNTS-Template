@@ -15,6 +15,16 @@ type Props = {
   levelLabel: string;
 };
 
+const getClueText = (clue: WordPuzzleClue, t: (key: string) => string) => {
+  if ('text' in clue && clue.text) {
+    return clue.text;
+  }
+  if ('textKey' in clue && clue.textKey) {
+    return t(clue.textKey);
+  }
+  return '';
+};
+
 const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const styles = useThemedStyles(tokens => ({
@@ -34,6 +44,8 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
     },
   }));
 
+  const clueText = getClueText(clue, t);
+
   return (
     <View style={styles.card}>
       <TextView text={levelLabel} variant="caption" muted />
@@ -45,16 +57,16 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
               <TextView key={item} text={item} style={styles.emoji} />
             ))}
           </View>
-          {clue.captionKey ? (
+          {clueText ? (
             <>
               <Spacer size="sm" />
-              <TextView text={t(clue.captionKey)} variant="bodySmall" style={styles.text} muted />
+              <TextView text={clueText} variant="bodySmall" style={styles.text} muted />
             </>
           ) : null}
         </>
       ) : (
         <Heading
-          text={t(clue.textKey)}
+          text={clueText}
           level="h3"
           align={language === 'ar' ? 'right' : 'left'}
         />
