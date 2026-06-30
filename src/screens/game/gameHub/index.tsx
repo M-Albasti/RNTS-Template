@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
@@ -11,7 +12,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
-import type {AppStackNavigationProp} from '@Types/appNavigation';
+import type {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
 
 interface GameHubProps {
   navigation: AppStackNavigationProp<'GameHub'>;
@@ -33,6 +34,8 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
       stats: {...tokens.layout.presets.rowBetween, width: '100%'},
     }),
   );
+
+  const drawerNav = navigation.getParent<DrawerNavigationProp<DrawerParamList>>();
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
@@ -79,6 +82,13 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
           iconType="Ionicons"
           iconName="time-outline"
           onPress={() => navigation.navigate('GameHistory')}
+        />
+        <FeatureHubCard
+          title={t('game.wordPuzzle')}
+          subtitle={t('game.wordPuzzleSubtitle')}
+          iconType="Ionicons"
+          iconName="grid-outline"
+          onPress={() => drawerNav?.navigate('WordPuzzleStack')}
         />
         <FeatureHubCard
           title={t('game.achievements')}

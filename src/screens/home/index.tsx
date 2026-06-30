@@ -122,6 +122,13 @@ const MODULES: HubModule[] = [
     iconType: 'Ionicons',
     iconName: 'storefront-outline',
   },
+  {
+    titleKey: 'home.modules.wordPuzzle.title',
+    subtitleKey: 'home.modules.wordPuzzle.subtitle',
+    route: 'WordPuzzleStack',
+    iconType: 'Ionicons',
+    iconName: 'grid-outline',
+  },
 ];
 
 const Home = ({navigation}: HomeProps): React.JSX.Element => {
