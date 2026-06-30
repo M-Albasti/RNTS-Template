@@ -9,6 +9,7 @@ import {isEmpty} from 'lodash';
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
 import FeatureHubCard from '@atoms/FeatureHubCard';
+import AnimatedEntrance from '@atoms/AnimatedEntrance';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import Spacer from '@atoms/Spacer';
@@ -282,16 +283,17 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
       <Spacer size="md" />
 
       <View style={styles.grid}>
-        {MODULES.map(module => (
-          <FeatureHubCard
-            key={module.route}
-            title={t(module.titleKey)}
-            subtitle={t(module.subtitleKey)}
-            iconType={module.iconType}
-            iconName={module.iconName}
-            accentColor={module.accent}
-            onPress={() => openModule(module.route)}
-          />
+        {MODULES.map((module, index) => (
+          <AnimatedEntrance key={module.route} delay={index * 40}>
+            <FeatureHubCard
+              title={t(module.titleKey)}
+              subtitle={t(module.subtitleKey)}
+              iconType={module.iconType}
+              iconName={module.iconName}
+              accentColor={module.accent}
+              onPress={() => openModule(module.route)}
+            />
+          </AnimatedEntrance>
         ))}
       </View>
 
