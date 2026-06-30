@@ -979,7 +979,11 @@
       "includeQuranDescription": "Random ayah with translation.",
       "includeHadith": "Include hadith",
       "includeHadithDescription": "Random sahih hadith snippets.",
-      "previewNotification": "Preview notification"
+      "previewNotification": "Preview notification",
+      "fcmTitle": "Firebase push token",
+      "fcmDescription": "Copy this device token into Firebase Console → Cloud Messaging to send test pushes after you add google-services.json / GoogleService-Info.plist.",
+      "fcmUnavailable": "Enable reminders and grant notification permission to generate a token.",
+      "copyFcmToken": "Copy FCM token"
     }
   }
 }

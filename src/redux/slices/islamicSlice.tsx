@@ -8,6 +8,7 @@ type IslamicState = {
   prayerCity: string;
   prayerCountry: string;
   notificationSettings: IslamicNotificationSettings;
+  fcmToken: string | null;
 };
 
 const defaultNotificationSettings: IslamicNotificationSettings = {
@@ -24,6 +25,7 @@ const initialState: IslamicState = {
   prayerCity: 'Mecca',
   prayerCountry: 'Saudi Arabia',
   notificationSettings: defaultNotificationSettings,
+  fcmToken: null,
 };
 
 const islamicSlice = createSlice({
@@ -57,6 +59,9 @@ const islamicSlice = createSlice({
         ...action.payload,
       };
     },
+    setFcmToken: (state, action: PayloadAction<string | null>) => {
+      state.fcmToken = action.payload;
+    },
   },
 });
 
@@ -65,6 +70,7 @@ export const {
   toggleBookmarkAyah,
   setPrayerLocation,
   updateNotificationSettings,
+  setFcmToken,
 } = islamicSlice.actions;
 
 export default islamicSlice.reducer;

@@ -1,5 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -12,12 +13,13 @@ import TextView from '@atoms/TextView';
 
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
-import {updateNotificationSettings} from '@redux/slices/islamicSlice';
+import {setFcmToken, updateNotificationSettings} from '@redux/slices/islamicSlice';
 import {
   buildIslamicNotificationPayload,
   displayIslamicNotification,
   refreshIslamicNotificationSchedule,
 } from '@services/islamicServices/islamicNotificationService';
+import {registerFirebasePushNotifications} from '@services/firebaseServices/firebaseMessagingService';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -51,14 +53,27 @@ const IslamicSettings = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const settings = useAppSelector(state => state.islamic.notificationSettings);
+  const fcmToken = useAppSelector(state => state.islamic.fcmToken);
 
   const styles = useThemedStyles(tokens => ({
     stack: {gap: tokens.spacing.md},
+    token: {
+      backgroundColor: tokens.colors.surfaceSecondary,
+      borderRadius: tokens.radius.md,
+      padding: tokens.spacing.sm,
+    },
   }));
 
   const patchSettings = async (patch: Partial<typeof settings>) => {
+    const nextSettings = {...settings, ...patch};
     dispatch(updateNotificationSettings(patch));
-    await refreshIslamicNotificationSchedule({...settings, ...patch});
+
+    if (patch.enabled === true) {
+      const token = await registerFirebasePushNotifications();
+      dispatch(setFcmToken(token));
+    }
+
+    await refreshIslamicNotificationSchedule(nextSettings);
   };
 
   const previewNotification = async () => {
@@ -106,6 +121,30 @@ const IslamicSettings = ({navigation}: Props): React.JSX.Element => {
           fullWidth
           onPress={previewNotification}
         />
+        <Card>
+          <Heading text={t('islamic.settings.fcmTitle')} level="h3" />
+          <Spacer size="xs" />
+          <TextView text={t('islamic.settings.fcmDescription')} variant="bodySmall" muted />
+          <Spacer size="sm" />
+          <View style={styles.token}>
+            <TextView
+              text={fcmToken ?? t('islamic.settings.fcmUnavailable')}
+              variant="caption"
+              numberOfLines={4}
+            />
+          </View>
+          {fcmToken ? (
+            <>
+              <Spacer size="sm" />
+              <Button
+                label={t('islamic.settings.copyFcmToken')}
+                variant="secondary"
+                fullWidth
+                onPress={() => Clipboard.setString(fcmToken)}
+              />
+            </>
+          ) : null}
+        </Card>
       </View>
     </ScreenContainer>
   );

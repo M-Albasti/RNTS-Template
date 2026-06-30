@@ -979,7 +979,11 @@
       "includeQuranDescription": "آية عشوائية مع الترجمة.",
       "includeHadith": "تضمين الأحاديث",
       "includeHadithDescription": "مقتطفات من الأحاديث الصحيحة.",
-      "previewNotification": "معاينة الإشعار"
+      "previewNotification": "معاينة الإشعار",
+      "fcmTitle": "رمز Firebase Push",
+      "fcmDescription": "انسخ رمز الجهاز إلى Firebase Console → Cloud Messaging لإرسال إشعارات تجريبية بعد إضافة google-services.json و GoogleService-Info.plist.",
+      "fcmUnavailable": "فعّل التذكيرات وامنح إذن الإشعارات لإنشاء الرمز.",
+      "copyFcmToken": "نسخ رمز FCM"
     }
   }
 }

@@ -32,6 +32,7 @@ import {persistor, store} from '@redux/store';
 //* translation import
 import i18n from '@translation/i18n';
 import DriverBackgroundTrackingHost from '@organisms/delivery/DriverBackgroundTrackingHost';
+import FirebaseMessagingHost from '@organisms/firebase/FirebaseMessagingHost';
 import IslamicNotificationHost from '@organisms/islamic/IslamicNotificationHost';
 
 const App = (): React.JSX.Element => {
@@ -65,6 +66,7 @@ const App = (): React.JSX.Element => {
             <SafeAreaProvider>
               <GestureHandlerRootView style={styles.container}>
                 <DriverBackgroundTrackingHost />
+                <FirebaseMessagingHost />
                 <IslamicNotificationHost />
                 <NavigationScreens />
               </GestureHandlerRootView>
