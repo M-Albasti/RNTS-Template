@@ -870,6 +870,76 @@
   },
   "tabs": {
     "home": "Home",
+    "services": "Services",
     "profile": "Profile"
+  },
+  "services": {
+    "title": "Services",
+    "hubTitle": "Service distributor",
+    "subtitle": "Browse every module in one place — like الموزع",
+    "searchPlaceholder": "Search services...",
+    "noResults": "No services matched your search.",
+    "categories": {
+      "all": "All",
+      "social": "Social",
+      "commerce": "Commerce",
+      "media": "Media",
+      "tools": "Tools",
+      "account": "Account"
+    },
+    "items": {
+      "feed": {
+        "title": "Social feed",
+        "subtitle": "Posts, polls & community"
+      },
+      "chat": {
+        "title": "Chat",
+        "subtitle": "Messages & threads"
+      },
+      "todo": {
+        "title": "Todos",
+        "subtitle": "Tasks & productivity"
+      },
+      "delivery": {
+        "title": "Delivery",
+        "subtitle": "Courier & live tracking"
+      },
+      "marketplace": {
+        "title": "Marketplace",
+        "subtitle": "Buy, sell & merchant tools"
+      },
+      "wallet": {
+        "title": "Wallet",
+        "subtitle": "Balance & transfers"
+      },
+      "video": {
+        "title": "Video",
+        "subtitle": "Record & watch videos"
+      },
+      "audio": {
+        "title": "Audio",
+        "subtitle": "Record & play audio"
+      },
+      "gallery": {
+        "title": "Gallery",
+        "subtitle": "Photos & media library"
+      },
+      "game": {
+        "title": "Lucky game",
+        "subtitle": "Spin & earn coins"
+      },
+      "camera": {
+        "title": "Camera studio",
+        "subtitle": "Snap, QR & barcode"
+      },
+      "designSystem": {
+        "title": "Design system",
+        "subtitle": "UI tokens & components"
+      },
+      "profile": {
+        "title": "Profile",
+        "subtitle": "Account & activity"
+      }
+    }
   }
 }

@@ -870,6 +870,76 @@
   },
   "tabs": {
     "home": "الرئيسية",
+    "services": "الخدمات",
     "profile": "الملف"
+  },
+  "services": {
+    "title": "الخدمات",
+    "hubTitle": "موزع الخدمات",
+    "subtitle": "تصفح كل وحدات التطبيق من مكان واحد — مثل الموزع",
+    "searchPlaceholder": "ابحث في الخدمات...",
+    "noResults": "لا توجد خدمات مطابقة.",
+    "categories": {
+      "all": "الكل",
+      "social": "التواصل",
+      "commerce": "التجارة",
+      "media": "الوسائط",
+      "tools": "الأدوات",
+      "account": "الحساب"
+    },
+    "items": {
+      "feed": {
+        "title": "التغذية الاجتماعية",
+        "subtitle": "منشورات واستطلاعات"
+      },
+      "chat": {
+        "title": "الدردشة",
+        "subtitle": "الرسائل والمحادثات"
+      },
+      "todo": {
+        "title": "المهام",
+        "subtitle": "إنتاجية وتنظيم"
+      },
+      "delivery": {
+        "title": "التوصيل",
+        "subtitle": "سائق وتتبع مباشر"
+      },
+      "marketplace": {
+        "title": "السوق",
+        "subtitle": "بيع وشراء ومتجر"
+      },
+      "wallet": {
+        "title": "المحفظة",
+        "subtitle": "رصيد وتحويلات"
+      },
+      "video": {
+        "title": "الفيديو",
+        "subtitle": "تسجيل ومشاهدة"
+      },
+      "audio": {
+        "title": "الصوت",
+        "subtitle": "تسجيل وتشغيل"
+      },
+      "gallery": {
+        "title": "المعرض",
+        "subtitle": "صور ومكتبة وسائط"
+      },
+      "game": {
+        "title": "لعبة الحظ",
+        "subtitle": "عجلة وعملات"
+      },
+      "camera": {
+        "title": "استوديو الكاميرا",
+        "subtitle": "سيلفي وQR وباركود"
+      },
+      "designSystem": {
+        "title": "نظام التصميم",
+        "subtitle": "مكونات ورموز UI"
+      },
+      "profile": {
+        "title": "الملف الشخصي",
+        "subtitle": "الحساب والنشاط"
+      }
+    }
   }
 }
