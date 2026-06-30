@@ -8,26 +8,16 @@ import TextView from '@atoms/TextView';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useShowcaseStack} from '../shared/showcaseHelpers';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveThemeShowcaseStyles3} from './styles/resolveThemeShowcaseStyles3';
+import {resolveThemeShowcaseStyles2} from './styles/resolveThemeShowcaseStyles2';
+import {resolveThemeShowcaseStyles} from './styles/resolveThemeShowcaseStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {spacing} from '@theme/tokens/spacing';
 
 const ColorSwatches = (): React.JSX.Element => {
   const {colors} = useThemeTokens();
   const stackStyles = useShowcaseStack();
-  const styles = useThemedStyles(tokens => ({
-    swatchItem: {
-      alignItems: tokens.layout.alignItems.center,
-      gap: tokens.spacing.xs,
-      width: tokens.sizes.showcaseRow,
-    },
-    swatch: {
-      width: tokens.sizes.showcaseSwatch,
-      height: tokens.sizes.showcaseSwatch,
-      borderRadius: tokens.radius.sm,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-    },
-  }));
+  const styles = useThemedStyles(resolveThemeShowcaseStyles);
 
   return (
     <View style={stackStyles.row}>
@@ -44,14 +34,7 @@ const ColorSwatches = (): React.JSX.Element => {
 const SpacingScale = (): React.JSX.Element => {
   const {colors} = useThemeTokens();
   const stackStyles = useShowcaseStack();
-  const styles = useThemedStyles(tokens => ({
-    row: {
-      ...tokens.layout.presets.row,
-      gap: tokens.spacing.sm,
-    },
-    label: {width: tokens.sizes.showcaseSwatch},
-    bar: {height: tokens.spacing.md},
-  }));
+  const styles = useThemedStyles(resolveThemeShowcaseStyles2);
 
   return (
     <View style={stackStyles.stack}>
@@ -69,40 +52,7 @@ const SpacingScale = (): React.JSX.Element => {
 const LayoutSamples = (): React.JSX.Element => {
   const {colors, layout} = useThemeTokens();
   const stackStyles = useShowcaseStack();
-  const styles = useThemedStyles(tokens => ({
-    flexRow: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-    flexBar: {
-      flex: tokens.layout.flex.fill,
-      height: tokens.sizes.iconSm,
-      backgroundColor: tokens.colors.primaryMuted,
-      borderRadius: tokens.radius.sm,
-    },
-    growBar: {
-      ...tokens.layout.presets.grow,
-      height: tokens.sizes.iconSm,
-      backgroundColor: tokens.colors.primaryMuted,
-      borderRadius: tokens.radius.sm,
-    },
-    presetCard: {padding: tokens.spacing.sm, gap: tokens.spacing.sm},
-    clipHost: {
-      width: tokens.sizes.videoPreviewLg / 3,
-      height: tokens.sizes.iconSm,
-      position: tokens.layout.position.relative,
-    },
-    clipFill: {
-      ...tokens.layout.presets.clipOverlayTopLeft,
-      width: tokens.sizes.showcaseRow,
-      height: tokens.sizes.iconSm,
-      backgroundColor: tokens.colors.ratingStar,
-    },
-    presetDemo: {gap: tokens.spacing.xs, marginTop: tokens.spacing.xs},
-    presetBox: {
-      width: tokens.sizes.iconSm,
-      height: tokens.sizes.iconSm,
-      borderRadius: tokens.radius.sm,
-    },
-    presetCardInner: {padding: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveThemeShowcaseStyles3);
   const presets = [
     'row',
     'rowBetween',

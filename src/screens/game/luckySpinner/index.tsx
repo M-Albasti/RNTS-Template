@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {spin} from '@redux/slices/gameSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveLuckySpinnerStyles} from './styles/resolveLuckySpinnerStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 const SEGMENTS = ['+10', '+25', '+5', 'Again', '+50', 'Jackpot'];
@@ -27,34 +28,7 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
   const {coins, lastReward, spinCount} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
   const rotation = useRef(new Animated.Value(0)).current;
-  const styles = useThemedStyles(tokens => ({
-    wheel: {
-      width: tokens.sizes.spinner,
-      height: tokens.sizes.spinner,
-      borderRadius: tokens.radius.full,
-      borderWidth: tokens.layout.borderWidth.lg,
-      borderColor: tokens.colors.primary,
-      ...tokens.layout.presets.selfCenter,
-      ...tokens.layout.presets.center,
-      backgroundColor: tokens.colors.surfaceSecondary,
-    },
-    segmentRow: {
-      ...tokens.layout.presets.wrapRow,
-      ...tokens.layout.presets.rowCenter,
-      gap: tokens.spacing.xs,
-    },
-    segment: {
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xs,
-      borderRadius: tokens.radius.sm,
-      backgroundColor: tokens.colors.primaryMuted,
-    },
-    stats: {
-      ...tokens.layout.presets.columnCenter,
-      gap: tokens.spacing.xs,
-    },
-    links: {gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveLuckySpinnerStyles);
 
   const onSpin = () => {
     rotation.setValue(0);

@@ -9,6 +9,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveScreenContainerStyles} from './styles/resolveScreenContainerStyles';
 import {spacing} from '@theme/tokens';
 
 type SpacingKey = keyof typeof spacing;
@@ -39,24 +40,10 @@ const ScreenContainer = ({
   scrollProps,
 }: ScreenContainerProps): React.JSX.Element => {
   const insets = useSafeAreaInsets();
-  const styles = useThemedStyles(tokens => ({
-    root: {
-      flex: tokens.layout.flex.fill,
-      backgroundColor: tokens.colors.background,
-    },
-    content: {
-      paddingHorizontal: tokens.spacing.lg,
-      paddingVertical: tokens.spacing.lg,
-      alignItems: alignContent === 'center' ? ('center' as const) : ('stretch' as const),
-      paddingBottom: bottomPadding
-        ? tokens.spacing[bottomPadding]
-        : tokens.spacing.lg,
-    },
-    contentCentered: {
-      flexGrow: tokens.layout.flexGrow.fill,
-      justifyContent: 'center' as const,
-    },
-  }));
+  const styles = useThemedStyles(
+    tokens => resolveScreenContainerStyles(tokens, alignContent, bottomPadding),
+    [alignContent, bottomPadding],
+  );
 
   const safeStyles = useMemo(
     () =>

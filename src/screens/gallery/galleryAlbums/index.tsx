@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -12,6 +12,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGalleryAlbumsStyles} from './styles/resolveGalleryAlbumsStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import type {GalleryAlbum, GalleryImage} from '@Types/galleryTypes';
 
@@ -25,25 +26,7 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
   const albums = useAppSelector(state => state.gallery.albums);
   const images = useAppSelector(state => state.gallery.images);
   const albumId = route.params?.albumId;
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      cover: {
-        width: tokens.sizes.galleryCover,
-        height: tokens.sizes.galleryCover,
-        borderRadius: tokens.radius.md,
-      },
-      row: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-      meta: {flex: tokens.layout.flex.fill},
-      tile: {
-        flex: tokens.layout.flex.fill,
-        margin: tokens.spacing.xs,
-        borderRadius: tokens.radius.md,
-        overflow: tokens.layout.overflow.hidden,
-        aspectRatio: 1,
-      },
-      thumb: {width: '100%', height: '100%'},
-    }),
-  );
+  const styles = useThemedStyles(resolveGalleryAlbumsStyles)
 
   const albumImages = useMemo(
     () => (albumId ? images.filter(img => img.albumId === albumId) : []),
@@ -66,7 +49,7 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
             <Pressable
               style={styles.tile}
               onPress={() => navigation.navigate('ImageViewer', {imageId: item.id})}>
-              <Image source={{uri: item.uri}} style={styles.thumb} />
+              <Image source={{uri: item.uri}} style={styles.thumb as ImageStyle} />
             </Pressable>
           )}
         />
@@ -85,7 +68,7 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
           <Pressable onPress={() => navigation.navigate('GalleryAlbums', {albumId: item.id})}>
             <Card>
               <View style={styles.row}>
-                <Image source={{uri: item.coverUri}} style={styles.cover} />
+                <Image source={{uri: item.coverUri}} style={styles.cover as ImageStyle} />
                 <View style={styles.meta}>
                   <Heading text={item.title} level="h3" />
                   <TextView

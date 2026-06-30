@@ -10,16 +10,14 @@ import PasswordTextInput from '@molecules/passwordTextInput';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSResetPasswordTemplateStyles} from './styles/resolveDSResetPasswordTemplateStyles';
 
 const ResetPasswordContent = (): React.JSX.Element => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const styles = useThemedStyles(tokens => ({
-    form: {width: '100%' as const, maxWidth: 420},
-    inputs: {gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveDSResetPasswordTemplateStyles);
 
   return (
     <>

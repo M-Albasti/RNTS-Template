@@ -14,6 +14,7 @@ import {
 } from '../registry';
 import {navigateDesignSystemShowcase} from '../shared/showcaseHelpers';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveHubStyles} from './styles/resolveHubStyles';
 import type {
   DesignSystemRouteName,
   DesignSystemStackParamList,
@@ -39,19 +40,7 @@ const CATEGORY_ORDER: Category[] = [
 
 const DesignSystemHub = ({navigation}: HubProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    category: {gap: tokens.spacing.sm},
-    item: {
-      ...tokens.layout.presets.rowBetween,
-      paddingVertical: tokens.spacing.sm,
-      paddingHorizontal: tokens.spacing.md,
-      borderRadius: tokens.radius.md,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      backgroundColor: tokens.colors.surface,
-    },
-    itemPressed: {backgroundColor: tokens.colors.surfaceSecondary},
-  }));
+  const styles = useThemedStyles(resolveHubStyles);
 
   const grouped = useMemo(() => {
     const map = new Map<Category, DesignSystemRegistryItem[]>();

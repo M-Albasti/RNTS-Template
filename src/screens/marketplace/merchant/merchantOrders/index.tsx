@@ -11,15 +11,14 @@ import {formatCurrency} from '@helpers/locationHelpers';
 import {getMerchantOrderTotal, getMerchantOrders} from '@helpers/marketplaceHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantOrdersStyles} from './styles/resolveMerchantOrdersStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MerchantOrders'>};
 
 const MerchantOrders = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    card: {marginBottom: tokens.spacing.sm, gap: tokens.sizes.progressTrack},
-  }));
+  const styles = useThemedStyles(resolveMerchantOrdersStyles);
   const orders = useAppSelector(state => state.marketplace.orders);
   const merchantOrders = getMerchantOrders(orders);
 

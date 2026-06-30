@@ -8,6 +8,7 @@ import VideoView from '@atoms/VideoView';
 //* theme import
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoContainerStyles} from './styles/resolveVideoContainerStyles';
 
 //* types import
 import {VideoRef, ReactVideoSource, OnVideoErrorData} from 'react-native-video';
@@ -22,14 +23,7 @@ interface VideoViewProps {
 }
 
 const VideoContainer = (props: VideoViewProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      loader: {
-        ...StyleSheet.absoluteFill,
-        backgroundColor: tokens.colors.overlay,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveVideoContainerStyles);
   const {colors} = useThemeTokens();
 
   return (

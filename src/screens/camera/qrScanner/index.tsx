@@ -23,6 +23,7 @@ import {
   logScreenView,
 } from '@services/firebaseServices/firebaseAnalyticsService';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveQrScannerStyles} from './styles/resolveQrScannerStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type QrScannerProps = {
@@ -40,33 +41,7 @@ const QrScanner = ({navigation}: QrScannerProps): React.JSX.Element => {
     null,
   );
 
-  const styles = useThemedStyles(tokens => ({
-    root: {flex: tokens.layout.flex.fill, backgroundColor: tokens.colors.cameraBackground},
-    header: {
-      position: tokens.layout.position.absolute,
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: tokens.layout.zIndex.sticky,
-      paddingHorizontal: tokens.spacing.lg,
-    },
-    frame: {
-      position: tokens.layout.position.absolute,
-      top: '30%' as const,
-      left: '15%' as const,
-      width: '70%' as const,
-      height: '30%' as const,
-      borderWidth: tokens.layout.borderWidth.lg,
-      borderColor: tokens.colors.primary,
-      borderRadius: tokens.radius.lg,
-    },
-    hint: {
-      position: tokens.layout.position.absolute,
-      left: tokens.spacing.lg,
-      right: tokens.spacing.lg,
-    },
-    hintText: {color: tokens.colors.cameraForeground},
-  }));
+  const styles = useThemedStyles(resolveQrScannerStyles);
 
   useEffect(() => {
     logScreenView('QrScanner');

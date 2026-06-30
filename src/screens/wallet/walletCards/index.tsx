@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {setDefaultCard} from '@redux/slices/walletSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveWalletCardsStyles} from './styles/resolveWalletCardsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {WalletCard} from '@Types/walletTypes';
 
@@ -26,17 +27,7 @@ const WalletCards = ({navigation}: WalletCardsProps): React.JSX.Element => {
   const {t} = useTranslation();
   const cards = useAppSelector(state => state.wallet.cards);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.rowBetween},
-      badge: {
-        backgroundColor: tokens.colors.primaryMuted,
-        paddingHorizontal: tokens.spacing.sm,
-        paddingVertical: tokens.spacing.xs,
-        borderRadius: tokens.radius.sm,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveWalletCardsStyles);
 
   const renderItem = ({item}: {item: WalletCard}) => (
     <Card>

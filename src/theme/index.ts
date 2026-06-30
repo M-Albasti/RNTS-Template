@@ -1,5 +1,9 @@
 export {createNavigationTheme, createMyTheme, isDarkTheme} from './appTheme';
-export {createThemedStyles, useThemedStyles} from './createThemedStyles';
+export {
+  createThemedStyles,
+  useThemedStyles,
+  type ResolveThemedStyles,
+} from './createThemedStyles';
 export {useThemeTokens} from './useThemeTokens';
 export {
   createThemeTokens,

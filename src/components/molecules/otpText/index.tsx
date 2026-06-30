@@ -3,22 +3,10 @@ import {View} from 'react-native';
 
 import TextView from '@atoms/TextView';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveOtpTextStyles} from './styles/resolveOtpTextStyles';
 
 const OTPText = (): React.JSX.Element => {
-  const styles = useThemedStyles(t => ({
-    title: {
-      ...t.typography.h2,
-      marginBottom: t.spacing.md,
-      textAlign: t.layout.textAlign.center,
-      color: t.colors.textPrimary,
-    },
-    subtitle: {
-      ...t.typography.body,
-      color: t.colors.textMuted,
-      marginBottom: t.spacing.xxl,
-      textAlign: t.layout.textAlign.center,
-    },
-  }));
+  const styles = useThemedStyles(resolveOtpTextStyles);
 
   return (
     <View>

@@ -13,6 +13,7 @@ import {formatCurrency} from '@helpers/locationHelpers';
 import {isLiveTrackingStatus} from '@helpers/deliveryTrackingHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveActiveOrdersStyles} from './styles/resolveActiveOrdersStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {
@@ -24,18 +25,7 @@ const ActiveOrders = ({navigation}: Props): React.JSX.Element => {
   const orders = useAppSelector(state =>
     state.delivery.orders.filter(o => !['delivered', 'cancelled'].includes(o.status)),
   );
-  const styles = useThemedStyles(tokens => ({
-    card: {gap: tokens.spacing.sm, marginBottom: tokens.spacing.sm},
-    row: {...tokens.layout.presets.rowBetween},
-    badgeRow: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-    livePill: {
-      backgroundColor: tokens.colors.error,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xxs,
-    },
-    liveText: {color: tokens.colors.textInverse},
-  }));
+  const styles = useThemedStyles(resolveActiveOrdersStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

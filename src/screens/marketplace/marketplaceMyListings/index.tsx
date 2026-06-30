@@ -15,6 +15,7 @@ import {removeProductListing} from '@redux/slices/marketplaceSlice';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceMyListingsStyles} from './styles/resolveMarketplaceMyListingsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MarketplaceMyListings'>};
@@ -24,12 +25,7 @@ const MarketplaceMyListings = ({navigation}: Props): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const products = useAppSelector(state => state.marketplace.products);
   const listings = getOwnListings(products);
-  const styles = useThemedStyles(tokens => ({
-    listingCard: {
-      marginBottom: tokens.spacing.sm,
-      gap: tokens.sizes.progressTrack,
-    },
-  }));
+  const styles = useThemedStyles(resolveMarketplaceMyListingsStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

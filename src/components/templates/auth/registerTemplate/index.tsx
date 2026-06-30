@@ -7,6 +7,7 @@ import RegisterForm from '@organisms/auth/register/RegisterForm';
 import RegisterFooter from '@organisms/auth/register/RegisterFooter';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveRegisterTemplateStyles} from './styles/resolveRegisterTemplateStyles';
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import {RegisterScreens} from '@Types/registerScreens';
 
@@ -17,12 +18,7 @@ interface RegisterTemplateProps {
 }
 
 const RegisterTemplate = (props: RegisterTemplateProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    formWrap: {
-      width: '100%' as const,
-      maxWidth: 420,
-    },
-  }));
+  const styles = useThemedStyles(resolveRegisterTemplateStyles);
 
   return (
     <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>

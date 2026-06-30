@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {createThread} from '@redux/slices/chatSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveNewChatStyles} from './styles/resolveNewChatStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {ChatContact} from '@Types/chatTypes';
 
@@ -25,20 +26,7 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
   const {t} = useTranslation();
   const contacts = useAppSelector(state => state.chat.contacts);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-      avatar: {width: 44, height: 44, borderRadius: tokens.radius.full},
-      meta: {flex: tokens.layout.flex.fill},
-      dot: {
-        width: 10,
-        height: 10,
-        borderRadius: tokens.radius.full,
-        backgroundColor: tokens.colors.success,
-      },
-      offline: {backgroundColor: tokens.colors.textMuted},
-    }),
-  );
+  const styles = useThemedStyles(resolveNewChatStyles)
 
   const startChat = (contact: ChatContact) => {
     const threadId = Date.now().toString();
@@ -70,7 +58,7 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
     <Pressable onPress={() => startChat(item)}>
       <Card>
         <View style={styles.row}>
-          <Image source={{uri: item.avatar}} style={styles.avatar} />
+          <Image source={{uri: item.avatar}} style={styles.avatar as ImageStyle} />
           <View style={styles.meta}>
             <Heading text={item.name} level="h3" />
             <TextView

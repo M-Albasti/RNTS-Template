@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet} from 'react-native';
+import {Image, Pressable, StyleSheet, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -10,6 +10,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGalleryHiddenStyles} from './styles/resolveGalleryHiddenStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {GalleryImage} from '@Types/galleryTypes';
 
@@ -20,20 +21,7 @@ interface GalleryHiddenProps {
 const GalleryHidden = ({navigation}: GalleryHiddenProps): React.JSX.Element => {
   const {t} = useTranslation();
   const hidden = useAppSelector(state => state.gallery.images.filter(i => i.hidden));
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      tile: {
-        flex: tokens.layout.flex.fill,
-        margin: tokens.spacing.xs,
-        borderRadius: tokens.radius.md,
-        overflow: tokens.layout.overflow.hidden,
-        aspectRatio: 1,
-      },
-      image: {width: '100%', height: '100%'},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolveGalleryHiddenStyles)
 
   if (hidden.length === 0) {
     return (
@@ -56,7 +44,7 @@ const GalleryHidden = ({navigation}: GalleryHiddenProps): React.JSX.Element => {
           <Pressable
             style={styles.tile}
             onPress={() => navigation.navigate('ImageViewer', {imageId: item.id})}>
-            <Image source={{uri: item.uri}} style={styles.image} />
+            <Image source={{uri: item.uri}} style={styles.image as ImageStyle} />
           </Pressable>
         )}
       />

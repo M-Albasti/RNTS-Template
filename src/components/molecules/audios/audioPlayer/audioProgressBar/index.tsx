@@ -9,6 +9,7 @@ import TextView from '@atoms/TextView';
 //* theme import
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioProgressBarStyles} from './styles/resolveAudioProgressBarStyles';
 
 //* utils import
 import {minutesFormat} from '@utils/minutesFormat';
@@ -22,22 +23,7 @@ interface AudioProgressBarProps {
 const AudioProgressBar = memo(
   ({currentTime, duration, onSeekSound}: AudioProgressBarProps) => {
     const {colors} = useThemeTokens();
-    const styles = useThemedStyles(tokens => ({
-      root: {
-        width: '100%',
-        ...tokens.layout.presets.row,
-        paddingHorizontal: tokens.spacing.lg,
-        gap: tokens.spacing.sm,
-      },
-      slider: {
-        flex: tokens.layout.flex.fill,
-        height: tokens.sizes.progressBar,
-      },
-      time: {
-        minWidth: tokens.sizes.touchTarget,
-        textAlign: tokens.layout.textAlign.center,
-      },
-    }));
+    const styles = useThemedStyles(resolveAudioProgressBarStyles);
 
     return (
       <View style={styles.root}>

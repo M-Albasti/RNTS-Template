@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 import {formatCurrency} from '@helpers/locationHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceOrdersStyles} from './styles/resolveMarketplaceOrdersStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MarketplaceOrders'>};
@@ -18,9 +19,7 @@ type Props = {navigation: AppStackNavigationProp<'MarketplaceOrders'>};
 const MarketplaceOrders = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const orders = useAppSelector(state => state.marketplace.orders);
-  const styles = useThemedStyles(tokens => ({
-    card: {marginBottom: tokens.spacing.sm, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveMarketplaceOrdersStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

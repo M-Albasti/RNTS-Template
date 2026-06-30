@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 import OTPTextInput from '@molecules/otpTextInput';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMockOtpTemplateStyles} from './styles/resolveMockOtpTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface MockOtpTemplateProps {
@@ -22,12 +23,7 @@ const MockOtpTemplate = ({
 }: MockOtpTemplateProps): React.JSX.Element => {
   const {t} = useTranslation();
   const [code, setCode] = useState('');
-  const styles = useThemedStyles(tokens => ({
-    form: {
-      width: '100%' as const,
-      maxWidth: 420,
-    },
-  }));
+  const styles = useThemedStyles(resolveMockOtpTemplateStyles);
 
   const verifyCode = () => {
     if (code.length < 4) {

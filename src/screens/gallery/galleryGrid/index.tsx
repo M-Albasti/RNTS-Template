@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -10,6 +10,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGalleryGridStyles} from './styles/resolveGalleryGridStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {GalleryImage} from '@Types/galleryTypes';
 
@@ -20,36 +21,13 @@ interface GalleryGridProps {
 const GalleryGrid = ({navigation}: GalleryGridProps): React.JSX.Element => {
   const {t} = useTranslation();
   const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      tile: {
-        flex: tokens.layout.flex.fill,
-        margin: tokens.spacing.xs,
-        borderRadius: tokens.radius.md,
-        overflow: tokens.layout.overflow.hidden,
-        aspectRatio: 1,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      image: {width: '100%', height: '100%'},
-      overlay: {
-        position: tokens.layout.position.absolute,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        padding: tokens.spacing.xs,
-        backgroundColor: tokens.colors.overlay,
-      },
-      overlayText: {color: tokens.colors.textInverse},
-    }),
-  );
+  const styles = useThemedStyles(resolveGalleryGridStyles)
 
   const renderItem = ({item}: {item: GalleryImage}) => (
     <Pressable
       style={styles.tile}
       onPress={() => navigation.navigate('ImageViewer', {imageId: item.id})}>
-      <Image source={{uri: item.uri}} style={styles.image} />
+      <Image source={{uri: item.uri}} style={styles.image as ImageStyle} />
       <View style={styles.overlay}>
         <TextView text={item.title} variant="caption" style={styles.overlayText} />
       </View>

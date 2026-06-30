@@ -4,6 +4,7 @@ import {View} from 'react-native';
 import Card from '@atoms/Card';
 import TextView from '@atoms/TextView';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantStatCardStyles} from './styles/resolveMerchantStatCardStyles';
 
 type MerchantStatCardProps = {
   label: string;
@@ -12,10 +13,10 @@ type MerchantStatCardProps = {
 };
 
 const MerchantStatCard = ({label, value, accent}: MerchantStatCardProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    card: {flex: 1, minWidth: '46%' as const, gap: tokens.spacing.xs},
-    value: {color: accent ?? tokens.colors.primary},
-  }));
+  const styles = useThemedStyles(
+    tokens => resolveMerchantStatCardStyles(tokens, accent),
+    [accent],
+  );
 
   return (
     <Card style={styles.card}>

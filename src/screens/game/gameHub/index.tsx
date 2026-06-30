@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGameHubStyles} from './styles/resolveGameHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface GameHubProps {
@@ -20,19 +21,7 @@ interface GameHubProps {
 const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {coins, spinCount, history} = useAppSelector(state => state.game);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        ...tokens.layout.presets.columnCenter,
-        backgroundColor: tokens.colors.accent2,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-      },
-      heroText: {color: tokens.colors.textInverse},
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      stats: {...tokens.layout.presets.rowBetween, width: '100%'},
-    }),
-  );
+  const styles = useThemedStyles(resolveGameHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

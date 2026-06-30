@@ -7,6 +7,7 @@ import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveShowcaseSectionStyles} from './styles/resolveShowcaseSectionStyles';
 
 type ShowcaseSectionProps = {
   title: string;
@@ -19,9 +20,7 @@ const ShowcaseSection = ({
   description,
   children,
 }: ShowcaseSectionProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    content: {gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveShowcaseSectionStyles);
 
   return (
     <View>

@@ -1,6 +1,6 @@
 //* packages import
 import React, {Fragment, memo} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View, ImageStyle} from 'react-native';
 
 //* components import
 import Heading from '@atoms/Heading';
@@ -8,6 +8,7 @@ import TextView from '@atoms/TextView';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioContentStyles} from './styles/resolveAudioContentStyles';
 
 //* types import
 import {SoundProps} from '@Types/soundProps';
@@ -17,36 +18,14 @@ interface AudioContentProps {
 }
 
 const AudioContent = memo(({audioDetails}: AudioContentProps) => {
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      artworkWrap: {
-        width: '100%',
-        alignItems: 'center',
-        paddingHorizontal: tokens.spacing.lg,
-      },
-      artwork: {
-        width: '78%',
-        aspectRatio: 1,
-        borderRadius: tokens.radius.xl,
-        backgroundColor: tokens.colors.surfaceSecondary,
-        ...tokens.shadows.md,
-      },
-      meta: {
-        width: '100%',
-        alignItems: 'center',
-        paddingHorizontal: tokens.spacing.lg,
-        paddingTop: tokens.spacing.lg,
-        gap: tokens.spacing.xs,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveAudioContentStyles)
 
   return (
     <Fragment>
       <View style={styles.artworkWrap}>
         <Image
           source={{uri: audioDetails.artwork}}
-          style={styles.artwork}
+          style={styles.artwork as ImageStyle}
           resizeMode="cover"
         />
       </View>

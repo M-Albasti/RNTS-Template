@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGameHistoryStyles} from './styles/resolveGameHistoryStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {GameHistoryEntry} from '@Types/gameTypes';
 
@@ -21,14 +22,7 @@ interface GameHistoryProps {
 const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
   const {t} = useTranslation();
   const history = useAppSelector(state => state.game.history);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.rowBetween},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-      gain: {color: tokens.colors.success},
-      loss: {color: tokens.colors.error},
-    }),
-  );
+  const styles = useThemedStyles(resolveGameHistoryStyles);
 
   if (history.length === 0) {
     return (

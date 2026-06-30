@@ -10,6 +10,7 @@ import RegisterButton from '@molecules/registerButton';
 import {registerService} from '@services/authServices/registerService';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveRegisterFormStyles} from './styles/resolveRegisterFormStyles';
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import {RegisterScreens} from '@Types/registerScreens';
 
@@ -26,11 +27,7 @@ const RegisterForm = (props: RegisterFormProps): React.JSX.Element => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    inputs: {
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveRegisterFormStyles);
 
   const onRegister = () => {
     registerService(

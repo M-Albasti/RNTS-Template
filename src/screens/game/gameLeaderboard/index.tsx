@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {syncLeaderboard} from '@redux/slices/gameSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGameLeaderboardStyles} from './styles/resolveGameLeaderboardStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {LeaderboardEntry} from '@Types/gameTypes';
 
@@ -25,20 +26,7 @@ const GameLeaderboard = ({navigation}: GameLeaderboardProps): React.JSX.Element 
   const {t} = useTranslation();
   const {leaderboard, coins} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.rowBetween},
-      rank: {
-        width: tokens.sizes.leaderboardRank,
-        ...tokens.layout.presets.textCenter,
-        ...tokens.typography.h3,
-      },
-      highlight: {
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.primary,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveGameLeaderboardStyles);
 
   useEffect(() => {
     dispatch(syncLeaderboard(coins));

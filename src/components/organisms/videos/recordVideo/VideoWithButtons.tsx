@@ -21,6 +21,7 @@ import {uploadVideo} from '@redux/slices/videosSlice';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoWithButtonsStyles} from './styles/resolveVideoWithButtonsStyles';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -37,17 +38,7 @@ const VideoWithButtons = (props: ViewWithButtonsProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const uploadStatus = useAppSelector(state => state.video.status);
 
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      container: {
-        flex: tokens.layout.flex.fill,
-        backgroundColor: tokens.colors.background,
-      },
-      player: {
-        flex: tokens.layout.flex.fill,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveVideoWithButtonsStyles);
 
   const onDismiss = () => {
     props.emptyVideoFile();

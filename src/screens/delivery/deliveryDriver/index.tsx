@@ -27,6 +27,7 @@ import {useLiveDeliveryTracking} from '@hooks/useLiveDeliveryTracking';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDeliveryDriverStyles} from './styles/resolveDeliveryDriverStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -36,10 +37,7 @@ const DeliveryDriver = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const {colors, sizes} = useThemeTokens();
-  const styles = useThemedStyles(tokens => ({
-    switchRow: {...tokens.layout.presets.rowBetween},
-    jobCard: {marginBottom: tokens.spacing.sm, gap: tokens.spacing.xs},
-  }));
+  const styles = useThemedStyles(resolveDeliveryDriverStyles);
   const {orders, driverMode, driverAvailable, activeDriverOrderId} = useAppSelector(
     state => state.delivery,
   );

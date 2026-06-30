@@ -16,6 +16,7 @@ import {removeFromCart, updateCartQuantity} from '@redux/slices/marketplaceSlice
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceCartStyles} from './styles/resolveMarketplaceCartStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MarketplaceCart'>};
@@ -23,15 +24,7 @@ type Props = {navigation: AppStackNavigationProp<'MarketplaceCart'>};
 const MarketplaceCart = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    card: {marginBottom: tokens.spacing.sm, gap: tokens.spacing.sm},
-    row: {...tokens.layout.presets.rowBetween, alignItems: tokens.layout.alignItems.center},
-    qtyRow: {
-      ...tokens.layout.presets.row,
-      gap: tokens.spacing.sm,
-      alignItems: tokens.layout.alignItems.center,
-    },
-  }));
+  const styles = useThemedStyles(resolveMarketplaceCartStyles);
   const {cart, products, promotions} = useAppSelector(state => state.marketplace);
   const lines = getCartLines(cart, products, promotions);
   const subtotal = getCartSubtotal(cart, products, promotions);

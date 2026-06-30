@@ -24,6 +24,7 @@ import {permissionsRequest} from '@helpers/permissionsRequest';
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoCameraModalStyles} from './styles/resolveVideoCameraModalStyles';
 
 interface VideoCameraModalProps {
   navigation: AppStackNavigationProp<'RecordVideo'>;
@@ -40,24 +41,7 @@ const VideoCameraModal = (props: VideoCameraModalProps): React.JSX.Element => {
   const microphonePermission = useMicrophonePermission();
   const cameraRef = useRef<Camera | null>(null);
 
-  const styles = useThemedStyles(t => ({
-    permissionContainer: {
-      ...t.layout.presets.fill,
-      ...t.layout.presets.center,
-    },
-    permissionText: {
-      ...t.layout.presets.textRight,
-      ...t.typography.title,
-    },
-    noDeviceContainer: {
-      ...t.layout.presets.fill,
-      ...t.layout.presets.center,
-    },
-    noDeviceText: {
-      ...t.layout.presets.textRight,
-      ...t.typography.title,
-    },
-  }));
+  const styles = useThemedStyles(resolveVideoCameraModalStyles);
 
   useLayoutEffect(() => {
     requestCameraPermission();

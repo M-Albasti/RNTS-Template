@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {addCallLog} from '@redux/slices/chatSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveChatCallLogStyles} from './styles/resolveChatCallLogStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {CallLogEntry} from '@Types/chatTypes';
 
@@ -26,13 +27,7 @@ const ChatCallLog = ({navigation}: ChatCallLogProps): React.JSX.Element => {
   const {t} = useTranslation();
   const logs = useAppSelector(state => state.chat.callLogs);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      row: {...tokens.layout.presets.rowBetween},
-      missed: {color: tokens.colors.error},
-    }),
-  );
+  const styles = useThemedStyles(resolveChatCallLogStyles);
 
   const startCall = (type: 'audio' | 'video') => {
     dispatch(

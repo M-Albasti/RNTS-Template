@@ -8,21 +8,13 @@ import AudioPlayerView from '@organisms/audios/audioPlayer/AudioPlayerView';
 import {sounds} from '@constants/sounds';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSAudioPlayerTemplateStyles} from './styles/resolveDSAudioPlayerTemplateStyles';
 
 const AudioPlayerContent = (): React.JSX.Element => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [repeat, setRepeat] = useState(false);
   const [currentTime, setCurrentTime] = useState(30);
-  const styles = useThemedStyles(tokens => ({
-    playerCard: {
-      flex: tokens.layout.flex.fill,
-      backgroundColor: tokens.colors.surface,
-      borderRadius: tokens.radius.xl,
-      paddingVertical: tokens.spacing.lg,
-      minHeight: tokens.sizes.audioPlayerMin,
-      ...tokens.shadows.md,
-    },
-  }));
+  const styles = useThemedStyles(resolveDSAudioPlayerTemplateStyles);
 
   return (
     <>

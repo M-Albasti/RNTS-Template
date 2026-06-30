@@ -1,3 +1,4 @@
+import {resolveFirebaseLoginMethodsButtonsStyles} from './styles/resolveFirebaseLoginMethodsButtonsStyles';
 import React from 'react';
 import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
@@ -52,12 +53,7 @@ const FirebaseLoginMethodsButtons = ({
     logger.info('Navigate to Apple Login');
   };
 
-  const styles = useThemedStyles(tokens => ({
-    container: {
-      width: '100%' as const,
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveFirebaseLoginMethodsButtonsStyles);
 
   return (
     <View style={styles.container}>

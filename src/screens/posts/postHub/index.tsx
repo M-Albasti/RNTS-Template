@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolvePostHubStyles} from './styles/resolvePostHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface PostHubProps {
@@ -21,26 +22,7 @@ const PostHub = ({navigation}: PostHubProps): React.JSX.Element => {
   const {t} = useTranslation();
   const posts = useAppSelector(state => state.posts.posts);
   const savedIds = useAppSelector(state => state.posts.savedIds);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        ...tokens.layout.presets.columnCenter,
-        backgroundColor: tokens.colors.primaryMuted,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      grid: {
-        ...tokens.layout.presets.wrapRow,
-        gap: tokens.spacing.sm,
-      },
-      stats: {
-        ...tokens.layout.presets.rowBetween,
-        width: '100%',
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolvePostHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

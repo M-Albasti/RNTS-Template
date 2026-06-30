@@ -5,12 +5,11 @@ import VideoContainer from '@molecules/videos/videoPlayer/videoContainer';
 
 import {videos} from '@constants/videos';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSVideoContainerStyles} from './styles/resolveDSVideoContainerStyles';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 
 const VideoContainerPreview = (): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    container: {height: tokens.sizes.videoPreview},
-  }));
+  const styles = useThemedStyles(resolveDSVideoContainerStyles);
 
   return (
     <View style={styles.container}>

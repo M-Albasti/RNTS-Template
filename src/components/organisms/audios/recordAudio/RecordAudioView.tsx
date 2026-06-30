@@ -8,6 +8,7 @@ import AudioPlayback from '@molecules/audios/recordAudio/audioPlayback';
 import AudioControllers from '@molecules/audios/recordAudio/audioSubmit';
 import {useAudioRecorder} from '@hooks/useAudioRecorder';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveRecordAudioViewStyles} from './styles/resolveRecordAudioViewStyles';
 
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -16,12 +17,7 @@ interface RecordAudioViewProps {
 }
 
 const RecordAudioView = (_props: RecordAudioViewProps): React.JSX.Element => {
-  const styles = useThemedStyles(t => ({
-    container: {
-      flex: layout.flex.fill,
-      backgroundColor: t.colors.background,
-    },
-  }));
+  const styles = useThemedStyles(resolveRecordAudioViewStyles);
 
   const {
     recordSecs,

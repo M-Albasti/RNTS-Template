@@ -16,6 +16,7 @@ import {
 } from '@config/firebaseInit';
 import {logScreenView} from '@services/firebaseServices/firebaseAnalyticsService';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCameraHubStyles} from './styles/resolveCameraHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type CameraHubProps = {
@@ -40,22 +41,7 @@ const CameraHub = ({navigation}: CameraHubProps): React.JSX.Element => {
     setBarcodeEnabled(getRemoteConfigBoolean('camera_barcode_enabled'));
   }, []);
 
-  const styles = useThemedStyles(tokens => ({
-    hero: {
-      ...tokens.layout.presets.columnCenter,
-      backgroundColor: tokens.colors.surfaceSecondary,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-    },
-    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    empty: {
-      ...tokens.layout.presets.columnCenter,
-      padding: tokens.spacing.lg,
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveCameraHubStyles);
 
   useEffect(() => {
     logScreenView('CameraHub');

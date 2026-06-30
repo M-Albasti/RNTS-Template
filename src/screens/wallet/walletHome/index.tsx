@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveWalletHomeStyles} from './styles/resolveWalletHomeStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface WalletHomeProps {
@@ -20,19 +21,7 @@ interface WalletHomeProps {
 const WalletHome = ({navigation}: WalletHomeProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {balance, cardLast4, transactions, cards} = useAppSelector(state => state.wallet);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        backgroundColor: tokens.colors.primary,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-        ...tokens.layout.presets.columnCenter,
-      },
-      heroText: {color: tokens.colors.textInverse},
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      stats: {...tokens.layout.presets.rowBetween, width: '100%'},
-    }),
-  );
+  const styles = useThemedStyles(resolveWalletHomeStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

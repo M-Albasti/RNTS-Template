@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {addPost, extractHashtags} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCreatePostStyles} from './styles/resolveCreatePostStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {PostMediaType} from '@Types/postTypes';
 
@@ -30,22 +31,7 @@ const CreatePost = ({navigation}: CreatePostProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const [content, setContent] = useState('');
   const [mediaType, setMediaType] = useState<PostMediaType>('text');
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      types: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      typeChip: {
-        paddingHorizontal: tokens.spacing.md,
-        paddingVertical: tokens.spacing.sm,
-        borderRadius: tokens.radius.md,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      typeChipActive: {
-        backgroundColor: tokens.colors.primaryMuted,
-        borderColor: tokens.colors.primary,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveCreatePostStyles);
 
   const publish = () => {
     if (!content.trim()) return;

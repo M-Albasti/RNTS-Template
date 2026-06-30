@@ -10,23 +10,10 @@ import TextView from '@atoms/TextView';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSLoginOptionsTemplateStyles} from './styles/resolveDSLoginOptionsTemplateStyles';
 
 const LoginOptionsContent = (): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    hero: {
-      backgroundColor: tokens.colors.primaryMuted,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
-      alignItems: 'center' as const,
-    },
-    grid: {
-      flexDirection: tokens.layout.flexDirection.row,
-      flexWrap: tokens.layout.flexWrap.wrap,
-      gap: tokens.spacing.sm,
-      width: '100%' as const,
-    },
-    footer: {width: '100%' as const, maxWidth: 400, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveDSLoginOptionsTemplateStyles);
 
   return (
     <>

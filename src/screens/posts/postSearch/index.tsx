@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {setSearchQuery, toggleLike, toggleSave} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolvePostSearchStyles} from './styles/resolvePostSearchStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {PostItem} from '@Types/postTypes';
 
@@ -27,12 +28,7 @@ const PostSearch = ({navigation}: PostSearchProps): React.JSX.Element => {
   const savedIds = useAppSelector(state => state.posts.savedIds);
   const query = useAppSelector(state => state.posts.searchQuery);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolvePostSearchStyles);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

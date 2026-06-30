@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {setChatSearchQuery} from '@redux/slices/chatSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveChatSearchStyles} from './styles/resolveChatSearchStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface ChatSearchProps {
@@ -25,13 +26,7 @@ const ChatSearch = ({navigation}: ChatSearchProps): React.JSX.Element => {
   const query = useAppSelector(state => state.chat.searchQuery);
   const threads = useAppSelector(state => state.chat.threads);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      hit: {gap: tokens.spacing.xs},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolveChatSearchStyles);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

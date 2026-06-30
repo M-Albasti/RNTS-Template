@@ -12,6 +12,8 @@ import IconView from '@atoms/Icon';
 import TextView from '@atoms/TextView';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveRatingStyles2} from './styles/resolveRatingStyles2';
+import {resolveRatingStyles} from './styles/resolveRatingStyles';
 
 export type RatingSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -69,11 +71,7 @@ const RatingStar = ({
   const fillWidth = useSharedValue(animated ? 0 : fill * size);
   const scale = useSharedValue(1);
 
-  const styles = useThemedStyles(t => ({
-    fillClip: {
-      ...t.layout.presets.clipOverlayTopLeft,
-    },
-  }));
+  const styles = useThemedStyles(resolveRatingStyles);
 
   useEffect(() => {
     const target = fill * size;
@@ -161,16 +159,7 @@ const Rating = ({
   const resolvedSize = size ?? tokens.rating.size[sizeToken];
   const normalized = clampRating(value, maxStars);
 
-  const styles = useThemedStyles(t => ({
-    row: {
-      ...t.layout.presets.row,
-      gap: t.spacing.xs,
-    },
-    stars: {
-      ...t.layout.presets.row,
-      gap: t.rating.starGap,
-    },
-  }));
+  const styles = useThemedStyles(resolveRatingStyles2);
 
   return (
     <View style={styles.row}>

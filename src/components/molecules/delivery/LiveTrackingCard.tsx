@@ -8,6 +8,7 @@ import TextView from '@atoms/TextView';
 import {getRemainingEtaMinutes} from '@helpers/deliveryTrackingHelpers';
 import {formatCurrency} from '@helpers/locationHelpers';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveLiveTrackingCardStyles} from './styles/resolveLiveTrackingCardStyles';
 
 import type {DeliveryOrder} from '@Types/deliveryTypes';
 
@@ -29,27 +30,7 @@ const LiveTrackingCard = ({
   isBackgroundTracking = false,
 }: LiveTrackingCardProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    card: {gap: tokens.spacing.sm},
-    row: {...tokens.layout.presets.rowBetween, alignItems: 'center' as const},
-    livePill: {
-      backgroundColor: tokens.colors.error,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xxs,
-    },
-    liveText: {color: tokens.colors.textInverse},
-    progressTrack: {
-      height: tokens.sizes.progressTrack,
-      borderRadius: tokens.radius.full,
-      backgroundColor: tokens.colors.border,
-      overflow: tokens.layout.overflow.hidden,
-    },
-    progressFill: {
-      height: tokens.sizes.progressTrack,
-      backgroundColor: tokens.colors.primary,
-    },
-  }));
+  const styles = useThemedStyles(resolveLiveTrackingCardStyles);
 
   const eta = getRemainingEtaMinutes(
     order.pickup.coordinate,

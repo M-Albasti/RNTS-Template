@@ -14,6 +14,7 @@ import {
 } from '@helpers/marketplaceHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveProductCardStyles} from './styles/resolveProductCardStyles';
 import {spacing} from '@theme/tokens/spacing';
 
 import type {MarketplaceProduct} from '@Types/marketplaceTypes';
@@ -31,39 +32,10 @@ const ProductCard = ({product, onPress, onAdd}: ProductCardProps): React.JSX.Ele
   const promo = getPromotionForProduct(product.id, promotions);
   const buyable = isProductBuyable(product);
 
-  const styles = useThemedStyles(tokens => ({
-    card: {
-      width: '48%' as const,
-      minWidth: tokens.sizes.minCardWidth,
-      gap: tokens.spacing.xs,
-      opacity: buyable ? 1 : 0.65,
-    },
-    emoji: {
-      ...tokens.typography.display,
-      textAlign: tokens.layout.textAlign.center,
-      marginBottom: tokens.spacing.xs,
-    },
-    row: {...tokens.layout.presets.rowBetween, alignItems: tokens.layout.alignItems.center},
-    addBtn: {
-      backgroundColor: tokens.colors.primary,
-      borderRadius: tokens.radius.full,
-      width: tokens.sizes.addButton,
-      height: tokens.sizes.addButton,
-      ...tokens.layout.presets.center,
-    },
-    addText: {
-      color: tokens.colors.textInverse,
-      ...tokens.typography.h3,
-    },
-    promoPill: {
-      alignSelf: tokens.layout.alignSelf.start,
-      backgroundColor: tokens.colors.warningMuted,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.xs,
-      paddingVertical: tokens.spacing.xxs,
-    },
-    strike: {textDecorationLine: 'line-through' as const, color: tokens.colors.textMuted},
-  }));
+  const styles = useThemedStyles(
+    tokens => resolveProductCardStyles(tokens, buyable),
+    [buyable],
+  );
 
   return (
     <Pressable onPress={onPress}>

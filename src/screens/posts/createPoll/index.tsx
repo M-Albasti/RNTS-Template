@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {addPost, extractHashtags} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCreatePollStyles} from './styles/resolveCreatePollStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface CreatePollProps {
@@ -27,12 +28,7 @@ const CreatePoll = ({navigation}: CreatePollProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const [question, setQuestion] = useState('');
   const [options, setOptions] = useState(['', '']);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      optionRow: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-      optionInput: {flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolveCreatePollStyles);
 
   const addOption = () => {
     if (options.length < 4) setOptions([...options, '']);

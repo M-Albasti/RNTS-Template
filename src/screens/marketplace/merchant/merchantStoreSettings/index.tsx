@@ -16,6 +16,7 @@ import {toggleMerchantStoreOpen, updateMerchantStore} from '@redux/slices/market
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantStoreSettingsStyles} from './styles/resolveMerchantStoreSettingsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MerchantStoreSettings'>};
@@ -27,10 +28,7 @@ const MerchantStoreSettings = ({navigation}: Props): React.JSX.Element => {
   const [name, setName] = useState(merchantStore.name);
   const [description, setDescription] = useState(merchantStore.description);
 
-  const styles = useThemedStyles(tokens => ({
-    row: {...tokens.layout.presets.rowBetween, alignItems: tokens.layout.alignItems.center},
-    settingsCard: {gap: tokens.spacing.md, marginBottom: tokens.spacing.md},
-  }));
+  const styles = useThemedStyles(resolveMerchantStoreSettingsStyles);
 
   const save = () => {
     if (!name.trim()) {

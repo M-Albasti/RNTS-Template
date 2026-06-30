@@ -18,6 +18,7 @@ import {AudioState, useAudioRecorder} from '@hooks/useAudioRecorder';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveRecordAudioTemplateStyles} from './styles/resolveRecordAudioTemplateStyles';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -50,28 +51,7 @@ const RecordAudioTemplate = ({
     uploadAudio,
   } = useAudioRecorder();
 
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      timer: {
-        ...tokens.typography.h2,
-        color: tokens.colors.textPrimary,
-        textAlign: 'center',
-      },
-      hint: {
-        textAlign: 'center',
-      },
-      actions: {
-        gap: tokens.spacing.sm,
-      },
-      statusBadge: {
-        alignSelf: 'center',
-        backgroundColor: tokens.colors.primaryMuted,
-        borderRadius: tokens.radius.full,
-        paddingVertical: tokens.spacing.xs,
-        paddingHorizontal: tokens.spacing.md,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveRecordAudioTemplateStyles);
 
   const isRecording = audioState === AudioState.RECORDING;
   const isRecordingPaused = audioState === AudioState.PAUSED;

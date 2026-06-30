@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {claimDailyReward} from '@redux/slices/gameSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGameAchievementsStyles} from './styles/resolveGameAchievementsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {GameAchievement} from '@Types/gameTypes';
 
@@ -28,13 +29,7 @@ const GameAchievements = ({navigation}: GameAchievementsProps): React.JSX.Elemen
   const lastDaily = useAppSelector(state => state.game.lastDailyClaim);
   const dispatch = useAppDispatch();
   const today = new Date().toISOString().slice(0, 10);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      row: {...tokens.layout.presets.rowBetween},
-      locked: {opacity: 0.5},
-    }),
-  );
+  const styles = useThemedStyles(resolveGameAchievementsStyles);
 
   const renderItem = ({item}: {item: GameAchievement}) => (
     <Card style={!item.unlocked ? styles.locked : undefined}>
