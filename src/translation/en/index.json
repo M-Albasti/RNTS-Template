@@ -968,6 +968,8 @@
       "readPages": "You read its pages at school",
       "railRide": "Runs on tracks with carriages",
       "grassColor": "The color of fresh grass"
+    }
+  },
   "services": {
     "title": "Services",
     "hubTitle": "Service distributor",
@@ -1035,6 +1037,8 @@
         "title": "Profile",
         "subtitle": "Account & activity"
       }
+    }
+  },
   "islamic": {
     "title": "Islamic",
     "hubTitle": "Your spiritual companion",

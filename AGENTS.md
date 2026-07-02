@@ -12,8 +12,7 @@ macOS + Xcode). The runnable development surface in this environment is the **Me
   with `ERESOLVE`. There is no committed lockfile.
 - `package.json` scripts reference `bun`/`bunx` (e.g. `start:development`), but `bun` is not required
   for the dev loop — `npm`/`npx` work fine.
-- No `.env` file is needed: the `@env` alias (react-native-dotenv) is only referenced in
-  `babel.config.js` and is not imported anywhere under `src/`.
+- Copy env before first run: `cp .env.example .env` (required — `src/config/apiConfig.tsx` imports `@env`; babel rejects missing vars).
 
 ### Run (dev server)
 - `npm start` launches Metro on `http://localhost:8081`.
@@ -30,5 +29,4 @@ macOS + Xcode). The runnable development surface in this environment is the **Me
 - `npm test` (Jest) fails on the single committed `__tests__/App.test.tsx`: it renders the full
   `<App />`, and the `@react-native/jest-preset` `transformIgnorePatterns` does not transform the
   ESM-only deps it pulls in (`@sentry/react-native`, `react-redux`, etc.). This is a repo config gap.
-- There is no `typecheck` script. `npx tsc --noEmit` runs but reports pre-existing source-level type
-  errors in `src/`.
+- There is a `typecheck` script (`npm run typecheck`). It should pass on `develop` after merge fixes.
