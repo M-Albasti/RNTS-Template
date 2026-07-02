@@ -116,6 +116,7 @@
     "camera": "Camera",
     "delivery": "Delivery",
     "marketplace": "Marketplace",
+    "islamic": "Islamic",
     "designSystem": "Design system",
     "settings": "Settings"
   },
@@ -550,6 +551,10 @@
       "marketplace": {
         "title": "Marketplace",
         "subtitle": "Buy, sell & checkout"
+      },
+      "islamic": {
+        "title": "Islamic",
+        "subtitle": "Quran, adhkar & hadith"
       }
     },
     "workflow": {
@@ -871,5 +876,162 @@
   "tabs": {
     "home": "Home",
     "profile": "Profile"
+  },
+  "islamic": {
+    "title": "Islamic",
+    "hubTitle": "Your spiritual companion",
+    "hubSubtitle": "Quran, adhkar, authentic hadith, and prayer times — powered by trusted public APIs.",
+    "errors": {
+      "loadFailed": "Could not load content. Check your connection and try again."
+    },
+    "common": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "modules": {
+      "quran": {
+        "title": "Holy Quran",
+        "subtitle": "Ayat-style mushaf with tafsir & reciters"
+      },
+      "adhkar": {
+        "title": "Adhkar",
+        "subtitle": "Hisn al-Muslim supplications"
+      },
+      "hadith": {
+        "title": "Hadith",
+        "subtitle": "Sahih & graded collections"
+      },
+      "prayer": {
+        "title": "Prayer times",
+        "subtitle": "Daily salah schedule"
+      },
+      "settings": {
+        "title": "Reminders",
+        "subtitle": "Hourly Islamic notifications"
+      }
+    },
+    "quran": {
+      "title": "Quran",
+      "hubTitle": "Mushaf & recitation",
+      "hubSubtitle": "Ayat-style reading with tafsir, reciters, and index",
+      "continueReading": "Continue reading",
+      "continueReadingRef": "Surah {{surah}} · Ayah {{ayah}}",
+      "index": "Index (Fahras)",
+      "indexSubtitle": "Browse by surah or juz",
+      "indexTabs": {
+        "surah": "Surah",
+        "juz": "Juz"
+      },
+      "juzTitle": "Juz {{number}}",
+      "juzAyahCount": "{{count}} ayahs",
+      "allSurahs": "All surahs",
+      "allSurahsSubtitle": "Complete list of 114 surahs",
+      "searchModesSubtitle": "Surah, ayah, or text search",
+      "showTafsir": "Tafsir",
+      "showTranslation": "Translation",
+      "tafsirLabel": "Tafsir",
+      "search": "Search Quran",
+      "searchPlaceholder": "Search by keyword or surah name...",
+      "searchHint": "Type at least 2 characters to search translations.",
+      "noResults": "No verses matched your search.",
+      "ayahs": "ayahs"
+    },
+    "search": {
+      "title": "Islamic search",
+      "hubSubtitle": "Search Quran, adhkar, and hadith in one place",
+      "scopes": {
+        "all": "All",
+        "quran": "Quran",
+        "adhkar": "Adhkar",
+        "hadith": "Hadith"
+      },
+      "quranModes": {
+        "surah": "Surah",
+        "ayah": "Ayah",
+        "text": "Text"
+      },
+      "kinds": {
+        "quran": "Quran",
+        "adhkar": "Adhkar",
+        "hadith": "Hadith"
+      },
+      "surahPlaceholder": "Search surah name or number...",
+      "ayahPlaceholder": "Enter reference e.g. 2:255",
+      "textPlaceholder": "Search verse text...",
+      "surahHint": "Type a surah name or number.",
+      "ayahHint": "Enter surah:ayah like 2:255 or 2 255.",
+      "textHint": "Type at least 2 characters to search verse text.",
+      "noResults": "No results matched your search.",
+      "openAyah": "Open this ayah in the reader",
+      "surahAyahs": "{{count}} ayahs",
+      "adhkarCategory": "Adhkar category"
+    },
+    "adhkar": {
+      "title": "Adhkar",
+      "featured": "Featured categories",
+      "allCategories": "All categories",
+      "openCategory": "Tap to open",
+      "source": "Source: Hisn al-Muslim (hisnmuslim.com)",
+      "repeat": "Repeat {{count}}x",
+      "morningEvening": "Morning & evening",
+      "morningEveningSubtitle": "أذكار الصباح والمساء",
+      "sleep": "Before sleep",
+      "sleepSubtitle": "أذكار النوم",
+      "afterPrayer": "After prayer",
+      "afterPrayerSubtitle": "أذكار بعد الصلاة",
+      "travel": "Travel",
+      "travelSubtitle": "أدعية السفر"
+    },
+    "hadith": {
+      "title": "Hadith",
+      "subtitle": "Browse authentic collections with scholar grades",
+      "hubTitle": "Hadith library",
+      "sahih": "Sahih hadith",
+      "sahihSubtitle": "Bukhari, Muslim & Nawawi",
+      "weak": "Weak & graded",
+      "weakSubtitle": "Sunan with Da'eef grades",
+      "allCollections": "All collections",
+      "allCollectionsSubtitle": "Every available edition",
+      "search": "Search hadith",
+      "searchSubtitle": "Full-text search",
+      "searchPlaceholder": "Search hadith text...",
+      "searchHint": "Type at least 2 characters to search.",
+      "noResults": "No hadith matched your search.",
+      "hadithCount": "{{count}} hadith",
+      "grades": "Grades",
+      "filters": {
+        "all": "All",
+        "sahih": "Sahih",
+        "weak": "Weak"
+      }
+    },
+    "prayer": {
+      "title": "Prayer times",
+      "fajr": "Fajr",
+      "sunrise": "Sunrise",
+      "dhuhr": "Dhuhr",
+      "asr": "Asr",
+      "maghrib": "Maghrib",
+      "isha": "Isha",
+      "source": "Source: Aladhan.com · Umm al-Qura method"
+    },
+    "settings": {
+      "title": "Islamic reminders",
+      "notifications": "Enable reminders",
+      "notificationsDescription": "Receive hourly Islamic reminders on this device.",
+      "hourly": "Hourly schedule",
+      "hourlyDescription": "Send a reminder every hour with rotating content.",
+      "includeAdhkar": "Include adhkar",
+      "includeAdhkarDescription": "Morning/evening dhikr from Hisn al-Muslim.",
+      "includeQuran": "Include Quran",
+      "includeQuranDescription": "Random ayah with translation.",
+      "includeHadith": "Include hadith",
+      "includeHadithDescription": "Random sahih hadith snippets.",
+      "previewNotification": "Preview notification",
+      "fcmTitle": "Firebase push token",
+      "fcmDescription": "Copy this device token into Firebase Console → Cloud Messaging to send test pushes after you add google-services.json / GoogleService-Info.plist.",
+      "fcmUnavailable": "Enable reminders and grant notification permission to generate a token.",
+      "copyFcmToken": "Copy FCM token"
+    }
   }
 }
