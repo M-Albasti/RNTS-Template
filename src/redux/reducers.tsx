@@ -14,6 +14,7 @@ import galleryReducer from '@redux/slices/gallerySlice';
 import gameReducer from '@redux/slices/gameSlice';
 import deliveryReducer from '@redux/slices/deliverySlice';
 import marketplaceReducer from '@redux/slices/marketplaceSlice';
+import islamicReducer from '@redux/slices/islamicSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   game: gameReducer,
   delivery: deliveryReducer,
   marketplace: marketplaceReducer,
+  islamic: islamicReducer,
 });
 
 export default rootReducer;

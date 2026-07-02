@@ -6,6 +6,9 @@
     "crashlytics_debug_enabled": true,
     "crashlytics_disable_auto_disabler": true,
     "crashlytics_is_error_generation_on_js_crash_enabled": true,
-    "crashlytics_javascript_exception_handler_chaining_enabled": false
+    "crashlytics_javascript_exception_handler_chaining_enabled": false,
+    "messaging_android_notification_channel_id": "fcm-default",
+    "messaging_android_notification_color": "@color/notification_color",
+    "messaging_ios_auto_register_for_remote_messages": true
   }
 }

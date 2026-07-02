@@ -1,4 +1,4 @@
-# Firebase Setup Guide (Analytics, Crashlytics, Remote Config)
+# Firebase Setup Guide (Analytics, Crashlytics, Remote Config, Cloud Messaging)
 
 This app uses **React Native Firebase** (`@react-native-firebase/*`).
 
@@ -9,8 +9,14 @@ Package | Purpose
 `@react-native-firebase/analytics` | Event & screen tracking
 `@react-native-firebase/crashlytics` | Crash reports
 `@react-native-firebase/remote-config` | Feature flags & remote values
+`@react-native-firebase/messaging` | FCM push notifications
+`@notifee/react-native` | Local + foreground notification display
 
-JS entry point: `src/config/firebaseInit.tsx` (called from `App.tsx` on startup).
+JS entry points:
+
+- `src/config/firebaseInit.tsx` — startup init (Crashlytics, Remote Config, Messaging)
+- `index.js` — FCM background handler (`setBackgroundMessageHandler`)
+- `src/components/organisms/firebase/FirebaseMessagingHost.tsx` — foreground FCM listener
 
 ---
 
@@ -147,10 +153,11 @@ Do these once per project:
 4. **Analytics** → confirm GA4 property is linked (usually automatic)
 5. **Crashlytics** → click **Enable Crashlytics** for both apps
 6. **Remote Config** → add parameters from Step 5 below → **Publish changes**
-7. **Authentication** → enable sign-in providers you use (Email, Google, Phone, etc.)
-8. **Android SHA-1 / SHA-256** → Project settings → Android app → add fingerprints (required for Google Sign-In)
-9. Run `cd ios && pod install` after Firebase package updates
-10. Rebuild and verify with **Analytics DebugView** and a test Crashlytics crash (release build recommended)
+7. **Cloud Messaging** → upload iOS APNs key → send test push with device token from app
+8. **Authentication** → enable sign-in providers you use (Email, Google, Phone, etc.)
+9. **Android SHA-1 / SHA-256** → Project settings → Android app → add fingerprints (required for Google Sign-In)
+10. Run `cd ios && pod install` after Firebase package updates
+11. Rebuild and verify with **Analytics DebugView**, a test Crashlytics crash, and an FCM test message
 
 ---
 
@@ -187,7 +194,70 @@ To test a change: publish in console → restart app (or call `refreshRemoteConf
 
 ---
 
-## Step 6 — Enable Google Sign-In / Auth (already in project)
+## Step 6 — Enable Cloud Messaging (FCM)
+
+Push notifications use **Firebase Cloud Messaging** plus **Notifee** to display alerts when the app is in the foreground.
+
+### In Firebase Console
+
+1. Open your project → **Build** → **Cloud Messaging**
+2. If prompted, enable the **Firebase Cloud Messaging API** (Google Cloud)
+3. Ensure both **Android** and **iOS** apps are registered (Step 2)
+4. **Upload APNs key (iOS, required for real devices):**
+   - Apple Developer → **Keys** → create a key with **Apple Push Notifications service (APNs)**
+   - Firebase Console → Project settings → **Cloud Messaging** → iOS app → upload the `.p8` key (Key ID + Team ID)
+5. Send a **test message** from Cloud Messaging → **Send test message** using the device token shown in the app
+
+### Google service files (you provide these)
+
+| Platform | File | Path |
+|----------|------|------|
+| Android | `google-services.json` | `android/app/google-services.json` |
+| iOS | `GoogleService-Info.plist` | `ios/RNTS-Template/GoogleService-Info.plist` |
+
+Download fresh copies from Firebase Console whenever you create a new Firebase project or change the app bundle ID / package name. These files are **not committed** — add them locally after cloning.
+
+### Native setup already in this template
+
+| Platform | What is configured |
+|----------|-------------------|
+| Android | `POST_NOTIFICATIONS` permission, default FCM icon/color/channel in `AndroidManifest.xml` |
+| Android | `firebase.json` → `messaging_android_notification_channel_id` = `fcm-default` |
+| iOS | `aps-environment` in `RNTS-Template.entitlements` |
+| iOS | `remote-notification` in `Info.plist` → `UIBackgroundModes` |
+| JS | Background handler in `index.js`, foreground handler in `FirebaseMessagingHost` |
+
+### After adding or replacing service files
+
+```bash
+npm install --legacy-peer-deps
+cd ios && pod install && cd ..
+npm run android   # or npm run ios
+```
+
+Rebuild native apps whenever you change Firebase packages, `firebase.json`, or service files.
+
+### In the app
+
+1. Open **Islamic → Reminders**
+2. Turn **Enable reminders** **On** → grants notification permission and registers FCM
+3. Copy the **Firebase push token** and paste it into Firebase Console test message
+4. Foreground pushes are displayed via Notifee; background notification payloads are handled by the OS
+
+Hourly **local** Islamic reminders (adhkar / ayah / hadith) still use Notifee scheduled triggers and work without FCM. FCM is for **server-sent** pushes from your Firebase project.
+
+### iOS Xcode capabilities (verify once)
+
+In Xcode → **RNTS-Template** target → **Signing & Capabilities**:
+
+- **Push Notifications** (enabled)
+- **Background Modes** → **Remote notifications** (enabled)
+
+The entitlements file already includes `aps-environment`.
+
+---
+
+## Step 7 — Enable Google Sign-In / Auth (already in project)
 
 If not done yet:
 
@@ -206,6 +276,8 @@ If not done yet:
 - [ ] Analytics DebugView shows events
 - [ ] Crashlytics enabled in console + test crash received
 - [ ] Remote Config parameters published
+- [ ] Cloud Messaging enabled + iOS APNs key uploaded
+- [ ] FCM test message received (token from Islamic → Reminders)
 - [ ] Camera permission strings in `Info.plist` (already present)
 - [ ] `VisionCamera_enableCodeScanner=true` in `android/gradle.properties` (already set)
 
@@ -218,6 +290,9 @@ If not done yet:
 | Analytics empty | Enable DebugView; wait 24h for standard reports |
 | Crashlytics empty | Use release build; reopen app after crash |
 | Remote Config not updating | Publish in console; restart app; check fetch interval |
+| FCM token empty | Enable reminders in app; grant notification permission; rebuild after adding service files |
+| iOS push not received | Upload APNs `.p8` key in Firebase; use physical device; check Push capability in Xcode |
+| Android push not received | Confirm `google-services.json`; Android 13+ notification permission granted |
 | QR scan not working on Android | Rebuild after `VisionCamera_enableCodeScanner=true` |
 | `google-services.json` missing | Download from Firebase Console → Project settings |
 | Gradle Crashlytics error | Ensure Crashlytics classpath + plugin in `android/build.gradle` and `android/app/build.gradle` |
@@ -231,7 +306,17 @@ App.tsx
   └─ initFirebaseServices()
        ├─ initCrashlytics()
        ├─ initRemoteConfig()
+       ├─ initFirebaseMessaging()
        └─ trackAppOpen()
+
+index.js
+  └─ messaging().setBackgroundMessageHandler()
+
+FirebaseMessagingHost
+  └─ onMessage → Notifee display (foreground FCM)
+
+Islamic → Reminders
+  └─ registerFirebasePushNotifications() + hourly Notifee schedule
 
 NavigationContainer
   └─ onStateChange → logScreenView (all screens)
