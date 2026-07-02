@@ -49,6 +49,7 @@ export type RootStackParamList = {
   DrawerRoot: NavigatorScreenParams<DrawerParamList> | undefined;
   TabRoot: undefined;
   Home: undefined;
+  ServicesHub: undefined;
   Profile: undefined;
   AudioStack: undefined;
   VideoStack: undefined;
