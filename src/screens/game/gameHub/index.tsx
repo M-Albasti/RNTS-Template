@@ -15,6 +15,7 @@ import TextView from '@atoms/TextView';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
+import {resolveGameHubStyles} from './styles/resolveGameHubStyles';
 
 interface GameHubProps {
   navigation: AppStackNavigationProp<'GameHub'>;
@@ -61,7 +62,13 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
               subtitle={item.subtitle}
               iconType={item.type}
               iconName={item.icon}
-              onPress={() => navigation.navigate(item.route)}
+              onPress={() => {
+                if (item.route === 'WordPuzzleStack') {
+                  drawerNav?.navigate('WordPuzzleStack');
+                  return;
+                }
+                navigation.navigate(item.route);
+              }}
             />
           </AnimatedEntrance>
         ))}

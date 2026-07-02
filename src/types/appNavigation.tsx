@@ -64,8 +64,7 @@ export type RootStackParamList = {
   CameraStack: undefined;
   DeliveryStack: undefined;
   MarketplaceStack: undefined;
-  DeliveryStack: undefined;
-  MarketplaceStack: undefined;
+  WordPuzzleStack: undefined;
   IslamicStack: undefined;
   IslamicHub: undefined;
   QuranHub: undefined;

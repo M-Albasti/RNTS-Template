@@ -144,6 +144,7 @@ const MODULES: HubModule[] = [
     route: 'IslamicStack',
     iconType: 'Ionicons',
     iconName: 'moon-outline',
+    section: 'media',
   },
   {
     titleKey: 'home.modules.wordPuzzle.title',
@@ -151,6 +152,7 @@ const MODULES: HubModule[] = [
     route: 'WordPuzzleStack',
     iconType: 'Ionicons',
     iconName: 'grid-outline',
+    section: 'media',
   },
 ];
 
