@@ -492,6 +492,15 @@
   "home": {
     "title": "الرئيسية",
     "greeting": "{{name}}",
+    "greetingMorning": "صباح الخير، {{name}}",
+    "greetingAfternoon": "مساء الخير، {{name}}",
+    "greetingEvening": "مساء الخير، {{name}}",
+    "appModulesSubtitle": "منظم كالتطبيقات الشهيرة — تواصل، تجارة، ووسائط",
+    "sections": {
+      "social": "التواصل والإنتاجية",
+      "commerce": "التجارة والمحفظة",
+      "media": "الوسائط والترفيه"
+    },
     "purpose": "قالب RNTS هو مركز React Native شامل: المصادقة، التغذية الاجتماعية، المهام، الدردشة، المحفظة، الألعاب والوسائط — مع Axios وReact Query وRedux.",
     "mockApiActive": "واجهة API تجريبية نشطة",
     "loadingDashboard": "جاري تحميل لوحة المعلومات…",

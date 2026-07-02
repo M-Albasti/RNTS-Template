@@ -492,6 +492,15 @@
   "home": {
     "title": "Home",
     "greeting": "{{name}}",
+    "greetingMorning": "Good morning, {{name}}",
+    "greetingAfternoon": "Good afternoon, {{name}}",
+    "greetingEvening": "Good evening, {{name}}",
+    "appModulesSubtitle": "Organized like popular super-apps — social, commerce, and media",
+    "sections": {
+      "social": "Social & productivity",
+      "commerce": "Commerce & wallet",
+      "media": "Media & entertainment"
+    },
     "purpose": "RNTS Template is an all-in-one React Native hub: authentication, social feed, tasks, chat, wallet, games, and media — wired with Axios, React Query, and Redux.",
     "mockApiActive": "Mock API active",
     "loadingDashboard": "Loading dashboard…",

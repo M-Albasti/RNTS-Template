@@ -11,6 +11,7 @@ import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
+import SectionHeader from '@molecules/SectionHeader';
 
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 
@@ -88,7 +89,7 @@ const Profile = ({navigation}: ProfileProps): React.JSX.Element => {
       </Card>
 
       <Spacer size="lg" />
-      <Heading text={t('profile.yourActivity')} level="h3" />
+      <SectionHeader title={t('profile.yourActivity')} />
       <Spacer size="sm" />
       <View style={styles.statsRow}>
         <Pressable style={styles.stat} onPress={() => openModule('PostStack')}>
@@ -120,7 +121,7 @@ const Profile = ({navigation}: ProfileProps): React.JSX.Element => {
       <Spacer size="lg" />
       <Divider />
       <Spacer size="lg" />
-      <Heading text={t('profile.quickModules')} level="h3" />
+      <SectionHeader title={t('profile.quickModules')} />
       <Spacer size="md" />
       <View style={styles.grid}>
         <FeatureHubCard
