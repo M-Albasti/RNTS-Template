@@ -116,6 +116,8 @@
     "camera": "Camera",
     "delivery": "Delivery",
     "marketplace": "Marketplace",
+    "wordPuzzle": "Word puzzle",
+    "islamic": "Islamic",
     "designSystem": "Design system",
     "settings": "Settings"
   },
@@ -491,6 +493,15 @@
   "home": {
     "title": "Home",
     "greeting": "{{name}}",
+    "greetingMorning": "Good morning, {{name}}",
+    "greetingAfternoon": "Good afternoon, {{name}}",
+    "greetingEvening": "Good evening, {{name}}",
+    "appModulesSubtitle": "Organized like popular super-apps — social, commerce, and media",
+    "sections": {
+      "social": "Social & productivity",
+      "commerce": "Commerce & wallet",
+      "media": "Media & entertainment"
+    },
     "purpose": "RNTS Template is an all-in-one React Native hub: authentication, social feed, tasks, chat, wallet, games, and media — wired with Axios, React Query, and Redux.",
     "mockApiActive": "Mock API active",
     "loadingDashboard": "Loading dashboard…",
@@ -550,6 +561,14 @@
       "marketplace": {
         "title": "Marketplace",
         "subtitle": "Buy, sell & checkout"
+      },
+      "wordPuzzle": {
+        "title": "Scattered letters",
+        "subtitle": "Hex word riddles AR/EN"
+      },
+      "islamic": {
+        "title": "Islamic",
+        "subtitle": "Quran, adhkar & hadith"
       }
     },
     "workflow": {
@@ -791,6 +810,8 @@
     "historySubtitle": "Your reward log",
     "achievements": "Achievements",
     "achievementsSubtitle": "Badges & daily bonus",
+    "wordPuzzle": "Scattered letters",
+    "wordPuzzleSubtitle": "Connect hex letters to solve riddles",
     "dailyClaimed": "Daily reward claimed",
     "claimDaily": "Claim daily +15 coins",
     "unlocked": "Unlocked",
@@ -870,6 +891,305 @@
   },
   "tabs": {
     "home": "Home",
+    "services": "Services",
     "profile": "Profile"
+  },
+  "wordPuzzle": {
+    "title": "Scattered letters",
+    "hubTitle": "Word riddle adventure",
+    "hubSubtitle": "Drag across hex letters to spell the answer — Arabic and English worlds stay separate.",
+    "gems": "{{count}} gems",
+    "arabicWorld": "Arabic lands",
+    "arabicWorldSubtitle": "Quran & prophets riddles — Arabic only",
+    "englishWorld": "English lands",
+    "englishWorldSubtitle": "English riddles only",
+    "libraryHint": "Pick a book. Each land has 50 locations with mini riddles.",
+    "libraryHintApi": "Books and riddles are loaded live from trusted public APIs.",
+    "loadingBooks": "Loading books from API…",
+    "loadingStage": "Loading location puzzles…",
+    "landTitle": "Land {{number}}",
+    "retry": "Retry",
+    "apiSourceArabic": "Arabic: IslamicQuizAPI (islamicquiz.i8x.net) — Dorar.net questions",
+    "apiSourceEnglish": "English: Riddles API (riddles-api-eight.vercel.app)",
+    "errors": {
+      "loadFailed": "Could not load puzzles. Check your connection and try again."
+    },
+    "bookmark": "Book",
+    "stageCount": "{{count}} locations",
+    "separateLanguagesNote": "Arabic and English puzzles never mix on the same screen.",
+    "mapHint": "Complete locations in order to unlock the path.",
+    "levelLabel": "Location {{stage}} · {{book}} · Riddle {{puzzle}}/{{total}}",
+    "correct": "Correct!",
+    "tryAgain": "Not quite — try another path.",
+    "hint": "Hint (-2 gems)",
+    "hintUsed": "Solution path highlighted.",
+    "clear": "Clear",
+    "next": "Next riddle",
+    "dragHint": "Drag from the first letter to the last to form the word.",
+    "bookNotFound": "Book not found.",
+    "stageNotFound": "Location not found.",
+    "stageTitle": "Location",
+    "books": {
+      "arProphets": {
+        "title": "Book of Prophets",
+        "land": "First land — Prophets"
+      },
+      "arQuran": {
+        "title": "Book of Quran",
+        "land": "Second land — Quran signs"
+      },
+      "enDiscovery": {
+        "title": "Book of Discovery",
+        "land": "First land — Discovery"
+      },
+      "enNature": {
+        "title": "Book of Nature",
+        "land": "Second land — Nature"
+      }
+    },
+    "clues": {
+      "ismail": "A prophet linked to a sacrifice",
+      "ayatKursiSurah": "Which surah contains Ayat al-Kursi?",
+      "fatihahAyahCount": "How many ayahs are in Surah Al-Fatiha?",
+      "staffSea": "Which prophet parted the sea with his staff?",
+      "yunus": "A prophet who was swallowed by a great fish",
+      "shortSurahTauhid": "Which short surah speaks of pure monotheism?",
+      "yusuf": "A prophet known for the beautiful coat",
+      "kabaBuilder": "Who raised the foundations of the Kaaba with his son?",
+      "lastSurah": "Which surah asks refuge from the whispering of devils?",
+      "nuh": "A prophet who built a great ship",
+      "yellowFruit": "Monkeys love this yellow fruit",
+      "redPlanet": "The fourth planet from the Sun",
+      "jungleKing": "The king of the jungle",
+      "skyWater": "Falls from clouds",
+      "breakfastLoaf": "Baked slice for breakfast",
+      "nightLight": "Twinkles in the night sky",
+      "swimsInSea": "Lives underwater and swims",
+      "readPages": "You read its pages at school",
+      "railRide": "Runs on tracks with carriages",
+      "grassColor": "The color of fresh grass"
+  "services": {
+    "title": "Services",
+    "hubTitle": "Service distributor",
+    "subtitle": "Browse every module in one place — like الموزع",
+    "searchPlaceholder": "Search services...",
+    "noResults": "No services matched your search.",
+    "categories": {
+      "all": "All",
+      "social": "Social",
+      "commerce": "Commerce",
+      "media": "Media",
+      "tools": "Tools",
+      "account": "Account"
+    },
+    "items": {
+      "feed": {
+        "title": "Social feed",
+        "subtitle": "Posts, polls & community"
+      },
+      "chat": {
+        "title": "Chat",
+        "subtitle": "Messages & threads"
+      },
+      "todo": {
+        "title": "Todos",
+        "subtitle": "Tasks & productivity"
+      },
+      "delivery": {
+        "title": "Delivery",
+        "subtitle": "Courier & live tracking"
+      },
+      "marketplace": {
+        "title": "Marketplace",
+        "subtitle": "Buy, sell & merchant tools"
+      },
+      "wallet": {
+        "title": "Wallet",
+        "subtitle": "Balance & transfers"
+      },
+      "video": {
+        "title": "Video",
+        "subtitle": "Record & watch videos"
+      },
+      "audio": {
+        "title": "Audio",
+        "subtitle": "Record & play audio"
+      },
+      "gallery": {
+        "title": "Gallery",
+        "subtitle": "Photos & media library"
+      },
+      "game": {
+        "title": "Lucky game",
+        "subtitle": "Spin & earn coins"
+      },
+      "camera": {
+        "title": "Camera studio",
+        "subtitle": "Snap, QR & barcode"
+      },
+      "designSystem": {
+        "title": "Design system",
+        "subtitle": "UI tokens & components"
+      },
+      "profile": {
+        "title": "Profile",
+        "subtitle": "Account & activity"
+      }
+  "islamic": {
+    "title": "Islamic",
+    "hubTitle": "Your spiritual companion",
+    "hubSubtitle": "Quran, adhkar, authentic hadith, and prayer times — powered by trusted public APIs.",
+    "errors": {
+      "loadFailed": "Could not load content. Check your connection and try again."
+    },
+    "common": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "modules": {
+      "quran": {
+        "title": "Holy Quran",
+        "subtitle": "Ayat-style mushaf with tafsir & reciters"
+      },
+      "adhkar": {
+        "title": "Adhkar",
+        "subtitle": "Hisn al-Muslim supplications"
+      },
+      "hadith": {
+        "title": "Hadith",
+        "subtitle": "Sahih & graded collections"
+      },
+      "prayer": {
+        "title": "Prayer times",
+        "subtitle": "Daily salah schedule"
+      },
+      "settings": {
+        "title": "Reminders",
+        "subtitle": "Hourly Islamic notifications"
+      }
+    },
+    "quran": {
+      "title": "Quran",
+      "hubTitle": "Mushaf & recitation",
+      "hubSubtitle": "Ayat-style reading with tafsir, reciters, and index",
+      "continueReading": "Continue reading",
+      "continueReadingRef": "Surah {{surah}} · Ayah {{ayah}}",
+      "index": "Index (Fahras)",
+      "indexSubtitle": "Browse by surah or juz",
+      "indexTabs": {
+        "surah": "Surah",
+        "juz": "Juz"
+      },
+      "juzTitle": "Juz {{number}}",
+      "juzAyahCount": "{{count}} ayahs",
+      "allSurahs": "All surahs",
+      "allSurahsSubtitle": "Complete list of 114 surahs",
+      "searchModesSubtitle": "Surah, ayah, or text search",
+      "showTafsir": "Tafsir",
+      "showTranslation": "Translation",
+      "tafsirLabel": "Tafsir",
+      "search": "Search Quran",
+      "searchPlaceholder": "Search by keyword or surah name...",
+      "searchHint": "Type at least 2 characters to search translations.",
+      "noResults": "No verses matched your search.",
+      "ayahs": "ayahs"
+    },
+    "search": {
+      "title": "Islamic search",
+      "hubSubtitle": "Search Quran, adhkar, and hadith in one place",
+      "scopes": {
+        "all": "All",
+        "quran": "Quran",
+        "adhkar": "Adhkar",
+        "hadith": "Hadith"
+      },
+      "quranModes": {
+        "surah": "Surah",
+        "ayah": "Ayah",
+        "text": "Text"
+      },
+      "kinds": {
+        "quran": "Quran",
+        "adhkar": "Adhkar",
+        "hadith": "Hadith"
+      },
+      "surahPlaceholder": "Search surah name or number...",
+      "ayahPlaceholder": "Enter reference e.g. 2:255",
+      "textPlaceholder": "Search verse text...",
+      "surahHint": "Type a surah name or number.",
+      "ayahHint": "Enter surah:ayah like 2:255 or 2 255.",
+      "textHint": "Type at least 2 characters to search verse text.",
+      "noResults": "No results matched your search.",
+      "openAyah": "Open this ayah in the reader",
+      "surahAyahs": "{{count}} ayahs",
+      "adhkarCategory": "Adhkar category"
+    },
+    "adhkar": {
+      "title": "Adhkar",
+      "featured": "Featured categories",
+      "allCategories": "All categories",
+      "openCategory": "Tap to open",
+      "source": "Source: Hisn al-Muslim (hisnmuslim.com)",
+      "repeat": "Repeat {{count}}x",
+      "morningEvening": "Morning & evening",
+      "morningEveningSubtitle": "أذكار الصباح والمساء",
+      "sleep": "Before sleep",
+      "sleepSubtitle": "أذكار النوم",
+      "afterPrayer": "After prayer",
+      "afterPrayerSubtitle": "أذكار بعد الصلاة",
+      "travel": "Travel",
+      "travelSubtitle": "أدعية السفر"
+    },
+    "hadith": {
+      "title": "Hadith",
+      "subtitle": "Browse authentic collections with scholar grades",
+      "hubTitle": "Hadith library",
+      "sahih": "Sahih hadith",
+      "sahihSubtitle": "Bukhari, Muslim & Nawawi",
+      "weak": "Weak & graded",
+      "weakSubtitle": "Sunan with Da'eef grades",
+      "allCollections": "All collections",
+      "allCollectionsSubtitle": "Every available edition",
+      "search": "Search hadith",
+      "searchSubtitle": "Full-text search",
+      "searchPlaceholder": "Search hadith text...",
+      "searchHint": "Type at least 2 characters to search.",
+      "noResults": "No hadith matched your search.",
+      "hadithCount": "{{count}} hadith",
+      "grades": "Grades",
+      "filters": {
+        "all": "All",
+        "sahih": "Sahih",
+        "weak": "Weak"
+      }
+    },
+    "prayer": {
+      "title": "Prayer times",
+      "fajr": "Fajr",
+      "sunrise": "Sunrise",
+      "dhuhr": "Dhuhr",
+      "asr": "Asr",
+      "maghrib": "Maghrib",
+      "isha": "Isha",
+      "source": "Source: Aladhan.com · Umm al-Qura method"
+    },
+    "settings": {
+      "title": "Islamic reminders",
+      "notifications": "Enable reminders",
+      "notificationsDescription": "Receive hourly Islamic reminders on this device.",
+      "hourly": "Hourly schedule",
+      "hourlyDescription": "Send a reminder every hour with rotating content.",
+      "includeAdhkar": "Include adhkar",
+      "includeAdhkarDescription": "Morning/evening dhikr from Hisn al-Muslim.",
+      "includeQuran": "Include Quran",
+      "includeQuranDescription": "Random ayah with translation.",
+      "includeHadith": "Include hadith",
+      "includeHadithDescription": "Random sahih hadith snippets.",
+      "previewNotification": "Preview notification",
+      "fcmTitle": "Firebase push token",
+      "fcmDescription": "Copy this device token into Firebase Console → Cloud Messaging to send test pushes after you add google-services.json / GoogleService-Info.plist.",
+      "fcmUnavailable": "Enable reminders and grant notification permission to generate a token.",
+      "copyFcmToken": "Copy FCM token"
+    }
   }
 }

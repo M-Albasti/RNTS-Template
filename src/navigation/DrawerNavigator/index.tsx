@@ -26,18 +26,20 @@ import DesignSystemNavigator from '@navigation/DesignSystemNavigator';
 import CameraNavigator from '@navigation/CameraNavigator';
 import DeliveryNavigator from '@navigation/DeliveryNavigator';
 import MarketplaceNavigator from '@navigation/MarketplaceNavigator';
+import WordPuzzleNavigator from '@navigation/WordPuzzleNavigator';
+import IslamicNavigator from '@navigation/IslamicNavigator';
 
 //* types import
-import {RootStackParamList} from '@Types/appNavigation';
+import type {DrawerParamList} from '@Types/appNavigation';
 
 import {useThemeTokens} from '@theme/useThemeTokens';
 
 //* styles import
 import {styles} from './styles';
 
-const Drawer = createDrawerNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<DrawerParamList>();
 
-const DrawerNavigator = (props: any): React.JSX.Element => {
+const DrawerNavigator = (): React.JSX.Element => {
   const {colors} = useThemeTokens();
 
   return (
@@ -73,16 +75,16 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
       drawerContent={props => <DrawerMenuContent {...props} />}>
       <Drawer.Group>
         <Drawer.Screen name="TabRoot" options={{title: 'Home'}}>
-          {props => <TabNavigator {...props} />}
+          {() => <TabNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="Profile">
           {props => <Profile {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="AudioStack" options={{title: 'Audios'}}>
-          {props => <AudioNavigator {...props} />}
+          {() => <AudioNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="VideoStack" options={{title: 'Videos'}}>
-          {props => <VideoNavigator {...props} />}
+          {() => <VideoNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="PostStack" options={{title: 'Social Feed'}}>
           {() => <PostNavigator />}
@@ -115,6 +117,12 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
         </Drawer.Screen>
         <Drawer.Screen name="MarketplaceStack" options={{title: 'Marketplace'}}>
           {() => <MarketplaceNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="WordPuzzleStack" options={{title: 'Word Puzzle'}}>
+          {() => <WordPuzzleNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="IslamicStack" options={{title: 'Islamic'}}>
+          {() => <IslamicNavigator />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

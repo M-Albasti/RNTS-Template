@@ -116,6 +116,8 @@
     "camera": "الكاميرا",
     "delivery": "التوصيل",
     "marketplace": "السوق",
+    "wordPuzzle": "أحرف متناثرة",
+    "islamic": "إسلامي",
     "designSystem": "نظام التصميم",
     "settings": "الإعدادات"
   },
@@ -491,6 +493,15 @@
   "home": {
     "title": "الرئيسية",
     "greeting": "{{name}}",
+    "greetingMorning": "صباح الخير، {{name}}",
+    "greetingAfternoon": "مساء الخير، {{name}}",
+    "greetingEvening": "مساء الخير، {{name}}",
+    "appModulesSubtitle": "منظم كالتطبيقات الشهيرة — تواصل، تجارة، ووسائط",
+    "sections": {
+      "social": "التواصل والإنتاجية",
+      "commerce": "التجارة والمحفظة",
+      "media": "الوسائط والترفيه"
+    },
     "purpose": "قالب RNTS هو مركز React Native شامل: المصادقة، التغذية الاجتماعية، المهام، الدردشة، المحفظة، الألعاب والوسائط — مع Axios وReact Query وRedux.",
     "mockApiActive": "واجهة API تجريبية نشطة",
     "loadingDashboard": "جاري تحميل لوحة المعلومات…",
@@ -550,6 +561,14 @@
       "marketplace": {
         "title": "السوق",
         "subtitle": "شراء، بيع، ودفع"
+      },
+      "wordPuzzle": {
+        "title": "أحرف متناثرة",
+        "subtitle": "ألغاز حروف سداسية عربي/إنجليزي"
+      },
+      "islamic": {
+        "title": "إسلامي",
+        "subtitle": "القرآن والأذكار والأحاديث"
       }
     },
     "workflow": {
@@ -791,6 +810,8 @@
     "historySubtitle": "سجل المكافآت",
     "achievements": "الإنجازات",
     "achievementsSubtitle": "شارات ومكافأة يومية",
+    "wordPuzzle": "أحرف متناثرة",
+    "wordPuzzleSubtitle": "اربط الحروف السداسية لحل اللغز",
     "dailyClaimed": "تم استلام المكافأة اليومية",
     "claimDaily": "استلم +15 عملة يومياً",
     "unlocked": "مفتوح",
@@ -870,6 +891,305 @@
   },
   "tabs": {
     "home": "الرئيسية",
+    "services": "الخدمات",
     "profile": "الملف"
+  },
+  "wordPuzzle": {
+    "title": "أحرف متناثرة",
+    "hubTitle": "مغامرة الألغاز",
+    "hubSubtitle": "اسحب على الحروف السداسية لتكوين الإجابة — عالم عربي وعالم إنجليزي منفصلان.",
+    "gems": "{{count}} جوهرة",
+    "arabicWorld": "العالم العربي",
+    "arabicWorldSubtitle": "ألغاز قرآن وأنبياء — عربي فقط",
+    "englishWorld": "العالم الإنجليزي",
+    "englishWorldSubtitle": "ألغاز إنجليزية فقط",
+    "libraryHint": "اختر كتاباً. كل أرض فيها 50 موقعاً بألغاز صغيرة.",
+    "libraryHintApi": "الكتب والألغاز تُحمّل مباشرة من واجهات برمجة عامة.",
+    "loadingBooks": "جاري تحميل الكتب من API…",
+    "loadingStage": "جاري تحميل ألغاز الموقع…",
+    "landTitle": "الأرض {{number}}",
+    "retry": "إعادة المحاولة",
+    "apiSourceArabic": "العربية: IslamicQuizAPI (islamicquiz.i8x.net) — أسئلة من الدرر السنية",
+    "apiSourceEnglish": "الإنجليزية: Riddles API (riddles-api-eight.vercel.app)",
+    "errors": {
+      "loadFailed": "تعذر تحميل الألغاز. تحقق من الاتصال وحاول مرة أخرى."
+    },
+    "bookmark": "كتاب",
+    "stageCount": "{{count}} موقع",
+    "separateLanguagesNote": "لا تختلط الألغاز العربية مع الإنجليزية في نفس الشاشة.",
+    "mapHint": "أكمل المواقع بالترتيب لفتح المسار.",
+    "levelLabel": "موقع {{stage}} · {{book}} · لغز {{puzzle}}/{{total}}",
+    "correct": "إجابة صحيحة!",
+    "tryAgain": "حاول مساراً آخر.",
+    "hint": "تلميح (-2 جوهرة)",
+    "hintUsed": "تم إظهار مسار الحل.",
+    "clear": "مسح",
+    "next": "اللغز التالي",
+    "dragHint": "اسحب من أول حرف إلى آخر حرف لتكوين الكلمة.",
+    "bookNotFound": "الكتاب غير موجود.",
+    "stageNotFound": "الموقع غير موجود.",
+    "stageTitle": "موقع",
+    "books": {
+      "arProphets": {
+        "title": "كتاب الأنبياء",
+        "land": "الأرض الأولى — الأنبياء"
+      },
+      "arQuran": {
+        "title": "كتاب القرآن",
+        "land": "الأرض الثانية — آيات القرآن"
+      },
+      "enDiscovery": {
+        "title": "كتاب الاكتشاف",
+        "land": "الأرض الأولى — الاكتشاف"
+      },
+      "enNature": {
+        "title": "كتاب الطبيعة",
+        "land": "الأرض الثانية — الطبيعة"
+      }
+    },
+    "clues": {
+      "ismail": "نبي مرتبط بقصة الذبح",
+      "ayatKursiSurah": "في أي سورة توجد آية الكرسي؟",
+      "fatihahAyahCount": "كم عدد آيات سورة الفاتحة؟",
+      "staffSea": "أي نبي شق البحر بعصاه؟",
+      "yunus": "نبي ابتلعه حوت كبير",
+      "shortSurahTauhid": "أي سورة قصيرة تتحدث عن التوحيد الخالص؟",
+      "yusuf": "نبي اشتهر بالقميص الجميل",
+      "kabaBuilder": "من رفع قواعد الكعبة مع ابنه؟",
+      "lastSurah": "أي سورة نتعوذ فيها من وسوسة الشياطين؟",
+      "nuh": "نبي بنى سفينة عظيمة",
+      "yellowFruit": "فاكهة صفراء يحبها القرد",
+      "redPlanet": "الكوكب الرابع من الشمس",
+      "jungleKing": "ملك الغابة",
+      "skyWater": "يسقط من السحب",
+      "breakfastLoaf": "شريحة مخبوزة للفطور",
+      "nightLight": "يلمع في سماء الليل",
+      "swimsInSea": "يعيش في الماء ويسبح",
+      "readPages": "تقرأ صفحاته في المدرسة",
+      "railRide": "يسير على قضبان وعربات",
+      "grassColor": "لون العشب الطازج"
+  "services": {
+    "title": "الخدمات",
+    "hubTitle": "موزع الخدمات",
+    "subtitle": "تصفح كل وحدات التطبيق من مكان واحد — مثل الموزع",
+    "searchPlaceholder": "ابحث في الخدمات...",
+    "noResults": "لا توجد خدمات مطابقة.",
+    "categories": {
+      "all": "الكل",
+      "social": "التواصل",
+      "commerce": "التجارة",
+      "media": "الوسائط",
+      "tools": "الأدوات",
+      "account": "الحساب"
+    },
+    "items": {
+      "feed": {
+        "title": "التغذية الاجتماعية",
+        "subtitle": "منشورات واستطلاعات"
+      },
+      "chat": {
+        "title": "الدردشة",
+        "subtitle": "الرسائل والمحادثات"
+      },
+      "todo": {
+        "title": "المهام",
+        "subtitle": "إنتاجية وتنظيم"
+      },
+      "delivery": {
+        "title": "التوصيل",
+        "subtitle": "سائق وتتبع مباشر"
+      },
+      "marketplace": {
+        "title": "السوق",
+        "subtitle": "بيع وشراء ومتجر"
+      },
+      "wallet": {
+        "title": "المحفظة",
+        "subtitle": "رصيد وتحويلات"
+      },
+      "video": {
+        "title": "الفيديو",
+        "subtitle": "تسجيل ومشاهدة"
+      },
+      "audio": {
+        "title": "الصوت",
+        "subtitle": "تسجيل وتشغيل"
+      },
+      "gallery": {
+        "title": "المعرض",
+        "subtitle": "صور ومكتبة وسائط"
+      },
+      "game": {
+        "title": "لعبة الحظ",
+        "subtitle": "عجلة وعملات"
+      },
+      "camera": {
+        "title": "استوديو الكاميرا",
+        "subtitle": "سيلفي وQR وباركود"
+      },
+      "designSystem": {
+        "title": "نظام التصميم",
+        "subtitle": "مكونات ورموز UI"
+      },
+      "profile": {
+        "title": "الملف الشخصي",
+        "subtitle": "الحساب والنشاط"
+      }
+  "islamic": {
+    "title": "إسلامي",
+    "hubTitle": "رفيقك الروحي",
+    "hubSubtitle": "القرآن والأذكار والأحاديث الصحيحة وأوقات الصلاة — من مصادر موثوقة.",
+    "errors": {
+      "loadFailed": "تعذر تحميل المحتوى. تحقق من الاتصال وحاول مرة أخرى."
+    },
+    "common": {
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "modules": {
+      "quran": {
+        "title": "القرآن الكريم",
+        "subtitle": "مصحف بأسلوب آيات مع التفسير والقراء"
+      },
+      "adhkar": {
+        "title": "الأذكار",
+        "subtitle": "حصن المسلم"
+      },
+      "hadith": {
+        "title": "الأحاديث",
+        "subtitle": "كتب صحيحة ودرجات العلماء"
+      },
+      "prayer": {
+        "title": "أوقات الصلاة",
+        "subtitle": "جدول الصلوات اليومي"
+      },
+      "settings": {
+        "title": "التذكير",
+        "subtitle": "إشعارات إسلامية كل ساعة"
+      }
+    },
+    "quran": {
+      "title": "القرآن",
+      "hubTitle": "المصحف والتلاوة",
+      "hubSubtitle": "قراءة بأسلوب آيات مع التفسير والقراء والفهرس",
+      "continueReading": "متابعة القراءة",
+      "continueReadingRef": "سورة {{surah}} · آية {{ayah}}",
+      "index": "الفهرس",
+      "indexSubtitle": "تصفح بالسورة أو الجزء",
+      "indexTabs": {
+        "surah": "سورة",
+        "juz": "جزء"
+      },
+      "juzTitle": "الجزء {{number}}",
+      "juzAyahCount": "{{count}} آية",
+      "allSurahs": "كل السور",
+      "allSurahsSubtitle": "قائمة السور الـ114",
+      "searchModesSubtitle": "بحث بالسورة أو الآية أو النص",
+      "showTafsir": "التفسير",
+      "showTranslation": "الترجمة",
+      "tafsirLabel": "التفسير",
+      "search": "بحث في القرآن",
+      "searchPlaceholder": "ابحث بالكلمة أو اسم السورة...",
+      "searchHint": "اكتب حرفين على الأقل للبحث في الترجمات.",
+      "noResults": "لم يتم العثور على آيات مطابقة.",
+      "ayahs": "آية"
+    },
+    "search": {
+      "title": "البحث الإسلامي",
+      "hubSubtitle": "ابحث في القرآن والأذكار والأحاديث من مكان واحد",
+      "scopes": {
+        "all": "الكل",
+        "quran": "القرآن",
+        "adhkar": "الأذكار",
+        "hadith": "الأحاديث"
+      },
+      "quranModes": {
+        "surah": "سورة",
+        "ayah": "آية",
+        "text": "نص"
+      },
+      "kinds": {
+        "quran": "قرآن",
+        "adhkar": "أذكار",
+        "hadith": "حديث"
+      },
+      "surahPlaceholder": "ابحث باسم السورة أو رقمها...",
+      "ayahPlaceholder": "أدخل المرجع مثل 2:255",
+      "textPlaceholder": "ابحث في نص الآيات...",
+      "surahHint": "اكتب اسم السورة أو رقمها.",
+      "ayahHint": "أدخل سورة:آية مثل 2:255 أو 2 255.",
+      "textHint": "اكتب حرفين على الأقل للبحث في النص.",
+      "noResults": "لا توجد نتائج مطابقة.",
+      "openAyah": "افتح هذه الآية في القارئ",
+      "surahAyahs": "{{count}} آية",
+      "adhkarCategory": "قسم أذكار"
+    },
+    "adhkar": {
+      "title": "الأذكار",
+      "featured": "أقسام مميزة",
+      "allCategories": "كل الأقسام",
+      "openCategory": "اضغط للفتح",
+      "source": "المصدر: حصن المسلم (hisnmuslim.com)",
+      "repeat": "كرر {{count}} مرة",
+      "morningEvening": "أذكار الصباح والمساء",
+      "morningEveningSubtitle": "Hisn al-Muslim",
+      "sleep": "أذكار النوم",
+      "sleepSubtitle": "قبل النوم",
+      "afterPrayer": "أذكار بعد الصلاة",
+      "afterPrayerSubtitle": "أذكار الصلاة",
+      "travel": "أدعية السفر",
+      "travelSubtitle": "أذكار السفر"
+    },
+    "hadith": {
+      "title": "الأحاديث",
+      "subtitle": "تصفح الكتب الصحيحة مع درجات العلماء",
+      "hubTitle": "مكتبة الأحاديث",
+      "sahih": "الأحاديث الصحيحة",
+      "sahihSubtitle": "البخاري ومسلم والنووي",
+      "weak": "الضعيفة والموضوعة",
+      "weakSubtitle": "السنن مع درجات الضعف",
+      "allCollections": "كل الكتب",
+      "allCollectionsSubtitle": "جميع المجموعات المتاحة",
+      "search": "بحث في الأحاديث",
+      "searchSubtitle": "بحث نصي كامل",
+      "searchPlaceholder": "ابحث في نص الحديث...",
+      "searchHint": "اكتب حرفين على الأقل للبحث.",
+      "noResults": "لم يتم العثور على أحاديث مطابقة.",
+      "hadithCount": "{{count}} حديث",
+      "grades": "الدرجات",
+      "filters": {
+        "all": "الكل",
+        "sahih": "صحيح",
+        "weak": "ضعيف"
+      }
+    },
+    "prayer": {
+      "title": "أوقات الصلاة",
+      "fajr": "الفجر",
+      "sunrise": "الشروق",
+      "dhuhr": "الظهر",
+      "asr": "العصر",
+      "maghrib": "المغرب",
+      "isha": "العشاء",
+      "source": "المصدر: Aladhan.com · طريقة أم القرى"
+    },
+    "settings": {
+      "title": "التذكير الإسلامي",
+      "notifications": "تفعيل التذكير",
+      "notificationsDescription": "استلم تذكيرات إسلامية كل ساعة على هذا الجهاز.",
+      "hourly": "جدول كل ساعة",
+      "hourlyDescription": "إرسال تذكير كل ساعة بمحتوى متنوع.",
+      "includeAdhkar": "تضمين الأذكار",
+      "includeAdhkarDescription": "أذكار الصباح والمساء من حصن المسلم.",
+      "includeQuran": "تضمين القرآن",
+      "includeQuranDescription": "آية عشوائية مع الترجمة.",
+      "includeHadith": "تضمين الأحاديث",
+      "includeHadithDescription": "مقتطفات من الأحاديث الصحيحة.",
+      "previewNotification": "معاينة الإشعار",
+      "fcmTitle": "رمز Firebase Push",
+      "fcmDescription": "انسخ رمز الجهاز إلى Firebase Console → Cloud Messaging لإرسال إشعارات تجريبية بعد إضافة google-services.json و GoogleService-Info.plist.",
+      "fcmUnavailable": "فعّل التذكيرات وامنح إذن الإشعارات لإنشاء الرمز.",
+      "copyFcmToken": "نسخ رمز FCM"
+    }
   }
 }

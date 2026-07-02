@@ -21,6 +21,8 @@ export type DrawerParamList = {
   CameraStack: undefined;
   DeliveryStack: undefined;
   MarketplaceStack: undefined;
+  WordPuzzleStack: undefined;
+  IslamicStack: undefined;
 };
 
 export type RootStackParamList = {
@@ -48,6 +50,7 @@ export type RootStackParamList = {
   DrawerRoot: NavigatorScreenParams<DrawerParamList> | undefined;
   TabRoot: undefined;
   Home: undefined;
+  ServicesHub: undefined;
   Profile: undefined;
   AudioStack: undefined;
   VideoStack: undefined;
@@ -61,6 +64,25 @@ export type RootStackParamList = {
   CameraStack: undefined;
   DeliveryStack: undefined;
   MarketplaceStack: undefined;
+  DeliveryStack: undefined;
+  MarketplaceStack: undefined;
+  IslamicStack: undefined;
+  IslamicHub: undefined;
+  QuranHub: undefined;
+  QuranIndex: undefined;
+  QuranList: undefined;
+  QuranReader: {surahNumber: number; ayahNumber?: number};
+  QuranSearch: undefined;
+  IslamicUnifiedSearch: undefined;
+  AdhkarCategories: undefined;
+  AdhkarDetail: {categoryId: number; title: string};
+  HadithHub: undefined;
+  HadithEditions: {filter: 'all' | 'sahih' | 'weak'; title: string};
+  HadithList: {slug: string; title: string; filter?: 'all' | 'sahih' | 'weak'};
+  HadithDetail: {hadithId: string; title: string};
+  HadithSearch: undefined;
+  PrayerTimes: undefined;
+  IslamicSettings: undefined;
   CameraHub: undefined;
   SnapCamera: undefined;
   QrScanner: undefined;
@@ -113,6 +135,10 @@ export type RootStackParamList = {
   GameLeaderboard: undefined;
   GameHistory: undefined;
   GameAchievements: undefined;
+  WordPuzzleHub: undefined;
+  WordPuzzleLibrary: {language: 'ar' | 'en'};
+  WordPuzzleStageMap: {bookId: string};
+  WordPuzzlePlay: {bookId: string; stageId: string};
   WalletHome: undefined;
   WalletTransactions: undefined;
   WalletSend: undefined;

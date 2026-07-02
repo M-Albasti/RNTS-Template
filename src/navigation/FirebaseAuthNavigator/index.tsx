@@ -22,7 +22,7 @@ import {styles} from './styles';
 
 const FirebaseStack = createNativeStackNavigator<RootStackParamList>();
 
-const FirebaseAuthNavigator = (props: any): React.JSX.Element => {
+const FirebaseAuthNavigator = (): React.JSX.Element => {
   return (
     <FirebaseStack.Navigator
       initialRouteName="FirebaseLoginMethod"

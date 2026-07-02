@@ -35,6 +35,8 @@ const menuItems: {labelKey: string; route: DrawerRoute}[] = [
   {labelKey: 'drawer.camera', route: 'CameraStack'},
   {labelKey: 'drawer.delivery', route: 'DeliveryStack'},
   {labelKey: 'drawer.marketplace', route: 'MarketplaceStack'},
+  {labelKey: 'drawer.wordPuzzle', route: 'WordPuzzleStack'},
+  {labelKey: 'drawer.islamic', route: 'IslamicStack'},
   {labelKey: 'drawer.designSystem', route: 'DesignSystemStack'},
 ];
 

@@ -20,7 +20,7 @@ import {styles} from './styles';
 
 const VideoStack = createNativeStackNavigator<RootStackParamList>();
 
-const VideoNavigator = (props: any): React.JSX.Element => {
+const VideoNavigator = (): React.JSX.Element => {
   return (
     <VideoStack.Navigator
       initialRouteName="VideosList"

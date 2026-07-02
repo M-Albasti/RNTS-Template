@@ -1,9 +1,10 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {View} from 'react-native';
 
 import Heading from '@atoms/Heading';
 import IconView from '@atoms/Icon';
 import TextView from '@atoms/TextView';
+import AnimatedScalePressable from '@atoms/AnimatedScalePressable';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {resolveFeatureHubCardStyles} from './styles/resolveFeatureHubCardStyles';
@@ -31,15 +32,13 @@ const FeatureHubCard = ({
   const styles = useThemedStyles(tokens => resolveFeatureHubCardStyles(tokens, accentColor), [accentColor]);
 
   return (
-    <Pressable
-      style={({pressed}) => [styles.card, pressed && styles.cardPressed]}
-      onPress={onPress}>
+    <AnimatedScalePressable style={styles.card} onPress={onPress}>
       <View style={styles.iconWrap}>
         <IconView iconType={iconType} name={iconName} size={sizes.iconSm} />
       </View>
       <Heading text={title} level="h3" />
       <TextView text={subtitle} variant="caption" muted />
-    </Pressable>
+    </AnimatedScalePressable>
   );
 };
 
