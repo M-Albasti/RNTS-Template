@@ -13,6 +13,7 @@ import {filterProducts} from '@helpers/marketplaceHelpers';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceProductsStyles} from './styles/resolveMarketplaceProductsStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {
@@ -28,9 +29,7 @@ const MarketplaceProducts = ({navigation, route}: Props): React.JSX.Element => {
   const searchQuery = route.params?.searchQuery;
   const filtered = filterProducts(products, {categoryId, searchQuery});
 
-  const styles = useThemedStyles(tokens => ({
-    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveMarketplaceProductsStyles);
 
   const category = MARKETPLACE_CATEGORIES.find(c => c.id === categoryId);
   const title = category

@@ -4,6 +4,7 @@ import {View} from 'react-native';
 import VideoWithButtons from '@organisms/videos/recordVideo/VideoWithButtons';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSVideoWithButtonsStyles} from './styles/resolveDSVideoWithButtonsStyles';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {
   mockVideoFile,
@@ -11,9 +12,7 @@ import {
 } from '../shared/showcaseHelpers';
 
 const VideoWithButtonsPreview = (): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    container: {height: tokens.sizes.videoPreviewLg},
-  }));
+  const styles = useThemedStyles(resolveDSVideoWithButtonsStyles);
 
   return (
     <View style={styles.container}>

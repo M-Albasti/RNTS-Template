@@ -6,6 +6,7 @@ import ScreenHeader from '@atoms/ScreenHeader';
 import VideoPlayerView from '@organisms/videos/videoPlayer/VideoPlayerView';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoPlayerTemplateStyles} from './styles/resolveVideoPlayerTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {VideoProps} from '@Types/videoProps';
 
@@ -18,13 +19,7 @@ const VideoPlayerTemplate = ({
   navigation,
   videoDetails,
 }: VideoPlayerTemplateProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    player: {
-      flex: tokens.layout.flex.fill,
-      borderRadius: tokens.radius.lg,
-      overflow: 'hidden' as const,
-    },
-  }));
+  const styles = useThemedStyles(resolveVideoPlayerTemplateStyles);
 
   return (
     <ScreenContainer>

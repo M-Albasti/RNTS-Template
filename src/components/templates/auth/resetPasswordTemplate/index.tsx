@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 import PasswordTextInput from '@molecules/passwordTextInput';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveResetPasswordTemplateStyles} from './styles/resolveResetPasswordTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface ResetPasswordTemplateProps {
@@ -25,16 +26,7 @@ const ResetPasswordTemplate = ({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const styles = useThemedStyles(tokens => ({
-    form: {
-      width: '100%' as const,
-      maxWidth: 420,
-      gap: tokens.spacing.sm,
-    },
-    inputs: {
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveResetPasswordTemplateStyles);
 
   const onResetPassword = () => {
     if (!password || password !== confirmPassword) {

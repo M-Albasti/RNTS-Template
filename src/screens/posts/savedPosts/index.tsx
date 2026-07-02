@@ -13,6 +13,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {toggleLike, toggleSave} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveSavedPostsStyles} from './styles/resolveSavedPostsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {PostItem} from '@Types/postTypes';
 
@@ -26,12 +27,7 @@ const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
     state.posts.posts.filter(p => state.posts.savedIds.includes(p.id)),
   );
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolveSavedPostsStyles);
 
   const renderItem = ({item}: {item: PostItem}) => (
     <PostCard

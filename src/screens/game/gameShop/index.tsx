@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {purchaseItem} from '@redux/slices/gameSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGameShopStyles} from './styles/resolveGameShopStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {GameShopItem} from '@Types/gameTypes';
 
@@ -26,12 +27,7 @@ const GameShop = ({navigation}: GameShopProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {coins, shopItems} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.rowBetween},
-      meta: {flex: tokens.layout.flex.fill, paddingRight: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(resolveGameShopStyles);
 
   const renderItem = ({item}: {item: GameShopItem}) => (
     <Card>

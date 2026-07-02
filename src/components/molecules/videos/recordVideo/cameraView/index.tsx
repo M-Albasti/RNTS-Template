@@ -7,6 +7,7 @@ import VisionCamera from '@atoms/VisionCamera';
 import TouchableIcon from '@atoms/TouchableIcon';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCameraViewStyles} from './styles/resolveCameraViewStyles';
 
 interface VideoCameraProps {
   device: CameraDevice;
@@ -42,28 +43,7 @@ const CameraView = ({
   closeCamera,
 }: VideoCameraProps): React.JSX.Element => {
   const {colors, sizes} = useThemeTokens();
-  const styles = useThemedStyles(t => ({
-    cameraContainer: {
-      flex: t.layout.flex.fill,
-    },
-    topButtonsContainer: {
-      padding: t.spacing.sm,
-      ...t.layout.presets.rowBetween,
-      width: ScreenWidth,
-      backgroundColor: t.colors.mediaOverlay,
-    },
-    bottomButtonsContainer: {
-      padding: t.spacing.sm,
-      ...t.layout.presets.rowBetween,
-      width: ScreenWidth,
-      backgroundColor: t.colors.mediaOverlay,
-      position: t.layout.position.absolute,
-      bottom: 0,
-    },
-    iconPlaceholder: {
-      width: t.sizes.recordIcon,
-    },
-  }));
+  const styles = useThemedStyles(resolveCameraViewStyles);
 
   return (
     <View style={styles.cameraContainer}>

@@ -12,6 +12,7 @@ import TextView from '@atoms/TextView';
 import {formatCurrency} from '@helpers/locationHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDeliveryHubStyles} from './styles/resolveDeliveryHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'DeliveryHub'>};
@@ -21,16 +22,7 @@ const DeliveryHub = ({navigation}: Props): React.JSX.Element => {
   const {orders, driverMode} = useAppSelector(state => state.delivery);
   const activeCount = orders.filter(o => !['delivered', 'cancelled'].includes(o.status)).length;
 
-  const styles = useThemedStyles(tokens => ({
-    hero: {
-      backgroundColor: tokens.colors.primary,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
-      ...tokens.layout.presets.columnCenter,
-    },
-    heroText: {color: tokens.colors.textInverse},
-    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveDeliveryHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

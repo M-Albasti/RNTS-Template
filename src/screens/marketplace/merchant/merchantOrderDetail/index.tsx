@@ -20,6 +20,7 @@ import {updateMarketplaceOrderStatus} from '@redux/slices/marketplaceSlice';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantOrderDetailStyles} from './styles/resolveMerchantOrderDetailStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {
@@ -30,9 +31,7 @@ type Props = {
 const MerchantOrderDetail = ({navigation, route}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    cancelWrap: {marginTop: tokens.spacing.md},
-  }));
+  const styles = useThemedStyles(resolveMerchantOrderDetailStyles);
   const orders = useAppSelector(state => state.marketplace.orders);
   const order = getMerchantOrders(orders).find(o => o.id === route.params.orderId);
 

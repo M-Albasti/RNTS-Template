@@ -8,6 +8,7 @@ import Rating from '@atoms/Rating';
 import TextInputView from '@atoms/TextInputView';
 import TextView from '@atoms/TextView';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantReviewCardStyles} from './styles/resolveMerchantReviewCardStyles';
 
 import type {MerchantReview} from '@Types/marketplaceTypes';
 
@@ -27,25 +28,7 @@ const MerchantReviewCard = ({
   onMarkRead,
 }: MerchantReviewCardProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    card: {gap: tokens.spacing.sm, marginBottom: tokens.spacing.sm},
-    row: {...tokens.layout.presets.rowBetween, alignItems: 'center' as const},
-    unreadDot: {
-      width: tokens.sizes.ratingDot,
-      height: tokens.sizes.ratingDot,
-      borderRadius: tokens.radius.full,
-      backgroundColor: tokens.colors.primary,
-    },
-    actions: {
-      ...tokens.layout.presets.wrapRow,
-      gap: tokens.spacing.sm,
-    },
-    replyBox: {
-      backgroundColor: tokens.colors.surfaceSecondary,
-      borderRadius: tokens.radius.md,
-      padding: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveMerchantReviewCardStyles);
 
   return (
     <Card style={styles.card}>

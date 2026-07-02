@@ -22,6 +22,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveLoginFormStyles} from './styles/resolveLoginFormStyles';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -41,15 +42,7 @@ const LoginForm = (props: LoginFormProps): React.JSX.Element => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    container: {
-      width: '100%' as const,
-      maxWidth: 420,
-    },
-    inputs: {
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveLoginFormStyles);
 
   const toggleShowPassword = () => {
     setShowPassword(prev => !prev);

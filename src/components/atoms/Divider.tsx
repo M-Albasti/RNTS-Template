@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDividerStyles} from './styles/resolveDividerStyles';
 
 interface DividerProps {
   style?: ViewStyle;
@@ -9,18 +10,7 @@ interface DividerProps {
 }
 
 const Divider = ({style, spacing = 'md'}: DividerProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      line: {
-        height: StyleSheet.hairlineWidth,
-        backgroundColor: tokens.colors.border,
-      },
-      none: {marginVertical: tokens.spacing.none},
-      sm: {marginVertical: tokens.spacing.sm},
-      md: {marginVertical: tokens.spacing.md},
-      lg: {marginVertical: tokens.spacing.lg},
-    }),
-  );
+  const styles = useThemedStyles(resolveDividerStyles);
 
   const spacingStyle = styles[spacing];
 

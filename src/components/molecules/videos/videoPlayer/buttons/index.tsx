@@ -8,6 +8,7 @@ import Button from '@atoms/Button';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveButtonsStyles} from './styles/resolveButtonsStyles';
 
 interface ButtonsProps {
   onDismiss: () => void;
@@ -23,22 +24,7 @@ const Buttons = ({
   uploading = false,
 }: ButtonsProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      container: {
-        flexDirection: tokens.layout.flexDirection.row,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: tokens.spacing.sm,
-        paddingHorizontal: tokens.spacing.md,
-        paddingVertical: tokens.spacing.md,
-        backgroundColor: tokens.colors.overlay,
-      },
-      action: {
-        flex: tokens.layout.flex.fill,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveButtonsStyles);
 
   return (
     <View style={styles.container}>

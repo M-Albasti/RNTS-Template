@@ -7,6 +7,7 @@ import Card from '@atoms/Card';
 import TextView from '@atoms/TextView';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCodeScanOverlayStyles} from './styles/resolveCodeScanOverlayStyles';
 
 type CodeScanOverlayProps = {
   title: string;
@@ -26,24 +27,7 @@ const CodeScanOverlay = ({
   onScanAgain,
 }: CodeScanOverlayProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    backdrop: {
-      ...tokens.layout.presets.absoluteFill,
-      ...tokens.layout.presets.center,
-      backgroundColor: tokens.colors.overlay,
-      padding: tokens.spacing.lg,
-    },
-    card: {
-      width: '100%' as const,
-      gap: tokens.spacing.sm,
-    },
-    actions: {
-      ...tokens.layout.presets.row,
-      gap: tokens.spacing.sm,
-      marginTop: tokens.spacing.sm,
-    },
-    action: {flex: tokens.layout.flex.fill},
-  }));
+  const styles = useThemedStyles(resolveCodeScanOverlayStyles);
 
   return (
     <View style={styles.backdrop}>

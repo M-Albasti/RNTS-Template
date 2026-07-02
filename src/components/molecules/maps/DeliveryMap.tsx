@@ -7,6 +7,7 @@ import {DEFAULT_MAP_REGION} from '@constants/deliveryMockData';
 import {getMapRegionForPoints} from '@helpers/deliveryTrackingHelpers';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDeliveryMapStyles} from './styles/resolveDeliveryMapStyles';
 
 import type {GeoPoint} from '@Types/deliveryTypes';
 
@@ -47,33 +48,7 @@ const DeliveryMap = ({
   const mapRef = useRef<MapView | null>(null);
   const lastAnimateAtRef = useRef(0);
   const {colors} = useThemeTokens();
-  const styles = useThemedStyles(t => ({
-    wrapper: {
-      width: '100%' as const,
-      borderRadius: t.radius.lg,
-      overflow: t.layout.overflow.hidden,
-    },
-    fullScreen: {
-      flex: t.layout.flex.fill,
-      borderRadius: t.radius.none,
-    },
-    liveBadge: {
-      position: t.layout.position.absolute,
-      top: t.spacing.md,
-      right: t.spacing.md,
-      zIndex: t.layout.zIndex.sticky,
-      backgroundColor: t.colors.liveBadge,
-      borderRadius: t.radius.full,
-      paddingHorizontal: t.spacing.sm,
-      paddingVertical: t.spacing.xs,
-    },
-    liveDot: {
-      width: t.spacing.sm,
-      height: t.spacing.sm,
-      borderRadius: t.radius.sm,
-      backgroundColor: t.colors.onLiveBadge,
-    },
-  }));
+  const styles = useThemedStyles(resolveDeliveryMapStyles);
 
   const routeCoordinates = useMemo(() => {
     if (!routeFrom || !routeTo) {

@@ -14,6 +14,7 @@ import {isLiveTrackingStatus} from '@helpers/deliveryTrackingHelpers';
 import {useLiveDeliveryTracking} from '@hooks/useLiveDeliveryTracking';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveLiveDeliveryMapStyles} from './styles/resolveLiveDeliveryMapStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -32,29 +33,7 @@ const LiveDeliveryMap = ({navigation, route}: Props): React.JSX.Element => {
   const tracking = useLiveDeliveryTracking(order, mode, {
     pollEnabled: mode === 'customer' ? isFocused : false,
   });
-  const styles = useThemedStyles(tokens => ({
-    root: {flex: tokens.layout.flex.fill, backgroundColor: tokens.colors.cameraBackground},
-    header: {
-      position: tokens.layout.position.absolute,
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: tokens.layout.zIndex.overlay,
-      paddingHorizontal: tokens.spacing.md,
-    },
-    footer: {
-      position: tokens.layout.position.absolute,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      padding: tokens.spacing.md,
-    },
-    empty: {
-      flex: tokens.layout.flex.fill,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-  }));
+  const styles = useThemedStyles(resolveLiveDeliveryMapStyles);
 
   const markers = useMemo(() => {
     if (!order) {

@@ -10,12 +10,11 @@ import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSForgetPasswordTemplateStyles} from './styles/resolveDSForgetPasswordTemplateStyles';
 
 const ForgetPasswordContent = (): React.JSX.Element => {
   const [emailOrPhone, setEmailOrPhone] = useState('');
-  const styles = useThemedStyles(tokens => ({
-    form: {width: '100%' as const, maxWidth: 420, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveDSForgetPasswordTemplateStyles);
 
   return (
     <>

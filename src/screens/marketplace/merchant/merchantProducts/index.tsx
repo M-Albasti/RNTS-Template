@@ -21,6 +21,7 @@ import {
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantProductsStyles} from './styles/resolveMerchantProductsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MerchantProducts'>};
@@ -31,11 +32,7 @@ const MerchantProducts = ({navigation}: Props): React.JSX.Element => {
   const products = useAppSelector(state => state.marketplace.products);
   const merchantProducts = getMerchantProducts(products);
 
-  const styles = useThemedStyles(tokens => ({
-    row: {...tokens.layout.presets.rowBetween, alignItems: tokens.layout.alignItems.center},
-    actions: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    productCard: {marginBottom: tokens.spacing.sm, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveMerchantProductsStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

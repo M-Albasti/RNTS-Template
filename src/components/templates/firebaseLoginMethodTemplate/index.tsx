@@ -9,6 +9,7 @@ import Spacer from '@atoms/Spacer';
 import FirebaseLoginMethodButtons from '@organisms/firebaseLoginMethod/FirebaseLoginMethodsButtons';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveFirebaseLoginMethodTemplateStyles} from './styles/resolveFirebaseLoginMethodTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface FirebaseLoginMethodTemplateProps {
@@ -19,13 +20,7 @@ const FirebaseLoginMethodTemplate = ({
   navigation,
 }: FirebaseLoginMethodTemplateProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    wrap: {
-      width: '100%' as const,
-      maxWidth: 420,
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveFirebaseLoginMethodTemplateStyles);
 
   return (
     <ScreenContainer scroll centered alignContent="center">

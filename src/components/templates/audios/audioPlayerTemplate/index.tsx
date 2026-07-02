@@ -9,6 +9,7 @@ import AudioPlayerView from '@organisms/audios/audioPlayer/AudioPlayerView';
 
 import {useAudioView} from '@hooks/useAudioView';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioPlayerTemplateStyles} from './styles/resolveAudioPlayerTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {SoundProps} from '@Types/soundProps';
 
@@ -35,15 +36,7 @@ const AudioPlayerTemplate = ({
     onSeekSound,
   } = useAudioView(audioDetails);
 
-  const styles = useThemedStyles(tokens => ({
-    playerCard: {
-      flex: tokens.layout.flex.fill,
-      backgroundColor: tokens.colors.surface,
-      borderRadius: tokens.radius.xl,
-      paddingVertical: tokens.spacing.lg,
-      ...tokens.shadows.md,
-    },
-  }));
+  const styles = useThemedStyles(resolveAudioPlayerTemplateStyles);
 
   return (
     <ScreenContainer>

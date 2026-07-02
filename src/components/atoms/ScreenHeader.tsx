@@ -5,6 +5,7 @@ import Heading from '@atoms/Heading';
 import TouchableIcon from '@atoms/TouchableIcon';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveScreenHeaderStyles} from './styles/resolveScreenHeaderStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 
 interface ScreenHeaderProps {
@@ -21,21 +22,7 @@ const ScreenHeader = ({
   rightAccessory,
 }: ScreenHeaderProps): React.JSX.Element => {
   const {sizes} = useThemeTokens();
-  const styles = useThemedStyles(tokens => ({
-    row: {
-      ...tokens.layout.presets.rowBetween,
-      marginBottom: tokens.spacing.md,
-      minHeight: tokens.sizes.touchTarget,
-    },
-    side: {
-      width: tokens.sizes.touchTarget,
-      ...tokens.layout.presets.center,
-    },
-    titleWrap: {
-      flex: tokens.layout.flex.fill,
-      alignItems: tokens.layout.alignItems.center,
-    },
-  }));
+  const styles = useThemedStyles(resolveScreenHeaderStyles);
 
   return (
     <View style={styles.row}>

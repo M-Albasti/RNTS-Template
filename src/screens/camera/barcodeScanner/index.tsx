@@ -23,6 +23,7 @@ import {
   logScreenView,
 } from '@services/firebaseServices/firebaseAnalyticsService';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveBarcodeScannerStyles} from './styles/resolveBarcodeScannerStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type BarcodeScannerProps = {
@@ -40,31 +41,7 @@ const BarcodeScanner = ({navigation}: BarcodeScannerProps): React.JSX.Element =>
     null,
   );
 
-  const styles = useThemedStyles(tokens => ({
-    root: {flex: tokens.layout.flex.fill, backgroundColor: tokens.colors.cameraBackground},
-    header: {
-      position: tokens.layout.position.absolute,
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: tokens.layout.zIndex.sticky,
-      paddingHorizontal: tokens.spacing.lg,
-    },
-    line: {
-      position: tokens.layout.position.absolute,
-      top: '45%' as const,
-      left: '8%' as const,
-      width: '84%' as const,
-      height: tokens.sizes.markerLine,
-      backgroundColor: tokens.colors.primary,
-    },
-    hint: {
-      position: tokens.layout.position.absolute,
-      left: tokens.spacing.lg,
-      right: tokens.spacing.lg,
-    },
-    hintText: {color: tokens.colors.cameraForeground},
-  }));
+  const styles = useThemedStyles(resolveBarcodeScannerStyles);
 
   useEffect(() => {
     logScreenView('BarcodeScanner');

@@ -4,13 +4,12 @@ import {View} from 'react-native';
 import VideosListWithButtons from '@organisms/videos/videosList/ListWithButtons';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSVideosListWithButtonsStyles} from './styles/resolveDSVideosListWithButtonsStyles';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {videosListShowcaseNavigation} from '../shared/showcaseHelpers';
 
 const VideosListPreview = (): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    container: {height: tokens.sizes.videoPreviewLg},
-  }));
+  const styles = useThemedStyles(resolveDSVideosListWithButtonsStyles);
 
   return (
     <View style={styles.container}>

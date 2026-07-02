@@ -10,12 +10,11 @@ import OTPTextInput from '@molecules/otpTextInput';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSMockOtpTemplateStyles} from './styles/resolveDSMockOtpTemplateStyles';
 
 const MockOtpContent = (): React.JSX.Element => {
   const [code, setCode] = useState('');
-  const styles = useThemedStyles(tokens => ({
-    form: {width: '100%' as const, maxWidth: 420},
-  }));
+  const styles = useThemedStyles(resolveDSMockOtpTemplateStyles);
 
   return (
     <>

@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveForgetPasswordTemplateStyles} from './styles/resolveForgetPasswordTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface ForgetPasswordTemplateProps {
@@ -22,13 +23,7 @@ const ForgetPasswordTemplate = ({
 }: ForgetPasswordTemplateProps): React.JSX.Element => {
   const {t} = useTranslation();
   const [emailOrPhone, setEmailOrPhone] = useState('');
-  const styles = useThemedStyles(tokens => ({
-    form: {
-      width: '100%' as const,
-      maxWidth: 420,
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveForgetPasswordTemplateStyles);
 
   const onSendResetLink = () => {
     if (!emailOrPhone.trim()) {

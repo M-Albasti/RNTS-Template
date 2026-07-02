@@ -13,6 +13,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {setFocusMinutes} from '@redux/slices/todosSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveTodoFocusStyles} from './styles/resolveTodoFocusStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface TodoFocusProps {
@@ -26,13 +27,7 @@ const TodoFocus = ({navigation}: TodoFocusProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const [secondsLeft, setSecondsLeft] = useState(focusMinutes * 60);
   const [running, setRunning] = useState(false);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      timer: {...tokens.layout.presets.center, padding: tokens.spacing.xxl},
-      time: {...tokens.typography.h1, ...tokens.layout.presets.textCenter},
-      actions: {gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(resolveTodoFocusStyles);
 
   useEffect(() => {
     if (!running || secondsLeft <= 0) return;

@@ -13,6 +13,7 @@ import {MARKETPLACE_CATEGORIES} from '@constants/marketplaceMockData';
 import {getCartItemCount} from '@helpers/marketplaceHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceHubStyles} from './styles/resolveMarketplaceHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MarketplaceHub'>};
@@ -21,25 +22,7 @@ const MarketplaceHub = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const cartCount = useAppSelector(state => getCartItemCount(state.marketplace.cart));
 
-  const styles = useThemedStyles(tokens => ({
-    hero: {
-      backgroundColor: tokens.colors.surfaceSecondary,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-    },
-    categories: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    categoryChip: {
-      width: '30%' as const,
-      minWidth: 96,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.md,
-      ...tokens.layout.presets.columnCenter,
-      gap: tokens.spacing.xs,
-    },
-    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveMarketplaceHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

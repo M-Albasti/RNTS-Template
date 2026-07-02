@@ -7,6 +7,7 @@ import TextView from '@atoms/TextView';
 
 import {requestLocationPermission} from '@helpers/locationHelpers';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveLocationPermissionGateStyles} from './styles/resolveLocationPermissionGateStyles';
 
 type LocationPermissionGateProps = {
   children: React.ReactNode;
@@ -18,15 +19,7 @@ const LocationPermissionGate = ({
   const {t} = useTranslation();
   const [granted, setGranted] = React.useState<boolean | null>(null);
   const [loading, setLoading] = React.useState(false);
-  const styles = useThemedStyles(tokens => ({
-    gate: {
-      ...tokens.layout.presets.center,
-      ...tokens.layout.presets.fill,
-      padding: tokens.spacing.lg,
-      gap: tokens.spacing.md,
-      backgroundColor: tokens.colors.background,
-    },
-  }));
+  const styles = useThemedStyles(resolveLocationPermissionGateStyles);
 
   React.useEffect(() => {
     void requestLocationPermission().then(setGranted);

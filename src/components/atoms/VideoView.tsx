@@ -9,6 +9,7 @@ import Video, {
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoViewStyles} from './styles/resolveVideoViewStyles';
 
 interface VideoPlayerProps extends ReactVideoProps {
   onVideoReady: (ref: VideoRef) => void;
@@ -16,15 +17,7 @@ interface VideoPlayerProps extends ReactVideoProps {
 }
 
 const VideoView = (props: VideoPlayerProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      videoBackground: {
-        flex: tokens.layout.flex.fill,
-        backgroundColor: tokens.colors.textPrimary,
-        borderRadius: tokens.radius.lg,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveVideoViewStyles);
 
   return (
     <Video

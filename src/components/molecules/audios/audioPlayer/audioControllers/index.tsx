@@ -8,6 +8,7 @@ import TouchableIcon from '@atoms/TouchableIcon';
 //* theme import
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioControllersStyles} from './styles/resolveAudioControllersStyles';
 
 interface AudioControllersProps {
   isPlaying: boolean;
@@ -28,22 +29,7 @@ const AudioControllers = memo(
     repeatSound,
   }: AudioControllersProps) => {
     const {colors, sizes} = useThemeTokens();
-    const styles = useThemedStyles(tokens => ({
-      root: {
-        width: '100%',
-        ...tokens.layout.presets.rowBetween,
-        paddingHorizontal: tokens.spacing.xl,
-        paddingTop: tokens.spacing.md,
-      },
-      playButton: {
-        width: tokens.sizes.audioControl,
-        height: tokens.sizes.audioControl,
-        borderRadius: tokens.radius.full,
-        backgroundColor: tokens.colors.primaryMuted,
-        ...tokens.layout.presets.center,
-        ...tokens.shadows.sm,
-      },
-    }));
+    const styles = useThemedStyles(resolveAudioControllersStyles);
 
     return (
       <View style={styles.root}>

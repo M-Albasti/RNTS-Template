@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {setGallerySearchQuery} from '@redux/slices/gallerySlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGallerySearchStyles} from './styles/resolveGallerySearchStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface GallerySearchProps {
@@ -25,12 +26,7 @@ const GallerySearch = ({navigation}: GallerySearchProps): React.JSX.Element => {
   const query = useAppSelector(state => state.gallery.searchQuery);
   const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolveGallerySearchStyles);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {contributeToGoal} from '@redux/slices/walletSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveWalletBudgetStyles} from './styles/resolveWalletBudgetStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface WalletBudgetProps {
@@ -24,20 +25,7 @@ const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {budgetCategories, savingsGoals, balance} = useAppSelector(state => state.wallet);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.rowBetween},
-      bar: {
-        height: tokens.spacing.sm,
-        backgroundColor: tokens.colors.surfaceSecondary,
-        borderRadius: tokens.radius.full,
-        overflow: tokens.layout.overflow.hidden,
-        marginTop: tokens.spacing.xs,
-      },
-      fill: {height: '100%', backgroundColor: tokens.colors.primary},
-      over: {backgroundColor: tokens.colors.error},
-    }),
-  );
+  const styles = useThemedStyles(resolveWalletBudgetStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

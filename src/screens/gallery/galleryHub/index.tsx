@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGalleryHubStyles} from './styles/resolveGalleryHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface GalleryHubProps {
@@ -22,20 +23,7 @@ const GalleryHub = ({navigation}: GalleryHubProps): React.JSX.Element => {
   const images = useAppSelector(state => state.gallery.images);
   const albums = useAppSelector(state => state.gallery.albums);
   const favorites = images.filter(i => i.favorite).length;
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        ...tokens.layout.presets.columnCenter,
-        backgroundColor: tokens.colors.surfaceSecondary,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      stats: {...tokens.layout.presets.rowBetween, width: '100%'},
-    }),
-  );
+  const styles = useThemedStyles(resolveGalleryHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

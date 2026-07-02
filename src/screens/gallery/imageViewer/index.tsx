@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image} from 'react-native';
+import {Image, ImageStyle} from 'react-native';
 
 import {Share} from 'react-native';
 import {useTranslation} from 'react-i18next';
@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {toggleFavorite, toggleHidden} from '@redux/slices/gallerySlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveImageViewerStyles} from './styles/resolveImageViewerStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface ImageViewerProps {
@@ -27,16 +28,7 @@ const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element =
   const {imageId} = route.params;
   const image = useAppSelector(state => state.gallery.images.find(img => img.id === imageId));
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    image: {
-      width: '100%',
-      height: tokens.sizes.videoPreviewLg,
-      borderRadius: tokens.radius.lg,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-    },
-    actions: {gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveImageViewerStyles)
 
   if (!image) {
     return (
@@ -51,7 +43,7 @@ const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element =
   return (
     <ScreenContainer scroll>
       <ScreenHeader title={image.title} onBack={() => navigation.goBack()} />
-      <Image source={{uri: image.uri}} style={styles.image} resizeMode="cover" />
+      <Image source={{uri: image.uri}} style={styles.image as ImageStyle} resizeMode="cover" />
       <Spacer size="md" />
       <Heading text={image.title} level="h2" align="center" />
       <Spacer size="md" />

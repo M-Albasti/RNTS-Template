@@ -14,6 +14,7 @@ import {upsertPromotion} from '@redux/slices/marketplaceSlice';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMerchantEditPromotionStyles} from './styles/resolveMerchantEditPromotionStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import type {MerchantPromotionType} from '@Types/marketplaceTypes';
 
@@ -27,9 +28,7 @@ const PROMO_TYPES: MerchantPromotionType[] = ['percentage', 'fixed', 'bundle'];
 const MerchantEditPromotion = ({navigation, route}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    productRow: {marginBottom: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveMerchantEditPromotionStyles);
   const {products, promotions} = useAppSelector(state => state.marketplace);
   const merchantProducts = useMemo(() => getMerchantProducts(products), [products]);
   const promotionId = route.params?.promotionId;

@@ -10,6 +10,7 @@ import Spacer from '@atoms/Spacer';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAuthMethodsButtonsStyles} from './styles/resolveAuthMethodsButtonsStyles';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -22,13 +23,7 @@ const AuthMethodsButtons = ({
   navigation,
 }: AuthMethodsButtonsProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    container: {
-      width: '100%' as const,
-      maxWidth: 400,
-      gap: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(resolveAuthMethodsButtonsStyles);
 
   const navigateToFirebaseLogin = () => {
     navigation.navigate('FirebaseAuthStack');

@@ -7,6 +7,7 @@ import TextView from '@atoms/TextView';
 import AnimatedScalePressable from '@atoms/AnimatedScalePressable';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveFeatureHubCardStyles} from './styles/resolveFeatureHubCardStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {FontsFamily} from '@Types/fontsFamily';
 
@@ -28,30 +29,7 @@ const FeatureHubCard = ({
   onPress,
 }: FeatureHubCardProps): React.JSX.Element => {
   const {sizes} = useThemeTokens();
-  const styles = useThemedStyles(tokens => ({
-    card: {
-      flex: tokens.layout.flex.fill,
-      minWidth: '46%' as const,
-      backgroundColor: tokens.colors.surface,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.md,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      ...tokens.shadows.md,
-    },
-    cardPressed: {
-      backgroundColor: tokens.colors.surfaceSecondary,
-      ...tokens.shadows.none,
-    },
-    iconWrap: {
-      width: tokens.sizes.touchTarget + 4,
-      height: tokens.sizes.touchTarget + 4,
-      borderRadius: tokens.radius.lg,
-      ...tokens.layout.presets.center,
-      backgroundColor: accentColor || tokens.colors.primaryMuted,
-      marginBottom: tokens.spacing.sm,
-    },
-  }));
+  const styles = useThemedStyles(tokens => resolveFeatureHubCardStyles(tokens, accentColor), [accentColor]);
 
   return (
     <AnimatedScalePressable style={styles.card} onPress={onPress}>

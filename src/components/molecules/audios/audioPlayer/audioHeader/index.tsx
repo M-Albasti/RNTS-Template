@@ -6,6 +6,7 @@ import TouchableIcon from '@atoms/TouchableIcon';
 import TextView from '@atoms/TextView';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioHeaderStyles} from './styles/resolveAudioHeaderStyles';
 
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -15,19 +16,7 @@ interface AudioHeaderProps {
 
 const AudioHeader = memo((props: AudioHeaderProps): React.JSX.Element => {
   const {colors, sizes} = useThemeTokens();
-  const styles = useThemedStyles(t => ({
-    mainbar: {
-      height: ScreenHeight * 0.1,
-      width: '100%' as const,
-      ...t.layout.presets.rowBetween,
-      paddingHorizontal: '10%',
-    },
-    nowPlayingText: {
-      ...t.typography.subtitle,
-      textAlign: t.layout.textAlign.center,
-      color: t.colors.textPrimary,
-    },
-  }));
+  const styles = useThemedStyles(resolveAudioHeaderStyles);
 
   return (
     <View style={styles.mainbar}>

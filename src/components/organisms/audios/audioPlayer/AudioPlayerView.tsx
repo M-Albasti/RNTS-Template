@@ -10,6 +10,7 @@ import AudioProgressBar from '@molecules/audios/audioPlayer/audioProgressBar';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioPlayerViewStyles} from './styles/resolveAudioPlayerViewStyles';
 
 //* types import
 import {SoundProps} from '@Types/soundProps';
@@ -42,21 +43,7 @@ const AudioPlayerView = memo(
     repeatSound,
     onSeekSound,
   }: AudioPlayerViewProps) => {
-    const styles = useThemedStyles(tokens =>
-      StyleSheet.create({
-        container: {
-          flex: tokens.layout.flex.fill,
-          justifyContent: 'space-between',
-        },
-        errorBanner: {
-          marginHorizontal: tokens.spacing.lg,
-          marginBottom: tokens.spacing.md,
-          padding: tokens.spacing.md,
-          borderRadius: tokens.radius.md,
-          backgroundColor: tokens.colors.errorMuted,
-        },
-      }),
-    );
+    const styles = useThemedStyles(resolveAudioPlayerViewStyles);
 
     return (
       <View style={styles.container}>

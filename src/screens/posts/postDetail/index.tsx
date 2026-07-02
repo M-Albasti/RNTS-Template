@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, ImageStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -15,6 +15,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {addComment, toggleLike, toggleSave} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolvePostDetailStyles} from './styles/resolvePostDetailStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface PostDetailProps {
@@ -29,21 +30,7 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
   const saved = useAppSelector(state => state.posts.savedIds.includes(postId));
   const dispatch = useAppDispatch();
   const [commentText, setCommentText] = useState('');
-  const styles = useThemedStyles(tokens => ({
-    avatar: {
-      width: tokens.sizes.avatarMd,
-      height: tokens.sizes.avatarMd,
-      borderRadius: tokens.radius.full,
-    },
-    header: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-    media: {
-      width: '100%',
-      height: tokens.sizes.postMediaHeight,
-      borderRadius: tokens.radius.md,
-    },
-    comment: {gap: tokens.spacing.xs},
-    actions: {gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolvePostDetailStyles)
 
   const comments = useMemo(() => post?.comments ?? [], [post?.comments]);
 
@@ -78,7 +65,7 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
       <ScreenHeader title={t('posts.postTitle')} onBack={() => navigation.goBack()} />
       <Card>
         <View style={styles.header}>
-          <Image source={{uri: post.avatar}} style={styles.avatar} />
+          <Image source={{uri: post.avatar}} style={styles.avatar as ImageStyle} />
           <Heading text={post.author} level="h3" />
         </View>
         <Spacer size="sm" />
@@ -86,7 +73,7 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
         {post.mediaType === 'image' && post.mediaUrl ? (
           <>
             <Spacer size="sm" />
-            <Image source={{uri: post.mediaUrl}} style={styles.media} />
+            <Image source={{uri: post.mediaUrl}} style={styles.media as ImageStyle} />
           </>
         ) : null}
         <Spacer size="md" />

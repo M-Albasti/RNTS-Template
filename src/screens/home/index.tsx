@@ -36,6 +36,7 @@ import {changeLanguage} from '@translation/i18n';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveHomeStyles} from './styles/resolveHomeStyles';
 
 //* types import
 import {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
@@ -172,43 +173,7 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
   const coins = dashboard?.gameCoins ?? localCoins;
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    hero: {
-      backgroundColor: tokens.colors.primary,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
-      ...tokens.layout.presets.columnCenter,
-      ...tokens.shadows.md,
-    },
-    heroText: {color: tokens.colors.textInverse},
-    statsRow: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    statPill: {
-      backgroundColor: tokens.colors.surface,
-      borderRadius: tokens.radius.lg,
-      paddingVertical: tokens.spacing.md,
-      paddingHorizontal: tokens.spacing.md,
-      minWidth: '46%' as const,
-      flex: tokens.layout.flex.fill,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      ...tokens.shadows.sm,
-    },
-    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    actions: {gap: tokens.spacing.sm},
-    workflowStep: {
-      borderLeftWidth: tokens.layout.borderWidth.md,
-      borderLeftColor: tokens.colors.primary,
-      paddingLeft: tokens.spacing.md,
-      gap: tokens.spacing.xxs,
-    },
-    apiBadge: {
-      alignSelf: 'flex-start' as const,
-      backgroundColor: tokens.colors.surfaceSecondary,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xxs,
-    },
-  }));
+  const styles = useThemedStyles(resolveHomeStyles);
 
   const drawerNav = navigation.getParent<DrawerNavigationProp<DrawerParamList>>();
 

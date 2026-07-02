@@ -25,6 +25,7 @@ import {changeLanguage} from '@translation/i18n';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveSettingsStyles} from './styles/resolveSettingsStyles';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -46,19 +47,7 @@ const Settings = (_props: SettingsProps): React.JSX.Element => {
   const themeMode = useAppSelector(state => state.appSettings.themeMode);
   const activeScheme = useAppColorScheme();
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    row: {
-      ...tokens.layout.presets.rowBetween,
-    },
-    modeRow: {
-      ...tokens.layout.presets.wrapRow,
-      gap: tokens.spacing.sm,
-    },
-    modeButton: {
-      flex: tokens.layout.flex.fill,
-      minWidth: '30%' as const,
-    },
-  }));
+  const styles = useThemedStyles(resolveSettingsStyles);
 
   const appearanceHint =
     themeMode === 'system'

@@ -4,6 +4,7 @@ import Svg, {Circle, Ellipse, Path, Rect} from 'react-native-svg';
 
 import type {CameraFilterId} from '@constants/cameraFilters';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCameraFilterOverlayStyles} from './styles/resolveCameraFilterOverlayStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 
 type CameraFilterOverlayProps = {
@@ -22,11 +23,7 @@ const CameraFilterOverlay = ({
   height,
 }: CameraFilterOverlayProps): React.JSX.Element | null => {
   const {palette} = useThemeTokens();
-  const styles = useThemedStyles(t => ({
-    overlay: {
-      ...t.layout.presets.absoluteFill,
-    },
-  }));
+  const styles = useThemedStyles(resolveCameraFilterOverlayStyles);
 
   if (filterId === 'none') {
     return null;

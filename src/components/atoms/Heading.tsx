@@ -1,7 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, TextProps, TextStyle} from 'react-native';
+import {Text, TextProps, TextStyle} from 'react-native';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveHeadingStyles} from './styles/resolveHeadingStyles';
 import type {TextAlign} from '@theme/types';
 
 export type HeadingLevel = 'display' | 'h1' | 'h2' | 'h3';
@@ -27,37 +28,10 @@ const Heading = ({
   ...textProps
 }: HeadingProps): React.JSX.Element => {
   const resolvedTone = tone ?? (muted ? 'muted' : 'default');
-  const styles = useThemedStyles(tokens => {
-    const toneColor =
-      resolvedTone === 'muted'
-        ? tokens.colors.textSecondary
-        : resolvedTone === 'primary'
-          ? tokens.colors.primary
-          : tokens.colors.textPrimary;
-
-    return StyleSheet.create({
-      display: {
-        ...tokens.typography.display,
-        color: toneColor,
-        textAlign: align,
-      },
-      h1: {
-        ...tokens.typography.h1,
-        color: toneColor,
-        textAlign: align,
-      },
-      h2: {
-        ...tokens.typography.h2,
-        color: toneColor,
-        textAlign: align,
-      },
-      h3: {
-        ...tokens.typography.h3,
-        color: toneColor,
-        textAlign: align,
-      },
-    });
-  });
+  const styles = useThemedStyles(
+    tokens => resolveHeadingStyles(tokens, resolvedTone, align),
+    [resolvedTone, align],
+  );
 
   return (
     <Text {...textProps} style={[styles[level], style]}>

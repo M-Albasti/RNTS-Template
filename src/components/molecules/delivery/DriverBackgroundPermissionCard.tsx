@@ -11,6 +11,7 @@ import {
   requestDriverBackgroundLocationPermission,
 } from '@helpers/locationHelpers';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDriverBackgroundPermissionCardStyles} from './styles/resolveDriverBackgroundPermissionCardStyles';
 
 type Props = {
   visible: boolean;
@@ -22,9 +23,7 @@ const DriverBackgroundPermissionCard = ({visible}: Props): React.JSX.Element | n
     null,
   );
   const [loading, setLoading] = React.useState(false);
-  const styles = useThemedStyles(tokens => ({
-    card: {gap: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveDriverBackgroundPermissionCardStyles);
 
   React.useEffect(() => {
     if (!visible) {

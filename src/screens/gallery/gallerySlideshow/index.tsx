@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View, ImageStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGallerySlideshowStyles} from './styles/resolveGallerySlideshowStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface GallerySlideshowProps {
@@ -24,16 +25,7 @@ const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX
   const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
   const startIndex = Math.max(0, images.findIndex(i => i.id === imageId));
   const [index, setIndex] = useState(startIndex);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      image: {
-        width: '100%',
-        height: tokens.sizes.gallerySlide,
-        borderRadius: tokens.radius.lg,
-      },
-      controls: {...tokens.layout.presets.rowBetween},
-    }),
-  );
+  const styles = useThemedStyles(resolveGallerySlideshowStyles)
 
   const current = images[index];
 
@@ -56,7 +48,7 @@ const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX
   return (
     <ScreenContainer>
       <ScreenHeader title={t('gallery.slideshow')} onBack={() => navigation.goBack()} />
-      <Image source={{uri: current.uri}} style={styles.image} resizeMode="cover" />
+      <Image source={{uri: current.uri}} style={styles.image as ImageStyle} resizeMode="cover" />
       <Spacer size="md" />
       <Heading text={current.title} level="h2" align="center" />
       <TextView

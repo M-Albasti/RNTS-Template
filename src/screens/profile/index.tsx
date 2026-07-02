@@ -18,6 +18,7 @@ import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {navigate as rootNavigate} from '@services/navigationServices/NavigationService';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveProfileStyles} from './styles/resolveProfileStyles';
 import {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
 
 interface ProfileProps {
@@ -37,33 +38,7 @@ const Profile = ({navigation}: ProfileProps): React.JSX.Element => {
 
   const drawerNav = navigation.getParent<DrawerNavigationProp<DrawerParamList>>();
 
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      avatar: {
-        width: tokens.sizes.profileAvatar,
-        height: tokens.sizes.profileAvatar,
-        borderRadius: tokens.radius.full,
-        backgroundColor: tokens.colors.primaryMuted,
-        ...tokens.layout.presets.selfCenter,
-      },
-      statsRow: {
-        ...tokens.layout.presets.wrapRow,
-        gap: tokens.spacing.sm,
-      },
-      stat: {
-        flex: tokens.layout.flex.fill,
-        minWidth: '46%' as const,
-        ...tokens.layout.presets.columnCenter,
-        backgroundColor: tokens.colors.surfaceSecondary,
-        borderRadius: tokens.radius.md,
-        padding: tokens.spacing.sm,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      actions: {gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(resolveProfileStyles);
 
   const openModule = (route: keyof DrawerParamList) => drawerNav?.navigate(route);
 

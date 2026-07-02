@@ -8,16 +8,10 @@ import {videos} from '@constants/videos';
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {videoPlayerShowcaseNavigation} from '../shared/showcaseHelpers';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSVideoPlayerTemplateStyles} from './styles/resolveDSVideoPlayerTemplateStyles';
 
 const VideoPlayerContent = (): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    player: {
-      flex: tokens.layout.flex.fill,
-      borderRadius: tokens.radius.lg,
-      overflow: tokens.layout.overflow.hidden,
-      height: tokens.sizes.videoPlayer,
-    },
-  }));
+  const styles = useThemedStyles(resolveDSVideoPlayerTemplateStyles);
 
   return (
     <>

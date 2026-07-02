@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveTodoHubStyles} from './styles/resolveTodoHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface TodoHubProps {
@@ -22,18 +23,7 @@ const TodoHub = ({navigation}: TodoHubProps): React.JSX.Element => {
   const items = useAppSelector(state => state.todos.items);
   const open = items.filter(i => !i.done).length;
   const high = items.filter(i => !i.done && i.priority === 'high').length;
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        ...tokens.layout.presets.columnCenter,
-        backgroundColor: tokens.colors.primaryMuted,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-      },
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      stats: {...tokens.layout.presets.rowBetween, width: '100%'},
-    }),
-  );
+  const styles = useThemedStyles(resolveTodoHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

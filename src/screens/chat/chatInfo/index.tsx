@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, View} from 'react-native';
+import {Image, View, ImageStyle} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {clearThread, toggleMute, togglePin} from '@redux/slices/chatSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveChatInfoStyles} from './styles/resolveChatInfoStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface ChatInfoProps {
@@ -28,15 +29,7 @@ const ChatInfo = ({navigation, route}: ChatInfoProps): React.JSX.Element => {
     state.chat.threads.find(t => t.id === threadId),
   );
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens => ({
-    avatar: {
-      width: tokens.sizes.avatarLg,
-      height: tokens.sizes.avatarLg,
-      borderRadius: tokens.radius.full,
-      ...tokens.layout.presets.selfCenter,
-    },
-    row: {...tokens.layout.presets.rowBetween},
-  }));
+  const styles = useThemedStyles(resolveChatInfoStyles)
 
   if (!thread) {
     return (
@@ -52,7 +45,7 @@ const ChatInfo = ({navigation, route}: ChatInfoProps): React.JSX.Element => {
     <ScreenContainer scroll>
       <ScreenHeader title={t('chat.chatInfo')} onBack={() => navigation.goBack()} />
       <Card>
-        <Image source={{uri: thread.avatar}} style={styles.avatar} />
+        <Image source={{uri: thread.avatar}} style={styles.avatar as ImageStyle} />
         <Spacer size="md" />
         <Heading text={thread.name} level="h2" align="center" />
         <TextView

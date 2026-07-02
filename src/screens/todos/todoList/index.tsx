@@ -22,6 +22,7 @@ import {
   toggleTodo,
 } from '@redux/slices/todosSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveTodoListStyles} from './styles/resolveTodoListStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {TodoFilter, TodoItem, TodoPriority} from '@Types/todoTypes';
 
@@ -45,17 +46,7 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState(t('todos.personal'));
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      row: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-      meta: {flex: tokens.layout.flex.fill, gap: tokens.spacing.xxs},
-      done: {textDecorationLine: 'line-through' as const, opacity: 0.6},
-      filters: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.xs},
-      high: {color: tokens.colors.error},
-      medium: {color: tokens.colors.warning},
-    }),
-  );
+  const styles = useThemedStyles(resolveTodoListStyles);
 
   const filtered = useMemo(() => {
     if (filter === 'active') return items.filter(i => !i.done);

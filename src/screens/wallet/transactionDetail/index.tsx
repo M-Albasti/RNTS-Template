@@ -12,6 +12,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveTransactionDetailStyles} from './styles/resolveTransactionDetailStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 interface TransactionDetailProps {
@@ -28,17 +29,7 @@ const TransactionDetail = ({
   const tx = useAppSelector(state =>
     state.wallet.transactions.find(item => item.id === transactionId),
   );
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      amount: {
-        ...tokens.layout.presets.textCenter,
-        ...tokens.typography.h1,
-      },
-      credit: {color: tokens.colors.success},
-      debit: {color: tokens.colors.error},
-      row: {...tokens.layout.presets.rowBetween},
-    }),
-  );
+  const styles = useThemedStyles(resolveTransactionDetailStyles);
 
   if (!tx) {
     return (

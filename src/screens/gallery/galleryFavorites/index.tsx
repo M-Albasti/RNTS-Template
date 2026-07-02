@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -10,6 +10,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveGalleryFavoritesStyles} from './styles/resolveGalleryFavoritesStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {GalleryImage} from '@Types/galleryTypes';
 
@@ -20,19 +21,7 @@ interface GalleryFavoritesProps {
 const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Element => {
   const {t} = useTranslation();
   const favorites = useAppSelector(state => state.gallery.images.filter(i => i.favorite));
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      tile: {
-        flex: tokens.layout.flex.fill,
-        margin: tokens.spacing.xs,
-        borderRadius: tokens.radius.md,
-        overflow: tokens.layout.overflow.hidden,
-        aspectRatio: 1,
-      },
-      image: {width: '100%', height: '100%'},
-      empty: {...tokens.layout.presets.center, flex: tokens.layout.flex.fill},
-    }),
-  );
+  const styles = useThemedStyles(resolveGalleryFavoritesStyles)
 
   if (favorites.length === 0) {
     return (
@@ -56,7 +45,7 @@ const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Elemen
           <Pressable
             style={styles.tile}
             onPress={() => navigation.navigate('ImageViewer', {imageId: item.id})}>
-            <Image source={{uri: item.uri}} style={styles.image} />
+            <Image source={{uri: item.uri}} style={styles.image as ImageStyle} />
           </Pressable>
         )}
       />

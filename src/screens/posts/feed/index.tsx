@@ -17,6 +17,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {hydratePosts, setFeedSort, toggleLike, toggleSave} from '@redux/slices/postsSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveFeedStyles} from './styles/resolveFeedStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {FeedSort, PostItem} from '@Types/postTypes';
 
@@ -31,13 +32,7 @@ const Feed = ({navigation}: FeedProps): React.JSX.Element => {
   const feedSort = useAppSelector(state => state.posts.feedSort);
   const dispatch = useAppDispatch();
   const feedQuery = useFeedQuery(feedSort);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      footer: {paddingBottom: tokens.spacing.xxl},
-      sortRow: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
-    }),
-  );
+  const styles = useThemedStyles(resolveFeedStyles);
 
   useEffect(() => {
     if (feedQuery.data) {

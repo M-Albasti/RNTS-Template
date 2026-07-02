@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveChatHubStyles} from './styles/resolveChatHubStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface ChatHubProps {
@@ -22,20 +23,7 @@ const ChatHub = ({navigation}: ChatHubProps): React.JSX.Element => {
   const threads = useAppSelector(state => state.chat.threads);
   const contacts = useAppSelector(state => state.chat.contacts);
   const unread = threads.reduce((sum, thread) => sum + thread.unread, 0);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      hero: {
-        ...tokens.layout.presets.columnCenter,
-        backgroundColor: tokens.colors.surfaceSecondary,
-        borderRadius: tokens.radius.lg,
-        padding: tokens.spacing.lg,
-        borderWidth: tokens.layout.borderWidth.sm,
-        borderColor: tokens.colors.border,
-      },
-      grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-      stats: {...tokens.layout.presets.rowBetween, width: '100%'},
-    }),
-  );
+  const styles = useThemedStyles(resolveChatHubStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

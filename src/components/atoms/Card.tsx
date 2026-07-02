@@ -2,6 +2,7 @@ import React from 'react';
 import {View, ViewProps, ViewStyle} from 'react-native';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCardStyles} from './styles/resolveCardStyles';
 
 interface CardProps extends ViewProps {
   children: React.ReactNode;
@@ -19,25 +20,10 @@ const Card = ({
   style,
   ...viewProps
 }: CardProps): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    base: {
-      overflow: tokens.layout.overflow.hidden,
-      backgroundColor: tokens.colors.surface,
-      borderRadius: tokens.radius.lg,
-      borderColor: tokens.colors.border,
-      padding: padded ? tokens.spacing.lg : tokens.spacing.none,
-    },
-    outline: {
-      borderWidth: tokens.layout.borderWidth.sm,
-    },
-    elevated: {
-      ...tokens.shadows.md,
-    },
-    constrained: {
-      width: '100%',
-      maxWidth: tokens.sizes.videoPreviewLg,
-    },
-  }));
+  const styles = useThemedStyles(
+    tokens => resolveCardStyles(tokens, padded),
+    [padded],
+  );
 
   return (
     <View

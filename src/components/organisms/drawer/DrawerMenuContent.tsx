@@ -16,6 +16,7 @@ import {navigate as rootNavigate} from '@services/navigationServices/NavigationS
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDrawerMenuContentStyles} from './styles/resolveDrawerMenuContentStyles';
 import type {DrawerParamList} from '@Types/appNavigation';
 
 type DrawerRoute = keyof DrawerParamList;
@@ -44,21 +45,7 @@ const DrawerMenuContent = (
 ): React.JSX.Element => {
   const {t} = useTranslation();
   const user = useAppSelector(state => state.auth.user);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      container: {
-        flex: tokens.layout.flex.fill,
-        paddingTop: tokens.spacing.xxl,
-        paddingHorizontal: tokens.spacing.lg,
-        backgroundColor: tokens.colors.background,
-      },
-      footer: {
-        marginTop: 'auto' as const,
-        paddingBottom: tokens.spacing.xl,
-        gap: tokens.spacing.sm,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveDrawerMenuContentStyles);
 
   const navigateTo = (route: DrawerRoute) => {
     props.navigation.navigate(route);

@@ -5,6 +5,7 @@ import type {VideoFile} from 'react-native-vision-camera';
 
 import {videos} from '@constants/videos';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveShowcaseHelpersStyles} from './styles/resolveShowcaseHelpersStyles';
 
 import type {
   AppStackNavigationProp,
@@ -100,11 +101,4 @@ export const navigateDesignSystemShowcase = (
 };
 
 export const useShowcaseStack = () =>
-  useThemedStyles(tokens => ({
-    stack: {gap: tokens.spacing.sm},
-    row: {
-      flexDirection: tokens.layout.flexDirection.row,
-      flexWrap: tokens.layout.flexWrap.wrap,
-      gap: tokens.spacing.sm,
-    },
-  }));
+  useThemedStyles(resolveShowcaseHelpersStyles);

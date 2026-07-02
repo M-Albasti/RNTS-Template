@@ -5,6 +5,7 @@ import {View} from 'react-native';
 //* components imports
 import TouchableTextIcon from '@atoms/TouchableTextIcon';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveButtonsStyles} from './styles/resolveButtonsStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 
 interface VideosListButtonsProps {
@@ -13,26 +14,7 @@ interface VideosListButtonsProps {
 
 const Buttons = (props: VideosListButtonsProps): React.JSX.Element => {
   const {colors, sizes} = useThemeTokens();
-  const styles = useThemedStyles(t => ({
-    container: {
-      ...t.layout.presets.rowCenter,
-    },
-    recordTouchableContainer: {
-      alignSelf: t.layout.alignSelf.center,
-      ...t.layout.presets.rowCenter,
-      padding: t.spacing.md,
-      borderWidth: t.layout.borderWidth.sm,
-      borderRadius: t.radius.lg,
-      marginVertical: t.spacing.md,
-    },
-    recordTextContainer: {
-      paddingHorizontal: t.spacing.xs,
-    },
-    recordText: {
-      ...t.layout.presets.textRight,
-      ...t.typography.title,
-    },
-  }));
+  const styles = useThemedStyles(resolveButtonsStyles);
 
   return (
     <View style={styles.container}>

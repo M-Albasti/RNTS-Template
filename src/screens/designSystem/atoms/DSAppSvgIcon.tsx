@@ -5,6 +5,7 @@ import AppSvgIcon from '@atoms/AppSvgIcon';
 import TextView from '@atoms/TextView';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveDSAppSvgIconStyles} from './styles/resolveDSAppSvgIconStyles';
 
 import {createShowcaseScreen} from '../shared/createShowcaseScreen';
 import {useShowcaseStack} from '../shared/showcaseHelpers';
@@ -13,12 +14,7 @@ const NAMES = ['home', 'user', 'settings', 'chat'] as const;
 
 const SvgIcons = (): React.JSX.Element => {
   const stackStyles = useShowcaseStack();
-  const styles = useThemedStyles(tokens => ({
-    iconItem: {
-      alignItems: tokens.layout.alignItems.center,
-      gap: tokens.spacing.xs,
-    },
-  }));
+  const styles = useThemedStyles(resolveDSAppSvgIconStyles);
   return (
     <View style={stackStyles.row}>
       {NAMES.map(name => (

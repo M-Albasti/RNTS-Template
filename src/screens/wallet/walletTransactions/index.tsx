@@ -12,6 +12,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveWalletTransactionsStyles} from './styles/resolveWalletTransactionsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {WalletTransaction} from '@Types/walletTypes';
 
@@ -24,14 +25,7 @@ const WalletTransactions = ({
 }: WalletTransactionsProps): React.JSX.Element => {
   const {t} = useTranslation();
   const transactions = useAppSelector(state => state.wallet.transactions);
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      list: {flex: tokens.layout.flex.fill},
-      row: {...tokens.layout.presets.rowBetween},
-      credit: {color: tokens.colors.success},
-      debit: {color: tokens.colors.error},
-    }),
-  );
+  const styles = useThemedStyles(resolveWalletTransactionsStyles);
 
   const renderItem = ({item}: {item: WalletTransaction}) => (
     <Pressable onPress={() => navigation.navigate('TransactionDetail', {transactionId: item.id})}>

@@ -4,6 +4,7 @@ import {View} from 'react-native';
 import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioPlaybackStyles} from './styles/resolveAudioPlaybackStyles';
 
 interface AudioPlaybackProps {
   startPlay: () => Promise<void>;
@@ -18,25 +19,7 @@ interface AudioPlaybackProps {
 }
 
 const AudioPlayback = (props: AudioPlaybackProps): React.JSX.Element => {
-  const styles = useThemedStyles(t => ({
-    recordAudioContainer: {
-      ...t.layout.presets.columnCenter,
-      paddingTop: t.spacing.xl,
-    },
-    headerTextStyle: {
-      ...t.typography.title,
-      color: t.colors.textPrimary,
-    },
-    buttonContainerStyle: {
-      padding: t.spacing.md,
-      margin: t.spacing.md,
-      borderWidth: t.layout.borderWidth.sm,
-      borderRadius: t.radius.lg,
-      borderColor: t.colors.border,
-      ...t.layout.presets.center,
-      width: t.sizes.videoPreview,
-    },
-  }));
+  const styles = useThemedStyles(resolveAudioPlaybackStyles);
 
   return (
     <View style={styles.recordAudioContainer}>

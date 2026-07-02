@@ -10,6 +10,7 @@ import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveErrorFallbackStyles} from './styles/resolveErrorFallbackStyles';
 
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
@@ -23,20 +24,7 @@ const ErrorFallback = ({
   resetErrorBoundary,
 }: FallbackProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      container: {
-        flex: tokens.layout.flex.fill,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: tokens.spacing.xl,
-        backgroundColor: tokens.colors.background,
-      },
-      errorText: {
-        color: tokens.colors.error,
-      },
-    }),
-  );
+  const styles = useThemedStyles(resolveErrorFallbackStyles);
 
   return (
     <View style={styles.container}>

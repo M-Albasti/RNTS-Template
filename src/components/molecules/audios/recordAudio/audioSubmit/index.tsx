@@ -4,6 +4,7 @@ import React, {Fragment} from 'react';
 //* components import
 import TouchableText from '@atoms/TouchableText';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioSubmitStyles} from './styles/resolveAudioSubmitStyles';
 
 interface AudioSubmitProps {
   retakeAudio: () => void;
@@ -12,16 +13,7 @@ interface AudioSubmitProps {
 }
 
 const AudioSubmit = (props: AudioSubmitProps) => {
-  const styles = useThemedStyles(t => ({
-    buttonContainerStyle: {
-      padding: t.spacing.md,
-      margin: t.spacing.md,
-      borderWidth: t.layout.borderWidth.sm,
-      borderRadius: t.radius.lg,
-      ...t.layout.presets.center,
-      width: t.sizes.videoPreview,
-    },
-  }));
+  const styles = useThemedStyles(resolveAudioSubmitStyles);
 
   return (
     <Fragment>

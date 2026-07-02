@@ -6,6 +6,7 @@ import Button from '@atoms/Button';
 import Card from '@atoms/Card';
 import TextView from '@atoms/TextView';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolvePromotionCardStyles} from './styles/resolvePromotionCardStyles';
 
 import type {MerchantPromotion} from '@Types/marketplaceTypes';
 
@@ -23,17 +24,10 @@ const PromotionCard = ({
   onDelete,
 }: PromotionCardProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    card: {gap: tokens.spacing.sm, marginBottom: tokens.spacing.sm},
-    row: {...tokens.layout.presets.rowBetween, alignItems: 'center' as const},
-    activePill: {
-      backgroundColor: promotion.isActive ? tokens.colors.successMuted : tokens.colors.surfaceSecondary,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: 4,
-    },
-    actions: {flexDirection: 'row' as const, gap: tokens.spacing.sm, flexWrap: 'wrap' as const},
-  }));
+  const styles = useThemedStyles(
+    tokens => resolvePromotionCardStyles(tokens, promotion),
+    [promotion],
+  );
 
   const valueLabel =
     promotion.type === 'percentage'

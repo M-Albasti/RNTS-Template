@@ -19,6 +19,7 @@ import {createDeliveryOrderOnServer} from '@services/deliveryServices/deliveryOr
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveNewDeliveryStyles} from './styles/resolveNewDeliveryStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {DeliveryAddress, DeliveryPackageType} from '@Types/deliveryTypes';
 
@@ -47,21 +48,7 @@ const NewDelivery = ({navigation}: Props): React.JSX.Element => {
     return {eta, price};
   }, [dropoff, packageType, pickup]);
 
-  const styles = useThemedStyles(tokens => ({
-    section: {gap: tokens.spacing.sm},
-    chipRow: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    chip: {
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.md,
-      paddingVertical: tokens.spacing.sm,
-    },
-    chipActive: {
-      borderColor: tokens.colors.primary,
-      backgroundColor: tokens.colors.surfaceSecondary,
-    },
-  }));
+  const styles = useThemedStyles(resolveNewDeliveryStyles);
 
   const submit = () => {
     if (!pickup || !dropoff || !quote) {

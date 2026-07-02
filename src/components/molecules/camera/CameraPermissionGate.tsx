@@ -7,6 +7,7 @@ import TextView from '@atoms/TextView';
 
 import {permissionsRequest} from '@helpers/permissionsRequest';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveCameraPermissionGateStyles} from './styles/resolveCameraPermissionGateStyles';
 
 type CameraPermissionGateProps = {
   hasPermission: boolean;
@@ -22,15 +23,7 @@ const CameraPermissionGate = ({
   const {t} = useTranslation();
   const [loading, setLoading] = React.useState(false);
   const [attempted, setAttempted] = React.useState(false);
-  const styles = useThemedStyles(tokens => ({
-    gate: {
-      ...tokens.layout.presets.center,
-      ...tokens.layout.presets.fill,
-      padding: tokens.spacing.lg,
-      gap: tokens.spacing.md,
-      backgroundColor: tokens.colors.background,
-    },
-  }));
+  const styles = useThemedStyles(resolveCameraPermissionGateStyles);
 
   if (hasPermission) {
     return <>{children}</>;

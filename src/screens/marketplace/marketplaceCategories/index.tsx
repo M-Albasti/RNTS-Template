@@ -9,24 +9,14 @@ import TextView from '@atoms/TextView';
 
 import {MARKETPLACE_CATEGORIES} from '@constants/marketplaceMockData';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceCategoriesStyles} from './styles/resolveMarketplaceCategoriesStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'MarketplaceCategories'>};
 
 const MarketplaceCategories = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
-  const styles = useThemedStyles(tokens => ({
-    grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    chip: {
-      width: '47%' as const,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
-      ...tokens.layout.presets.columnCenter,
-      gap: tokens.spacing.xs,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-    },
-  }));
+  const styles = useThemedStyles(resolveMarketplaceCategoriesStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

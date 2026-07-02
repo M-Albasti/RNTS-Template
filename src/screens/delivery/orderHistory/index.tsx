@@ -11,6 +11,7 @@ import TextView from '@atoms/TextView';
 import {formatCurrency} from '@helpers/locationHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveOrderHistoryStyles} from './styles/resolveOrderHistoryStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'DeliveryHistory'>};
@@ -20,9 +21,7 @@ const DeliveryHistory = ({navigation}: Props): React.JSX.Element => {
   const orders = useAppSelector(state =>
     state.delivery.orders.filter(o => ['delivered', 'cancelled'].includes(o.status)),
   );
-  const styles = useThemedStyles(tokens => ({
-    card: {gap: tokens.spacing.sm, marginBottom: tokens.spacing.sm},
-  }));
+  const styles = useThemedStyles(resolveOrderHistoryStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">

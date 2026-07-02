@@ -14,6 +14,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {payBill} from '@redux/slices/walletSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveWalletBillsStyles} from './styles/resolveWalletBillsStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface WalletBillsProps {
@@ -24,12 +25,7 @@ const WalletBills = ({navigation}: WalletBillsProps): React.JSX.Element => {
   const {t} = useTranslation();
   const bills = useAppSelector(state => state.wallet.bills);
   const dispatch = useAppDispatch();
-  const styles = useThemedStyles(tokens =>
-    StyleSheet.create({
-      row: {...tokens.layout.presets.rowBetween},
-      paid: {opacity: 0.5},
-    }),
-  );
+  const styles = useThemedStyles(resolveWalletBillsStyles);
 
   return (
     <ScreenContainer scroll>

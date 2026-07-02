@@ -21,6 +21,7 @@ import {addToCart} from '@redux/slices/marketplaceSlice';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveMarketplaceProductDetailStyles} from './styles/resolveMarketplaceProductDetailStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {
@@ -35,13 +36,7 @@ const MarketplaceProductDetail = ({navigation, route}: Props): React.JSX.Element
   const product = products.find(p => p.id === route.params.productId);
   const [qty, setQty] = useState(1);
 
-  const styles = useThemedStyles(tokens => ({
-    strike: {textDecorationLine: 'line-through' as const, color: tokens.colors.textMuted},
-    qtyRow: {
-      ...tokens.layout.presets.row,
-      gap: tokens.spacing.md,
-    },
-  }));
+  const styles = useThemedStyles(resolveMarketplaceProductDetailStyles);
 
   if (!product) {
     return (
