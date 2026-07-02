@@ -26,6 +26,7 @@ import DesignSystemNavigator from '@navigation/DesignSystemNavigator';
 import CameraNavigator from '@navigation/CameraNavigator';
 import DeliveryNavigator from '@navigation/DeliveryNavigator';
 import MarketplaceNavigator from '@navigation/MarketplaceNavigator';
+import IslamicNavigator from '@navigation/IslamicNavigator';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -115,6 +116,9 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
         </Drawer.Screen>
         <Drawer.Screen name="MarketplaceStack" options={{title: 'Marketplace'}}>
           {() => <MarketplaceNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="IslamicStack" options={{title: 'Islamic'}}>
+          {() => <IslamicNavigator />}
         </Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

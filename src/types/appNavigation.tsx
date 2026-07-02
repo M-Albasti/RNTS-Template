@@ -21,6 +21,7 @@ export type DrawerParamList = {
   CameraStack: undefined;
   DeliveryStack: undefined;
   MarketplaceStack: undefined;
+  IslamicStack: undefined;
 };
 
 export type RootStackParamList = {
@@ -62,6 +63,25 @@ export type RootStackParamList = {
   CameraStack: undefined;
   DeliveryStack: undefined;
   MarketplaceStack: undefined;
+  DeliveryStack: undefined;
+  MarketplaceStack: undefined;
+  IslamicStack: undefined;
+  IslamicHub: undefined;
+  QuranHub: undefined;
+  QuranIndex: undefined;
+  QuranList: undefined;
+  QuranReader: {surahNumber: number; ayahNumber?: number};
+  QuranSearch: undefined;
+  IslamicUnifiedSearch: undefined;
+  AdhkarCategories: undefined;
+  AdhkarDetail: {categoryId: number; title: string};
+  HadithHub: undefined;
+  HadithEditions: {filter: 'all' | 'sahih' | 'weak'; title: string};
+  HadithList: {slug: string; title: string; filter?: 'all' | 'sahih' | 'weak'};
+  HadithDetail: {hadithId: string; title: string};
+  HadithSearch: undefined;
+  PrayerTimes: undefined;
+  IslamicSettings: undefined;
   CameraHub: undefined;
   SnapCamera: undefined;
   QrScanner: undefined;
