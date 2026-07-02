@@ -28,7 +28,7 @@ import {styles} from './styles';
 
 const AuthStack = createNativeStackNavigator<RootStackParamList>();
 
-const AuthNavigator = (props: any): React.JSX.Element => {
+const AuthNavigator = (): React.JSX.Element => {
   return (
     <AuthStack.Navigator
       initialRouteName="OnBoarding"
@@ -58,7 +58,7 @@ const AuthNavigator = (props: any): React.JSX.Element => {
           {props => <AuthMethod {...props} />}
         </AuthStack.Screen>
         <AuthStack.Screen name="FirebaseAuthStack">
-          {props => <FirebaseAuthNavigator {...props} />}
+          {() => <FirebaseAuthNavigator />}
         </AuthStack.Screen>
         <AuthStack.Screen name="Login">
           {props => <Login {...props} />}

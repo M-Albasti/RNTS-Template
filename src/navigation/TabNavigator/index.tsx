@@ -35,7 +35,7 @@ interface TabBarIconProps {
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-const TabNavigator = (props: any): React.JSX.Element => {
+const TabNavigator = (): React.JSX.Element => {
   const {t} = useTranslation();
   const {colors} = useTheme();
   const {colors: themeColors} = useThemeTokens();

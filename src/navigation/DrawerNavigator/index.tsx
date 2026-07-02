@@ -38,7 +38,7 @@ import {styles} from './styles';
 
 const Drawer = createDrawerNavigator<RootStackParamList>();
 
-const DrawerNavigator = (props: any): React.JSX.Element => {
+const DrawerNavigator = (): React.JSX.Element => {
   const {colors} = useThemeTokens();
 
   return (
@@ -74,16 +74,16 @@ const DrawerNavigator = (props: any): React.JSX.Element => {
       drawerContent={props => <DrawerMenuContent {...props} />}>
       <Drawer.Group>
         <Drawer.Screen name="TabRoot" options={{title: 'Home'}}>
-          {props => <TabNavigator {...props} />}
+          {() => <TabNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="Profile">
           {props => <Profile {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="AudioStack" options={{title: 'Audios'}}>
-          {props => <AudioNavigator {...props} />}
+          {() => <AudioNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="VideoStack" options={{title: 'Videos'}}>
-          {props => <VideoNavigator {...props} />}
+          {() => <VideoNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="PostStack" options={{title: 'Social Feed'}}>
           {() => <PostNavigator />}
