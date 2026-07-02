@@ -116,6 +116,7 @@
     "camera": "Camera",
     "delivery": "Delivery",
     "marketplace": "Marketplace",
+    "wordPuzzle": "Word puzzle",
     "islamic": "Islamic",
     "designSystem": "Design system",
     "settings": "Settings"
@@ -561,6 +562,10 @@
         "title": "Marketplace",
         "subtitle": "Buy, sell & checkout"
       },
+      "wordPuzzle": {
+        "title": "Scattered letters",
+        "subtitle": "Hex word riddles AR/EN"
+      },
       "islamic": {
         "title": "Islamic",
         "subtitle": "Quran, adhkar & hadith"
@@ -805,6 +810,8 @@
     "historySubtitle": "Your reward log",
     "achievements": "Achievements",
     "achievementsSubtitle": "Badges & daily bonus",
+    "wordPuzzle": "Scattered letters",
+    "wordPuzzleSubtitle": "Connect hex letters to solve riddles",
     "dailyClaimed": "Daily reward claimed",
     "claimDaily": "Claim daily +15 coins",
     "unlocked": "Unlocked",
@@ -887,6 +894,80 @@
     "services": "Services",
     "profile": "Profile"
   },
+  "wordPuzzle": {
+    "title": "Scattered letters",
+    "hubTitle": "Word riddle adventure",
+    "hubSubtitle": "Drag across hex letters to spell the answer — Arabic and English worlds stay separate.",
+    "gems": "{{count}} gems",
+    "arabicWorld": "Arabic lands",
+    "arabicWorldSubtitle": "Quran & prophets riddles — Arabic only",
+    "englishWorld": "English lands",
+    "englishWorldSubtitle": "English riddles only",
+    "libraryHint": "Pick a book. Each land has 50 locations with mini riddles.",
+    "libraryHintApi": "Books and riddles are loaded live from trusted public APIs.",
+    "loadingBooks": "Loading books from API…",
+    "loadingStage": "Loading location puzzles…",
+    "landTitle": "Land {{number}}",
+    "retry": "Retry",
+    "apiSourceArabic": "Arabic: IslamicQuizAPI (islamicquiz.i8x.net) — Dorar.net questions",
+    "apiSourceEnglish": "English: Riddles API (riddles-api-eight.vercel.app)",
+    "errors": {
+      "loadFailed": "Could not load puzzles. Check your connection and try again."
+    },
+    "bookmark": "Book",
+    "stageCount": "{{count}} locations",
+    "separateLanguagesNote": "Arabic and English puzzles never mix on the same screen.",
+    "mapHint": "Complete locations in order to unlock the path.",
+    "levelLabel": "Location {{stage}} · {{book}} · Riddle {{puzzle}}/{{total}}",
+    "correct": "Correct!",
+    "tryAgain": "Not quite — try another path.",
+    "hint": "Hint (-2 gems)",
+    "hintUsed": "Solution path highlighted.",
+    "clear": "Clear",
+    "next": "Next riddle",
+    "dragHint": "Drag from the first letter to the last to form the word.",
+    "bookNotFound": "Book not found.",
+    "stageNotFound": "Location not found.",
+    "stageTitle": "Location",
+    "books": {
+      "arProphets": {
+        "title": "Book of Prophets",
+        "land": "First land — Prophets"
+      },
+      "arQuran": {
+        "title": "Book of Quran",
+        "land": "Second land — Quran signs"
+      },
+      "enDiscovery": {
+        "title": "Book of Discovery",
+        "land": "First land — Discovery"
+      },
+      "enNature": {
+        "title": "Book of Nature",
+        "land": "Second land — Nature"
+      }
+    },
+    "clues": {
+      "ismail": "A prophet linked to a sacrifice",
+      "ayatKursiSurah": "Which surah contains Ayat al-Kursi?",
+      "fatihahAyahCount": "How many ayahs are in Surah Al-Fatiha?",
+      "staffSea": "Which prophet parted the sea with his staff?",
+      "yunus": "A prophet who was swallowed by a great fish",
+      "shortSurahTauhid": "Which short surah speaks of pure monotheism?",
+      "yusuf": "A prophet known for the beautiful coat",
+      "kabaBuilder": "Who raised the foundations of the Kaaba with his son?",
+      "lastSurah": "Which surah asks refuge from the whispering of devils?",
+      "nuh": "A prophet who built a great ship",
+      "yellowFruit": "Monkeys love this yellow fruit",
+      "redPlanet": "The fourth planet from the Sun",
+      "jungleKing": "The king of the jungle",
+      "skyWater": "Falls from clouds",
+      "breakfastLoaf": "Baked slice for breakfast",
+      "nightLight": "Twinkles in the night sky",
+      "swimsInSea": "Lives underwater and swims",
+      "readPages": "You read its pages at school",
+      "railRide": "Runs on tracks with carriages",
+      "grassColor": "The color of fresh grass"
   "services": {
     "title": "Services",
     "hubTitle": "Service distributor",

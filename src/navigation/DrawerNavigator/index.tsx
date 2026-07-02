@@ -26,17 +26,18 @@ import DesignSystemNavigator from '@navigation/DesignSystemNavigator';
 import CameraNavigator from '@navigation/CameraNavigator';
 import DeliveryNavigator from '@navigation/DeliveryNavigator';
 import MarketplaceNavigator from '@navigation/MarketplaceNavigator';
+import WordPuzzleNavigator from '@navigation/WordPuzzleNavigator';
 import IslamicNavigator from '@navigation/IslamicNavigator';
 
 //* types import
-import {RootStackParamList} from '@Types/appNavigation';
+import type {DrawerParamList} from '@Types/appNavigation';
 
 import {useThemeTokens} from '@theme/useThemeTokens';
 
 //* styles import
 import {styles} from './styles';
 
-const Drawer = createDrawerNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const DrawerNavigator = (): React.JSX.Element => {
   const {colors} = useThemeTokens();
@@ -116,6 +117,9 @@ const DrawerNavigator = (): React.JSX.Element => {
         </Drawer.Screen>
         <Drawer.Screen name="MarketplaceStack" options={{title: 'Marketplace'}}>
           {() => <MarketplaceNavigator />}
+        </Drawer.Screen>
+        <Drawer.Screen name="WordPuzzleStack" options={{title: 'Word Puzzle'}}>
+          {() => <WordPuzzleNavigator />}
         </Drawer.Screen>
         <Drawer.Screen name="IslamicStack" options={{title: 'Islamic'}}>
           {() => <IslamicNavigator />}

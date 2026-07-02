@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
@@ -13,7 +14,7 @@ import TextView from '@atoms/TextView';
 
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
-import type {AppStackNavigationProp} from '@Types/appNavigation';
+import type {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
 
 interface GameHubProps {
   navigation: AppStackNavigationProp<'GameHub'>;
@@ -35,6 +36,8 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
       stats: {...tokens.layout.presets.rowBetween, width: '100%'},
     }),
   );
+
+  const drawerNav = navigation.getParent<DrawerNavigationProp<DrawerParamList>>();
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
@@ -61,6 +64,7 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
           {title: t('game.shop'), subtitle: t('game.shopSubtitle'), icon: 'cart-outline', route: 'GameShop' as const, type: 'Ionicons' as const},
           {title: t('game.leaderboard'), subtitle: t('game.leaderboardSubtitle'), icon: 'podium-outline', route: 'GameLeaderboard' as const, type: 'Ionicons' as const},
           {title: t('game.history'), subtitle: t('game.historySubtitle'), icon: 'time-outline', route: 'GameHistory' as const, type: 'Ionicons' as const},
+          {title: t('game.wordPuzzle'), subtitle: t('game.wordPuzzleSubtitle'), icon: 'grid-outline', route: 'WordPuzzleStack' as const, type: 'Ionicons' as const},
           {title: t('game.achievements'), subtitle: t('game.achievementsSubtitle'), icon: 'ribbon-outline', route: 'GameAchievements' as const, type: 'Ionicons' as const},
         ].map((item, index) => (
           <AnimatedEntrance key={item.route} delay={index * 50}>

@@ -21,6 +21,7 @@ export type DrawerParamList = {
   CameraStack: undefined;
   DeliveryStack: undefined;
   MarketplaceStack: undefined;
+  WordPuzzleStack: undefined;
   IslamicStack: undefined;
 };
 
@@ -134,6 +135,10 @@ export type RootStackParamList = {
   GameLeaderboard: undefined;
   GameHistory: undefined;
   GameAchievements: undefined;
+  WordPuzzleHub: undefined;
+  WordPuzzleLibrary: {language: 'ar' | 'en'};
+  WordPuzzleStageMap: {bookId: string};
+  WordPuzzlePlay: {bookId: string; stageId: string};
   WalletHome: undefined;
   WalletTransactions: undefined;
   WalletSend: undefined;
