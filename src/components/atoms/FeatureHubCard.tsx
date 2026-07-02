@@ -1,9 +1,10 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {View} from 'react-native';
 
 import Heading from '@atoms/Heading';
 import IconView from '@atoms/Icon';
 import TextView from '@atoms/TextView';
+import AnimatedScalePressable from '@atoms/AnimatedScalePressable';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
@@ -36,16 +37,16 @@ const FeatureHubCard = ({
       padding: tokens.spacing.md,
       borderWidth: tokens.layout.borderWidth.sm,
       borderColor: tokens.colors.border,
-      ...tokens.shadows.sm,
+      ...tokens.shadows.md,
     },
     cardPressed: {
       backgroundColor: tokens.colors.surfaceSecondary,
       ...tokens.shadows.none,
     },
     iconWrap: {
-      width: tokens.sizes.touchTarget,
-      height: tokens.sizes.touchTarget,
-      borderRadius: tokens.radius.md,
+      width: tokens.sizes.touchTarget + 4,
+      height: tokens.sizes.touchTarget + 4,
+      borderRadius: tokens.radius.lg,
       ...tokens.layout.presets.center,
       backgroundColor: accentColor || tokens.colors.primaryMuted,
       marginBottom: tokens.spacing.sm,
@@ -53,15 +54,13 @@ const FeatureHubCard = ({
   }));
 
   return (
-    <Pressable
-      style={({pressed}) => [styles.card, pressed && styles.cardPressed]}
-      onPress={onPress}>
+    <AnimatedScalePressable style={styles.card} onPress={onPress}>
       <View style={styles.iconWrap}>
         <IconView iconType={iconType} name={iconName} size={sizes.iconSm} />
       </View>
       <Heading text={title} level="h3" />
       <TextView text={subtitle} variant="caption" muted />
-    </Pressable>
+    </AnimatedScalePressable>
   );
 };
 

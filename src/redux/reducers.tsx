@@ -15,6 +15,7 @@ import gameReducer from '@redux/slices/gameSlice';
 import deliveryReducer from '@redux/slices/deliverySlice';
 import marketplaceReducer from '@redux/slices/marketplaceSlice';
 import wordPuzzleReducer from '@redux/slices/wordPuzzleSlice';
+import islamicReducer from '@redux/slices/islamicSlice';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   delivery: deliveryReducer,
   marketplace: marketplaceReducer,
   wordPuzzle: wordPuzzleReducer,
+  islamic: islamicReducer,
 });
 
 export default rootReducer;

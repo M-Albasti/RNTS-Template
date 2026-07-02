@@ -4,7 +4,6 @@ import {layout} from '@theme/tokens';
 import React, {Suspense} from 'react';
 import {View} from 'react-native';
 import {
-  BottomTabBarButtonProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import {useTheme} from '@react-navigation/native';
@@ -13,6 +12,7 @@ import {useTranslation} from 'react-i18next';
 //* screens import
 import Home from '@screens/home';
 import Profile from '@screens/profile';
+import ServicesHub from '@screens/servicesHub';
 
 //* types import
 import {RootStackParamList} from '@Types/appNavigation';
@@ -20,7 +20,6 @@ import {RootStackParamList} from '@Types/appNavigation';
 //* components import
 import IconView from '@atoms/Icon';
 import TextView from '@atoms/TextView';
-import TouchableText from '@atoms/TouchableText';
 import ErrorBoundary from '@atoms/ErrorBoundary';
 
 import {useThemeTokens} from '@theme/useThemeTokens';
@@ -36,15 +35,11 @@ interface TabBarIconProps {
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
-const TabNavigator = (props: any): React.JSX.Element => {
+const TabNavigator = (): React.JSX.Element => {
   const {t} = useTranslation();
   const {colors} = useTheme();
   const {colors: themeColors} = useThemeTokens();
   const styles = useTabNavigatorStyles();
-
-  const EmptyComponent = () => {
-    return <View />;
-  };
 
   return (
     <Tab.Navigator
@@ -98,27 +93,31 @@ const TabNavigator = (props: any): React.JSX.Element => {
           }}
         />
         <Tab.Screen
-          name="PopUp"
+          name="ServicesHub"
+          component={ServicesHub}
           options={{
+            tabBarLabel: t('tabs.services'),
             tabBarItemStyle: styles.tabBarItemStyle,
-            tabBarButton: (props: BottomTabBarButtonProps) => {
+            tabBarIcon: ({focused, size}: TabBarIconProps) => {
               return (
-                <TouchableText
-                  textStyle={{}}
-                  touchableStyle={{
-                    ...styles.floatingButtonStyle,
-                    borderColor: colors.background,
-                  }}
-                  text={t('common.hello')}
-                  onPress={e => {
-                    e.preventDefault();
-                  }}
+                <IconView
+                  iconType={'Ionicons'}
+                  name="grid"
+                  size={size + 5}
+                  color={focused ? themeColors.textPrimary : themeColors.textInverse}
+                  iconContainerStyle={
+                    focused
+                      ? {
+                          ...styles.iconContainerStyle,
+                          backgroundColor: colors.primary,
+                        }
+                      : styles.iconContainerStyle
+                  }
                 />
               );
             },
-          }}>
-          {props => <EmptyComponent />}
-        </Tab.Screen>
+          }}
+        />
         <Tab.Screen
           name="Profile"
           component={Profile}
