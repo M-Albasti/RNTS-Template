@@ -45,6 +45,8 @@ jobs:
         run: npm run lint
 
       - name: Unit tests
+        env:
+          NODE_ENV: test
         run: npm test -- --ci --coverage --forceExit
 
       - name: Upload coverage

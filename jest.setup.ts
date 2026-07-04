@@ -1,8 +1,7 @@
 /**
  * Jest setup — mocks native modules and ESM-only deps so App smoke tests run in Node.
+ * @env is resolved via babel module-resolver alias in test mode (see babel.config.js).
  */
-
-jest.mock('@env', () => require('./__mocks__/env'));
 
 jest.mock('@config/sentryConfig', () => ({}));
 
