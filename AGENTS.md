@@ -8,8 +8,7 @@ macOS + Xcode). The runnable development surface in this environment is the **Me
 
 ### Install
 - Use `npm install --legacy-peer-deps`. The flag is required: `react-native-reanimated` declares a
-  peer on `react-native-worklets@0.9.x` while the repo pins `^0.9.2`, so a plain `npm install` fails
-  with `ERESOLVE`. There is no committed lockfile.
+  peer on `react-native-worklets@0.10.x` while older pins may fail; use `^0.10.1`.
 - `package.json` scripts reference `bun`/`bunx` (e.g. `start:development`), but `bun` is not required
   for the dev loop — `npm`/`npx` work fine.
 - Copy env before first run: `cp .env.example .env` (required — `src/config/apiConfig.tsx` imports `@env`; babel rejects missing vars).
