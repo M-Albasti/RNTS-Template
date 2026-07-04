@@ -19,7 +19,7 @@ import {
 import {isAnswerMatch, normalizeWord} from '@helpers/hexGridHelpers';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
-import {completeStage, useHint} from '@redux/slices/wordPuzzleSlice';
+import {completeStage, spendHint} from '@redux/slices/wordPuzzleSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import type {HexCoord} from '@Types/wordPuzzleTypes';
@@ -122,7 +122,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
     if (!puzzle || solved) {
       return;
     }
-    dispatch(useHint());
+    dispatch(spendHint());
     setHintPath(puzzle.solutionPath);
     setFilledWord(normalizeWord(puzzle.answers[0], language));
     setMessage(t('wordPuzzle.hintUsed'));

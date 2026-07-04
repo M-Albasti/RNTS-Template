@@ -28,7 +28,7 @@ const wordPuzzleSlice = createSlice({
         state.gems += 5;
       }
     },
-    useHint: state => {
+    spendHint: state => {
       if (state.gems >= 2) {
         state.gems -= 2;
         state.hintsUsed += 1;
@@ -37,7 +37,7 @@ const wordPuzzleSlice = createSlice({
   },
 });
 
-export const {setActiveBook, completeStage, useHint} = wordPuzzleSlice.actions;
+export const {setActiveBook, completeStage, spendHint} = wordPuzzleSlice.actions;
 export default wordPuzzleSlice.reducer;
 
 export const isStageCompleted = (
