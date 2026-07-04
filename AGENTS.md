@@ -17,6 +17,7 @@ macOS + Xcode). The runnable development surface in this environment is the **Me
 - Local full pipeline: `npm run ci` (validate i18n → typecheck → lint → test → Android bundle).
 - GitHub Actions: `.github/workflows/ci.yml` on push/PR to `develop` and `master`.
 - Android CI builds **arm64-v8a only**, New Architecture off, ABI splits disabled (`-PenableAbiSplits=false`).
+- `stream-chat-react-native` is excluded from native autolinking (`react-native.config.js`) — unused in `src/` and requires New Arch codegen.
 - Commit `package-lock.json` whenever `package.json` deps change — CI uses `npm install --legacy-peer-deps`.
 - ESLint uses `eslint.config.js` (ESLint 9 flat config, ft-flow plugin removed).
 - Jest smoke tests in `__tests__/smoke.test.ts` (not full App render).
