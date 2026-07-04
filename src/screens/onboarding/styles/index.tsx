@@ -1,12 +1,14 @@
+import {layout} from '@theme/tokens';
+
 import {ScreenHeight, ScreenWidth} from '@rneui/base';
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: layout.flex.fill,
   },
   onBoardingContainer: {
-    flex: 1,
+    flex: layout.flex.fill,
   },
   imageOnBoardingContainer: {
     width: ScreenWidth,

@@ -3,6 +3,7 @@ import React
 import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import Firebase
+import GoogleMaps
 import GoogleSignIn
 // import FacebookCore
 import FBSDKCoreKit
@@ -18,6 +19,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    if let mapsApiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String,
+       !mapsApiKey.isEmpty,
+       mapsApiKey != "YOUR_GOOGLE_MAPS_API_KEY" {
+      GMSServices.provideAPIKey(mapsApiKey)
+    }
     FirebaseApp.configure()
     ApplicationDelegate.shared.application(
       application,

@@ -1,16 +1,13 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-//* components import
 import TextView from '@atoms/TextView';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveOtpTextStyles} from './styles/resolveOtpTextStyles';
 
-//* constants import
-import {appColors} from '@constants/colors';
+const OTPText = (): React.JSX.Element => {
+  const styles = useThemedStyles(resolveOtpTextStyles);
 
-interface OTPTextProps {}
-
-const OTPText = (props: OTPTextProps): React.JSX.Element => {
   return (
     <View>
       <TextView text={'Enter Verification Code'} style={styles.title} />
@@ -23,18 +20,3 @@ const OTPText = (props: OTPTextProps): React.JSX.Element => {
 };
 
 export default OTPText;
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: appColors.gray,
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-});

@@ -31,20 +31,16 @@ const resources = {
   },
 };
 
-// Helper function to normalize language codes
 const normalizeLanguageCode = (languageCode: string): Languages => {
   const primaryTag = languageCode.split('-')[0].toLowerCase();
 
-  // Check if the primary tag is supported
   if (primaryTag === 'ar' || primaryTag === 'en') {
     return primaryTag as Languages;
   }
 
-  // Default to English for unsupported languages
   return 'en';
 };
 
-// Helper function to get device language
 const getDeviceLanguage = (): Languages => {
   try {
     const deviceLocales = RNLocalize.getLocales();
@@ -54,41 +50,53 @@ const getDeviceLanguage = (): Languages => {
   } catch (error) {
     console.log('Error getting device language:', error);
   }
-  return 'en'; // Fallback to English
+  return 'en';
 };
 
-export const initLanguage = (lang: Languages) => {
-  // Check if i18next is already initialized
-  if (!i18next.isInitialized) {
-    const languageToUse = lang ?? getDeviceLanguage();
-
-    i18next
-      .use(initReactI18next)
-      .init({
-        resources,
-        lng: languageToUse, // Use normalized language code
-        debug: true,
-        fallbackLng: 'en', // Fallback language if detected language is not available
-        interpolation: {
-          escapeValue: false, // React already escapes values
-        },
-      })
-      .then(() => {
-        // Set up RTL support for Arabic
-        checkAppDirection(languageToUse);
-      })
-      .catch(error => {
-        console.log('Error initializing i18next:', error);
-      })
-      .finally(() => {
-        loadDateFnsLocale();
-      });
+const bootstrapI18n = () => {
+  if (i18next.isInitialized) {
+    return;
   }
+
+  i18next.use(initReactI18next).init({
+    resources,
+    lng: getDeviceLanguage(),
+    fallbackLng: 'en',
+    debug: __DEV__,
+    compatibilityJSON: 'v4',
+    interpolation: {
+      escapeValue: false,
+    },
+    react: {
+      // React Native should not suspend on translations — avoids hook/remount issues.
+      useSuspense: false,
+    },
+    initImmediate: false,
+  });
+
+  loadDateFnsLocale();
 };
 
-// Function to change the language
+bootstrapI18n();
+
+/** Sync i18n with Redux language after navigation is ready or when settings change. */
+export const syncLanguage = (lang?: Languages) => {
+  const languageToUse = lang ?? normalizeLanguageCode(i18next.language) ?? getDeviceLanguage();
+
+  if (i18next.language !== languageToUse) {
+    i18next.changeLanguage(languageToUse).catch(error => {
+      console.log('Error changing i18n language:', error);
+    });
+  }
+
+  checkAppDirection(languageToUse);
+  loadDateFnsLocale();
+};
+
+/** @deprecated Use `syncLanguage` */
+export const initLanguage = syncLanguage;
+
 export const changeLanguage = async (dispatch: AppDispatch) => {
-  // Get current language and normalize it
   const currentLanguage = normalizeLanguageCode(i18next.language);
   const newLang: Languages = currentLanguage === 'ar' ? 'en' : 'ar';
 
@@ -113,17 +121,14 @@ export const changeLanguage = async (dispatch: AppDispatch) => {
   }
 };
 
-// Function to check the app direction
 export const checkAppDirection = async (currentLang: Languages) => {
   try {
     const shouldBeRTL = currentLang === 'ar';
     const isCurrentlyRTL = I18nManager.isRTL;
 
-    // Only change RTL if it's different from current state
     if (shouldBeRTL !== isCurrentlyRTL) {
       I18nManager.forceRTL(shouldBeRTL);
       I18nManager.allowRTL(shouldBeRTL);
-      // Only restart if RTL actually changed
       delay(restartApp, 1000);
     }
   } catch (error) {

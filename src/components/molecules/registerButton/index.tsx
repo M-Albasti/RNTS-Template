@@ -1,20 +1,12 @@
-//* packages import
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-//* components import
 import TouchableText from '@atoms/TouchableText';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveRegisterButtonStyles} from './styles/resolveRegisterButtonStyles';
 
-//* constants import
-import {appColors} from '@constants/colors';
-
-//* theme import
-import {isDarkTheme} from '@theme/appTheme';
-
-//* types import
-import {AppRouteProp} from '@Types/appNavigation';
-import {RegisterScreens} from '@Types/registerScreens';
+import type {AppRouteProp} from '@Types/appNavigation';
+import type {RegisterScreens} from '@Types/registerScreens';
 
 interface RegisterButtonProps {
   onRegister: () => void;
@@ -23,6 +15,7 @@ interface RegisterButtonProps {
 
 const RegisterButton = (props: RegisterButtonProps): React.JSX.Element => {
   const {t} = useTranslation();
+  const styles = useThemedStyles(resolveRegisterButtonStyles);
 
   return (
     <TouchableText
@@ -34,9 +27,3 @@ const RegisterButton = (props: RegisterButtonProps): React.JSX.Element => {
 };
 
 export default RegisterButton;
-
-const styles = StyleSheet.create({
-  textStyle: {
-    color: isDarkTheme ? appColors.white : appColors.black,
-  },
-});

@@ -1,3 +1,5 @@
+import {layout} from '@theme/tokens';
+
 //* packages import
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
@@ -73,7 +75,7 @@ export default OTPForm;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: layout.flex.fill,
     width: ScreenWidth,
   },
 });

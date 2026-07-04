@@ -1,34 +1,43 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-//* components import
+import Button from '@atoms/Button';
+import Heading from '@atoms/Heading';
+import ScreenContainer from '@atoms/ScreenContainer';
+import Spacer from '@atoms/Spacer';
 import FirebaseLoginMethodButtons from '@organisms/firebaseLoginMethod/FirebaseLoginMethodsButtons';
 
-//* types import
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveFirebaseLoginMethodTemplateStyles} from './styles/resolveFirebaseLoginMethodTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface FirebaseLoginMethodTemplateProps {
-  // Define any props you need here
   navigation: AppStackNavigationProp<'FirebaseLoginMethod'>;
 }
 
-const FirebaseLoginMethodTemplate = (
-  props: FirebaseLoginMethodTemplateProps,
-): React.JSX.Element => {
+const FirebaseLoginMethodTemplate = ({
+  navigation,
+}: FirebaseLoginMethodTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
+  const styles = useThemedStyles(resolveFirebaseLoginMethodTemplateStyles);
+
   return (
-    <View style={styles.container}>
-      <FirebaseLoginMethodButtons navigation={props.navigation} />
-    </View>
+    <ScreenContainer scroll centered alignContent="center">
+      <Heading text={t('auth.firebaseSignIn')} level="h1" align="center" />
+      <Spacer size="sm" />
+      <View style={styles.wrap}>
+        <FirebaseLoginMethodButtons navigation={navigation} />
+        <Spacer size="md" />
+        <Button
+          label={t('common.goBack')}
+          variant="ghost"
+          fullWidth
+          onPress={() => navigation.goBack()}
+        />
+      </View>
+    </ScreenContainer>
   );
 };
 
 export default FirebaseLoginMethodTemplate;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

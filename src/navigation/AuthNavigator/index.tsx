@@ -11,6 +11,7 @@ import ResetPassword from '@screens/auth/resetPassword';
 import OTP from '@screens/auth/otp';
 import OnBoarding from '@screens/onboarding';
 import AuthMethod from '@screens/authMethod';
+import LoginOptions from '@screens/loginOptions';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -27,7 +28,7 @@ import {styles} from './styles';
 
 const AuthStack = createNativeStackNavigator<RootStackParamList>();
 
-const AuthNavigator = (props: any): React.JSX.Element => {
+const AuthNavigator = (): React.JSX.Element => {
   return (
     <AuthStack.Navigator
       initialRouteName="OnBoarding"
@@ -50,11 +51,14 @@ const AuthNavigator = (props: any): React.JSX.Element => {
         <AuthStack.Screen name="OnBoarding">
           {props => <OnBoarding {...props} />}
         </AuthStack.Screen>
+        <AuthStack.Screen name="LoginOptions">
+          {props => <LoginOptions {...props} />}
+        </AuthStack.Screen>
         <AuthStack.Screen name="AuthMethod">
           {props => <AuthMethod {...props} />}
         </AuthStack.Screen>
         <AuthStack.Screen name="FirebaseAuthStack">
-          {props => <FirebaseAuthNavigator {...props} />}
+          {() => <FirebaseAuthNavigator />}
         </AuthStack.Screen>
         <AuthStack.Screen name="Login">
           {props => <Login {...props} />}

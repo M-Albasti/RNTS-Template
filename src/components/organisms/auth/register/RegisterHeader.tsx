@@ -1,18 +1,25 @@
-//* packages import
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-//* components import
+import Heading from '@atoms/Heading';
+import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
-const RegisterHeader = (props: any): React.JSX.Element => {
-  return <TextView text={'Register Header'} containerStyle={styles.container} />;
+const RegisterHeader = (): React.JSX.Element => {
+  const {t} = useTranslation();
+
+  return (
+    <>
+      <Heading text={t('Register')} level="h1" align="center" />
+      <Spacer size="sm" />
+      <TextView
+        text={t('auth.registerSubtitle')}
+        variant="bodySmall"
+        muted
+        align="center"
+      />
+    </>
+  );
 };
 
 export default RegisterHeader;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

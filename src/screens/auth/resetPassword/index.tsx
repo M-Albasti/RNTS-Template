@@ -1,19 +1,20 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
 
 //* components import
-import TextView from '@atoms/TextView';
+import ResetPasswordTemplate from '@templates/auth/resetPasswordTemplate';
 
-//* styles import
-import {styles} from './styles';
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const ResetPassword = (props: any): React.JSX.Element => {
-  return (
-    <View style={styles.container}>
-      <TextView text={'Reset Password'} />
-    </View>
-  );
+interface ResetPasswordProps {
+  navigation: AppStackNavigationProp<'ResetPassword'>;
+}
+
+const ResetPassword = ({
+  navigation,
+}: ResetPasswordProps): React.JSX.Element => {
+  return <ResetPasswordTemplate navigation={navigation} />;
 };
 
 export default ResetPassword;

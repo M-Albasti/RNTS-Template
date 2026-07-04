@@ -167,7 +167,7 @@ All paths are relative to `/v1`.
 **Response 401:**
 
 ```json
-{ "message": "Invalid email or password" }
+{ "statusCode": 401, "message": "Invalid email or password", "error": "Unauthorized" }
 ```
 
 ---
@@ -189,7 +189,7 @@ All paths are relative to `/v1`.
 **Response 409:**
 
 ```json
-{ "message": "Email already registered" }
+{ "statusCode": 409, "message": "Email already registered", "error": "Conflict" }
 ```
 
 ---
@@ -332,9 +332,9 @@ Returns user profile.
 
 ### 4. MEDIA
 
-Upload is **public** (backward compatible with RN slices). Metadata endpoints require JWT.
+Upload metadata endpoints require JWT. Upload itself requires JWT (or pre-signed upload URLs in production).
 
-#### `POST /upload` — Public (optional JWT for user scoping)
+#### `POST /upload` — JWT required (or pre-signed upload URL)
 
 **Request:** `multipart/form-data`, field name must be **`file`**
 
@@ -506,7 +506,7 @@ Stream file bytes.
 
 ---
 
-### 7. DELIVERY — Public
+### 7. DELIVERY — Mixed (read-only public; mutations JWT + owner/driver authorization)
 
 **Status enum:** `pending | accepted | picked_up | in_transit | delivered | cancelled`  
 **Package types:** `document | food | parcel | fragile`
@@ -548,7 +548,7 @@ Stream file bytes.
 
 ---
 
-#### `POST /delivery/orders` — HTTP 201
+#### `POST /delivery/orders` — JWT required — HTTP 201
 
 **Request:**
 
@@ -568,7 +568,7 @@ Stream file bytes.
 **Response 400:**
 
 ```json
-{ "message": "Invalid pickup or dropoff" }
+{ "statusCode": 400, "message": "Invalid pickup or dropoff", "error": "Bad Request" }
 ```
 
 ---
@@ -580,12 +580,12 @@ Stream file bytes.
 **Response 404:**
 
 ```json
-{ "message": "Order not found" }
+{ "statusCode": 404, "message": "Order not found", "error": "Not Found" }
 ```
 
 ---
 
-#### `POST /delivery/orders/:orderId/driver-location`
+#### `POST /delivery/orders/:orderId/driver-location` — JWT required (driver)
 
 **Request:**
 
@@ -608,7 +608,7 @@ Stream file bytes.
 
 ---
 
-#### `PATCH /delivery/orders/:orderId/status`
+#### `PATCH /delivery/orders/:orderId/status` — JWT required (owner or driver)
 
 **Request:**
 
@@ -623,7 +623,7 @@ Stream file bytes.
 
 ---
 
-#### `POST /delivery/orders/:orderId/accept`
+#### `POST /delivery/orders/:orderId/accept` — JWT required (driver)
 
 Driver accepts a pending order. Assigns driver and updates timeline.
 
@@ -632,19 +632,19 @@ Driver accepts a pending order. Assigns driver and updates timeline.
 **Response 409:**
 
 ```json
-{ "message": "Order is not available" }
+{ "statusCode": 409, "message": "Order is not available", "error": "Conflict" }
 ```
 
 ---
 
-#### `POST /delivery/orders/:orderId/cancel`
+#### `POST /delivery/orders/:orderId/cancel` — JWT required (owner or driver)
 
 **Response 200:** Tracking response object.
 
 **Response 409:**
 
 ```json
-{ "message": "Order cannot be cancelled" }
+{ "statusCode": 409, "message": "Order cannot be cancelled", "error": "Conflict" }
 ```
 
 ---
@@ -724,7 +724,7 @@ Talabat-style marketplace module.
 **Response 404:**
 
 ```json
-{ "message": "Product not found" }
+{ "statusCode": 404, "message": "Product not found", "error": "Not Found" }
 ```
 
 ---
@@ -802,7 +802,7 @@ Default merchant ID: `store-you`
 
 ---
 
-#### `POST /marketplace/orders` — HTTP 201
+#### `POST /marketplace/orders` — JWT required — HTTP 201
 
 **Request:**
 
@@ -842,7 +842,7 @@ Default merchant ID: `store-you`
 
 ---
 
-#### `PATCH /marketplace/orders/:id/status`
+#### `PATCH /marketplace/orders/:id/status` — JWT required (owner or merchant)
 
 **Request:**
 
@@ -877,7 +877,7 @@ Default merchant ID: `store-you`
 
 ---
 
-### 9. WALLET — Public
+### 9. WALLET — JWT required (scoped to current user)
 
 #### `GET /wallet`
 
@@ -988,7 +988,7 @@ Default merchant ID: `store-you`
 
 ---
 
-### 10. TODOS — Public
+### 10. TODOS — JWT required (scoped to current user)
 
 #### `GET /todos?filter=all|active|done|high`
 
@@ -1011,7 +1011,7 @@ Default merchant ID: `store-you`
 
 ---
 
-#### `POST /todos` — HTTP 201
+#### `POST /todos` — JWT required — HTTP 201
 
 **Request:**
 
@@ -1027,13 +1027,13 @@ Default merchant ID: `store-you`
 
 ---
 
-#### `PATCH /todos/:id`
+#### `PATCH /todos/:id` — JWT required
 
 **Request:** Any subset of `{ title, done, priority, category, dueDate, note }`
 
 ---
 
-#### `DELETE /todos/:id`
+#### `DELETE /todos/:id` — JWT required
 
 **Response 200:**
 
@@ -1043,7 +1043,7 @@ Default merchant ID: `store-you`
 
 ---
 
-### 11. CHAT — Public (stub for Stream Chat integration)
+### 11. CHAT — JWT required (scoped to current user; stub for Stream Chat integration)
 
 #### `GET /chat/threads`
 
@@ -1117,9 +1117,9 @@ Default merchant ID: `store-you`
 
 ---
 
-#### `GET /chat/stream-token`
+#### `GET /chat/stream-token` — JWT required
 
-Stub for future Stream Chat SDK integration.
+Stub for future Stream Chat SDK integration. Mint tokens only after JWT validation.
 
 **Response 200:**
 
@@ -1253,7 +1253,7 @@ CREATE TABLE users (
 
 CREATE TABLE user_settings (
   id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
   lang VARCHAR(2) DEFAULT 'en',
   notifications_enabled BOOLEAN DEFAULT TRUE
 );
@@ -1261,7 +1261,7 @@ CREATE TABLE user_settings (
 CREATE TABLE otp_tokens (
   id SERIAL PRIMARY KEY,
   phone VARCHAR NOT NULL,
-  code VARCHAR(6) NOT NULL,
+  code_hash VARCHAR(255) NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
   verified BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
@@ -1270,7 +1270,7 @@ CREATE TABLE otp_tokens (
 CREATE TABLE password_reset_tokens (
   id SERIAL PRIMARY KEY,
   user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  token VARCHAR UNIQUE NOT NULL,
+  token_hash VARCHAR UNIQUE NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
   used BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()

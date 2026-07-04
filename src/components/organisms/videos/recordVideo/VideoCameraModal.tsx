@@ -1,6 +1,6 @@
 //* packages import
 import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
-import {Platform, StyleSheet} from 'react-native';
+import {Platform} from 'react-native';
 import {
   Camera,
   CameraDevice,
@@ -23,6 +23,8 @@ import {permissionsRequest} from '@helpers/permissionsRequest';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoCameraModalStyles} from './styles/resolveVideoCameraModalStyles';
 
 interface VideoCameraModalProps {
   navigation: AppStackNavigationProp<'RecordVideo'>;
@@ -39,6 +41,8 @@ const VideoCameraModal = (props: VideoCameraModalProps): React.JSX.Element => {
   const microphonePermission = useMicrophonePermission();
   const cameraRef = useRef<Camera | null>(null);
 
+  const styles = useThemedStyles(resolveVideoCameraModalStyles);
+
   useLayoutEffect(() => {
     requestCameraPermission();
   }, []);
@@ -48,7 +52,7 @@ const VideoCameraModal = (props: VideoCameraModalProps): React.JSX.Element => {
       !cameraPermission.hasPermission ||
       !microphonePermission.hasPermission
     ) {
-      await permissionsRequest('camera');
+      await permissionsRequest('cameraWithMic');
     }
   };
 
@@ -190,26 +194,3 @@ const VideoCameraModal = (props: VideoCameraModalProps): React.JSX.Element => {
 };
 
 export default VideoCameraModal;
-
-const styles = StyleSheet.create({
-  permissionContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  permissionText: {
-    textAlign: 'right',
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-  noDeviceContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noDeviceText: {
-    textAlign: 'right',
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-});

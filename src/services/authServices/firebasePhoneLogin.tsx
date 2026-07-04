@@ -13,13 +13,15 @@ interface LoginCredentials {
   password: string;
 }
 
+//* utils import
+import {logger} from '@utils/logger';
+
 export const firebasePhoneLogin = (
   credentials: LoginCredentials,
   loginType: LoginTypes,
-) => {
-  loginFirebaseWithPhoneNumber(credentials.emailOrPhone).then(confirmation => {
-    // Handle successful login
-    console.log('Confirmation:', confirmation);
+): Promise<void> => {
+  return loginFirebaseWithPhoneNumber(credentials.emailOrPhone).then(confirmation => {
+    logger.debug('Phone confirmation received');
     Alert.alert('Validation Success', 'Your inputs are valid!');
     navigate('FirebasePhoneOTP', {confirmation, loginType});
   });

@@ -1,9 +1,10 @@
 //* packages import
 import React, {Fragment} from 'react';
-import {StyleSheet} from 'react-native';
 
 //* components import
 import TouchableText from '@atoms/TouchableText';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioSubmitStyles} from './styles/resolveAudioSubmitStyles';
 
 interface AudioSubmitProps {
   retakeAudio: () => void;
@@ -12,6 +13,8 @@ interface AudioSubmitProps {
 }
 
 const AudioSubmit = (props: AudioSubmitProps) => {
+  const styles = useThemedStyles(resolveAudioSubmitStyles);
+
   return (
     <Fragment>
       <TouchableText
@@ -32,15 +35,3 @@ const AudioSubmit = (props: AudioSubmitProps) => {
 };
 
 export default AudioSubmit;
-
-const styles = StyleSheet.create({
-  buttonContainerStyle: {
-    padding: 10,
-    margin: 10,
-    borderWidth: 1,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 200,
-  },
-});

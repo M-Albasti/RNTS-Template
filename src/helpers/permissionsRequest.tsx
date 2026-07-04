@@ -2,13 +2,13 @@ import {Platform, PermissionsAndroid} from 'react-native';
 import {Camera} from 'react-native-vision-camera';
 
 interface PermissionsRequestProps {
-  permissionType: 'microphone' | 'camera';
+  permissionType: 'microphone' | 'camera' | 'cameraWithMic';
 }
 
 export const permissionsRequest = async (
   permissionType: PermissionsRequestProps['permissionType'],
 ) => {
-  if (Platform.OS === 'android' && permissionType == 'microphone') {
+  if (Platform.OS === 'android' && permissionType === 'microphone') {
     try {
       const grants = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -33,9 +33,11 @@ export const permissionsRequest = async (
       return 'denied';
     }
   }
-  if (permissionType == 'camera') {
-    await Camera.requestCameraPermission().then(async () => {
-      await Camera.requestMicrophonePermission();
-    });
+  if (permissionType === 'camera') {
+    return Camera.requestCameraPermission();
+  }
+  if (permissionType === 'cameraWithMic') {
+    await Camera.requestCameraPermission();
+    return Camera.requestMicrophonePermission();
   }
 };

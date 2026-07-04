@@ -1,28 +1,53 @@
-//* packages import
 import React from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {FallbackProps} from 'react-error-boundary';
+import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-interface ErrorFallbackProps {
-  error: Error;
-  resetErrorBoundary: () => void;
-}
+import Button from '@atoms/Button';
+import Card from '@atoms/Card';
+import Heading from '@atoms/Heading';
+import Spacer from '@atoms/Spacer';
+import TextView from '@atoms/TextView';
 
-const ErrorFallback = ({error, resetErrorBoundary}: ErrorFallbackProps) => {
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveErrorFallbackStyles} from './styles/resolveErrorFallbackStyles';
+
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return String(error);
+};
+
+const ErrorFallback = ({
+  error,
+  resetErrorBoundary,
+}: FallbackProps): React.JSX.Element => {
+  const {t} = useTranslation();
+  const styles = useThemedStyles(resolveErrorFallbackStyles);
+
   return (
-    <View style={styles.errorContainer}>
-      <Text>Something went wrong:</Text>
-      <Text>{error.message}</Text>
-      <Button title="Try Again" onPress={resetErrorBoundary} />
+    <View style={styles.container}>
+      <Card constrained>
+        <Heading text={t('errors.somethingWentWrong')} level="h2" align="center" />
+        <Spacer size="sm" />
+        <TextView text={t('errors.sectionProblem')} variant="bodySmall" muted align="center" />
+        {__DEV__ ? (
+          <>
+            <Spacer size="md" />
+            <TextView
+              text={getErrorMessage(error)}
+              variant="caption"
+              align="center"
+              style={styles.errorText}
+            />
+          </>
+        ) : null}
+        <Spacer size="lg" />
+        <Button label={t('errors.tryAgain')} fullWidth onPress={resetErrorBoundary} />
+      </Card>
     </View>
   );
 };
 
 export default ErrorFallback;
-
-const styles = StyleSheet.create({
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

@@ -1,11 +1,13 @@
 //* packages import
 import React from 'react';
-import {KeyboardTypeOptions, StyleSheet, View} from 'react-native';
+import {KeyboardTypeOptions} from 'react-native';
 
 //* components import
-import LoginHeader from '@organisms/auth/login/LoginHeader';
-import LoginForm from '@organisms/auth/login/LoginForm';
 import LoginFooter from '@organisms/auth/login/LoginFooter';
+import LoginForm from '@organisms/auth/login/LoginForm';
+import LoginHeader from '@organisms/auth/login/LoginHeader';
+import ScreenContainer from '@atoms/ScreenContainer';
+import Spacer from '@atoms/Spacer';
 
 //* types import
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
@@ -25,28 +27,22 @@ interface LoginTemplateProps {
 
 const LoginTemplate = (props: LoginTemplateProps): React.JSX.Element => {
   return (
-    <View style={styles.container}>
+    <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
       <LoginHeader />
+      <Spacer size="lg" />
       <LoginForm
         navigation={props.navigation}
         loginType={props.loginType}
         keyboardType={props.keyboardType}
       />
+      <Spacer size="md" />
       <LoginFooter
         navigation={props.navigation}
         register={props.register}
         registerType={props.registerType}
       />
-    </View>
+    </ScreenContainer>
   );
 };
 
 export default LoginTemplate;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

@@ -1,28 +1,29 @@
 //* packages import
-import { useState, useCallback, useLayoutEffect, useMemo } from 'react';
-import { Alert } from 'react-native';
+import {useState, useCallback, useLayoutEffect, useMemo, useRef} from 'react';
+import {Alert} from 'react-native';
 import {
   createSound,
   AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AVModeIOSOption,
   AudioEncoderAndroidType,
   AudioSet,
   AudioSourceAndroidType,
   RecordBackType,
+  PlayBackType,
 } from 'react-native-nitro-sound';
-import { last } from 'lodash';
-import moment from 'moment';
+import {last} from 'lodash';
+
+//* utils import
+import {uniqueFileName} from '@utils/uniqueFileName';
 
 //* redux import
-import { addAudio, uploadAudio } from '@redux/slices/audiosSlice';
+import {uploadAudio} from '@redux/slices/audiosSlice';
 
 //* helpers import
-import { permissionsRequest } from '@helpers/permissionsRequest';
+import {permissionsRequest} from '@helpers/permissionsRequest';
 
 //* hooks import
-import { useAppDispatch } from '@hooks/useAppDispatch';
-import { useAppSelector } from '@hooks/useAppSelector';
+import {useAppDispatch} from '@hooks/useAppDispatch';
+import {useAppSelector} from '@hooks/useAppSelector';
 
 // Audio state enum for better state management
 export enum AudioState {
@@ -50,78 +51,84 @@ export const useAudioRecorder = () => {
   const [audioState, setAudioState] = useState<AudioState>(AudioState.IDLE);
   const [recordSecs, setRecordSecs] = useState<string | number>();
   const [recordTime, setRecordTime] = useState<string>();
-  const [currentPositionSec, setCurrentPositionSec] = useState<number>();
-  const [currentDurationSec, setCurrentDurationSec] = useState<number>();
+  const [currentPositionSec, setCurrentPositionSec] = useState<number>(0);
+  const [currentDurationSec, setCurrentDurationSec] = useState<number>(0);
   const [playTime, setPlayTime] = useState<string>();
   const [duration, setDuration] = useState<string>();
   const [recordPath, setRecordPath] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
-  const audioRecorderPlayer = createSound();
-  const { status } = useAppSelector(state => state.audio);
+  const audioRecorderPlayerRef = useRef<ReturnType<typeof createSound> | null>(
+    null,
+  );
+  const dispatch = useAppDispatch();
+  const {status} = useAppSelector(state => state.audio);
 
-  useLayoutEffect(() => {
-    permissionsRequest('microphone');
-    // Cleanup function
-    return () => {
-      cleanupAudioResources();
-    };
-  }, []);
+  if (!audioRecorderPlayerRef.current) {
+    audioRecorderPlayerRef.current = createSound();
+  }
 
-  // Cleanup function for audio resources
+  const audioRecorderPlayer = audioRecorderPlayerRef.current;
+
   const cleanupAudioResources = useCallback(async () => {
     try {
-      if (audioRecorderPlayer) {
-        await audioRecorderPlayer.stopRecorder();
-        await audioRecorderPlayer.stopPlayer();
-        audioRecorderPlayer.removeRecordBackListener();
-        audioRecorderPlayer.removePlayBackListener();
+      const player = audioRecorderPlayerRef.current;
+      if (!player) {
+        return;
       }
-    } catch (error) {
-      console.log('Cleanup error:', error);
+      await player.stopRecorder();
+      await player.stopPlayer();
+      player.removeRecordBackListener();
+      player.removePlayBackListener();
+    } catch {
+      // Ignore cleanup errors when nothing is active.
     }
   }, []);
 
-  // Memoized audio configuration
+  useLayoutEffect(() => {
+    permissionsRequest('microphone');
+    return () => {
+      cleanupAudioResources();
+    };
+  }, [cleanupAudioResources]);
+
   const audioSet = useMemo(
     (): AudioSet => ({
       AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
       AudioSourceAndroid: AudioSourceAndroidType.MIC,
-      AVModeIOS: AVModeIOSOption.measurement,
+      AVModeIOS: 'measurement',
       AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
       AVNumberOfChannelsKeyIOS: 2,
-      AVFormatIDKeyIOS: AVEncodingOption.aac,
+      AVFormatIDKeyIOS: 'aac',
     }),
     [],
   );
 
-  // Error handler
   const handleError = useCallback((error: unknown, operation: string) => {
     console.log(`${operation} Error =>`, error);
     Alert.alert('Audio Error', `Failed to ${operation}. Please try again.`, [
-      { text: 'OK' },
+      {text: 'OK'},
     ]);
   }, []);
 
-  // Audio recording functions
   const startRecord = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
-      const path = `audio-${moment().unix()}.m4a`;
-      const meteringEnabled = false;
+      const path = uniqueFileName('audio', 'm4a');
 
       const result = await audioRecorderPlayer.startRecorder(
-        // path,
-        undefined,
+        path,
         audioSet,
-        meteringEnabled,
+        false,
       );
 
       audioRecorderPlayer.addRecordBackListener((e: RecordBackType) => {
         setRecordSecs(e.currentPosition);
         setRecordTime(
-          audioRecorderPlayer?.mmssss(Math.floor(e.currentPosition)) || '00:00',
+          audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)) || '00:00',
         );
       });
 
@@ -132,40 +139,44 @@ export const useAudioRecorder = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [audioSet, handleError]);
+  }, [audioRecorderPlayer, audioSet, handleError]);
 
   const pauseRecord = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
-      const result = await audioRecorderPlayer.pauseRecorder();
+      await audioRecorderPlayer.pauseRecorder();
       setAudioState(AudioState.PAUSED);
-      console.log('Recording paused:', result);
     } catch (error) {
       handleError(error, 'pause recording');
     } finally {
       setIsLoading(false);
     }
-  }, [handleError]);
+  }, [audioRecorderPlayer, handleError]);
 
   const resumeRecord = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
-      const result = await audioRecorderPlayer.resumeRecorder();
+      await audioRecorderPlayer.resumeRecorder();
       setAudioState(AudioState.RECORDING);
-      console.log('Recording resumed:', result);
     } catch (error) {
       handleError(error, 'resume recording');
     } finally {
       setIsLoading(false);
     }
-  }, [handleError]);
+  }, [audioRecorderPlayer, handleError]);
 
   const stopRecord = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -174,39 +185,37 @@ export const useAudioRecorder = () => {
       setRecordSecs(0);
       setRecordPath(result);
       setAudioState(AudioState.IDLE);
-      console.log('Recording stopped:', result);
     } catch (error) {
       handleError(error, 'stop recording');
     } finally {
       setIsLoading(false);
     }
-  }, [handleError]);
+  }, [audioRecorderPlayer, handleError]);
 
-  // Audio playback functions
   const startPlay = useCallback(async () => {
-    if (!audioRecorderPlayer || !recordPath) return;
+    if (!audioRecorderPlayer || !recordPath) {
+      return;
+    }
 
     try {
-      console.log('onStartPlay');
       setIsLoading(true);
-      const msg = await audioRecorderPlayer.startPlayer();
+      await audioRecorderPlayer.startPlayer(recordPath);
       audioRecorderPlayer.setVolume(1.0);
-      console.log(msg);
       setAudioState(AudioState.PLAYING);
 
-      audioRecorderPlayer.addPlayBackListener(async e => {
-        if (e.currentPosition === e.duration) {
-          console.log('Playback finished');
-          await audioRecorderPlayer.stopPlayer();
+      audioRecorderPlayer.addPlayBackListener((e: PlayBackType) => {
+        if (e.currentPosition >= e.duration && e.duration > 0) {
+          audioRecorderPlayer.stopPlayer();
+          audioRecorderPlayer.removePlayBackListener();
           setAudioState(AudioState.IDLE);
         }
-        setCurrentPositionSec(e.duration);
-        setCurrentDurationSec(e.currentPosition);
+        setCurrentPositionSec(e.currentPosition);
+        setCurrentDurationSec(e.duration);
         setPlayTime(
-          audioRecorderPlayer?.mmssss(Math.floor(e.currentPosition)) || '00:00',
+          audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)) || '00:00',
         );
         setDuration(
-          audioRecorderPlayer?.mmssss(Math.floor(e.duration)) || '00:00',
+          audioRecorderPlayer.mmssss(Math.floor(e.duration)) || '00:00',
         );
       });
     } catch (error) {
@@ -214,10 +223,12 @@ export const useAudioRecorder = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [recordPath, handleError]);
+  }, [audioRecorderPlayer, recordPath, handleError]);
 
   const pausePlay = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -228,10 +239,12 @@ export const useAudioRecorder = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [handleError]);
+  }, [audioRecorderPlayer, handleError]);
 
   const resumePlay = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -242,22 +255,25 @@ export const useAudioRecorder = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [handleError]);
+  }, [audioRecorderPlayer, handleError]);
 
   const stopPlay = useCallback(async () => {
-    if (!audioRecorderPlayer) return;
+    if (!audioRecorderPlayer) {
+      return;
+    }
 
     try {
       setIsLoading(true);
       await audioRecorderPlayer.stopPlayer();
       audioRecorderPlayer.removePlayBackListener();
+      setCurrentPositionSec(0);
       setAudioState(AudioState.IDLE);
     } catch (error) {
       handleError(error, 'stop playback');
     } finally {
       setIsLoading(false);
     }
-  }, [handleError]);
+  }, [audioRecorderPlayer, handleError]);
 
   const retakeAudio = useCallback(() => {
     setRecordPath('');
@@ -270,26 +286,24 @@ export const useAudioRecorder = () => {
     setAudioState(AudioState.IDLE);
   }, []);
 
-  const uploadAudio = useCallback(async () => {
-    if (!recordPath) return;
+  const uploadRecordedAudio = useCallback(async () => {
+    if (!recordPath) {
+      return;
+    }
 
-    const extension = last(recordPath?.split('.')) || '';
+    const extension = last(recordPath.split('.')) || 'm4a';
     const type = `audio/${extension}`;
     const audioFile = {
       uri: recordPath,
-      type: type,
-      name: `audio-${moment().unix()}.${extension}`,
+      type,
+      name: uniqueFileName('audio', extension),
     };
     const formData = new FormData();
-    formData.append('file', audioFile);
-    console.log('Uploading audio:', recordPath);
-    // dispatch(uploadAudio(formData)).then(() => {
-    //   dispatch(addAudio(audioFile));
-    // });
-  }, [recordPath]);
+    formData.append('file', audioFile as unknown as Blob);
+    dispatch(uploadAudio(formData));
+  }, [dispatch, recordPath]);
 
   return {
-    // State
     audioState,
     recordSecs,
     recordTime,
@@ -300,8 +314,6 @@ export const useAudioRecorder = () => {
     recordPath,
     isLoading,
     status,
-
-    // Actions
     startRecord,
     pauseRecord,
     resumeRecord,
@@ -311,6 +323,6 @@ export const useAudioRecorder = () => {
     resumePlay,
     stopPlay,
     retakeAudio,
-    uploadAudio,
+    uploadAudio: uploadRecordedAudio,
   };
 };

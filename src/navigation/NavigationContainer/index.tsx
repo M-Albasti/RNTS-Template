@@ -1,12 +1,11 @@
 //* packages import
 import React, {PropsWithChildren, useCallback} from 'react';
-import {useColorScheme} from 'react-native';
 import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import {reactNavigationIntegration} from '@sentry/react-native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
 import TextView from '@atoms/TextView';
@@ -16,52 +15,59 @@ import {navigationRef} from '@services/navigationServices/NavigationService';
 import {linking} from '@services/linkingServices/deepLinking';
 
 //* hooks import
+import {useAppColorScheme} from '@hooks/useAppColorScheme';
 import {useAppSelector} from '@hooks/useAppSelector';
 
-//* constants import
-import {appColors} from '@constants/colors';
+//* navigators import
+import {navigationIntegration} from '@navigation/navigationIntegration';
+import {trackNavigationScreenChange} from '@navigation/firebaseNavigationAnalytics';
 
 //* theme import
-import {createMyTheme} from '@theme/appTheme';
+import {createNavigationTheme} from '@theme/appTheme';
 
 //* translation import
-import {initLanguage} from '@translation/i18n'; // Import the i18n initialization file
+import {syncLanguage} from '@translation/i18n';
+
+//* utils import
+import {logger} from '@utils/logger';
 
 //* styles import
-import {styles} from '@navigation/TabNavigator/styles';
-
-export const navigationIntegration = reactNavigationIntegration({
-  enableTimeToInitialDisplay: true,
-});
+import {navigationFallbackStyles} from '@navigation/TabNavigator/styles';
 
 const Navigation = ({children}: PropsWithChildren): React.JSX.Element => {
-  const scheme = useColorScheme();
-  const theme = createMyTheme(
+  const {t} = useTranslation();
+  const scheme = useAppColorScheme();
+  const theme = createNavigationTheme(
     scheme === 'dark' ? DarkTheme : DefaultTheme,
-    appColors.primary,
-    scheme === 'dark' ? appColors.black : appColors.white,
+    scheme,
   );
   const lang = useAppSelector(state => state?.appSettings?.lang);
 
   const onNavigationReady = useCallback(() => {
     navigationIntegration.registerNavigationContainer(navigationRef);
-    initLanguage(lang);
+    syncLanguage(lang);
+    trackNavigationScreenChange(() => navigationRef.getRootState());
   }, [lang]);
+
+  const onNavigationStateChange = useCallback(() => {
+    trackNavigationScreenChange(() => navigationRef.getRootState());
+  }, []);
 
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={theme}
       onReady={onNavigationReady}
+      onStateChange={onNavigationStateChange}
       onUnhandledAction={error => {
-        console.log('Error Navigation =>', error);
+        logger.warn('Unhandled navigation action:', error);
       }}
       linking={linking}
       fallback={
         <TextView
-          text={'Loading...'}
-          style={styles.fallbackText}
-          containerStyle={styles.fallback}
+          text={t('common.loading')}
+          style={navigationFallbackStyles.fallbackText}
+          containerStyle={navigationFallbackStyles.fallback}
         />
       }>
       {children}

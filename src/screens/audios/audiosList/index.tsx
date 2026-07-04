@@ -1,6 +1,5 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
 
 //* components import
 import AudiosListTemplate from '@templates/audios/audiosListTemplate';
@@ -8,19 +7,12 @@ import AudiosListTemplate from '@templates/audios/audiosListTemplate';
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
-//* styles import
-import {styles} from './styles';
-
-interface AudiosMenuProps {
+interface AudiosListProps {
   navigation: AppStackNavigationProp<'AudiosList'>;
 }
 
-const AudiosList = (props: AudiosMenuProps): React.JSX.Element => {
-  return (
-    <View style={styles.container}>
-      <AudiosListTemplate navigation={props.navigation} />
-    </View>
-  );
+const AudiosList = ({navigation}: AudiosListProps): React.JSX.Element => {
+  return <AudiosListTemplate navigation={navigation} />;
 };
 
 export default AudiosList;

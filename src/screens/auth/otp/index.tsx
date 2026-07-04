@@ -1,19 +1,18 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
 
 //* components import
-import TextView from '@atoms/TextView';
+import MockOtpTemplate from '@templates/auth/mockOtpTemplate';
 
-//* styles import
-import {styles} from './styles';
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const OTP = (props: any): React.JSX.Element => {
-  return (
-    <View style={styles.container}>
-      <TextView text={'OTP'} />
-    </View>
-  );
+interface OTPProps {
+  navigation: AppStackNavigationProp<'OTP'>;
+}
+
+const OTP = ({navigation}: OTPProps): React.JSX.Element => {
+  return <MockOtpTemplate navigation={navigation} />;
 };
 
 export default OTP;

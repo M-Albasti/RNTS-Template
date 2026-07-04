@@ -37,7 +37,6 @@ const List = memo((props: VideosListProps): React.JSX.Element => {
     <FlashList
       data={props.videosData}
       renderItem={renderItem}
-      estimatedItemSize={70}
       keyExtractor={(item: VideoProps) => item?.title?.toString()}
       removeClippedSubviews
       showsVerticalScrollIndicator={false}

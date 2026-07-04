@@ -4,6 +4,7 @@ import {ZodError} from 'zod';
 import {isEmpty} from 'lodash';
 
 //* services import
+import {apiLoginService} from '@services/authServices/apiLoginService';
 import {firebaseEmailLogin} from '@services/authServices/firebaseEmailLogin';
 import {firebasePhoneLogin} from '@services/authServices/firebasePhoneLogin';
 import {firebaseGoogleLogin} from '@services/authServices/firebaseGoogleLogin';
@@ -11,6 +12,7 @@ import {firebaseFacebookLogin} from '@services/authServices/firebaseFacebookLogi
 import {firebaseAppleLogin} from '@services/authServices/firebaseAppleLogin';
 
 //* utils import
+import {formatZodError} from '@utils/formatZodError';
 import loginValidation from '@utils/loginValidation';
 
 //* types import
@@ -37,24 +39,26 @@ export const loginService = async (
     // login with credentials
     if (!isEmpty(credentials)) {
       loginValidation.parse(credentials); // Validate data
-      if (loginType === 'FirebaseEmail') {
-        firebaseEmailLogin(credentials, dispatch, loginType);
+      if (loginType === 'Normal') {
+        await apiLoginService(credentials, dispatch, loginType);
+      } else if (loginType === 'FirebaseEmail') {
+        await firebaseEmailLogin(credentials, dispatch, loginType);
       } else if (loginType === 'FirebasePhone') {
-        firebasePhoneLogin(credentials, loginType);
+        await firebasePhoneLogin(credentials, loginType);
       }
     } else {
       if (loginType === 'FirebaseGoogle') {
-        firebaseGoogleLogin(dispatch, loginType);
+        await firebaseGoogleLogin(dispatch, loginType);
       } else if (loginType === 'FirebaseFacebook') {
-        firebaseFacebookLogin(dispatch, loginType);
+        await firebaseFacebookLogin(dispatch, loginType);
       } else if (loginType === 'FirebaseApple') {
-        firebaseAppleLogin(dispatch, loginType);
+        await firebaseAppleLogin(dispatch, loginType);
       }
     }
   } catch (error) {
     if (error instanceof ZodError) {
-      const errorMessages = error.errors.map(err => err.message).join('\n');
-      Alert.alert('Validation Error', errorMessages);
+      // Zod v4 exposes validation messages via `issues`, not `errors`.
+      Alert.alert('Validation Error', formatZodError(error));
     }
   }
 };

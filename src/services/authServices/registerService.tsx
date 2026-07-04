@@ -6,12 +6,20 @@ import {ZodError} from 'zod';
 import {addUser} from '@redux/slices/authSlice';
 
 //* services import
+import {apiRegisterService} from '@services/authServices/apiLoginService';
 import {registerFirebaseWithEmail} from '@services/firebaseServices/firebaseEmailService';
 
 //* helpers import
 import {cleanFirebaseUserResponse} from '@helpers/cleanFirebaseUserResponse';
 
+//* firebase import
+import {
+  trackRegisterFailure,
+  trackRegisterSuccess,
+} from '@services/firebaseServices/firebaseAuthAnalytics';
+
 //* utils import
+import {formatZodError} from '@utils/formatZodError';
 import registerValidation from '@utils/registerValidation';
 
 //* types import
@@ -31,15 +39,22 @@ export const registerService = async (
 ): Promise<void> => {
   try {
     registerValidation.parse(credentials); // Validate data
-    if (registerType === 'FirebaseEmailRegister') {
+    if (registerType === 'Register') {
+      await apiRegisterService(credentials, dispatch);
+    } else if (registerType === 'FirebaseEmailRegister') {
       registerFirebaseWithEmail(credentials.emailOrPhone, credentials.password)
         .then(user => {
           // Handle successful register
           dispatch(addUser(cleanFirebaseUserResponse(user, 'FirebaseEmail')));
+          void trackRegisterSuccess('FirebaseEmail');
           Alert.alert('Register Success', 'You have successfully registered!');
         })
         .catch(error => {
           // Handle register failure
+          void trackRegisterFailure(
+            'FirebaseEmail',
+            error.message || 'An error occurred during register.',
+          );
           Alert.alert(
             'Register Failed',
             error.message || 'An error occurred during register.',
@@ -49,8 +64,8 @@ export const registerService = async (
     }
   } catch (error) {
     if (error instanceof ZodError) {
-      const errorMessages = error.errors.map(err => err.message).join('\n');
-      Alert.alert('Validation Error', errorMessages);
+      // Zod v4 exposes validation messages via `issues`, not `errors`.
+      Alert.alert('Validation Error', formatZodError(error));
     }
   }
 };

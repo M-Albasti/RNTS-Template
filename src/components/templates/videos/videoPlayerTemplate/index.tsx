@@ -1,34 +1,41 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-//* components import
+import ScreenContainer from '@atoms/ScreenContainer';
+import ScreenHeader from '@atoms/ScreenHeader';
 import VideoPlayerView from '@organisms/videos/videoPlayer/VideoPlayerView';
 
-//* types import
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveVideoPlayerTemplateStyles} from './styles/resolveVideoPlayerTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {VideoProps} from '@Types/videoProps';
 
-interface VideoPlayerProps {
+interface VideoPlayerTemplateProps {
   navigation: AppStackNavigationProp<'VideoPlayer'>;
   videoDetails: VideoProps;
 }
 
-const VideoPlayerTemplate = (props: VideoPlayerProps): React.JSX.Element => {
+const VideoPlayerTemplate = ({
+  navigation,
+  videoDetails,
+}: VideoPlayerTemplateProps): React.JSX.Element => {
+  const styles = useThemedStyles(resolveVideoPlayerTemplateStyles);
+
   return (
-    <View style={styles.container}>
-      <VideoPlayerView
-        navigation={props.navigation}
-        videoDetails={props.videoDetails}
+    <ScreenContainer>
+      <ScreenHeader
+        title={videoDetails.title || 'Video player'}
+        onBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}
       />
-    </View>
+      <View style={styles.player}>
+        <VideoPlayerView navigation={navigation} videoDetails={videoDetails} />
+      </View>
+    </ScreenContainer>
   );
 };
 
 export default VideoPlayerTemplate;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

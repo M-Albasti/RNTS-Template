@@ -1,19 +1,20 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
 
 //* components import
-import TextView from '@atoms/TextView';
+import ForgetPasswordTemplate from '@templates/auth/forgetPasswordTemplate';
 
-//* styles import
-import {styles} from './styles';
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const ForgetPassword = (props: any): React.JSX.Element => {
-  return (
-    <View style={styles.container}>
-      <TextView text={'Forget Password'} />
-    </View>
-  );
+interface ForgetPasswordProps {
+  navigation: AppStackNavigationProp<'ForgetPassword'>;
+}
+
+const ForgetPassword = ({
+  navigation,
+}: ForgetPasswordProps): React.JSX.Element => {
+  return <ForgetPasswordTemplate navigation={navigation} />;
 };
 
 export default ForgetPassword;

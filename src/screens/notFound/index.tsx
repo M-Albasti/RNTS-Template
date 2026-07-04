@@ -1,25 +1,46 @@
 //* packages import
 import React from 'react';
-import {View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
-import TouchableText from '@atoms/TouchableText';
+import Button from '@atoms/Button';
+import Heading from '@atoms/Heading';
+import ScreenContainer from '@atoms/ScreenContainer';
+import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
-//* styles import
-import {styles} from './styles';
+//* types import
+import {AppStackNavigationProp} from '@Types/appNavigation';
 
-const NotFound = (props: any): React.JSX.Element => {
+interface NotFoundProps {
+  navigation: AppStackNavigationProp<'NotFound'>;
+}
+
+const NotFound = ({navigation}: NotFoundProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
-    <View style={styles.container}>
-      <TextView text={'Not Found!'} />
-      <TouchableText
-        text={'Go Back To Home'}
+    <ScreenContainer centered alignContent="center">
+      <Heading text={t('navigation.notFoundCode')} level="display" tone="primary" align="center" />
+      <Spacer size="sm" />
+      <Heading text={t('navigation.pageNotFound')} level="h2" tone="muted" align="center" />
+      <Spacer size="md" />
+      <TextView
+        text={t('navigation.pageNotFoundMessage')}
+        variant="body"
+        muted
+        align="center"
+      />
+      <Spacer size="xl" />
+      <Button
+        label={t('common.goBack')}
         onPress={() => {
-          props.navigation.goBack();
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
         }}
       />
-    </View>
+    </ScreenContainer>
   );
 };
 

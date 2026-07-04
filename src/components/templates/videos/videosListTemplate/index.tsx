@@ -1,29 +1,34 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-//* components import
+import ScreenContainer from '@atoms/ScreenContainer';
+import ScreenHeader from '@atoms/ScreenHeader';
 import ListWithButtons from '@organisms/videos/videosList/ListWithButtons';
 
-//* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface VideosListTemplateProps {
   navigation: AppStackNavigationProp<'VideosList'>;
 }
 
-const VideosListTemplate = (props: VideosListTemplateProps): React.JSX.Element => {
+const VideosListTemplate = ({
+  navigation,
+}: VideosListTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
-    <View style={styles.container}>
-      <ListWithButtons navigation={props.navigation} />
-    </View>
+    <ScreenContainer>
+      <ScreenHeader
+        title={t('media.videos')}
+        onBack={() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack();
+          }
+        }}
+      />
+      <ListWithButtons navigation={navigation} />
+    </ScreenContainer>
   );
 };
 
 export default VideosListTemplate;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

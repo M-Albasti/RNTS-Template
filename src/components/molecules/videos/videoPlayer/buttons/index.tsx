@@ -1,75 +1,59 @@
 //* packages import
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {ScreenHeight, ScreenWidth} from '@rneui/base';
+import {useTranslation} from 'react-i18next';
 
 //* components import
-import TouchableText from '@atoms/TouchableText';
+import Button from '@atoms/Button';
 
-//* constants import
-import {appColors} from '@constants/colors';
+//* theme import
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveButtonsStyles} from './styles/resolveButtonsStyles';
 
 interface ButtonsProps {
   onDismiss: () => void;
   onRetakeVideo: () => void;
   onUpload: () => void;
+  uploading?: boolean;
 }
 
-const Buttons = (props: ButtonsProps) => {
+const Buttons = ({
+  onDismiss,
+  onRetakeVideo,
+  onUpload,
+  uploading = false,
+}: ButtonsProps): React.JSX.Element => {
+  const {t} = useTranslation();
+  const styles = useThemedStyles(resolveButtonsStyles);
+
   return (
     <View style={styles.container}>
-      <TouchableText
-        text={'Dismiss Video'}
-        onPress={props.onDismiss}
-        textStyle={styles.recordText}
-        touchableStyle={styles.recordTouchableContainer}
+      <Button
+        label={t('common.dismiss')}
+        variant="ghost"
+        size="sm"
+        flat
+        style={styles.action}
+        onPress={onDismiss}
       />
-      <TouchableText
-        text={'Retake the Video'}
-        onPress={props.onRetakeVideo}
-        textStyle={styles.recordText}
-        touchableStyle={styles.recordTouchableContainer}
+      <Button
+        label={t('common.retake')}
+        variant="outline"
+        size="sm"
+        style={styles.action}
+        onPress={onRetakeVideo}
       />
-      <TouchableText
-        text={'Upload Video'}
-        onPress={props.onUpload}
-        textStyle={styles.recordText}
-        touchableStyle={styles.recordTouchableContainer}
+      <Button
+        label={uploading ? t('common.uploading') : t('common.upload')}
+        size="sm"
+        flat
+        style={styles.action}
+        loading={uploading}
+        disabled={uploading}
+        onPress={onUpload}
       />
     </View>
   );
 };
 
 export default Buttons;
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    paddingHorizontal: 15,
-    backgroundColor: appColors.black60,
-    width: ScreenWidth,
-    height: ScreenHeight * 0.1,
-  },
-  recordTouchableContainer: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    padding: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 15,
-    marginVertical: 10,
-    borderColor: appColors.white,
-    width: ScreenWidth / 3.5,
-  },
-  recordText: {
-    textAlign: 'right',
-    fontSize: 10,
-    fontWeight: 'bold',
-    color: appColors.white,
-  },
-});

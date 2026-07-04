@@ -57,11 +57,10 @@ This project is open-source, and contributions are always welcome! To contribute
 
 ## Documentation
 
-The template is **well-documented** to make it easier to get started and understand the project structure. You'll find detailed documentation on:
-
-- **Project structure** and the **atomic design components** (atoms, molecules, organisms).
-- Step-by-step instructions for **setting up Firebase authentication** and integrating **social logins**.
-- How to extend the app with your own features, such as adding more auth methods or custom API calls.
+- **[App Usage Guide](docs/APP_GUIDE.md)** — fonts, SVG icons, i18n, API layer, React Query, theming, auth, and workflow (how to use everything in the app).
+- **Project structure** and **atomic design** (atoms, molecules, organisms).
+- Firebase authentication and social login setup.
+- Path aliases (`@atoms`, `@config`, `@api`, etc.) — see the guide and `babel.config.js`.
 
 ## Dynamic Import Routes (Module Aliases)
 

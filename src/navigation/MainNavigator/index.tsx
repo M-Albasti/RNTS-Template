@@ -28,14 +28,16 @@ import {styles} from './styles';
 
 const MainStack = createNativeStackNavigator<RootStackParamList>();
 
-const MainNavigator = (props: any): React.JSX.Element => {
+const MainNavigator = (): React.JSX.Element => {
   const user = useAppSelector(state => state.auth.user);
   const insets = useSafeAreaInsets();
-  console.log('User: =>', user, isEmpty(user));
+  const isAuthenticated = !isEmpty(user);
 
+  // React Navigation requires stable screen names — do NOT swap `name` dynamically.
+  // Render AuthStack OR DrawerRoot based on auth state; both stay registered in the type map.
   return (
     <MainStack.Navigator
-      layout={({children, state, descriptors, navigation}) => (
+      layout={({children}) => (
         <ErrorBoundary>
           <Suspense
             fallback={
@@ -62,18 +64,15 @@ const MainNavigator = (props: any): React.JSX.Element => {
       )}
       screenOptions={{headerShown: false}}>
       <MainStack.Group>
-        <MainStack.Screen
-          name={isEmpty(user) ? 'AuthStack' : 'DrawerRoot'}
-          component={isEmpty(user) ? AuthNavigator : DrawerNavigator}
-        />
-        <MainStack.Screen name="NotFound">
-          {props => <NotFound {...props} />}
-        </MainStack.Screen>
+        {isAuthenticated ? (
+          <MainStack.Screen name="DrawerRoot" component={DrawerNavigator} />
+        ) : (
+          <MainStack.Screen name="AuthStack" component={AuthNavigator} />
+        )}
+        <MainStack.Screen name="NotFound" component={NotFound} />
       </MainStack.Group>
       <MainStack.Group screenOptions={{presentation: 'modal'}}>
-        <MainStack.Screen name="Settings">
-          {props => <Settings {...props} />}
-        </MainStack.Screen>
+        <MainStack.Screen name="Settings" component={Settings} />
       </MainStack.Group>
     </MainStack.Navigator>
   );

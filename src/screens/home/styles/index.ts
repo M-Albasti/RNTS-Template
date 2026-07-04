@@ -1,0 +1,1 @@
+export {resolveHomeStyles} from './resolveHomeStyles';

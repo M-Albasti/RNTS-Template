@@ -9,31 +9,72 @@
 import '@config/sentryConfig';
 
 //* packages import
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { wrap } from '@sentry/react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet} from 'react-native';
+import {Provider} from 'react-redux';
+import {PersistGate} from 'redux-persist/integration/react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {I18nextProvider} from 'react-i18next';
+import {wrap} from '@sentry/react-native';
+
+//* config import
+import AppProviders from '@config/AppProviders';
 
 //* navigators import
 import NavigationScreens from '@navigation/index';
 
 //* redux import
-import { persistor, store } from '@redux/store';
+import {bootstrapSQLite} from '@redux/storage/sqlite';
+import {initFirebaseServices} from '@config/firebaseInit';
+import {persistor, store} from '@redux/store';
+
+//* translation import
+import i18n from '@translation/i18n';
+import DriverBackgroundTrackingHost from '@organisms/delivery/DriverBackgroundTrackingHost';
+import FirebaseMessagingHost from '@organisms/firebase/FirebaseMessagingHost';
+import IslamicNotificationHost from '@organisms/islamic/IslamicNotificationHost';
 
 const App = (): React.JSX.Element => {
+  // Wait until SQLite is opened, migrated, and todos are loaded/seeded.
+  const [sqliteReady, setSqliteReady] = useState(false);
+
+  useEffect(() => {
+    const boot = async () => {
+      try {
+        bootstrapSQLite(store.dispatch, store.getState);
+        await initFirebaseServices();
+      } catch (error) {
+        console.log('App bootstrap Error =>', error);
+      } finally {
+        setSqliteReady(true);
+      }
+    };
+
+    boot();
+  }, []);
+
+  if (!sqliteReady) {
+    return <></>;
+  }
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <SafeAreaProvider>
-          <GestureHandlerRootView style={styles.container}>
-            <NavigationScreens />
-          </GestureHandlerRootView>
-        </SafeAreaProvider>
-      </PersistGate>
-    </Provider>
+    <I18nextProvider i18n={i18n}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <AppProviders>
+            <SafeAreaProvider>
+              <GestureHandlerRootView style={styles.container}>
+                <DriverBackgroundTrackingHost />
+                <FirebaseMessagingHost />
+                <IslamicNotificationHost />
+                <NavigationScreens />
+              </GestureHandlerRootView>
+            </SafeAreaProvider>
+          </AppProviders>
+        </PersistGate>
+      </Provider>
+    </I18nextProvider>
   );
 };
 

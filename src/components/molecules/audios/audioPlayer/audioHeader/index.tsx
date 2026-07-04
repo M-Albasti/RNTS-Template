@@ -1,30 +1,30 @@
-//* packages import
 import React, {memo} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {ScreenHeight} from '@rneui/base';
 
-//* components import
 import TouchableIcon from '@atoms/TouchableIcon';
 import TextView from '@atoms/TextView';
+import {useThemeTokens} from '@theme/useThemeTokens';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioHeaderStyles} from './styles/resolveAudioHeaderStyles';
 
-//* constants import
-import {appColors} from '@constants/colors';
-
-//* types import
-import {AppStackNavigationProp} from '@Types/appNavigation';
+import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface AudioHeaderProps {
   navigation: AppStackNavigationProp<'AudioPlayer'>;
 }
 
-const AudioHeader = memo((props: AudioHeaderProps) => {
+const AudioHeader = memo((props: AudioHeaderProps): React.JSX.Element => {
+  const {colors, sizes} = useThemeTokens();
+  const styles = useThemedStyles(resolveAudioHeaderStyles);
+
   return (
     <View style={styles.mainbar}>
       <TouchableIcon
         iconType={'AntDesign'}
         name={'left'}
-        size={24}
-        color={appColors.black}
+        size={sizes.iconSm}
+        color={colors.textPrimary}
         onPress={() => {
           if (props.navigation.canGoBack()) {
             props.navigation.goBack();
@@ -35,26 +35,11 @@ const AudioHeader = memo((props: AudioHeaderProps) => {
       <TouchableIcon
         iconType={'Entypo'}
         name="dots-three-horizontal"
-        size={24}
-        color={appColors.black}
+        size={sizes.iconSm}
+        color={colors.textPrimary}
       />
     </View>
   );
 });
 
 export default AudioHeader;
-
-const styles = StyleSheet.create({
-  mainbar: {
-    height: ScreenHeight * 0.1,
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: '10%',
-  },
-  nowPlayingText: {
-    fontSize: 19,
-    textAlign: 'center',
-  },
-});

@@ -1,13 +1,10 @@
-//* packages import
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 
-//* components import
 import TextView from '@atoms/TextView';
 import TouchableText from '@atoms/TouchableText';
-
-//* constants import
-import {appColors} from '@constants/colors';
+import {useThemedStyles} from '@theme/createThemedStyles';
+import {resolveAudioRecordingStyles} from './styles/resolveAudioRecordingStyles';
 
 interface AudioRecordingProps {
   startRecord: () => Promise<void>;
@@ -18,7 +15,9 @@ interface AudioRecordingProps {
   recordTime?: string;
 }
 
-const AudioRecording = (props: AudioRecordingProps) => {
+const AudioRecording = (props: AudioRecordingProps): React.JSX.Element => {
+  const styles = useThemedStyles(resolveAudioRecordingStyles);
+
   return (
     <View style={styles.recordAudioContainer}>
       <TextView text={'Record Audio'} style={styles.headerTextStyle} />
@@ -53,25 +52,3 @@ const AudioRecording = (props: AudioRecordingProps) => {
 };
 
 export default AudioRecording;
-
-const styles = StyleSheet.create({
-  recordAudioContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  headerTextStyle: {
-    color: appColors.black,
-    fontSize: 25,
-    fontWeight: 'bold',
-  },
-  buttonContainerStyle: {
-    padding: 10,
-    margin: 10,
-    borderWidth: 1,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 200,
-  },
-});
