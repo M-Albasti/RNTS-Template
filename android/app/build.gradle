@@ -116,7 +116,10 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.release
+            // Use debug keystore in CI / local dev when release keystore props are absent
+            signingConfig project.hasProperty('MYAPP_UPLOAD_STORE_FILE')
+                ? signingConfigs.release
+                : signingConfigs.debug
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -126,10 +129,11 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    def enableAbiSplits = findProperty('enableAbiSplits') ?: 'true'
     splits {
         abi {
             reset()
-            enable true
+            enable enableAbiSplits.toBoolean()
             universalApk true
             include "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
         }

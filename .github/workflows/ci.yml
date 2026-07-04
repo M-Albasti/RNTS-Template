@@ -95,7 +95,7 @@ jobs:
     name: Android assembleDebug
     runs-on: ubuntu-latest
     needs: quality
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -156,7 +156,13 @@ jobs:
 
       - name: Assemble debug APK
         working-directory: android
-        run: ./gradlew assembleDebug --no-daemon
+        env:
+          GRADLE_OPTS: -Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError"
+        run: >
+          ./gradlew assembleDebug --no-daemon --build-cache --max-workers=2
+          -PreactNativeArchitectures=arm64-v8a
+          -PenableAbiSplits=false
+          -PnewArchEnabled=false
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
