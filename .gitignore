@@ -44,7 +44,6 @@ local.properties
 google-services.json
 .kotlin/
 android/sentry.properties
-android/gradle.properties
 
 # node.js
 #
