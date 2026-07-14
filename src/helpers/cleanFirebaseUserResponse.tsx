@@ -1,12 +1,15 @@
 //* types import
-import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {
+  AdditionalUserInfo,
+  User as FirebaseUser,
+} from '@Types/firebaseAuthTypes';
 import {LoginTypes} from '@Types/loginTypes';
 import {User} from '@Types/userTypes';
 
 export const cleanFirebaseUserResponse = (
-  user: FirebaseAuthTypes.User,
+  user: FirebaseUser,
   loginType: LoginTypes,
-  additionalUserInfo?: FirebaseAuthTypes.AdditionalUserInfo,
+  additionalUserInfo?: AdditionalUserInfo,
 ): User | null => {
   if (!user) return null;
 

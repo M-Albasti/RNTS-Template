@@ -3,6 +3,7 @@ import {FlatList, Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
+import EmptyView from '@atoms/EmptyView';
 import OrderStatusBadge from '@molecules/delivery/OrderStatusBadge';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -31,7 +32,13 @@ const ActiveOrders = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader title={t('delivery.activeOrders')} onBack={() => navigation.goBack()} />
       {orders.length === 0 ? (
-        <TextView text={t('delivery.noActiveOrders')} align="center" muted />
+        <EmptyView
+          compact
+          title={t('delivery.noActiveOrders')}
+          iconName="bicycle-outline"
+          actionLabel={t('delivery.newDelivery')}
+          onAction={() => navigation.navigate('NewDelivery')}
+        />
       ) : (
         <FlatList
           data={orders}

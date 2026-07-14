@@ -1,6 +1,6 @@
 import type {RouteProp} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {ConfirmationResult} from '@Types/firebaseAuthTypes';
 import type {VideoFile} from 'react-native-vision-camera';
 
 import {videos} from '@constants/videos';
@@ -78,7 +78,7 @@ export const mockRegisterRoute: RouteProp<
 };
 
 export const mockFirebaseConfirmation =
-  mockNavigationShell as unknown as FirebaseAuthTypes.ConfirmationResult;
+  mockNavigationShell as unknown as ConfirmationResult;
 
 export const mockVideoFile: VideoFile = {
   path: videos[0].sources[0],

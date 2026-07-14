@@ -2,7 +2,6 @@ import React from 'react';
 import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-import Heading from '@atoms/Heading';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
@@ -29,15 +28,22 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
   const {t} = useTranslation();
   const styles = useThemedStyles(tokens => ({
     card: {
+      flex: 1,
       backgroundColor: tokens.colors.surface,
-      borderRadius: tokens.radius.lg,
-      padding: tokens.spacing.lg,
+      borderRadius: tokens.radius.xl,
+      padding: tokens.spacing.md,
+      paddingTop: tokens.spacing.lg,
       borderWidth: tokens.layout.borderWidth.sm,
       borderColor: tokens.colors.border,
-      ...tokens.shadows.sm,
+      ...tokens.shadows.md,
     },
-    emojiRow: {...tokens.layout.presets.row, gap: tokens.spacing.lg, justifyContent: 'center' as const},
-    emoji: {fontSize: 42},
+    emojiRow: {
+      ...tokens.layout.presets.row,
+      flexWrap: 'wrap' as const,
+      gap: tokens.spacing.sm,
+      justifyContent: 'center' as const,
+    },
+    emoji: {fontSize: 32},
     text: {
       textAlign: language === 'ar' ? ('right' as const) : ('left' as const),
       writingDirection: language === 'ar' ? ('rtl' as const) : ('ltr' as const),
@@ -48,8 +54,8 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
 
   return (
     <View style={styles.card}>
-      <TextView text={levelLabel} variant="caption" muted />
-      <Spacer size="sm" />
+      <TextView text={levelLabel} variant="caption" muted numberOfLines={1} />
+      <Spacer size="xs" />
       {clue.type === 'image_riddle' ? (
         <>
           <View style={styles.emojiRow}>
@@ -59,16 +65,24 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
           </View>
           {clueText ? (
             <>
-              <Spacer size="sm" />
-              <TextView text={clueText} variant="bodySmall" style={styles.text} muted />
+              <Spacer size="xs" />
+              <TextView
+                text={clueText}
+                variant="bodySmall"
+                style={styles.text}
+                muted
+                numberOfLines={3}
+              />
             </>
           ) : null}
         </>
       ) : (
-        <Heading
+        <TextView
           text={clueText}
-          level="h3"
+          variant="h3"
+          style={styles.text}
           align={language === 'ar' ? 'right' : 'left'}
+          numberOfLines={4}
         />
       )}
     </View>

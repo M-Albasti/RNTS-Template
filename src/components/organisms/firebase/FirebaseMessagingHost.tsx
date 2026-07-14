@@ -1,6 +1,12 @@
 import React, {useEffect} from 'react';
-import messaging from '@react-native-firebase/messaging';
+import {
+  getInitialNotification,
+  onMessage,
+  onNotificationOpenedApp,
+  onTokenRefresh,
+} from '@react-native-firebase/messaging';
 
+import {getFirebaseMessaging} from '@config/firebaseInstances';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {setFcmToken} from '@redux/slices/islamicSlice';
 import {
@@ -19,20 +25,21 @@ const FirebaseMessagingHost = (): null => {
 
     syncToken().catch(() => undefined);
 
-    const unsubscribeToken = messaging().onTokenRefresh(token => {
+    const messaging = getFirebaseMessaging();
+
+    const unsubscribeToken = onTokenRefresh(messaging, token => {
       dispatch(setFcmToken(token));
     });
 
-    const unsubscribeMessage = messaging().onMessage(async remoteMessage => {
+    const unsubscribeMessage = onMessage(messaging, async remoteMessage => {
       await displayFirebaseRemoteMessage(remoteMessage);
     });
 
-    const unsubscribeOpened = messaging().onNotificationOpenedApp(remoteMessage => {
+    const unsubscribeOpened = onNotificationOpenedApp(messaging, remoteMessage => {
       console.log('Notification opened app from background:', remoteMessage?.messageId);
     });
 
-    messaging()
-      .getInitialNotification()
+    getInitialNotification(messaging)
       .then(remoteMessage => {
         if (remoteMessage) {
           console.log('Notification opened app from quit state:', remoteMessage.messageId);

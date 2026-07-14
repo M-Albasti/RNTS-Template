@@ -18,7 +18,7 @@ import {
 
 //* types import
 import {AppDispatch} from '@Types/appDispatch';
-import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {UserCredential} from '@Types/firebaseAuthTypes';
 import {LoginTypes} from '@Types/loginTypes';
 
 export const firebaseGoogleLogin = (
@@ -26,7 +26,7 @@ export const firebaseGoogleLogin = (
   loginType: LoginTypes,
 ): Promise<void> => {
   return loginFirebaseWithGoogle()
-    .then((user: FirebaseAuthTypes.UserCredential) => {
+    .then((user: UserCredential) => {
       // Handle successful login
       dispatch(
         addUser(

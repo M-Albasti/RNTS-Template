@@ -1,10 +1,11 @@
 import React, {useMemo, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
+import EmptyView from '@atoms/EmptyView';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
@@ -153,6 +154,14 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
         keyExtractor={item => item.id}
         style={styles.list}
         ItemSeparatorComponent={() => <Spacer size="sm" />}
+        ListEmptyComponent={
+          <EmptyView
+            compact
+            title={t('todos.emptyTitle')}
+            message={t('todos.emptyMessage')}
+            iconName="checkbox-outline"
+          />
+        }
       />
     </ScreenContainer>
   );

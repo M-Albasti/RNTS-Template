@@ -69,6 +69,11 @@ export type SemanticColors = {
   accent1: string;
   accent2: string;
   accent3: string;
+  /**
+   * Bright accents for interactive selection (e.g. word-puzzle drag path).
+   * Prefer these over hard-coded hex in components.
+   */
+  selectionAccents: readonly string[];
 };
 
 export type AppPalette = typeof appPalette;

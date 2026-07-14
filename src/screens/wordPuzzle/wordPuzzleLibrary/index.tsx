@@ -2,6 +2,7 @@ import React from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
+import ApiErrorView from '@atoms/ApiErrorView';
 import Card from '@atoms/Card';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -93,13 +94,14 @@ const WordPuzzleLibrary = ({navigation, route}: Props): React.JSX.Element => {
           <TextView text={t('wordPuzzle.loadingBooks')} variant="caption" muted />
         </View>
       ) : isError ? (
-        <Card>
-          <TextView text={t('wordPuzzle.errors.loadFailed')} variant="body" muted />
-          <Spacer size="sm" />
-          <Pressable onPress={() => refetch()}>
-            <TextView text={t('wordPuzzle.retry')} variant="bodySmall" />
-          </Pressable>
-        </Card>
+        <ApiErrorView
+          compact
+          message={t('wordPuzzle.errors.loadFailed')}
+          retryLabel={t('wordPuzzle.retry')}
+          onRetry={() => {
+            void refetch();
+          }}
+        />
       ) : (
         booksByLand.map(({group, landBooks}) => (
           <View key={`land-${group.landIndex}`}>

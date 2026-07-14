@@ -1,5 +1,5 @@
 import {buildGridForWord} from '@helpers/hexGridHelpers';
-import {buildAnswerVariants, pickSpellableAnswer} from '@helpers/wordPuzzleAnswerHelpers';
+import {buildAnswerVariants, pickBoardWord} from '@helpers/wordPuzzleAnswerHelpers';
 import type {
   EnglishRiddleDto,
   IslamicQuizCategoryDto,
@@ -7,7 +7,6 @@ import type {
 } from '@api/server/wordPuzzle.dto';
 import {
   ENGLISH_RIDDLE_CATEGORIES,
-  WORD_PUZZLE_PUZZLES_PER_STAGE,
   WORD_PUZZLE_STAGES_PER_BOOK,
   type EnglishRiddleCategory,
 } from '@constants/wordPuzzle/wordPuzzleConfig';
@@ -55,7 +54,7 @@ export const mapIslamicQuestionToPuzzle = (
   if (!correct) {
     return null;
   }
-  const spellable = pickSpellableAnswer(correct, 'ar');
+  const spellable = pickBoardWord(correct, 'ar');
   if (!spellable) {
     return null;
   }
@@ -64,7 +63,7 @@ export const mapIslamicQuestionToPuzzle = (
     id: `ar-q-${question.id}`,
     type: 'text_riddle',
     clue: {type: 'text_riddle', text: question.q},
-    answers: buildAnswerVariants(spellable, 'ar'),
+    answers: buildAnswerVariants(correct, 'ar'),
     grid,
     solutionPath,
     sourceUrl: question.link,
@@ -76,7 +75,7 @@ export const mapEnglishRiddleToPuzzle = (
   index: number,
   category: string,
 ): WordPuzzleItem | null => {
-  const spellable = pickSpellableAnswer(riddle.answer, 'en');
+  const spellable = pickBoardWord(riddle.answer, 'en');
   if (!spellable) {
     return null;
   }
@@ -85,7 +84,7 @@ export const mapEnglishRiddleToPuzzle = (
     id: `en-${category}-${index}`,
     type: 'text_riddle',
     clue: {type: 'text_riddle', text: riddle.riddle},
-    answers: buildAnswerVariants(spellable, 'en'),
+    answers: buildAnswerVariants(riddle.answer, 'en'),
     grid,
     solutionPath,
   };

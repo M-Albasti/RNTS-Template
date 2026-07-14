@@ -147,6 +147,10 @@
     "copiedBody": "تم نسخ القيمة.",
     "copy": "نسخ",
     "scanAgain": "مسح مرة أخرى",
+    "snapDisabledTitle": "كاميرا السيلفي غير متاحة",
+    "snapDisabledMessage": "هذه الميزة متوقفة مؤقتاً. عد لاحقاً من مركز الكاميرا.",
+    "savePermissionFailed": "تعذر الحفظ في المعرض. تحقق من إذن مكتبة الصور وحاول مرة أخرى.",
+    "filtersPreviewOnly": "الفلاتر للمعاينة فقط ولا تُحفظ في الصورة.",
     "noFeatures": "ميزات الكاميرا غير متاحة مؤقتاً.",
     "permissionDenied": "تم رفض إذن الكاميرا. فعّله من الإعدادات للمتابعة.",
     "openSettings": "فتح الإعدادات",
@@ -470,6 +474,7 @@
   "errors": {
     "somethingWentWrong": "حدث خطأ ما",
     "sectionProblem": "واجه هذا القسم مشكلة. يمكنك المحاولة مرة أخرى دون إعادة تشغيل التطبيق.",
+    "loadFailed": "تعذر تحميل البيانات. تحقق من اتصالك وحاول مرة أخرى.",
     "tryAgain": "حاول مرة أخرى"
   },
   "navigation": {
@@ -629,7 +634,10 @@
     "recent": "الأحدث",
     "popular": "الأكثر شعبية",
     "createPost": "إنشاء منشور",
-    "createPoll": "إنشاء استطلاع"
+    "createPoll": "إنشاء استطلاع",
+    "emptyTitle": "لا توجد منشورات بعد",
+    "emptyMessage": "كن أول من يشارك شيئاً مع المجتمع.",
+    "loadError": "تعذر تحميل التغذية الآن."
   },
   "posts": {
     "hubTitle": "التواصل",
@@ -701,6 +709,8 @@
     "searchMessages": "بحث في الرسائل",
     "searchInConversations": "ابحث في المحادثات...",
     "typeToSearch": "اكتب للبحث في سجل الرسائل.",
+    "emptyTitle": "لا محادثات بعد",
+    "emptyMessage": "ابدأ دردشة جديدة للتواصل.",
     "callLog": "سجل المكالمات",
     "startAudioCall": "بدء مكالمة صوتية",
     "startVideoCall": "بدء مكالمة فيديو",
@@ -730,7 +740,9 @@
     "filterDone": "مكتملة",
     "filterHigh": "عالية",
     "personal": "شخصي",
-    "tasksWaiting": "{{count}} مهمة في الانتظار"
+    "tasksWaiting": "{{count}} مهمة في الانتظار",
+    "emptyTitle": "لا مهام بعد",
+    "emptyMessage": "أضف مهمة لتنظيم يومك."
   },
   "wallet": {
     "title": "المحفظة",
@@ -925,7 +937,22 @@
     "hintUsed": "تم إظهار مسار الحل.",
     "clear": "مسح",
     "next": "اللغز التالي",
+    "finishStage": "إنهاء الموقع",
+    "stageComplete": "تم إيجاد كل الكلمات!",
+    "stageSuccessTitle": "تم اجتياز الموقع!",
+    "stageSuccessBody": "أحسنت — تابع إلى المباراة التالية.",
+    "bookCompleteBody": "أنهيت كل المواقع في هذا الكتاب.",
+    "continueNextMatch": "متابعة",
+    "backToMap": "العودة إلى الخريطة",
+    "wordsFound": "{{found}}/{{total}} كلمات",
+    "solvedBadge": "تم الحل",
     "dragHint": "اسحب من أول حرف إلى آخر حرف لتكوين الكلمة.",
+    "dragHintShared": "مرّر بين البطاقات بحرية. كوّن أي كلمة متبقية من اللوحة المشتركة — الحروف المستخدمة تُقفل.",
+    "praiseGood": "أحسنت!",
+    "praiseGreat": "رائع!",
+    "praiseGenius": "عبقري!",
+    "praiseAwesome": "مذهل!",
+    "praiseBrilliant": "ممتاز!",
     "bookNotFound": "الكتاب غير موجود.",
     "stageNotFound": "الموقع غير موجود.",
     "stageTitle": "موقع",

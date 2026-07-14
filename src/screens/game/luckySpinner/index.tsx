@@ -1,6 +1,13 @@
-import React, {useRef} from 'react';
-import {Animated, View} from 'react-native';
+import React, {useState} from 'react';
+import {Dimensions, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import Animated, {
+  Easing,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
@@ -27,22 +34,47 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {coins, lastReward, spinCount} = useAppSelector(state => state.game);
   const dispatch = useAppDispatch();
-  const rotation = useRef(new Animated.Value(0)).current;
-  const styles = useThemedStyles(resolveLuckySpinnerStyles);
+  const rotation = useSharedValue(0);
+  const [spinning, setSpinning] = useState(false);
+  const styles = useThemedStyles(tokens => {
+    const wheelSize = Math.min(tokens.sizes.spinner, Dimensions.get('window').width * 0.55);
+    return {
+      ...resolveLuckySpinnerStyles(tokens),
+      wheel: {
+        ...resolveLuckySpinnerStyles(tokens).wheel,
+        width: wheelSize,
+        height: wheelSize,
+      },
+    };
+  });
 
-  const onSpin = () => {
-    rotation.setValue(0);
-    Animated.timing(rotation, {
-      toValue: 1,
-      duration: 2000,
-      useNativeDriver: true,
-    }).start(() => dispatch(spin()));
+  const finishSpin = () => {
+    setSpinning(false);
+    dispatch(spin());
   };
 
-  const spinInterpolate = rotation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', `${720 + Math.floor(Math.random() * 360)}deg`],
-  });
+  const onSpin = () => {
+    if (spinning) {
+      return;
+    }
+    setSpinning(true);
+    const extraTurns = 2 + Math.floor(Math.random() * 2);
+    const landing = Math.floor(Math.random() * 360);
+    const next = rotation.value + 360 * extraTurns + landing;
+    rotation.value = withTiming(
+      next,
+      {duration: 2200, easing: Easing.out(Easing.cubic)},
+      finished => {
+        if (finished) {
+          runOnJS(finishSpin)();
+        }
+      },
+    );
+  };
+
+  const wheelStyle = useAnimatedStyle(() => ({
+    transform: [{rotate: `${rotation.value}deg`}],
+  }));
 
   return (
     <ScreenContainer scroll centered alignContent="center" bottomPadding="xxl">
@@ -58,7 +90,7 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
           />
         </View>
         <Spacer size="lg" />
-        <Animated.View style={[styles.wheel, {transform: [{rotate: spinInterpolate}]}]}>
+        <Animated.View style={[styles.wheel, wheelStyle]}>
           <Heading text={t('game.spinLabel')} level="h2" align="center" />
         </Animated.View>
         <Spacer size="md" />
@@ -76,7 +108,13 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
             <Spacer size="md" />
           </>
         ) : null}
-        <Button label={t('game.spinTheWheel')} fullWidth onPress={onSpin} />
+        <Button
+          label={t('game.spinTheWheel')}
+          fullWidth
+          loading={spinning}
+          disabled={spinning}
+          onPress={onSpin}
+        />
         <Spacer size="md" />
         <View style={styles.links}>
           <Button

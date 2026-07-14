@@ -34,10 +34,30 @@ export const pickSpellableAnswer = (
 };
 
 export const buildAnswerVariants = (answer: string, language: WordPuzzleLanguage) => {
+  const trimmed = answer.trim().replace(/\s+/g, ' ');
   const normalized = normalizeWord(answer, language);
-  const variants = new Set([answer.trim(), normalized]);
-  if (language === 'ar') {
-    variants.add(answer.replace(/\s+/g, ''));
+  const variants = new Set(
+    [trimmed, normalized, trimmed.replace(/\s+/g, '')].filter(Boolean),
+  );
+  return Array.from(variants);
+};
+
+/** Compact board word: prefer full answer (spaces removed) when it fits length limits. */
+export const pickBoardWord = (
+  rawAnswer: string,
+  language: WordPuzzleLanguage,
+): string | null => {
+  const fullCompact = normalizeWord(rawAnswer, language);
+  if (language === 'en') {
+    if (/^[a-z]{2,15}$/.test(fullCompact)) {
+      return fullCompact;
+    }
+  } else if (
+    fullCompact.length >= 2 &&
+    fullCompact.length <= 12 &&
+    /[\u0600-\u06FF]/.test(fullCompact)
+  ) {
+    return fullCompact;
   }
-  return Array.from(variants).filter(Boolean);
+  return pickSpellableAnswer(rawAnswer, language);
 };

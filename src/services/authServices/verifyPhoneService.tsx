@@ -1,6 +1,6 @@
 //* packages import
 import {Alert} from 'react-native';
-import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {ConfirmationResult} from '@Types/firebaseAuthTypes';
 import {isEmpty} from 'lodash';
 
 //* redux import
@@ -28,7 +28,7 @@ import {AppDispatch} from '@Types/appDispatch';
 import {LoginTypes} from '@Types/loginTypes';
 
 export const confirmPhoneVerificationCode = async (
-  confirmation: FirebaseAuthTypes.ConfirmationResult,
+  confirmation: ConfirmationResult,
   code: string,
   dispatch: AppDispatch,
   loginType: LoginTypes,
@@ -56,7 +56,7 @@ export const confirmPhoneVerificationCode = async (
 };
 
 export const verifyLinkPhoneCode = async (
-  verificationId: FirebaseAuthTypes.ConfirmationResult['verificationId'],
+  verificationId: ConfirmationResult['verificationId'],
   code: string,
   dispatch: AppDispatch,
   loginType: LoginTypes,

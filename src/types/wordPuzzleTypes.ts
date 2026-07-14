@@ -14,6 +14,8 @@ export type HexCoord = {
 export type HexLetterCell = HexCoord & {
   id: string;
   letter: string;
+  /** Which answer word this cell belongs to; undefined = filler. */
+  groupIndex?: number;
 };
 
 export type WordPuzzleClue =

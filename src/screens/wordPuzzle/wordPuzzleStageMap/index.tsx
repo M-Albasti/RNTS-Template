@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, Pressable, ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-import Card from '@atoms/Card';
+import ApiErrorView from '@atoms/ApiErrorView';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -81,13 +81,13 @@ const WordPuzzleStageMap = ({navigation, route}: Props): React.JSX.Element => {
     return (
       <ScreenContainer>
         <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
-        <Card>
-          <TextView text={t('wordPuzzle.errors.loadFailed')} muted />
-          <Spacer size="sm" />
-          <Pressable onPress={() => refetch()}>
-            <TextView text={t('wordPuzzle.retry')} />
-          </Pressable>
-        </Card>
+        <ApiErrorView
+          message={t('wordPuzzle.errors.loadFailed')}
+          retryLabel={t('wordPuzzle.retry')}
+          onRetry={() => {
+            void refetch();
+          }}
+        />
       </ScreenContainer>
     );
   }

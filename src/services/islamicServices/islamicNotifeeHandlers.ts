@@ -6,6 +6,11 @@ import {
 } from '@services/islamicServices/islamicNotificationService';
 import type {IslamicNotificationSettings} from '@Types/islamicTypes';
 
+declare global {
+  // eslint-disable-next-line no-var
+  var __RNTS_ISLAMIC_NOTIFEE_HANDLERS__: boolean | undefined;
+}
+
 const defaultSettings: IslamicNotificationSettings = {
   enabled: true,
   hourlyReminders: true,
@@ -26,6 +31,12 @@ export const handleIslamicNotifeeEvent = async (type: EventType) => {
 };
 
 export const registerIslamicNotifeeHandlers = () => {
+  if (globalThis.__RNTS_ISLAMIC_NOTIFEE_HANDLERS__) {
+    return;
+  }
+
+  globalThis.__RNTS_ISLAMIC_NOTIFEE_HANDLERS__ = true;
+
   notifee.onForegroundEvent(async ({type}) => {
     await handleIslamicNotifeeEvent(type);
   });

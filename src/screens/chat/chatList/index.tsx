@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next';
 import TouchableIcon from '@atoms/TouchableIcon';
 import Button from '@atoms/Button';
 import Card from '@atoms/Card';
+import EmptyView from '@atoms/EmptyView';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -76,6 +77,16 @@ const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
         keyExtractor={item => item.id}
         style={styles.list}
         ItemSeparatorComponent={() => <Spacer size="sm" />}
+        ListEmptyComponent={
+          <EmptyView
+            compact
+            title={t('chat.emptyTitle')}
+            message={t('chat.emptyMessage')}
+            iconName="chatbubbles-outline"
+            actionLabel={t('chat.newChat')}
+            onAction={() => navigation.navigate('NewChat')}
+          />
+        }
       />
     </ScreenContainer>
   );

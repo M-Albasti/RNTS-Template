@@ -6,14 +6,14 @@ import OTPHeader from '@organisms/auth/otp/OTPHeader';
 import OTPForm from '@organisms/auth/otp/OTPForm';
 import OTPFooter from '@organisms/auth/otp/OTPFooter';
 
-import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {ConfirmationResult} from '@Types/firebaseAuthTypes';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {OTPVerificationScreens} from '@Types/otpVerificationScreen';
 import {LoginTypes} from '@Types/loginTypes';
 
 interface OTPTemplateProps {
   navigation: AppStackNavigationProp<OTPVerificationScreens>;
-  confirmation: FirebaseAuthTypes.ConfirmationResult;
+  confirmation: ConfirmationResult;
   loginType: LoginTypes;
 }
 
