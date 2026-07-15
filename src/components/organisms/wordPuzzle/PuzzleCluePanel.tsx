@@ -63,8 +63,8 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
         {clue.type === 'image_riddle' ? (
           <>
             <View style={styles.emojiRow}>
-              {clue.emojis.map(item => (
-                <TextView key={item} text={item} style={styles.emoji} />
+              {clue.emojis.map((item, index) => (
+                <TextView key={`emoji-${index}`} text={item} style={styles.emoji} />
               ))}
             </View>
             {clueText ? (
