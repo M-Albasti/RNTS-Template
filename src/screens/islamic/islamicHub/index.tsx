@@ -2,7 +2,7 @@ import React from 'react';
 import {ActivityIndicator, Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-import Card from '@atoms/Card';
+import ApiErrorView from '@atoms/ApiErrorView';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -112,8 +112,12 @@ export const IslamicLoadingState = (): React.JSX.Element => {
   );
 };
 
-export const IslamicErrorState = ({message}: {message: string}): React.JSX.Element => (
-  <Card>
-    <TextView text={message} variant="body" muted />
-  </Card>
+export const IslamicErrorState = ({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry?: () => void;
+}): React.JSX.Element => (
+  <ApiErrorView message={message} onRetry={onRetry} compact />
 );

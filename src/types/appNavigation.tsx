@@ -1,6 +1,6 @@
 import {NavigatorScreenParams, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {ConfirmationResult} from '@Types/firebaseAuthTypes';
 import {LoginTypes} from '@Types/loginTypes';
 import {SoundProps} from '@Types/soundProps';
 import {VideoProps} from '@Types/videoProps';
@@ -42,7 +42,7 @@ export type RootStackParamList = {
   ResetPassword: undefined;
   OTP: undefined;
   FirebasePhoneOTP: {
-    confirmation: FirebaseAuthTypes.ConfirmationResult;
+    confirmation: ConfirmationResult;
     loginType: LoginTypes;
   };
   NotFound: undefined;

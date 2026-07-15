@@ -147,6 +147,10 @@
     "copiedBody": "Value copied to clipboard.",
     "copy": "Copy",
     "scanAgain": "Scan again",
+    "snapDisabledTitle": "Snap camera unavailable",
+    "snapDisabledMessage": "This feature is temporarily turned off. Check back later from the camera hub.",
+    "savePermissionFailed": "Could not save to your gallery. Check photo library permission and try again.",
+    "filtersPreviewOnly": "Filters are preview-only and are not baked into the saved photo.",
     "noFeatures": "Camera features are temporarily unavailable.",
     "permissionDenied": "Camera permission was denied. Enable it in Settings to continue.",
     "openSettings": "Open Settings",
@@ -470,6 +474,7 @@
   "errors": {
     "somethingWentWrong": "Something went wrong",
     "sectionProblem": "This section ran into a problem. You can try again without restarting the app.",
+    "loadFailed": "Could not load data. Check your connection and try again.",
     "tryAgain": "Try Again"
   },
   "navigation": {
@@ -629,7 +634,10 @@
     "recent": "Recent",
     "popular": "Popular",
     "createPost": "Create post",
-    "createPoll": "Create poll"
+    "createPoll": "Create poll",
+    "emptyTitle": "No posts yet",
+    "emptyMessage": "Be the first to share something with the community.",
+    "loadError": "We couldn't load the feed right now."
   },
   "posts": {
     "hubTitle": "Social",
@@ -701,6 +709,8 @@
     "searchMessages": "Search messages",
     "searchInConversations": "Search in conversations...",
     "typeToSearch": "Type to search message history.",
+    "emptyTitle": "No conversations yet",
+    "emptyMessage": "Start a new chat to begin messaging.",
     "callLog": "Call log",
     "startAudioCall": "Start audio call",
     "startVideoCall": "Start video call",
@@ -730,7 +740,9 @@
     "filterDone": "Done",
     "filterHigh": "High",
     "personal": "Personal",
-    "tasksWaiting": "{{count}} tasks waiting"
+    "tasksWaiting": "{{count}} tasks waiting",
+    "emptyTitle": "No tasks yet",
+    "emptyMessage": "Add a task to get organized."
   },
   "wallet": {
     "title": "Wallet",
@@ -925,7 +937,23 @@
     "hintUsed": "Solution path highlighted.",
     "clear": "Clear",
     "next": "Next riddle",
+    "finishStage": "Finish location",
+    "stageComplete": "All words found!",
+    "stageSuccessTitle": "Location cleared!",
+    "stageSuccessBody": "Great job — continue to the next match.",
+    "bookCompleteBody": "You finished every location in this book.",
+    "continueNextMatch": "Continue",
+    "backToMap": "Back to map",
+    "wordsFound": "{{found}}/{{total}} words",
+    "solvedBadge": "Solved",
+    "clueDotLabel": "Clue {{number}}",
     "dragHint": "Drag from the first letter to the last to form the word.",
+    "dragHintShared": "Swipe clues freely. Spell any remaining word on the shared board — used letters lock.",
+    "praiseGood": "Good!",
+    "praiseGreat": "Great!",
+    "praiseGenius": "Genius!",
+    "praiseAwesome": "Awesome!",
+    "praiseBrilliant": "Brilliant!",
     "bookNotFound": "Book not found.",
     "stageNotFound": "Location not found.",
     "stageTitle": "Location",

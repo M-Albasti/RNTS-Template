@@ -1,17 +1,26 @@
 import notifee, {AndroidImportance} from '@notifee/react-native';
-import messaging, {
-  FirebaseMessagingTypes,
+import {
+  AuthorizationStatus,
+  deleteToken,
+  getToken,
+  hasPermission,
+  isDeviceRegisteredForRemoteMessages,
+  registerDeviceForRemoteMessages as registerDeviceForRemoteMessagesModular,
+  requestPermission,
+  type RemoteMessage,
 } from '@react-native-firebase/messaging';
 import {PermissionsAndroid, Platform} from 'react-native';
 
+import {getFirebaseMessaging} from '@config/firebaseInstances';
+import type {MessagingAuthorizationStatus} from '@Types/firebaseMessagingTypes';
 import {logAnalyticsEvent} from '@services/firebaseServices/firebaseAnalyticsService';
 import {recordCrashError} from '@services/firebaseServices/firebaseCrashlyticsService';
 
 export const FCM_CHANNEL_ID = 'fcm-default';
 
-const isAuthorizedStatus = (status: FirebaseMessagingTypes.AuthorizationStatus) =>
-  status === messaging.AuthorizationStatus.AUTHORIZED ||
-  status === messaging.AuthorizationStatus.PROVISIONAL;
+const isAuthorizedStatus = (status: MessagingAuthorizationStatus) =>
+  status === AuthorizationStatus.AUTHORIZED ||
+  status === AuthorizationStatus.PROVISIONAL;
 
 export const ensureFcmNotificationChannel = async () => {
   if (Platform.OS === 'android') {
@@ -42,11 +51,11 @@ export const requestFirebasePushPermission = async (): Promise<boolean> => {
     }
 
     if (Platform.OS === 'ios') {
-      const status = await messaging().requestPermission();
+      const status = await requestPermission(getFirebaseMessaging());
       return isAuthorizedStatus(status);
     }
 
-    const status = await messaging().hasPermission();
+    const status = await hasPermission(getFirebaseMessaging());
     return isAuthorizedStatus(status);
   } catch (error) {
     recordCrashError(error, 'requestFirebasePushPermission');
@@ -59,15 +68,15 @@ export const registerDeviceForRemoteMessages = async () => {
     return;
   }
 
-  if (!messaging().isDeviceRegisteredForRemoteMessages) {
-    await messaging().registerDeviceForRemoteMessages();
+  if (!isDeviceRegisteredForRemoteMessages(getFirebaseMessaging())) {
+    await registerDeviceForRemoteMessagesModular(getFirebaseMessaging());
   }
 };
 
 export const getFirebaseMessagingToken = async (): Promise<string | null> => {
   try {
     await registerDeviceForRemoteMessages();
-    const token = await messaging().getToken();
+    const token = await getToken(getFirebaseMessaging());
     return token || null;
   } catch (error) {
     console.log('Firebase Messaging getToken Error =>', error);
@@ -77,7 +86,7 @@ export const getFirebaseMessagingToken = async (): Promise<string | null> => {
 };
 
 export const displayFirebaseRemoteMessage = async (
-  remoteMessage: FirebaseMessagingTypes.RemoteMessage,
+  remoteMessage: RemoteMessage,
 ) => {
   await ensureFcmNotificationChannel();
 
@@ -107,7 +116,7 @@ export const displayFirebaseRemoteMessage = async (
 };
 
 export const handleFirebaseBackgroundMessage = async (
-  remoteMessage: FirebaseMessagingTypes.RemoteMessage,
+  remoteMessage: RemoteMessage,
 ) => {
   if (remoteMessage.notification) {
     return;
@@ -120,7 +129,7 @@ export const initFirebaseMessaging = async (): Promise<string | null> => {
   try {
     await ensureFcmNotificationChannel();
 
-    const status = await messaging().hasPermission();
+    const status = await hasPermission(getFirebaseMessaging());
     if (!isAuthorizedStatus(status)) {
       return null;
     }
@@ -152,7 +161,7 @@ export const registerFirebasePushNotifications = async (): Promise<string | null
 
 export const deleteFirebaseMessagingToken = async () => {
   try {
-    await messaging().deleteToken();
+    await deleteToken(getFirebaseMessaging());
   } catch (error) {
     recordCrashError(error, 'deleteFirebaseMessagingToken');
   }

@@ -5,11 +5,11 @@ import {Alert} from 'react-native';
 import {recordCrashError} from '@services/firebaseServices/firebaseCrashlyticsService';
 
 //* types import
-import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {NativeFirebaseAuthError} from '@Types/firebaseAuthTypes';
 import type {NativeModuleError} from '@react-native-google-signin/google-signin';
 
 export const firebaseErrorHandler = (
-  error: FirebaseAuthTypes.NativeFirebaseAuthError | NativeModuleError,
+  error: NativeFirebaseAuthError | NativeModuleError,
 ) => {
   switch (error.code) {
     case 'auth/email-already-in-use':

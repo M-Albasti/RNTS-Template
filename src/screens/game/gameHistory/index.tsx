@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
+import EmptyView from '@atoms/EmptyView';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
@@ -28,9 +29,12 @@ const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
     return (
       <ScreenContainer>
         <ScreenHeader title={t('game.rewardHistory')} onBack={() => navigation.goBack()} />
-        <View style={styles.empty}>
-          <TextView text={t('game.spinToEarn')} muted align="center" />
-        </View>
+        <EmptyView
+          title={t('game.spinToEarn')}
+          iconName="trophy-outline"
+          actionLabel={t('game.luckySpinner')}
+          onAction={() => navigation.navigate('LuckySpinner')}
+        />
       </ScreenContainer>
     );
   }

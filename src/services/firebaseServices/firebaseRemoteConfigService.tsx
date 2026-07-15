@@ -1,5 +1,6 @@
-import remoteConfig from '@react-native-firebase/remote-config';
+import {fetchAndActivate, getValue} from '@react-native-firebase/remote-config';
 
+import {getFirebaseRemoteConfig} from '@config/firebaseInstances';
 import {
   REMOTE_CONFIG_DEFAULTS,
   type RemoteConfigKey,
@@ -9,10 +10,10 @@ import {
 let cachedValues: RemoteConfigValues = {...REMOTE_CONFIG_DEFAULTS};
 
 const readBoolean = (key: RemoteConfigKey): boolean =>
-  remoteConfig().getValue(key).asBoolean();
+  getValue(getFirebaseRemoteConfig(), key).asBoolean();
 
 const readString = (key: RemoteConfigKey): string =>
-  remoteConfig().getValue(key).asString();
+  getValue(getFirebaseRemoteConfig(), key).asString();
 
 const syncCachedValues = (): RemoteConfigValues => {
   cachedValues = {
@@ -29,11 +30,13 @@ const syncCachedValues = (): RemoteConfigValues => {
 
 export const initRemoteConfig = async (): Promise<RemoteConfigValues> => {
   try {
-    await remoteConfig().setDefaults(REMOTE_CONFIG_DEFAULTS);
-    await remoteConfig().setConfigSettings({
+    const remoteConfig = getFirebaseRemoteConfig();
+    remoteConfig.defaultConfig = REMOTE_CONFIG_DEFAULTS;
+    remoteConfig.settings = {
       minimumFetchIntervalMillis: __DEV__ ? 0 : 60 * 60 * 1000,
-    });
-    await remoteConfig().fetchAndActivate();
+      fetchTimeoutMillis: 60_000,
+    };
+    await fetchAndActivate(remoteConfig);
   } catch (error) {
     console.log('Firebase Remote Config init Error =>', error);
   }
@@ -45,7 +48,7 @@ export const getRemoteConfigValues = (): RemoteConfigValues => cachedValues;
 
 export const refreshRemoteConfig = async (): Promise<RemoteConfigValues> => {
   try {
-    await remoteConfig().fetchAndActivate();
+    await fetchAndActivate(getFirebaseRemoteConfig());
   } catch (error) {
     console.log('Firebase Remote Config refresh Error =>', error);
   }

@@ -16,14 +16,18 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 
+import EmptyView from '@atoms/EmptyView';
 import CameraFilterOverlay from '@molecules/camera/CameraFilterOverlay';
 import CameraPermissionGate from '@molecules/camera/CameraPermissionGate';
+import ScreenContainer from '@atoms/ScreenContainer';
+import ScreenHeader from '@atoms/ScreenHeader';
 import TextView from '@atoms/TextView';
 
 import {
   CAMERA_FILTERS,
   type CameraFilterId,
 } from '@constants/cameraFilters';
+import {getRemoteConfigBoolean} from '@config/firebaseInit';
 import {savePhotoToGallery} from '@helpers/cameraHelpers';
 import {
   AnalyticsEvents,
@@ -50,6 +54,7 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
   const [filterId, setFilterId] = useState<CameraFilterId>('none');
   const [capturing, setCapturing] = useState(false);
   const [layout, setLayout] = useState({width: 0, height: 0});
+  const snapEnabled = getRemoteConfigBoolean('camera_snap_enabled');
 
   const {spacing} = useThemeTokens();
   const styles = useThemedStyles(resolveSnapCameraStyles);
@@ -70,7 +75,11 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
 
     setCapturing(true);
     try {
-      const photo = await cameraRef.current.takePhoto({flash: 'off', enableShutterSound: false});
+      const photo = await cameraRef.current.takePhoto({
+        flash: 'off',
+        enableShutterSound: false,
+      });
+      // Filters are preview overlays only — not composited into the saved file.
       await savePhotoToGallery(photo.path);
       await logAnalyticsEvent(AnalyticsEvents.cameraSnapCaptured, {
         filter: filterId,
@@ -78,7 +87,11 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
       Alert.alert(t('camera.savedTitle'), t('camera.savedBody'));
     } catch (error) {
       recordCrashError(error, 'SnapCamera.capturePhoto');
-      Alert.alert(t('camera.errorTitle'), t('camera.captureFailed'));
+      const message =
+        error instanceof Error && /permission|denied|access/i.test(error.message)
+          ? t('camera.savePermissionFailed')
+          : t('camera.captureFailed');
+      Alert.alert(t('camera.errorTitle'), message);
     } finally {
       setCapturing(false);
     }
@@ -95,6 +108,24 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
 
   const filterRailBottom = insets.bottom + spacing.xxxl * 2 + spacing.xxl;
   const shutterBottom = insets.bottom + spacing.xl;
+
+  if (!snapEnabled) {
+    return (
+      <ScreenContainer>
+        <ScreenHeader
+          title={t('camera.snapTitle')}
+          onBack={() => navigation.goBack()}
+        />
+        <EmptyView
+          title={t('camera.snapDisabledTitle')}
+          message={t('camera.snapDisabledMessage')}
+          iconName="camera-outline"
+          actionLabel={t('common.goBack')}
+          onAction={() => navigation.goBack()}
+        />
+      </ScreenContainer>
+    );
+  }
 
   if (!device) {
     return (

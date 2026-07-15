@@ -1,9 +1,11 @@
 import React, {useEffect, useMemo} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {FlashList} from '@shopify/flash-list';
 
 import Button from '@atoms/Button';
+import EmptyView from '@atoms/EmptyView';
+import ApiErrorView from '@atoms/ApiErrorView';
 import PostCard from '@molecules/posts/PostCard';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -93,14 +95,35 @@ const Feed = ({navigation}: FeedProps): React.JSX.Element => {
       <Spacer size="xs" />
       <Button label={t('feed.createPoll')} variant="secondary" fullWidth onPress={() => navigation.navigate('CreatePoll')} />
       <Spacer size="md" />
-      <FlashList
-        data={sortedPosts}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        style={styles.list}
-        ItemSeparatorComponent={() => <Spacer size="md" />}
-        contentContainerStyle={styles.footer}
-      />
+      {feedQuery.isError && sortedPosts.length === 0 ? (
+        <ApiErrorView
+          message={t('feed.loadError')}
+          onRetry={() => {
+            void feedQuery.refetch();
+          }}
+        />
+      ) : (
+        <FlashList
+          data={sortedPosts}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          style={styles.list}
+          ItemSeparatorComponent={() => <Spacer size="md" />}
+          contentContainerStyle={styles.footer}
+          ListEmptyComponent={
+            feedQuery.isFetching ? null : (
+              <EmptyView
+                compact
+                title={t('feed.emptyTitle')}
+                message={t('feed.emptyMessage')}
+                iconName="newspaper-outline"
+                actionLabel={t('feed.createPost')}
+                onAction={() => navigation.navigate('CreatePost')}
+              />
+            )
+          }
+        />
+      )}
     </ScreenContainer>
   );
 };

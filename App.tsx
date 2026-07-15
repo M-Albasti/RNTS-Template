@@ -35,11 +35,24 @@ import DriverBackgroundTrackingHost from '@organisms/delivery/DriverBackgroundTr
 import FirebaseMessagingHost from '@organisms/firebase/FirebaseMessagingHost';
 import IslamicNotificationHost from '@organisms/islamic/IslamicNotificationHost';
 
+declare global {
+  // eslint-disable-next-line no-var
+  var __RNTS_APP_BOOTSTRAPPED__: boolean | undefined;
+}
+
 const App = (): React.JSX.Element => {
   // Wait until SQLite is opened, migrated, and todos are loaded/seeded.
-  const [sqliteReady, setSqliteReady] = useState(false);
+  const [sqliteReady, setSqliteReady] = useState(
+    () => globalThis.__RNTS_APP_BOOTSTRAPPED__ === true,
+  );
 
   useEffect(() => {
+    if (globalThis.__RNTS_APP_BOOTSTRAPPED__) {
+      setSqliteReady(true);
+      return;
+    }
+    globalThis.__RNTS_APP_BOOTSTRAPPED__ = true;
+
     const boot = async () => {
       try {
         bootstrapSQLite(store.dispatch, store.getState);

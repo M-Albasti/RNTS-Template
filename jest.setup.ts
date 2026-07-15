@@ -59,53 +59,115 @@ jest.mock('react-native-mmkv', () => ({
 
 jest.mock('@react-native-firebase/app', () => ({
   __esModule: true,
-  default: jest.fn(() => ({
-    utils: () => ({playServicesAvailability: {isAvailable: true}}),
+  getApp: jest.fn(() => ({
+    analytics: jest.fn(),
+    crashlytics: jest.fn(),
+    messaging: jest.fn(),
+    remoteConfig: jest.fn(),
   })),
+  getApps: jest.fn(() => []),
 }));
 
 jest.mock('@react-native-firebase/messaging', () => {
-  const mockMessaging = () => ({
+  const messagingInstance = {};
+
+  return {
+    __esModule: true,
+    AuthorizationStatus: {
+      NOT_DETERMINED: -1,
+      DENIED: 0,
+      AUTHORIZED: 1,
+      PROVISIONAL: 2,
+      EPHEMERAL: 3,
+    },
+    getMessaging: jest.fn(() => messagingInstance),
     setBackgroundMessageHandler: jest.fn(),
     getToken: jest.fn(async () => 'test-fcm-token'),
     requestPermission: jest.fn(async () => 1),
+    hasPermission: jest.fn(async () => 1),
+    deleteToken: jest.fn(async () => undefined),
+    isDeviceRegisteredForRemoteMessages: jest.fn(() => true),
+    registerDeviceForRemoteMessages: jest.fn(async () => undefined),
     onMessage: jest.fn(() => jest.fn()),
     onNotificationOpenedApp: jest.fn(() => jest.fn()),
+    onTokenRefresh: jest.fn(() => jest.fn()),
     getInitialNotification: jest.fn(async () => null),
     subscribeToTopic: jest.fn(),
     unsubscribeFromTopic: jest.fn(),
-  });
-  return {__esModule: true, default: mockMessaging};
+  };
 });
 
-jest.mock('@react-native-firebase/auth', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({
+jest.mock('@react-native-firebase/auth', () => {
+  const authInstance = {
     signInWithEmailAndPassword: jest.fn(),
     createUserWithEmailAndPassword: jest.fn(),
     signOut: jest.fn(),
     onAuthStateChanged: jest.fn(() => jest.fn()),
     currentUser: null,
-  })),
-}));
+    settings: {},
+  };
 
-jest.mock('@react-native-firebase/analytics', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({logEvent: jest.fn()})),
-}));
+  return {
+    __esModule: true,
+    getAuth: jest.fn(() => authInstance),
+    GoogleAuthProvider: {credential: jest.fn()},
+    AppleAuthProvider: {credential: jest.fn()},
+    FacebookAuthProvider: {credential: jest.fn()},
+    PhoneAuthProvider: {credential: jest.fn()},
+    signInWithCredential: jest.fn(),
+    signInWithEmailAndPassword: jest.fn(),
+    createUserWithEmailAndPassword: jest.fn(),
+    signInWithPhoneNumber: jest.fn(),
+    verifyPhoneNumber: jest.fn(),
+    signOut: jest.fn(),
+    deleteUser: jest.fn(),
+    linkWithCredential: jest.fn(),
+    revokeToken: jest.fn(),
+  };
+});
 
-jest.mock('@react-native-firebase/crashlytics', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({log: jest.fn(), recordError: jest.fn()})),
-}));
+jest.mock('@react-native-firebase/analytics', () => {
+  const analyticsInstance = {};
 
-jest.mock('@react-native-firebase/remote-config', () => ({
-  __esModule: true,
-  default: jest.fn(() => ({
+  return {
+    __esModule: true,
+    getAnalytics: jest.fn(() => analyticsInstance),
+    logEvent: jest.fn(),
+    setUserId: jest.fn(),
+    setUserProperty: jest.fn(),
+  };
+});
+
+jest.mock('@react-native-firebase/crashlytics', () => {
+  const crashlyticsInstance = {};
+
+  return {
+    __esModule: true,
+    getCrashlytics: jest.fn(() => crashlyticsInstance),
+    log: jest.fn(),
+    recordError: jest.fn(),
+    crash: jest.fn(),
+    setCrashlyticsCollectionEnabled: jest.fn(),
+    setUserId: jest.fn(),
+  };
+});
+
+jest.mock('@react-native-firebase/remote-config', () => {
+  const remoteConfigInstance = {
+    defaultConfig: {},
+    settings: {
+      minimumFetchIntervalMillis: 43200000,
+      fetchTimeoutMillis: 60000,
+    },
+  };
+
+  return {
+    __esModule: true,
+    getRemoteConfig: jest.fn(() => remoteConfigInstance),
     fetchAndActivate: jest.fn(async () => true),
     getValue: jest.fn(() => ({asString: () => '', asBoolean: () => false})),
-  })),
-}));
+  };
+});
 
 jest.mock('@notifee/react-native', () => ({
   __esModule: true,

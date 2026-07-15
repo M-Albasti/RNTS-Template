@@ -3,12 +3,13 @@ import '@config/googleSignInConfig';
 
 //* packages import
 import {
-  GoogleAuthProvider, // Provides Google authentication methods
-  getAuth, // Returns the default Firebase Auth instance
-  signInWithCredential, // Signs in a user with a given credential
-  FirebaseAuthTypes, // Type definitions for Firebase Auth
-  signOut, // Signs out the current user
-  deleteUser, // Deletes the current user
+  GoogleAuthProvider,
+  deleteUser,
+  getAuth,
+  signInWithCredential,
+  signOut,
+  type User,
+  type UserCredential,
 } from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
@@ -17,7 +18,7 @@ import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHand
 
 // Export an async function to log in to Firebase using Google Sign-In
 export const loginFirebaseWithGoogle =
-  async (): Promise<FirebaseAuthTypes.UserCredential> => {
+  async (): Promise<UserCredential> => {
     // Check if the device supports Google Play Services and prompt to update if needed
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     // Start the Google Sign-In process and handle the result
@@ -55,7 +56,7 @@ export const logoutGoogleUser = async (): Promise<void> => {
 
 // Export an async function to delete the Google user from Firebase
 export const deleteGoogleUser = async (
-  user: FirebaseAuthTypes.User, // The user to delete
+  user: User,
 ): Promise<void> => {
   await GoogleSignin.revokeAccess() // Revoke the app's access to the user's Google account
     .then(async () => {

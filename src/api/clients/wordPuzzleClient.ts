@@ -9,8 +9,9 @@ import {
 import type {EnglishRiddleCategory} from '@constants/wordPuzzle/wordPuzzleConfig';
 import {
   WORD_PUZZLE_FETCH_BATCH,
-  WORD_PUZZLE_PUZZLES_PER_STAGE,
-  WORD_PUZZLE_STAGES_PER_BOOK,
+  getPuzzlesPerStage,
+  getStagePuzzleOffset,
+  getTotalPuzzlesForBook,
 } from '@constants/wordPuzzle/wordPuzzleConfig';
 import {
   englishRiddlesClient,
@@ -34,6 +35,7 @@ const parseEnglishBookId = (bookId: string) => bookId.replace('en-riddle-', '') 
 const mapQuestionsToStagePuzzles = (
   questions: Parameters<typeof mapIslamicQuestionToPuzzle>[0][],
   seedBase: number,
+  limit: number,
 ) => {
   const puzzles = [];
   for (const question of questions) {
@@ -41,7 +43,7 @@ const mapQuestionsToStagePuzzles = (
     if (puzzle) {
       puzzles.push(puzzle);
     }
-    if (puzzles.length >= WORD_PUZZLE_PUZZLES_PER_STAGE) {
+    if (puzzles.length >= limit) {
       break;
     }
   }
@@ -80,18 +82,20 @@ export const wordPuzzleClient = {
 
   getArabicStage: async (bookId: string, stageNumber: number): Promise<WordPuzzleStage> => {
     const categoryId = parseArabicBookId(bookId);
+    const puzzlesNeeded = getPuzzlesPerStage(stageNumber);
     let page = stageNumber;
     let puzzles: ReturnType<typeof mapIslamicQuestionToPuzzle>[] = [];
 
-    while (puzzles.length < WORD_PUZZLE_PUZZLES_PER_STAGE && page <= stageNumber + 8) {
+    while (puzzles.length < puzzlesNeeded && page <= stageNumber + 12) {
       const {data} = await islamicQuizClient.get<IslamicQuizPagedQuestionsDto>(
         `/categories/${categoryId}/questions`,
         {params: {page, limit: WORD_PUZZLE_FETCH_BATCH}},
       );
+      const remaining = puzzlesNeeded - puzzles.length;
       puzzles = [
         ...puzzles,
-        ...mapQuestionsToStagePuzzles(data.questions, stageNumber * 100),
-      ].slice(0, WORD_PUZZLE_PUZZLES_PER_STAGE);
+        ...mapQuestionsToStagePuzzles(data.questions, stageNumber * 100, remaining),
+      ].slice(0, puzzlesNeeded);
 
       if (page >= data.totalPages) {
         break;
@@ -108,7 +112,8 @@ export const wordPuzzleClient = {
 
   getEnglishStage: async (bookId: string, stageNumber: number): Promise<WordPuzzleStage> => {
     const category = parseEnglishBookId(bookId);
-    const totalNeeded = WORD_PUZZLE_STAGES_PER_BOOK * WORD_PUZZLE_PUZZLES_PER_STAGE;
+    const totalNeeded = getTotalPuzzlesForBook();
+    const puzzlesNeeded = getPuzzlesPerStage(stageNumber);
     const {data} = await englishRiddlesClient.get<EnglishRiddlesBulkDto>(
       `/${category}/${totalNeeded}`,
     );
@@ -117,8 +122,8 @@ export const wordPuzzleClient = {
       .map((riddle, index) => mapEnglishRiddleToPuzzle(riddle, index, category))
       .filter((item): item is NonNullable<typeof item> => Boolean(item));
 
-    const start = (stageNumber - 1) * WORD_PUZZLE_PUZZLES_PER_STAGE;
-    const puzzles = allPuzzles.slice(start, start + WORD_PUZZLE_PUZZLES_PER_STAGE);
+    const start = getStagePuzzleOffset(stageNumber);
+    const puzzles = allPuzzles.slice(start, start + puzzlesNeeded);
 
     return buildStageFromPuzzles(bookId, stageNumber, puzzles);
   },

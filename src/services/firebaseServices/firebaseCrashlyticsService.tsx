@@ -1,8 +1,16 @@
-import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  crash,
+  log,
+  recordError,
+  setCrashlyticsCollectionEnabled,
+  setUserId,
+} from '@react-native-firebase/crashlytics';
+
+import {getFirebaseCrashlytics} from '@config/firebaseInstances';
 
 export const initCrashlytics = async (): Promise<void> => {
   try {
-    await crashlytics().setCrashlyticsCollectionEnabled(true);
+    await setCrashlyticsCollectionEnabled(getFirebaseCrashlytics(), true);
   } catch (error) {
     console.log('Firebase Crashlytics init Error =>', error);
   }
@@ -11,37 +19,35 @@ export const initCrashlytics = async (): Promise<void> => {
 export const recordCrashError = (error: unknown, context?: string): void => {
   try {
     if (context) {
-      crashlytics().log(context);
+      log(getFirebaseCrashlytics(), context);
     }
 
     if (error instanceof Error) {
-      crashlytics().recordError(error);
+      recordError(getFirebaseCrashlytics(), error);
       return;
     }
 
-    crashlytics().recordError(new Error(String(error)));
-  } catch (recordError) {
-    console.log('Firebase Crashlytics recordError Error =>', recordError);
+    recordError(getFirebaseCrashlytics(), new Error(String(error)));
+  } catch (writeError) {
+    console.log('Firebase Crashlytics recordError Error =>', writeError);
   }
 };
 
 export const logCrashlytics = (message: string): void => {
   try {
-    crashlytics().log(message);
+    log(getFirebaseCrashlytics(), message);
   } catch (error) {
     console.log('Firebase Crashlytics log Error =>', error);
   }
 };
 
 export const setCrashlyticsUserId = (userId: string): void => {
-  try {
-    crashlytics().setUserId(userId);
-  } catch (error) {
+  Promise.resolve(setUserId(getFirebaseCrashlytics(), userId)).catch(error => {
     console.log('Firebase Crashlytics setUserId Error =>', error);
-  }
+  });
 };
 
 /** Dev-only helper to verify Crashlytics wiring (shows in Firebase after ~5 min). */
 export const triggerTestCrash = (): void => {
-  crashlytics().crash();
+  crash(getFirebaseCrashlytics());
 };

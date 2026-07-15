@@ -18,12 +18,12 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {OTPVerificationScreens} from '@Types/otpVerificationScreen';
-import type {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import type {ConfirmationResult} from '@Types/firebaseAuthTypes';
 import {LoginTypes} from '@Types/loginTypes';
 
 interface OTPFormProps {
   navigation: AppStackNavigationProp<OTPVerificationScreens>;
-  confirmation: FirebaseAuthTypes.ConfirmationResult;
+  confirmation: ConfirmationResult;
   loginType: LoginTypes;
 }
 

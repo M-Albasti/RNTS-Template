@@ -1,15 +1,15 @@
 import type {SemanticColors} from '@theme/types';
 
 export const darkColors: SemanticColors = {
-  background: '#0F172A',
+  background: '#0B1220',
   surface: '#1E293B',
-  surfaceSecondary: '#334155',
+  surfaceSecondary: '#1E3A5F',
   primary: '#38BDF8',
   primaryMuted: '#0C4A6E',
   primaryContrast: '#E0F2FE',
   textPrimary: '#F8FAFC',
   textSecondary: '#CBD5E1',
-  textMuted: '#64748B',
+  textMuted: '#94A3B8',
   textInverse: '#0F172A',
   border: '#334155',
   borderStrong: '#475569',
@@ -35,6 +35,28 @@ export const darkColors: SemanticColors = {
   liveBadge: '#F87171EB',
   onLiveBadge: '#FFFFFF',
   accent1: '#0C4A6E',
-  accent2: '#075985',
-  accent3: '#0369A1',
+  accent2: '#0369A1',
+  accent3: '#0EA5E9',
+  selectionAccents: [
+    '#38BDF8', // primary / sky
+    '#7DD3FC', // sky light
+    '#0EA5E9', // accent3
+    '#22D3EE', // cyan
+    '#2DD4BF', // teal
+    '#4ADE80', // success
+    '#86EFAC', // green soft
+    '#FBBF24', // warning
+    '#FCD34D', // amber soft
+    '#FB923C', // orange
+    '#F87171', // error soft
+    '#FB7185', // rose
+    '#F472B6', // pink
+    '#E879F9', // fuchsia
+    '#C084FC', // violet
+    '#A78BFA', // purple
+    '#818CF8', // indigo
+    '#60A5FA', // blue
+    '#A3E635', // lime
+    '#34D399', // emerald
+  ],
 };

@@ -98,3 +98,9 @@ bun.lockb
 .env.*
 !.env.example
 *.env
+
+# Cursor
+.cursor/
+.cursorrules
+.cursorignore
+.cursorconfig

@@ -4,6 +4,7 @@ import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
+import EmptyView from '@atoms/EmptyView';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
@@ -68,7 +69,7 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
             style={styles.list}
             keyExtractor={item => item.id}
             ListEmptyComponent={
-              <TextView text={t('islamic.hadith.noResults')} variant="body" muted />
+              <EmptyView compact title={t('islamic.hadith.noResults')} iconName="book-outline" />
             }
             renderItem={({item}) => (
               <Pressable

@@ -30,7 +30,7 @@ const AnimatedScalePressable = ({
 
   const handlePressIn = useCallback(
     (event: Parameters<NonNullable<PressableProps['onPressIn']>>[0]) => {
-      scale.value = withSpring(scaleTo, {damping: 14, stiffness: 220});
+      scale.value = withSpring(scaleTo, {damping: 16, stiffness: 280});
       onPressIn?.(event);
     },
     [onPressIn, scale, scaleTo],
@@ -38,7 +38,7 @@ const AnimatedScalePressable = ({
 
   const handlePressOut = useCallback(
     (event: Parameters<NonNullable<PressableProps['onPressOut']>>[0]) => {
-      scale.value = withSpring(1, {damping: 12, stiffness: 180});
+      scale.value = withSpring(1, {damping: 14, stiffness: 240});
       onPressOut?.(event);
     },
     [onPressOut, scale],

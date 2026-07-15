@@ -1,10 +1,10 @@
 //* packages import
 import {
-  FirebaseAuthTypes,
   createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
   signOut,
-  getAuth,
+  type User,
 } from '@react-native-firebase/auth';
 
 //* services import
@@ -19,7 +19,7 @@ import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHand
 export const registerFirebaseWithEmail = async (
   email: string,
   password: string,
-): Promise<FirebaseAuthTypes.User> => {
+): Promise<User> => {
   return await createUserWithEmailAndPassword(getAuth(), email, password)
     .then(userCredential => {
       return userCredential.user;
@@ -36,7 +36,7 @@ export const registerFirebaseWithEmail = async (
 export const loginFirebaseWithEmail = async (
   email: string,
   password: string,
-): Promise<FirebaseAuthTypes.User> => {
+): Promise<User> => {
   return await signInWithEmailAndPassword(getAuth(), email, password)
     .then(userCredential => {
       return userCredential.user;

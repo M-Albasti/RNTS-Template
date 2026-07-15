@@ -1,10 +1,11 @@
 //* packages import
 import {
-  AppleAuthProvider, // Provides Apple authentication methods
-  getAuth, // Returns the default Firebase Auth instance
-  signInWithCredential, // Signs in a user with a given credential
-  FirebaseAuthTypes, // Type definitions for Firebase Auth
-  signOut, // Signs out the current user
+  AppleAuthProvider,
+  getAuth,
+  revokeToken,
+  signInWithCredential,
+  signOut,
+  type UserCredential,
 } from '@react-native-firebase/auth';
 import {appleAuth} from '@invertase/react-native-apple-authentication';
 
@@ -13,7 +14,7 @@ import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHand
 
 // Export an async function to log in to Firebase using Apple Sign-In
 export const loginFirebaseWithApple =
-  async (): Promise<FirebaseAuthTypes.UserCredential> => {
+  async (): Promise<UserCredential> => {
     // Start the sign-in request with Apple
     return await appleAuth
       .performRequest({
@@ -77,8 +78,10 @@ export const deleteAppleUser = async (): Promise<void> => {
         );
       }
       // Revoke the token using the authorization code
-      return await getAuth()
-        .revokeToken(appleAuthRequestResponse?.authorizationCode) // Revoke the Apple token
+      return await revokeToken(
+        getAuth(),
+        appleAuthRequestResponse.authorizationCode,
+      )
         .then(async () => {
           await signOut(getAuth()).catch(firebaseErrorHandler); // Sign out from Firebase Auth and handle errors
         })

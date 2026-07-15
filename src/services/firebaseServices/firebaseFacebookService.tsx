@@ -1,12 +1,13 @@
 //* packages import
 import { Platform } from 'react-native';
 import {
-  FacebookAuthProvider, // Provides Facebook authentication methods
-  getAuth, // Returns the default Firebase Auth instance
-  signInWithCredential, // Signs in a user with a given credential
-  FirebaseAuthTypes, // Type definitions for Firebase Auth
-  signOut, // Signs out the current user
-  deleteUser, // Deletes the current user
+  FacebookAuthProvider,
+  deleteUser,
+  getAuth,
+  signInWithCredential,
+  signOut,
+  type User,
+  type UserCredential,
 } from '@react-native-firebase/auth';
 import {
   LoginManager, // Manages Facebook login
@@ -20,7 +21,7 @@ import { firebaseErrorHandler } from '@services/firebaseServices/firebaseErrorHa
 
 // Export an async function to log in to Firebase using Facebook Sign-In
 export const loginFirebaseWithFacebook =
-  async (): Promise<FirebaseAuthTypes.UserCredential> => {
+  async (): Promise<UserCredential> => {
     // Set the login behavior for Facebook login
     LoginManager.setLoginBehavior('native_with_fallback');
 
@@ -98,7 +99,7 @@ export const logoutFacebookUser = async (): Promise<void> => {
 
 // Export an async function to delete the Facebook user from Firebase
 export const deleteFacebookUser = async (
-  user: FirebaseAuthTypes.User, // The user to delete
+  user: User,
 ): Promise<void> => {
   await signOut(getAuth()) // Sign out from Firebase Auth
     .then(async () => {

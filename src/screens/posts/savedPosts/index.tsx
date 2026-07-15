@@ -1,13 +1,12 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import PostCard from '@molecules/posts/PostCard';
+import EmptyView from '@atoms/EmptyView';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
-import TextView from '@atoms/TextView';
 
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
@@ -43,9 +42,11 @@ const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
     return (
       <ScreenContainer>
         <ScreenHeader title={t('posts.savedPosts')} onBack={() => navigation.goBack()} />
-        <View style={styles.empty}>
-          <TextView text={t('posts.noSavedPosts')} muted align="center" />
-        </View>
+        <EmptyView
+          title={t('posts.noSavedPosts')}
+          message={t('posts.savedSubtitle')}
+          iconName="bookmark-outline"
+        />
       </ScreenContainer>
     );
   }
