@@ -82,7 +82,7 @@ const WordAnswerSlots = ({
       writingDirection: isRtl ? ('rtl' as const) : ('ltr' as const),
       color: solved ? tokens.colors.success : tokens.colors.textPrimary,
     },
-  }));
+  }), [isHint, isRtl, solved]);
 
   const items = useMemo((): SlotItem[] => {
     const result: SlotItem[] = [];

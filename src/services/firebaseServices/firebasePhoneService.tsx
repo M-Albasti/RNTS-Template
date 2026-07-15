@@ -14,10 +14,15 @@ import {
 //* services import
 import {firebaseErrorHandler} from '@services/firebaseServices/firebaseErrorHandler';
 
+declare global {
+  // Set to true in Jest/E2E runs only — never in ordinary debug builds.
+  var __RNTS_PHONE_AUTH_TEST__: boolean | undefined;
+}
+
 let phoneAuthTestingConfigured = false;
 
 const configurePhoneAuthForTesting = (): void => {
-  if (phoneAuthTestingConfigured || !__DEV__) {
+  if (phoneAuthTestingConfigured || !globalThis.__RNTS_PHONE_AUTH_TEST__) {
     return;
   }
 

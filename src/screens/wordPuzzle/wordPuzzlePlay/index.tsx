@@ -106,6 +106,11 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
     };
   }, []);
 
+  const puzzleSignature = useMemo(
+    () => puzzles.map(puzzle => `${puzzle.id}:${puzzle.answers[0] ?? ''}`).join('|'),
+    [puzzles],
+  );
+
   useEffect(() => {
     if (!stage?.id || puzzles.length === 0) {
       return;
@@ -125,7 +130,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
     setHintPath(undefined);
     setResetToken(value => value + 1);
     setShowStageSuccess(false);
-  }, [stage?.id, puzzles.length]);
+  }, [stage?.id, puzzleSignature]);
 
   const orderedPuzzles = useMemo(() => {
     if (cardOrder.length === 0) {
@@ -379,7 +384,11 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
       <ScreenContainer>
         <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
         <ApiErrorView
-          message={t('wordPuzzle.stageNotFound')}
+          message={
+            isError
+              ? t('wordPuzzle.errors.loadFailed')
+              : t('wordPuzzle.stageNotFound')
+          }
           retryLabel={t('wordPuzzle.retry')}
           onRetry={() => {
             void refetch();

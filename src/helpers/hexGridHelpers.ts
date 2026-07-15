@@ -226,10 +226,15 @@ const findHamiltonianPath = (cells: HexCoord[], seed: number): HexCoord[] | null
     starts[j] = tmp;
   }
 
+  let remainingVisits = 50_000;
   const dfs = (path: HexCoord[], used: Set<string>): boolean => {
     if (path.length === cells.length) {
       return true;
     }
+    if (remainingVisits <= 0) {
+      return false;
+    }
+    remainingVisits -= 1;
     const options = neighborsInSet(path[path.length - 1], keySet).filter(
       next => !used.has(hexKey(next)),
     );

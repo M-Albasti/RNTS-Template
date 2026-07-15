@@ -127,13 +127,9 @@ const ClueCardCarousel = ({
 }: Props): React.JSX.Element => {
   const [pageWidth, setPageWidth] = useState(0);
   const listRef = useRef<FlatList<WordPuzzleItem>>(null);
-  const activeIndexRef = useRef(activeIndex);
-  const onIndexChangeRef = useRef(onIndexChange);
   const isProgrammaticScrollRef = useRef(false);
   const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  activeIndexRef.current = activeIndex;
-  onIndexChangeRef.current = onIndexChange;
+  const {t} = useTranslation();
 
   const styles = useThemedStyles(tokens => ({
     wrap: {width: '100%' as const},
@@ -171,15 +167,18 @@ const ClueCardCarousel = ({
     dotSolved: {backgroundColor: tokens.colors.success},
   }));
 
-  const setActiveIndex = useCallback((next: number) => {
-    if (next < 0 || next >= puzzles.length) {
-      return;
-    }
-    if (next === activeIndexRef.current) {
-      return;
-    }
-    onIndexChangeRef.current?.(next);
-  }, [puzzles.length]);
+  const setActiveIndex = useCallback(
+    (next: number) => {
+      if (next < 0 || next >= puzzles.length) {
+        return;
+      }
+      if (next === activeIndex) {
+        return;
+      }
+      onIndexChange?.(next);
+    },
+    [activeIndex, onIndexChange, puzzles.length],
+  );
 
   const scrollToCard = useCallback(
     (index: number, animated: boolean) => {
@@ -329,7 +328,7 @@ const ClueCardCarousel = ({
             <Pressable
               key={item.id}
               accessibilityRole="button"
-              accessibilityLabel={`Clue ${dotIndex + 1}`}
+              accessibilityLabel={t('wordPuzzle.clueDotLabel', {number: dotIndex + 1})}
               accessibilityState={{selected: active}}
               hitSlop={8}
               onPress={() => goToIndex(dotIndex)}

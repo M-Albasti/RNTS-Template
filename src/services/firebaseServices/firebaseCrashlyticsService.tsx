@@ -42,11 +42,9 @@ export const logCrashlytics = (message: string): void => {
 };
 
 export const setCrashlyticsUserId = (userId: string): void => {
-  try {
-    void setUserId(getFirebaseCrashlytics(), userId);
-  } catch (error) {
+  Promise.resolve(setUserId(getFirebaseCrashlytics(), userId)).catch(error => {
     console.log('Firebase Crashlytics setUserId Error =>', error);
-  }
+  });
 };
 
 /** Dev-only helper to verify Crashlytics wiring (shows in Firebase after ~5 min). */

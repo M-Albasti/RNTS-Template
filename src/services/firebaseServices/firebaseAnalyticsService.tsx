@@ -6,22 +6,20 @@ export const logAnalyticsEvent = (
   name: string,
   params?: Record<string, string | number | boolean>,
 ): void => {
-  try {
-    logEvent(getFirebaseAnalytics(), name, params);
-  } catch (error) {
+  Promise.resolve(logEvent(getFirebaseAnalytics(), name, params)).catch(error => {
     console.log('Firebase Analytics logEvent Error =>', error);
-  }
+  });
 };
 
 export const logScreenView = (screenName: string, screenClass?: string): void => {
-  try {
+  Promise.resolve(
     logEvent(getFirebaseAnalytics(), 'screen_view', {
       screen_name: screenName,
       screen_class: screenClass ?? screenName,
-    });
-  } catch (error) {
+    }),
+  ).catch(error => {
     console.log('Firebase Analytics logScreenView Error =>', error);
-  }
+  });
 };
 
 export const setAnalyticsUserId = async (userId: string | null): Promise<void> => {

@@ -51,12 +51,12 @@ const App = (): React.JSX.Element => {
       setSqliteReady(true);
       return;
     }
+    globalThis.__RNTS_APP_BOOTSTRAPPED__ = true;
 
     const boot = async () => {
       try {
         bootstrapSQLite(store.dispatch, store.getState);
         await initFirebaseServices();
-        globalThis.__RNTS_APP_BOOTSTRAPPED__ = true;
       } catch (error) {
         console.log('App bootstrap Error =>', error);
       } finally {

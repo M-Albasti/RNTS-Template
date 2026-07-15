@@ -946,6 +946,7 @@
     "backToMap": "Back to map",
     "wordsFound": "{{found}}/{{total}} words",
     "solvedBadge": "Solved",
+    "clueDotLabel": "Clue {{number}}",
     "dragHint": "Drag from the first letter to the last to form the word.",
     "dragHintShared": "Swipe clues freely. Spell any remaining word on the shared board — used letters lock.",
     "praiseGood": "Good!",

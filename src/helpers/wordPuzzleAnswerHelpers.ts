@@ -55,7 +55,7 @@ export const pickBoardWord = (
   } else if (
     fullCompact.length >= 2 &&
     fullCompact.length <= 12 &&
-    /[\u0600-\u06FF]/.test(fullCompact)
+    /^[\u0600-\u06FF]+$/.test(fullCompact)
   ) {
     return fullCompact;
   }

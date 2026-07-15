@@ -81,9 +81,10 @@ const HexLetterGrid = ({
     windowWidth - spacing.lg * 2 - insets.left - insets.right,
   );
   const reservedChrome = 380 + insets.top + insets.bottom;
-  const maxBoardHeight = Math.max(
-    150,
-    Math.min(windowHeight - reservedChrome, windowHeight * 0.42),
+  const availableHeight = Math.max(0, windowHeight - reservedChrome);
+  const maxBoardHeight = Math.min(
+    availableHeight > 0 ? availableHeight : windowHeight * 0.42,
+    windowHeight * 0.42,
   );
 
   const [path, setPath] = React.useState<HexCoord[]>([]);
@@ -187,7 +188,15 @@ const HexLetterGrid = ({
     letterActive: {
       color: activeLetterColor,
     },
-  }));
+  }), [
+    activeLetterColor,
+    boardHeight,
+    boardWidth,
+    hexSize,
+    idleLetterColor,
+    maxBoardWidth,
+    spacing.sm,
+  ]);
 
   const publishPath = useCallback(
     (next: HexCoord[]) => {

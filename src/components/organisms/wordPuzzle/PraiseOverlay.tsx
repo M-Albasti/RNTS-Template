@@ -52,6 +52,7 @@ const PraiseOverlay = ({text, onDismiss}: Props): React.JSX.Element | null => {
     if (!text) {
       return undefined;
     }
+    let dismissTimer: ReturnType<typeof setTimeout> | undefined;
     backdrop.value = withTiming(1, {duration: 200});
     opacity.value = withTiming(1, {duration: 180});
     rotate.value = withSequence(
@@ -66,9 +67,14 @@ const PraiseOverlay = ({text, onDismiss}: Props): React.JSX.Element | null => {
       opacity.value = withTiming(0, {duration: 220, easing: Easing.in(Easing.cubic)});
       backdrop.value = withTiming(0, {duration: 240});
       scale.value = withTiming(0.9, {duration: 220});
-      setTimeout(onDismiss, 240);
+      dismissTimer = setTimeout(onDismiss, 240);
     }, 1250);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (dismissTimer) {
+        clearTimeout(dismissTimer);
+      }
+    };
   }, [backdrop, onDismiss, opacity, rotate, scale, text]);
 
   const backdropStyle = useAnimatedStyle(() => ({

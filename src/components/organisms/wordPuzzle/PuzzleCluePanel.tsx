@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Spacer from '@atoms/Spacer';
@@ -54,37 +54,35 @@ const PuzzleCluePanel = ({clue, language, levelLabel}: Props): React.JSX.Element
 
   return (
     <View style={styles.card}>
-      <TextView text={levelLabel} variant="caption" muted numberOfLines={1} />
-      <Spacer size="xs" />
-      {clue.type === 'image_riddle' ? (
-        <>
-          <View style={styles.emojiRow}>
-            {clue.emojis.map(item => (
-              <TextView key={item} text={item} style={styles.emoji} />
-            ))}
-          </View>
-          {clueText ? (
-            <>
-              <Spacer size="xs" />
-              <TextView
-                text={clueText}
-                variant="bodySmall"
-                style={styles.text}
-                muted
-                numberOfLines={3}
-              />
-            </>
-          ) : null}
-        </>
-      ) : (
-        <TextView
-          text={clueText}
-          variant="h3"
-          style={styles.text}
-          align={language === 'ar' ? 'right' : 'left'}
-          numberOfLines={4}
-        />
-      )}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+        contentContainerStyle={{flexGrow: 1}}>
+        <TextView text={levelLabel} variant="caption" muted numberOfLines={1} />
+        <Spacer size="xs" />
+        {clue.type === 'image_riddle' ? (
+          <>
+            <View style={styles.emojiRow}>
+              {clue.emojis.map(item => (
+                <TextView key={item} text={item} style={styles.emoji} />
+              ))}
+            </View>
+            {clueText ? (
+              <>
+                <Spacer size="xs" />
+                <TextView text={clueText} variant="bodySmall" style={styles.text} muted />
+              </>
+            ) : null}
+          </>
+        ) : (
+          <TextView
+            text={clueText}
+            variant="h3"
+            style={styles.text}
+            align={language === 'ar' ? 'right' : 'left'}
+          />
+        )}
+      </ScrollView>
     </View>
   );
 };
