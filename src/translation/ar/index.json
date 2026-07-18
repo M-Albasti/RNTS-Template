@@ -1076,7 +1076,9 @@
     },
     "common": {
       "previous": "السابق",
-      "next": "التالي"
+      "next": "التالي",
+      "more": "المزيد",
+      "less": "أقل"
     },
     "modules": {
       "quran": {
@@ -1124,7 +1126,15 @@
       "searchPlaceholder": "ابحث بالكلمة أو اسم السورة...",
       "searchHint": "اكتب حرفين على الأقل للبحث في الترجمات.",
       "noResults": "لم يتم العثور على آيات مطابقة.",
-      "ayahs": "آية"
+      "ayahs": "آية",
+      "mushafTitle": "المصحف · صفحة {{page}}",
+      "mushafMode": "صفحات المصحف",
+      "ayahMode": "حسب الآية",
+      "pageOf": "صفحة {{page}} من {{total}}",
+      "juz": "جزء {{n}}",
+      "continuousSurah": "سورة {{n}} كاملة · صوت متصل",
+      "ayahN": "آية {{n}}",
+      "loadingAudio": "جاري تحميل التلاوة…"
     },
     "search": {
       "title": "البحث الإسلامي",
@@ -1187,6 +1197,8 @@
       "searchPlaceholder": "ابحث في نص الحديث...",
       "searchHint": "اكتب حرفين على الأقل للبحث.",
       "noResults": "لم يتم العثور على أحاديث مطابقة.",
+      "noWeakOnPage": "لا أحاديث ضعيفة في هذه الصفحة — جرّب التالي.",
+      "pageInfo": "صفحة {{page}} من {{totalPages}} · {{total}} حديث",
       "hadithCount": "{{count}} حديث",
       "grades": "الدرجات",
       "filters": {

@@ -55,11 +55,12 @@ export const adhkarClient = {
   },
 };
 
+/** Hisn Muslim category IDs (verified against hisnmuslim.com/api). */
 export const ADHKAR_FEATURED_CATEGORY_IDS = {
   morningEvening: 27,
   sleep: 28,
   waking: 1,
-  afterPrayer: 16,
+  afterPrayer: 25, // الأذكار بعد السلام من الصلاة
   mosque: 12,
   travel: 96,
   food: 69,

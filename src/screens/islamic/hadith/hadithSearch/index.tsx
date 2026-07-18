@@ -82,7 +82,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
         <IslamicErrorState message={t('islamic.errors.loadFailed')} />
       ) : (
         <FlashList
-          data={data ?? []}
+          data={data?.items ?? []}
           style={styles.list}
           keyExtractor={item => item.id}
           ListEmptyComponent={

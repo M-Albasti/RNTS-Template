@@ -47,6 +47,22 @@ export const useQuranSearchQuery = (query: string, language = 'ar') =>
     enabled: query.trim().length >= 2,
   });
 
+export const useQuranMushafPageQuery = (pageNumber: number) =>
+  useQuery({
+    queryKey: queryKeys.islamic.quranMushafPage(pageNumber),
+    queryFn: () => quranClient.getMushafPage(pageNumber),
+    enabled: pageNumber >= 1 && pageNumber <= 604,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
+export const useQuranPageForAyahQuery = (surahNumber: number, ayahNumber = 1) =>
+  useQuery({
+    queryKey: queryKeys.islamic.quranPageForAyah(surahNumber, ayahNumber),
+    queryFn: () => quranClient.getPageForAyah(surahNumber, ayahNumber),
+    enabled: surahNumber > 0,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
+
 export const useAdhkarCategoriesQuery = (lang: AdhkarLanguage) =>
   useQuery({
     queryKey: queryKeys.islamic.adhkarCategories(lang),
@@ -87,14 +103,14 @@ export const useHadithBooksQuery = (slug: string) =>
 
 export const useHadithListQuery = (slug: string, page: number, language = 'en') =>
   useQuery({
-    queryKey: queryKeys.islamic.hadithList(slug, page),
+    queryKey: queryKeys.islamic.hadithList(slug, page, language),
     queryFn: () => hadithClient.getEditionHadiths(slug, page, language),
     enabled: Boolean(slug),
   });
 
 export const useHadithDetailQuery = (hadithId: string, language = 'en') =>
   useQuery({
-    queryKey: queryKeys.islamic.hadithDetail(hadithId),
+    queryKey: queryKeys.islamic.hadithDetail(hadithId, language),
     queryFn: () => hadithClient.getHadithById(hadithId, language),
     enabled: Boolean(hadithId),
   });
@@ -105,7 +121,7 @@ export const useHadithSearchQuery = (
   language = 'en',
 ) =>
   useQuery({
-    queryKey: queryKeys.islamic.hadithSearch(query, filter),
+    queryKey: queryKeys.islamic.hadithSearch(query, filter, language),
     queryFn: () => hadithClient.searchHadiths(query, filter, language),
     enabled: query.trim().length >= 2,
   });

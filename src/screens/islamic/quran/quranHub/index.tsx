@@ -21,19 +21,21 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
 
   const styles = useThemedStyles(tokens => ({
     hero: {
-      backgroundColor: tokens.colors.primary,
+      backgroundColor: '#0F3D2E',
       borderRadius: tokens.radius.lg,
       padding: tokens.spacing.lg,
+      ...tokens.shadows.md,
     },
-    heroText: {color: tokens.colors.textInverse},
+    heroText: {color: '#F5E6C8'},
     continueCard: {
-      backgroundColor: tokens.colors.surface,
+      backgroundColor: '#F7F0E2',
       borderRadius: tokens.radius.lg,
       padding: tokens.spacing.md,
       borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
+      borderColor: '#D4C4A8',
+      ...tokens.shadows.sm,
     },
-    continuePressed: {backgroundColor: tokens.colors.surfaceSecondary},
+    continuePressed: {backgroundColor: '#EFE4D0'},
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
   }));
 

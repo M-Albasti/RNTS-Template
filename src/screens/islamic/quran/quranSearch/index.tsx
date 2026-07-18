@@ -61,7 +61,10 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
             <Pressable
               style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
               onPress={() =>
-                navigation.navigate('QuranReader', {surahNumber: item.surah.number})
+                navigation.navigate('QuranReader', {
+                  surahNumber: item.surah.number,
+                  ayahNumber: item.numberInSurah,
+                })
               }>
               <Heading
                 text={`${item.surah.englishName} ${item.numberInSurah}`}

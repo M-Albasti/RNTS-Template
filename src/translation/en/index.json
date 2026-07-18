@@ -1076,7 +1076,9 @@
     },
     "common": {
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "more": "More",
+      "less": "Less"
     },
     "modules": {
       "quran": {
@@ -1124,7 +1126,15 @@
       "searchPlaceholder": "Search by keyword or surah name...",
       "searchHint": "Type at least 2 characters to search translations.",
       "noResults": "No verses matched your search.",
-      "ayahs": "ayahs"
+      "ayahs": "ayahs",
+      "mushafTitle": "Mushaf · page {{page}}",
+      "mushafMode": "Mushaf pages",
+      "ayahMode": "By ayah",
+      "pageOf": "Page {{page}} of {{total}}",
+      "juz": "Juz {{n}}",
+      "continuousSurah": "Full surah {{n}} · continuous audio",
+      "ayahN": "Ayah {{n}}",
+      "loadingAudio": "Loading recitation…"
     },
     "search": {
       "title": "Islamic search",
@@ -1187,6 +1197,8 @@
       "searchPlaceholder": "Search hadith text...",
       "searchHint": "Type at least 2 characters to search.",
       "noResults": "No hadith matched your search.",
+      "noWeakOnPage": "No weak-graded hadith on this page — try Next.",
+      "pageInfo": "Page {{page}} of {{totalPages}} · {{total}} hadith",
       "hadithCount": "{{count}} hadith",
       "grades": "Grades",
       "filters": {

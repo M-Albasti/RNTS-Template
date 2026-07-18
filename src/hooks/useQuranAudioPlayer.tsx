@@ -1,59 +1,67 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import SoundPlayer from 'react-native-sound-player';
 
-import {buildAyahAudioUrl} from '@helpers/quranAudioHelpers';
-import type {QuranAyah} from '@Types/islamicTypes';
+import {buildSurahAudioUrl} from '@helpers/quranAudioHelpers';
 
 type UseQuranAudioPlayerArgs = {
   surahNumber: number;
-  ayahs: QuranAyah[];
   reciterId: string;
+  /** Kept for API compatibility; continuous mode plays the whole surah. */
   initialAyahNumber?: number;
   onAyahChange?: (ayahNumber: number) => void;
+  onSurahChange?: (surahNumber: number) => void;
+  onSurahFinished?: () => void;
 };
 
+/**
+ * Continuous full-surah player (mp3quran.net).
+ * One MP3 per surah — no verse-by-verse gaps.
+ */
 export const useQuranAudioPlayer = ({
   surahNumber,
-  ayahs,
   reciterId,
   initialAyahNumber = 1,
   onAyahChange,
+  onSurahChange,
+  onSurahFinished,
 }: UseQuranAudioPlayerArgs) => {
   const [activeAyahNumber, setActiveAyahNumber] = useState(initialAyahNumber);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const activeAyahRef = useRef(initialAyahNumber);
+  const [hasLoadedTrack, setHasLoadedTrack] = useState(false);
+  const loadedKeyRef = useRef<string | null>(null);
 
-  const playAyah = useCallback(
-    async (ayahNumber: number) => {
-      const ayah = ayahs.find(item => item.numberInSurah === ayahNumber);
-      if (!ayah) {
-        return;
-      }
-
+  const loadAndPlaySurah = useCallback(
+    async (targetSurah: number) => {
       try {
         setIsLoading(true);
-        activeAyahRef.current = ayahNumber;
-        setActiveAyahNumber(ayahNumber);
-        onAyahChange?.(ayahNumber);
-
-        const url = buildAyahAudioUrl(
-          reciterId,
-          ayah.number,
-          surahNumber,
-          ayah.numberInSurah,
-        );
+        const url = buildSurahAudioUrl(reciterId, targetSurah);
+        const key = `${reciterId}:${targetSurah}`;
         SoundPlayer.loadUrl(url);
         SoundPlayer.play();
+        loadedKeyRef.current = key;
+        setHasLoadedTrack(true);
         setIsPlaying(true);
+        setActiveAyahNumber(1);
+        onAyahChange?.(1);
+        if (targetSurah !== surahNumber) {
+          onSurahChange?.(targetSurah);
+        }
       } catch (error) {
-        console.log('useQuranAudioPlayer playAyah Error =>', error);
+        console.log('useQuranAudioPlayer loadAndPlaySurah Error =>', error);
         setIsPlaying(false);
       } finally {
         setIsLoading(false);
       }
     },
-    [ayahs, onAyahChange, reciterId, surahNumber],
+    [onAyahChange, onSurahChange, reciterId, surahNumber],
+  );
+
+  const playAyah = useCallback(
+    async (_ayahNumber?: number) => {
+      await loadAndPlaySurah(surahNumber);
+    },
+    [loadAndPlaySurah, surahNumber],
   );
 
   const pause = useCallback(() => {
@@ -67,70 +75,98 @@ export const useQuranAudioPlayer = ({
 
   const resume = useCallback(() => {
     try {
+      if (!hasLoadedTrack) {
+        loadAndPlaySurah(surahNumber);
+        return;
+      }
       SoundPlayer.play();
       setIsPlaying(true);
     } catch (error) {
       console.log('useQuranAudioPlayer resume Error =>', error);
     }
-  }, []);
+  }, [hasLoadedTrack, loadAndPlaySurah, surahNumber]);
 
   const stop = useCallback(() => {
     try {
       SoundPlayer.stop();
       setIsPlaying(false);
+      setHasLoadedTrack(false);
+      loadedKeyRef.current = null;
     } catch (error) {
       console.log('useQuranAudioPlayer stop Error =>', error);
     }
   }, []);
 
+  const togglePlay = useCallback(() => {
+    if (isPlaying) {
+      pause();
+      return;
+    }
+    if (hasLoadedTrack) {
+      resume();
+      return;
+    }
+    playAyah();
+  }, [hasLoadedTrack, isPlaying, pause, playAyah, resume]);
+
+  /** Previous / next = adjacent surah (continuous chapter playback). */
   const playNext = useCallback(() => {
-    const currentIndex = ayahs.findIndex(item => item.numberInSurah === activeAyahRef.current);
-    const next = ayahs[currentIndex + 1];
-    if (next) {
-      playAyah(next.numberInSurah);
+    const next = Math.min(114, surahNumber + 1);
+    if (next !== surahNumber) {
+      loadAndPlaySurah(next);
     } else {
       stop();
+      onSurahFinished?.();
     }
-  }, [ayahs, playAyah, stop]);
+  }, [loadAndPlaySurah, onSurahFinished, stop, surahNumber]);
 
   const playPrevious = useCallback(() => {
-    const currentIndex = ayahs.findIndex(item => item.numberInSurah === activeAyahRef.current);
-    const previous = ayahs[currentIndex - 1];
-    if (previous) {
-      playAyah(previous.numberInSurah);
+    const previous = Math.max(1, surahNumber - 1);
+    if (previous !== surahNumber) {
+      loadAndPlaySurah(previous);
     }
-  }, [ayahs, playAyah]);
+  }, [loadAndPlaySurah, surahNumber]);
 
   useEffect(() => {
     const finished = SoundPlayer.addEventListener('FinishedPlaying', ({success}) => {
       if (success) {
-        playNext();
+        onSurahFinished?.();
+        setIsPlaying(false);
       }
     });
     return () => finished.remove();
-  }, [playNext]);
+  }, [onSurahFinished]);
 
   useEffect(() => {
-    activeAyahRef.current = initialAyahNumber;
     setActiveAyahNumber(initialAyahNumber);
-  }, [initialAyahNumber, surahNumber]);
+    setHasLoadedTrack(false);
+    loadedKeyRef.current = null;
+    setIsPlaying(false);
+  }, [initialAyahNumber, surahNumber, reciterId]);
 
   useEffect(
     () => () => {
-      stop();
+      try {
+        SoundPlayer.stop();
+      } catch {
+        // ignore cleanup errors
+      }
     },
-    [stop],
+    [],
   );
 
   return {
     activeAyahNumber,
     isPlaying,
     isLoading,
+    hasLoadedTrack,
     playAyah,
     pause,
     resume,
     stop,
+    togglePlay,
     playNext,
     playPrevious,
+    loadAndPlaySurah,
   };
 };

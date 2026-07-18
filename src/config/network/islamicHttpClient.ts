@@ -16,7 +16,24 @@ export const hadithHttpClient = axios.create({
 export const adhkarHttpClient = axios.create({
   baseURL: 'https://www.hisnmuslim.com/api',
   timeout: 20000,
-  headers: {Accept: 'application/json'},
+  headers: {
+    Accept: 'application/json',
+    'User-Agent':
+      'Mozilla/5.0 (compatible; RNTS-Template/1.0; +https://github.com/M-Albasti/RNTS-Template)',
+  },
+  transformResponse: [
+    data => {
+      if (typeof data !== 'string') {
+        return data;
+      }
+      const cleaned = data.replace(/^\uFEFF/, '');
+      try {
+        return JSON.parse(cleaned);
+      } catch {
+        return data;
+      }
+    },
+  ],
 });
 
 export const prayerHttpClient = axios.create({

@@ -31,6 +31,13 @@ const WEAK_SEARCH_EDITIONS = [
   'sunan-an-nasai',
 ];
 
+const PAGE_SIZE = 20;
+
+const resolveEditionObjectId = async (slug: string): Promise<string | null> => {
+  const editions = await hadithClient.getEditions();
+  return editions.find(edition => edition.slug === slug)?.id ?? null;
+};
+
 export const hadithClient = {
   getEditions: async (): Promise<HadithEdition[]> => {
     const {data} = await hadithHttpClient.get<HadislamEditionDto[]>('/editions/');
@@ -48,25 +55,28 @@ export const hadithClient = {
   },
 
   getEditionBooks: async (slug: string): Promise<HadithBook[]> => {
-    const {data} = await hadithHttpClient.get<HadislamPaginatedDto<HadislamBookDto>>(
-      `/editions/${slug}/books`,
-      {params: {page_size: 200}},
-    );
-    return data.items.map(mapHadithBook);
+    const {data} = await hadithHttpClient.get<
+      HadislamPaginatedDto<HadislamBookDto> | HadislamBookDto[]
+    >(`/editions/${slug}/books`, {params: {page_size: 200}});
+
+    const items = Array.isArray(data) ? data : data.items ?? [];
+    return items.map(mapHadithBook);
   },
 
   getEditionHadiths: async (
     slug: string,
     page = 1,
     language = 'en',
-  ): Promise<{items: HadithSummary[]; total: number}> => {
+  ): Promise<{items: HadithSummary[]; total: number; page: number; pageSize: number}> => {
     const {data} = await hadithHttpClient.get<HadislamPaginatedDto<HadislamHadithDto>>(
       `/editions/${slug}/hadiths`,
-      {params: {page, page_size: 20, language}},
+      {params: {page, page_size: PAGE_SIZE, language}},
     );
     return {
       items: data.items.map(item => mapHadithSummary(item, language)),
       total: data.total,
+      page: data.page,
+      pageSize: data.page_size ?? PAGE_SIZE,
     };
   },
 
@@ -81,10 +91,12 @@ export const hadithClient = {
     query: string,
     filter: HadithCollectionFilter = 'all',
     language = 'en',
-  ): Promise<HadithSummary[]> => {
+    page = 1,
+  ): Promise<{items: HadithSummary[]; total: number; page: number; pageSize: number}> => {
     const params: Record<string, string | number> = {
       q: query,
-      limit: 30,
+      page,
+      page_size: 30,
       language,
     };
 
@@ -102,8 +114,7 @@ export const hadithClient = {
     if (filter === 'sahih') {
       items = items.filter(
         item =>
-          SAHIH_EDITION_SLUGS.includes(item.editionSlug) ||
-          isSahihHadith(item.grades),
+          SAHIH_EDITION_SLUGS.includes(item.editionSlug) || isSahihHadith(item.grades),
       );
     }
 
@@ -111,19 +122,24 @@ export const hadithClient = {
       items = items.filter(item => isWeakHadith(item.grades));
     }
 
-    return items;
+    return {
+      items,
+      total: data.total,
+      page: data.page,
+      pageSize: data.page_size ?? 30,
+    };
   },
 
   getRandomHadith: async (filter: HadithCollectionFilter = 'sahih', language = 'en') => {
     const params: Record<string, string> = {language};
-    if (filter === 'sahih') {
-      params.edition = SAHIH_EDITION_SLUGS[
-        Math.floor(Math.random() * SAHIH_EDITION_SLUGS.length)
-      ];
-    } else if (filter === 'weak') {
-      params.edition = WEAK_SEARCH_EDITIONS[
-        Math.floor(Math.random() * WEAK_SEARCH_EDITIONS.length)
-      ];
+
+    if (filter === 'sahih' || filter === 'weak') {
+      const slugPool = filter === 'sahih' ? SAHIH_EDITION_SLUGS : WEAK_SEARCH_EDITIONS;
+      const slug = slugPool[Math.floor(Math.random() * slugPool.length)];
+      const editionId = await resolveEditionObjectId(slug);
+      if (editionId) {
+        params.edition = editionId;
+      }
     }
 
     const {data} = await hadithHttpClient.get<HadislamHadithDto>('/hadiths/random', {

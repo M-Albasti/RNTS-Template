@@ -176,9 +176,9 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
       );
     }
 
-    if (showHadith && hadithResults) {
+    if (showHadith && hadithResults?.items) {
       merged.push(
-        ...hadithResults.map(item => ({
+        ...hadithResults.items.map(item => ({
           kind: 'hadith' as const,
           id: `hadith-${item.id}`,
           title: item.editionName,

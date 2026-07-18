@@ -1,22 +1,19 @@
-import type {QuranReciter} from '@constants/quranReciters';
 import {getQuranReciterById} from '@constants/quranReciters';
 
+/** Continuous full-surah MP3 from mp3quran.net (no ayah cuts). */
+export const buildSurahAudioUrl = (reciterId: string, surahNumber: number): string => {
+  const reciter = getQuranReciterById(reciterId);
+  const padded = String(surahNumber).padStart(3, '0');
+  return `${reciter.server}${padded}.mp3`;
+};
+
+/** @deprecated Prefer buildSurahAudioUrl for gapless playback. */
 export const buildAyahAudioUrl = (
   reciterId: string,
-  globalAyahNumber: number,
+  _globalAyahNumber: number,
   surahNumber: number,
-  ayahInSurah: number,
-): string => {
-  const reciter = getQuranReciterById(reciterId);
-
-  if (reciter.source === 'everyayah' && reciter.folder) {
-    const surahPart = String(surahNumber).padStart(3, '0');
-    const ayahPart = String(ayahInSurah).padStart(3, '0');
-    return `https://everyayah.com/data/${reciter.folder}/${surahPart}${ayahPart}.mp3`;
-  }
-
-  return `https://cdn.islamic.network/quran/audio/128/${reciter.id}/${globalAyahNumber}.mp3`;
-};
+  _ayahInSurah: number,
+): string => buildSurahAudioUrl(reciterId, surahNumber);
 
 export const parseAyahReference = (
   input: string,
