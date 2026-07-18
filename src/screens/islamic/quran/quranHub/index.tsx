@@ -36,6 +36,7 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
       ...tokens.shadows.sm,
     },
     continuePressed: {backgroundColor: '#EFE4D0'},
+    sectionTitle: {marginBottom: tokens.spacing.sm},
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
   }));
 
@@ -72,7 +73,23 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
         />
       </Pressable>
       <Spacer size="lg" />
+      <Heading text={t('islamic.quran.readingModes')} level="h3" />
+      <Spacer size="sm" />
       <View style={styles.grid}>
+        <FeatureHubCard
+          title={t('islamic.quran.mushafMode')}
+          subtitle={t('islamic.quran.mushafModeSubtitle')}
+          iconType="Ionicons"
+          iconName="book-outline"
+          onPress={() => navigation.navigate('QuranList', {mode: 'mushaf'})}
+        />
+        <FeatureHubCard
+          title={t('islamic.quran.tafsirMode')}
+          subtitle={t('islamic.quran.tafsirModeSubtitle')}
+          iconType="Ionicons"
+          iconName="document-text-outline"
+          onPress={() => navigation.navigate('QuranList', {mode: 'tafsir'})}
+        />
         <FeatureHubCard
           title={t('islamic.quran.index')}
           subtitle={t('islamic.quran.indexSubtitle')}
@@ -86,13 +103,6 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
           iconType="Ionicons"
           iconName="search-outline"
           onPress={() => navigation.navigate('IslamicUnifiedSearch')}
-        />
-        <FeatureHubCard
-          title={t('islamic.quran.allSurahs')}
-          subtitle={t('islamic.quran.allSurahsSubtitle')}
-          iconType="Ionicons"
-          iconName="book-outline"
-          onPress={() => navigation.navigate('QuranList')}
         />
       </View>
     </ScreenContainer>

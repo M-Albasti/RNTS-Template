@@ -8,6 +8,7 @@ import QuranHub from '@screens/islamic/quran/quranHub';
 import QuranIndex from '@screens/islamic/quran/quranIndex';
 import QuranList from '@screens/islamic/quran/quranList';
 import QuranReader from '@screens/islamic/quran/quranReader';
+import QuranTafsirReader from '@screens/islamic/quran/quranTafsirReader';
 import QuranSearch from '@screens/islamic/quran/quranSearch';
 import AdhkarCategories from '@screens/islamic/adhkar/adhkarCategories';
 import AdhkarDetail from '@screens/islamic/adhkar/adhkarDetail';
@@ -51,6 +52,7 @@ const IslamicNavigator = (): React.JSX.Element => (
     <IslamicStack.Screen name="QuranIndex" component={QuranIndex} />
     <IslamicStack.Screen name="QuranList" component={QuranList} />
     <IslamicStack.Screen name="QuranReader" component={QuranReader} />
+    <IslamicStack.Screen name="QuranTafsirReader" component={QuranTafsirReader} />
     <IslamicStack.Screen name="QuranSearch" component={QuranSearch} />
     <IslamicStack.Screen name="IslamicUnifiedSearch" component={IslamicUnifiedSearch} />
     <IslamicStack.Screen name="AdhkarCategories" component={AdhkarCategories} />

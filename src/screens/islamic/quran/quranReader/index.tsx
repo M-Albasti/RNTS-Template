@@ -1,11 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Pressable, ScrollView, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
-import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 import TouchableIcon from '@atoms/TouchableIcon';
 
@@ -13,7 +11,6 @@ import {quranClient} from '@api/clients/quranClient';
 import {
   useQuranMushafPageQuery,
   useQuranPageForAyahQuery,
-  useQuranSurahQuery,
 } from '@api/query/hooks/useIslamicQueries';
 import QuranAudioBar from '@molecules/islamic/QuranAudioBar';
 import {MUSHAF_PAGE_COUNT, QURAN_RECITERS} from '@constants/quranReciters';
@@ -32,6 +29,10 @@ type Props = {
   route: AppRouteProp<'QuranReader'>;
 };
 
+/**
+ * Madinah mushaf page reader + continuous full-surah audio.
+ * For ayah-by-ayah study with tafsir, use QuranTafsirReader.
+ */
 const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   const {t, i18n} = useTranslation();
   const dispatch = useAppDispatch();
@@ -39,14 +40,11 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   const isAr = i18n.language.startsWith('ar');
   const surahNumber = route.params.surahNumber;
   const initialAyahNumber = route.params.ayahNumber ?? 1;
-  const quranPreferences = useAppSelector(state => state.islamic.quranPreferences);
-  const {reciterId, showTranslation} = quranPreferences;
-  const [viewMode, setViewMode] = useState<'mushaf' | 'ayah'>('mushaf');
+  const reciterId = useAppSelector(state => state.islamic.quranPreferences.reciterId);
   const [pageNumber, setPageNumber] = useState(1);
 
   const {data: resolvedPage} = useQuranPageForAyahQuery(surahNumber, initialAyahNumber);
   const mushafQuery = useQuranMushafPageQuery(pageNumber);
-  const surahQuery = useQuranSurahQuery(surahNumber, quranPreferences.tafsirEditionId, showTranslation);
 
   useEffect(() => {
     if (resolvedPage) {
@@ -86,25 +84,6 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
 
   const styles = useThemedStyles(tokens => ({
     body: {flex: tokens.layout.flex.fill},
-    toolbar: {
-      ...tokens.layout.presets.wrapRow,
-      gap: tokens.spacing.xs,
-      marginBottom: tokens.spacing.sm,
-      paddingHorizontal: tokens.spacing.sm,
-    },
-    chip: {
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xxs,
-      backgroundColor: tokens.colors.surface,
-    },
-    chipActive: {
-      backgroundColor: tokens.colors.primary,
-      borderColor: tokens.colors.primary,
-    },
-    chipTextActive: {color: tokens.colors.textInverse},
     pageNav: {
       ...tokens.layout.presets.rowBetween,
       alignItems: 'center' as const,
@@ -143,30 +122,12 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
       color: '#1A1208',
       fontWeight: '500' as const,
     },
-    ayahNumber: {
-      fontSize: 14,
-      color: '#8B6914',
-    },
     pageFooter: {
       marginTop: tokens.spacing.md,
       paddingTop: tokens.spacing.sm,
       borderTopWidth: tokens.layout.borderWidth.sm,
       borderTopColor: '#D4C4A8',
       alignItems: 'center' as const,
-    },
-    ayahWrap: {
-      marginBottom: tokens.spacing.md,
-      padding: tokens.spacing.md,
-      borderRadius: tokens.radius.lg,
-      backgroundColor: tokens.colors.surface,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-    },
-    arabic: {
-      fontSize: tokens.typography.h2.fontSize,
-      lineHeight: (tokens.typography.h2.lineHeight ?? 32) * 1.6,
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
     },
   }));
 
@@ -180,8 +141,6 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   }, [mushafQuery.data?.ayahs]);
 
   const pageMeta = mushafQuery.data?.ayahs[0];
-  const isLoading = viewMode === 'mushaf' ? mushafQuery.isLoading : surahQuery.isLoading;
-  const isError = viewMode === 'mushaf' ? mushafQuery.isError : surahQuery.isError;
 
   useEffect(() => {
     dispatch(setLastReadPosition({surahNumber, ayahNumber: initialAyahNumber}));
@@ -194,59 +153,28 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   return (
     <ScreenContainer bottomPadding="none" style={styles.body}>
       <ScreenHeader
-        title={
-          viewMode === 'mushaf'
-            ? t('islamic.quran.mushafTitle', {page: pageNumber})
-            : surahQuery.data?.name ?? t('islamic.quran.title')
-        }
+        title={t('islamic.quran.mushafTitle', {page: pageNumber})}
         onBack={() => navigation.goBack()}
         rightAccessory={
           <TouchableIcon
             iconType="Ionicons"
-            name="search-outline"
+            name="document-text-outline"
             size={sizes.iconSm}
-            onPress={() => navigation.navigate('IslamicUnifiedSearch')}
+            onPress={() =>
+              navigation.navigate('QuranTafsirReader', {
+                surahNumber: pageSurahNumber,
+                ayahNumber: 1,
+              })
+            }
           />
         }
       />
 
-      <View style={styles.toolbar}>
-        <Pressable
-          style={[styles.chip, viewMode === 'mushaf' && styles.chipActive]}
-          onPress={() => setViewMode('mushaf')}>
-          <TextView
-            text={t('islamic.quran.mushafMode')}
-            variant="caption"
-            style={viewMode === 'mushaf' ? styles.chipTextActive : undefined}
-          />
-        </Pressable>
-        <Pressable
-          style={[styles.chip, viewMode === 'ayah' && styles.chipActive]}
-          onPress={() => setViewMode('ayah')}>
-          <TextView
-            text={t('islamic.quran.ayahMode')}
-            variant="caption"
-            style={viewMode === 'ayah' ? styles.chipTextActive : undefined}
-          />
-        </Pressable>
-        <Pressable
-          style={[styles.chip, showTranslation && styles.chipActive]}
-          onPress={() =>
-            dispatch(updateQuranPreferences({showTranslation: !showTranslation}))
-          }>
-          <TextView
-            text={t('islamic.quran.showTranslation')}
-            variant="caption"
-            style={showTranslation ? styles.chipTextActive : undefined}
-          />
-        </Pressable>
-      </View>
-
-      {isLoading ? (
+      {mushafQuery.isLoading ? (
         <IslamicLoadingState />
-      ) : isError ? (
+      ) : mushafQuery.isError ? (
         <IslamicErrorState message={t('islamic.errors.loadFailed')} />
-      ) : viewMode === 'mushaf' ? (
+      ) : (
         <>
           <View style={styles.pageNav}>
             <TouchableIcon
@@ -292,36 +220,6 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
             </View>
           </View>
         </>
-      ) : (
-        <ScrollView style={styles.body} contentContainerStyle={{paddingHorizontal: 16}}>
-          <Heading
-            text={surahQuery.data?.name ?? ''}
-            level="h2"
-            align="center"
-          />
-          <TextView
-            text={`${surahQuery.data?.englishName} · ${surahQuery.data?.numberOfAyahs} ${t('islamic.quran.ayahs')}`}
-            variant="caption"
-            muted
-            align="center"
-          />
-          <Spacer size="md" />
-          {(surahQuery.data?.ayahs ?? []).map(item => (
-            <Pressable
-              key={item.number}
-              style={styles.ayahWrap}
-              onPress={() => audio.playAyah(item.numberInSurah)}>
-              <TextView text={item.text} variant="body" style={styles.arabic} />
-              {showTranslation && item.translation ? (
-                <>
-                  <Spacer size="sm" />
-                  <TextView text={item.translation} variant="bodySmall" muted />
-                </>
-              ) : null}
-            </Pressable>
-          ))}
-          <Spacer size="xxl" />
-        </ScrollView>
       )}
 
       <QuranAudioBar
