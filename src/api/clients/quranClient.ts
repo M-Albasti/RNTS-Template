@@ -191,4 +191,52 @@ export const quranClient = {
   },
 
   resolveAyahReference: (input: string) => parseAyahReference(input),
+
+  /** Madinah mushaf page (1–604) — Al Quran Cloud. */
+  getMushafPage: async (pageNumber: number): Promise<{
+    page: number;
+    ayahs: Array<{
+      number: number;
+      numberInSurah: number;
+      text: string;
+      surahNumber: number;
+      surahName: string;
+      surahNameEn: string;
+      juz: number;
+      sajda: boolean;
+    }>;
+  }> => {
+    const {data} = await quranHttpClient.get<
+      AlQuranApiResponse<{
+        number: number;
+        ayahs: Array<
+          AyahDto & {
+            surah: SurahSummaryDto;
+          }
+        >;
+      }>
+    >(`/page/${pageNumber}/${arabicEdition}`);
+
+    return {
+      page: data.data.number,
+      ayahs: data.data.ayahs.map(ayah => ({
+        number: ayah.number,
+        numberInSurah: ayah.numberInSurah,
+        text: ayah.text.replace(/^\ufeff/, ''),
+        surahNumber: ayah.surah.number,
+        surahName: ayah.surah.name,
+        surahNameEn: ayah.surah.englishName,
+        juz: ayah.juz,
+        sajda: typeof ayah.sajda === 'boolean' ? ayah.sajda : Boolean(ayah.sajda?.obligatory),
+      })),
+    };
+  },
+
+  /** Resolve mushaf page number for a surah:ayah reference. */
+  getPageForAyah: async (surahNumber: number, ayahNumber = 1): Promise<number> => {
+    const {data} = await quranHttpClient.get<
+      AlQuranApiResponse<{page: number}>
+    >(`/ayah/${surahNumber}:${ayahNumber}/${arabicEdition}`);
+    return data.data.page;
+  },
 };

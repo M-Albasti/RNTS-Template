@@ -1076,7 +1076,9 @@
     },
     "common": {
       "previous": "السابق",
-      "next": "التالي"
+      "next": "التالي",
+      "more": "المزيد",
+      "less": "أقل"
     },
     "modules": {
       "quran": {
@@ -1121,10 +1123,24 @@
       "showTranslation": "الترجمة",
       "tafsirLabel": "التفسير",
       "search": "بحث في القرآن",
-      "searchPlaceholder": "ابحث بالكلمة أو اسم السورة...",
-      "searchHint": "اكتب حرفين على الأقل للبحث في الترجمات.",
+      "searchPlaceholder": "اسم سورة أو 2:255 أو نص آية...",
+      "searchHint": "ابحث باسم السورة أو مرجع الآية أو نص الآية.",
       "noResults": "لم يتم العثور على آيات مطابقة.",
-      "ayahs": "آية"
+      "ayahs": "آية",
+      "mushafTitle": "المصحف · صفحة {{page}}",
+      "mushafMode": "صفحات المصحف",
+      "mushafModeSubtitle": "صفحات كاملة مع تلاوة متصلة",
+      "tafsirMode": "السورة مع التفسير",
+      "tafsirModeSubtitle": "قراءة آية بآية مع كتب التفسير",
+      "tafsirReaderTitle": "السورة والتفسير",
+      "tafsirReaderHint": "اضغط آية · فعّل كتب التفسير من الأسفل",
+      "readingModes": "أوضاع القراءة",
+      "ayahMode": "حسب الآية",
+      "pageOf": "صفحة {{page}} من {{total}}",
+      "juz": "جزء {{n}}",
+      "continuousSurah": "سورة {{n}} كاملة · صوت متصل",
+      "ayahN": "آية {{n}}",
+      "loadingAudio": "جاري تحميل التلاوة…"
     },
     "search": {
       "title": "البحث الإسلامي",
@@ -1145,13 +1161,27 @@
         "adhkar": "أذكار",
         "hadith": "حديث"
       },
+      "allPlaceholder": "ابحث في القرآن أو الأذكار أو الأحاديث...",
+      "adhkarPlaceholder": "ابحث في أقسام الأذكار...",
+      "hadithPlaceholder": "ابحث في نص الحديث...",
       "surahPlaceholder": "ابحث باسم السورة أو رقمها...",
       "ayahPlaceholder": "أدخل المرجع مثل 2:255",
       "textPlaceholder": "ابحث في نص الآيات...",
+      "allHint": "ابحث في كل شيء دفعة واحدة — أو اختر نطاقاً بالأسفل.",
       "surahHint": "اكتب اسم السورة أو رقمها.",
       "ayahHint": "أدخل سورة:آية مثل 2:255 أو 2 255.",
       "textHint": "اكتب حرفين على الأقل للبحث في النص.",
+      "recentSearches": "عمليات البحث السابقة",
+      "suggestions": "اقتراحات",
+      "clearHistory": "مسح",
+      "emptyTitle": "ابدأ البحث",
+      "emptyMessage": "جرّب اسم سورة أو مرجع آية أو ذكر أو كلمة من حديث.",
+      "keepTypingTitle": "أكمل الكتابة",
+      "keepTypingMessage": "أدخل حرفين على الأقل للبحث.",
       "noResults": "لا توجد نتائج مطابقة.",
+      "noResultsMessage": "جرّب كلمة أخرى أو اختر اقتراحاً.",
+      "trySuggestion": "عرض الاقتراحات",
+      "ayahResult": "سورة {{surah}} آية {{ayah}}",
       "openAyah": "افتح هذه الآية في القارئ",
       "surahAyahs": "{{count}} آية",
       "adhkarCategory": "قسم أذكار"
@@ -1187,6 +1217,8 @@
       "searchPlaceholder": "ابحث في نص الحديث...",
       "searchHint": "اكتب حرفين على الأقل للبحث.",
       "noResults": "لم يتم العثور على أحاديث مطابقة.",
+      "noWeakOnPage": "لا أحاديث ضعيفة في هذه الصفحة — جرّب التالي.",
+      "pageInfo": "صفحة {{page}} من {{totalPages}} · {{total}} حديث",
       "hadithCount": "{{count}} حديث",
       "grades": "الدرجات",
       "filters": {

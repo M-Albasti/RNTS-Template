@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -11,7 +11,6 @@ import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
-import type {HadithCollectionFilter} from '@api/clients/hadithClient';
 import {isWeakHadith} from '@api/mappers/islamic.mapper';
 import {useHadithListQuery} from '@api/query/hooks/useIslamicQueries';
 import {useThemedStyles} from '@theme/createThemedStyles';
@@ -47,13 +46,39 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
       paddingVertical: tokens.spacing.xxs,
       marginTop: tokens.spacing.xs,
     },
-    footer: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
+    footer: {
+      ...tokens.layout.presets.rowBetween,
+      alignItems: 'center' as const,
+      gap: tokens.spacing.sm,
+      paddingTop: tokens.spacing.sm,
+    },
+    pageLabel: {flex: 1, alignItems: 'center' as const},
   }));
 
-  const items =
-    filter === 'weak'
-      ? (data?.items ?? []).filter(item => isWeakHadith(item.grades))
-      : data?.items ?? [];
+  const pageSize = data?.pageSize ?? 20;
+  const total = data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+  const items = useMemo(() => {
+    const source = data?.items ?? [];
+    if (filter !== 'weak') {
+      return source;
+    }
+    return source.filter(item => isWeakHadith(item.grades));
+  }, [data?.items, filter]);
+
+  // Weak filter is client-side: auto-advance past empty weak pages.
+  useEffect(() => {
+    if (filter !== 'weak' || isLoading || isFetching || isError) {
+      return;
+    }
+    if (items.length === 0 && page < totalPages) {
+      setPage(current => current + 1);
+    }
+  }, [filter, isError, isFetching, isLoading, items.length, page, totalPages]);
+
+  const canGoNext = page < totalPages && !isFetching;
+  const canGoPrev = page > 1 && !isFetching;
 
   return (
     <ScreenContainer bottomPadding="xxl">
@@ -64,18 +89,35 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
         <IslamicErrorState message={t('islamic.errors.loadFailed')} />
       ) : (
         <>
+          <TextView
+            text={t('islamic.hadith.pageInfo', {page, totalPages, total})}
+            variant="caption"
+            muted
+          />
+          <Spacer size="sm" />
           <FlashList
             data={items}
             style={styles.list}
             keyExtractor={item => item.id}
             ListEmptyComponent={
-              <EmptyView compact title={t('islamic.hadith.noResults')} iconName="book-outline" />
+              <EmptyView
+                compact
+                title={
+                  filter === 'weak' && (data?.items?.length ?? 0) > 0
+                    ? t('islamic.hadith.noWeakOnPage')
+                    : t('islamic.hadith.noResults')
+                }
+                iconName="book-outline"
+              />
             }
             renderItem={({item}) => (
               <Pressable
                 style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
                 onPress={() =>
-                  navigation.navigate('HadithDetail', {hadithId: item.id, title: item.editionName})
+                  navigation.navigate('HadithDetail', {
+                    hadithId: item.id,
+                    title: item.editionName,
+                  })
                 }>
                 <Heading text={`#${item.hadithIndex}`} level="h3" />
                 <Spacer size="xs" />
@@ -94,13 +136,16 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
               label={t('islamic.common.previous')}
               variant="secondary"
               onPress={() => setPage(current => Math.max(1, current - 1))}
-              disabled={page <= 1 || isFetching}
+              disabled={!canGoPrev}
             />
+            <View style={styles.pageLabel}>
+              <TextView text={`${page} / ${totalPages}`} variant="caption" muted />
+            </View>
             <Button
               label={t('islamic.common.next')}
               variant="primary"
-              onPress={() => setPage(current => current + 1)}
-              disabled={isFetching || items.length === 0}
+              onPress={() => setPage(current => Math.min(totalPages, current + 1))}
+              disabled={!canGoNext}
             />
           </View>
         </>

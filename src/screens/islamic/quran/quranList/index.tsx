@@ -13,15 +13,19 @@ import {useQuranSurahsQuery} from '@api/query/hooks/useIslamicQueries';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {setLastReadSurah} from '@redux/slices/islamicSlice';
 import {useThemedStyles} from '@theme/createThemedStyles';
-import type {AppStackNavigationProp} from '@Types/appNavigation';
+import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 import {IslamicErrorState, IslamicLoadingState} from '@screens/islamic/islamicHub';
 
-type Props = {navigation: AppStackNavigationProp<'QuranList'>};
+type Props = {
+  navigation: AppStackNavigationProp<'QuranList'>;
+  route: AppRouteProp<'QuranList'>;
+};
 
-const QuranList = ({navigation}: Props): React.JSX.Element => {
+const QuranList = ({navigation, route}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
+  const mode = route.params?.mode ?? 'mushaf';
   const {data, isLoading, isError} = useQuranSurahsQuery();
 
   const styles = useThemedStyles(tokens => ({
@@ -46,7 +50,14 @@ const QuranList = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.quran.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader
+        title={
+          mode === 'tafsir'
+            ? t('islamic.quran.tafsirMode')
+            : t('islamic.quran.mushafMode')
+        }
+        onBack={() => navigation.goBack()}
+      />
       <Pressable style={styles.search} onPress={() => navigation.navigate('QuranSearch')}>
         <TextView text={t('islamic.quran.searchPlaceholder')} variant="body" muted />
       </Pressable>
@@ -65,7 +76,11 @@ const QuranList = ({navigation}: Props): React.JSX.Element => {
               style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
               onPress={() => {
                 dispatch(setLastReadSurah(item.number));
-                navigation.navigate('QuranReader', {surahNumber: item.number});
+                if (mode === 'tafsir') {
+                  navigation.navigate('QuranTafsirReader', {surahNumber: item.number});
+                } else {
+                  navigation.navigate('QuranReader', {surahNumber: item.number});
+                }
               }}>
               <View style={styles.meta}>
                 <Heading text={String(item.number)} level="h3" />

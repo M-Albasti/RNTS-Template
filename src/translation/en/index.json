@@ -1076,7 +1076,9 @@
     },
     "common": {
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "more": "More",
+      "less": "Less"
     },
     "modules": {
       "quran": {
@@ -1121,10 +1123,24 @@
       "showTranslation": "Translation",
       "tafsirLabel": "Tafsir",
       "search": "Search Quran",
-      "searchPlaceholder": "Search by keyword or surah name...",
-      "searchHint": "Type at least 2 characters to search translations.",
+      "searchPlaceholder": "Surah name, 2:255, or verse text...",
+      "searchHint": "Search by surah, ayah reference, or verse text.",
       "noResults": "No verses matched your search.",
-      "ayahs": "ayahs"
+      "ayahs": "ayahs",
+      "mushafTitle": "Mushaf · page {{page}}",
+      "mushafMode": "Mushaf pages",
+      "mushafModeSubtitle": "Full pages + continuous recitation",
+      "tafsirMode": "Surah with tafsir",
+      "tafsirModeSubtitle": "Ayah-by-ayah study with tafsir editions",
+      "tafsirReaderTitle": "Surah & tafsir",
+      "tafsirReaderHint": "Tap an ayah · toggle tafsir editions below",
+      "readingModes": "Reading modes",
+      "ayahMode": "By ayah",
+      "pageOf": "Page {{page}} of {{total}}",
+      "juz": "Juz {{n}}",
+      "continuousSurah": "Full surah {{n}} · continuous audio",
+      "ayahN": "Ayah {{n}}",
+      "loadingAudio": "Loading recitation…"
     },
     "search": {
       "title": "Islamic search",
@@ -1145,13 +1161,27 @@
         "adhkar": "Adhkar",
         "hadith": "Hadith"
       },
+      "allPlaceholder": "Search Quran, adhkar, or hadith...",
+      "adhkarPlaceholder": "Search adhkar categories...",
+      "hadithPlaceholder": "Search hadith text...",
       "surahPlaceholder": "Search surah name or number...",
       "ayahPlaceholder": "Enter reference e.g. 2:255",
       "textPlaceholder": "Search verse text...",
+      "allHint": "Search everything at once — or pick a scope below.",
       "surahHint": "Type a surah name or number.",
       "ayahHint": "Enter surah:ayah like 2:255 or 2 255.",
       "textHint": "Type at least 2 characters to search verse text.",
+      "recentSearches": "Recent searches",
+      "suggestions": "Suggestions",
+      "clearHistory": "Clear",
+      "emptyTitle": "Start searching",
+      "emptyMessage": "Try a surah name, ayah reference, dhikr, or hadith keyword.",
+      "keepTypingTitle": "Keep typing",
+      "keepTypingMessage": "Enter at least 2 characters to search.",
       "noResults": "No results matched your search.",
+      "noResultsMessage": "Try another keyword, or pick a suggestion.",
+      "trySuggestion": "Show suggestions",
+      "ayahResult": "Surah {{surah}}, ayah {{ayah}}",
       "openAyah": "Open this ayah in the reader",
       "surahAyahs": "{{count}} ayahs",
       "adhkarCategory": "Adhkar category"
@@ -1187,6 +1217,8 @@
       "searchPlaceholder": "Search hadith text...",
       "searchHint": "Type at least 2 characters to search.",
       "noResults": "No hadith matched your search.",
+      "noWeakOnPage": "No weak-graded hadith on this page — try Next.",
+      "pageInfo": "Page {{page}} of {{totalPages}} · {{total}} hadith",
       "hadithCount": "{{count}} hadith",
       "grades": "Grades",
       "filters": {

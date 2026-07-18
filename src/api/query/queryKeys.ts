@@ -20,13 +20,25 @@ export const queryKeys = {
   },
   islamic: {
     quranSurahs: () => [...queryKeys.all, 'islamic', 'quran', 'surahs'] as const,
-    quranSurah: (surahNumber: number, tafsirEditionId: string) =>
-      [...queryKeys.all, 'islamic', 'quran', 'surah', surahNumber, tafsirEditionId] as const,
+    quranSurah: (surahNumber: number, tafsirEditionId: string, withTranslation = false) =>
+      [
+        ...queryKeys.all,
+        'islamic',
+        'quran',
+        'surah',
+        surahNumber,
+        tafsirEditionId,
+        withTranslation,
+      ] as const,
     quranJuzList: () => [...queryKeys.all, 'islamic', 'quran', 'juz'] as const,
     quranSurahSearch: (query: string) =>
       [...queryKeys.all, 'islamic', 'quran', 'surah-search', query] as const,
-    quranSearch: (query: string) =>
-      [...queryKeys.all, 'islamic', 'quran', 'search', query] as const,
+    quranSearch: (query: string, language = 'ar') =>
+      [...queryKeys.all, 'islamic', 'quran', 'search', query, language] as const,
+    quranMushafPage: (page: number) =>
+      [...queryKeys.all, 'islamic', 'quran', 'mushaf', page] as const,
+    quranPageForAyah: (surah: number, ayah: number) =>
+      [...queryKeys.all, 'islamic', 'quran', 'page-for', surah, ayah] as const,
     adhkarCategories: (lang: AdhkarLanguage) =>
       [...queryKeys.all, 'islamic', 'adhkar', 'categories', lang] as const,
     adhkarCategory: (categoryId: number, lang: AdhkarLanguage) =>
@@ -36,12 +48,17 @@ export const queryKeys = {
     hadithEditions: () => [...queryKeys.all, 'islamic', 'hadith', 'editions'] as const,
     hadithBooks: (slug: string) =>
       [...queryKeys.all, 'islamic', 'hadith', 'books', slug] as const,
-    hadithList: (slug: string, page: number) =>
-      [...queryKeys.all, 'islamic', 'hadith', 'list', slug, page] as const,
-    hadithDetail: (id: string) =>
-      [...queryKeys.all, 'islamic', 'hadith', 'detail', id] as const,
-    hadithSearch: (query: string, filter: HadithCollectionFilter) =>
-      [...queryKeys.all, 'islamic', 'hadith', 'search', query, filter] as const,
+    hadithList: (slug: string, page: number, language: string) =>
+      [...queryKeys.all, 'islamic', 'hadith', 'list', slug, page, language] as const,
+    hadithDetail: (id: string, language: string) =>
+      [...queryKeys.all, 'islamic', 'hadith', 'detail', id, language] as const,
+    hadithSearch: (
+      query: string,
+      filter: HadithCollectionFilter,
+      language: string,
+      page = 1,
+    ) =>
+      [...queryKeys.all, 'islamic', 'hadith', 'search', query, filter, language, page] as const,
     prayerTimings: (city: string, country: string) =>
       [...queryKeys.all, 'islamic', 'prayer', city, country] as const,
   },

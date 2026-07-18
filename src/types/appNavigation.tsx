@@ -69,8 +69,10 @@ export type RootStackParamList = {
   IslamicHub: undefined;
   QuranHub: undefined;
   QuranIndex: undefined;
-  QuranList: undefined;
+  QuranList: {mode?: 'mushaf' | 'tafsir'} | undefined;
   QuranReader: {surahNumber: number; ayahNumber?: number};
+  /** Ayah-by-ayah study reader with tafsir editions (separate from mushaf pages). */
+  QuranTafsirReader: {surahNumber: number; ayahNumber?: number};
   QuranSearch: undefined;
   IslamicUnifiedSearch: undefined;
   AdhkarCategories: undefined;
