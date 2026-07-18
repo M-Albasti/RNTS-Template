@@ -4,7 +4,6 @@ import {playAdhan} from '@services/islamicServices/adhanAudioService';
 import {handleQuranMediaNotifeeEvent} from '@services/quranAudioService/quranMediaNotification';
 
 declare global {
-  // eslint-disable-next-line no-var
   var __RNTS_ISLAMIC_NOTIFEE_HANDLERS__: boolean | undefined;
 }
 

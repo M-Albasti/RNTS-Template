@@ -1,4 +1,4 @@
-import type {TextStyle, ViewStyle} from 'react-native';
+import type {ViewStyle} from 'react-native';
 
 import {
   alignContent,

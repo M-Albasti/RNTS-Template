@@ -121,9 +121,10 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     }
     const timer = setTimeout(() => {
       setSearching(true);
-      void placesClient
+      placesClient
         .autocompleteCities(search, isAr ? 'ar' : 'en')
         .then(setSuggestions)
+        .catch(() => setSuggestions([]))
         .finally(() => setSearching(false));
     }, 350);
     return () => clearTimeout(timer);
@@ -134,7 +135,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     navigation.goBack();
   };
 
-  const useGps = async () => {
+  const selectGpsLocation = async () => {
     setBusy(true);
     setError(null);
     try {
@@ -164,7 +165,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     }
   };
 
-  const useCity = () => {
+  const selectCityLocation = () => {
     if (!city || !country) {
       return;
     }
@@ -180,7 +181,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     });
   };
 
-  const usePlaceSuggestion = async (suggestion: PlaceCitySuggestion) => {
+  const selectPlaceSuggestion = async (suggestion: PlaceCitySuggestion) => {
     setBusy(true);
     setError(null);
     try {
@@ -206,7 +207,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     }
   };
 
-  const useTimezone = (timezoneId: string) => {
+  const selectTimezoneLocation = (timezoneId: string) => {
     const zone = PRAYER_TIMEZONES.find(item => item.id === timezoneId);
     if (!zone) {
       return;
@@ -270,7 +271,12 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
             {busy ? (
               <ActivityIndicator />
             ) : (
-              <Button label={t('islamic.prayer.useMyLocation')} onPress={() => void useGps()} />
+              <Button
+                label={t('islamic.prayer.useMyLocation')}
+                onPress={() => {
+                  selectGpsLocation().catch(() => undefined);
+                }}
+              />
             )}
             <Spacer size="sm" />
             <Button
@@ -302,7 +308,9 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
                   <Pressable
                     key={item.placeId}
                     style={styles.option}
-                    onPress={() => void usePlaceSuggestion(item)}>
+                    onPress={() => {
+                      selectPlaceSuggestion(item).catch(() => undefined);
+                    }}>
                     <TextView text={item.description} variant="body" />
                   </Pressable>
                 ))}
@@ -367,7 +375,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
             ) : null}
 
             <Spacer size="md" />
-            <Button label={t('islamic.prayer.saveLocation')} onPress={useCity} />
+            <Button label={t('islamic.prayer.saveLocation')} onPress={selectCityLocation} />
           </View>
         ) : null}
 
@@ -381,7 +389,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
               <Pressable
                 key={zone.id}
                 style={styles.option}
-                onPress={() => useTimezone(zone.id)}>
+                onPress={() => selectTimezoneLocation(zone.id)}>
                 <Heading text={isAr ? zone.labelAr : zone.labelEn} level="h3" />
                 <Spacer size="xxs" />
                 <TextView text={zone.gmtLabel} variant="caption" />
