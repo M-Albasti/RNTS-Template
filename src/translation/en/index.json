@@ -1140,7 +1140,8 @@
       "juz": "Juz {{n}}",
       "continuousSurah": "Full surah {{n}} · continuous audio",
       "ayahN": "Ayah {{n}}",
-      "loadingAudio": "Loading recitation…"
+      "loadingAudio": "Loading recitation…",
+      "widgetHint": "Add the Quran Audio widget from your home screen for play/pause controls."
     },
     "search": {
       "title": "Islamic search",

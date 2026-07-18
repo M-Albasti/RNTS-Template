@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">RNTS-Template</string>
+    <string name="quran_widget_name">Quran Audio</string>
+    <string name="quran_widget_description">Play, pause, and skip Quran recitation from your home screen.</string>
+    <string name="quran_widget_play">Play</string>
+    <string name="quran_widget_pause">Pause</string>
+    <string name="quran_widget_prev">Prev</string>
+    <string name="quran_widget_next">Next</string>
 </resources>

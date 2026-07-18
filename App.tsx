@@ -34,6 +34,7 @@ import i18n from '@translation/i18n';
 import DriverBackgroundTrackingHost from '@organisms/delivery/DriverBackgroundTrackingHost';
 import FirebaseMessagingHost from '@organisms/firebase/FirebaseMessagingHost';
 import IslamicNotificationHost from '@organisms/islamic/IslamicNotificationHost';
+import QuranWidgetHost from '@organisms/islamic/QuranWidgetHost';
 
 declare global {
   // eslint-disable-next-line no-var
