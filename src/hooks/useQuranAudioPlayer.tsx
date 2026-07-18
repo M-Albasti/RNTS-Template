@@ -29,42 +29,70 @@ export const useQuranAudioPlayer = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadedTrack, setHasLoadedTrack] = useState(false);
+
   const loadedKeyRef = useRef<string | null>(null);
+  const pendingKeyRef = useRef<string | null>(null);
+  const pendingSurahRef = useRef<number | null>(null);
   /** When we advance surah ourselves, skip the hard reset so audio keeps playing. */
   const skipExternalResetRef = useRef(false);
+  const skipResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const surahNumberRef = useRef(surahNumber);
+  const reciterIdRef = useRef(reciterId);
+  const onAyahChangeRef = useRef(onAyahChange);
+  const onSurahChangeRef = useRef(onSurahChange);
+  const onSurahFinishedRef = useRef(onSurahFinished);
+  const loadAndPlaySurahRef = useRef<(targetSurah: number) => void>(() => undefined);
+
   surahNumberRef.current = surahNumber;
+  reciterIdRef.current = reciterId;
+  onAyahChangeRef.current = onAyahChange;
+  onSurahChangeRef.current = onSurahChange;
+  onSurahFinishedRef.current = onSurahFinished;
+
+  const markSkipExternalReset = useCallback(() => {
+    skipExternalResetRef.current = true;
+    if (skipResetTimeoutRef.current) {
+      clearTimeout(skipResetTimeoutRef.current);
+    }
+    // If the parent never reflects the new surah, don't leave skip stuck forever.
+    skipResetTimeoutRef.current = setTimeout(() => {
+      skipExternalResetRef.current = false;
+    }, 2500);
+  }, []);
+
+  const clearPlaybackState = useCallback(() => {
+    setIsPlaying(false);
+    setHasLoadedTrack(false);
+    loadedKeyRef.current = null;
+    pendingKeyRef.current = null;
+    pendingSurahRef.current = null;
+  }, []);
 
   const loadAndPlaySurah = useCallback(
-    async (targetSurah: number) => {
+    (targetSurah: number) => {
       try {
         setIsLoading(true);
-        const url = buildSurahAudioUrl(reciterId, targetSurah);
-        const key = `${reciterId}:${targetSurah}`;
-        SoundPlayer.playUrl(url);
-        loadedKeyRef.current = key;
-        setHasLoadedTrack(true);
-        setIsPlaying(true);
-        setActiveAyahNumber(1);
-        onAyahChange?.(1);
-        if (targetSurah !== surahNumberRef.current) {
-          skipExternalResetRef.current = true;
-          onSurahChange?.(targetSurah);
-        }
-      } catch (error) {
-        console.log('useQuranAudioPlayer loadAndPlaySurah Error =>', error);
         setIsPlaying(false);
         setHasLoadedTrack(false);
-      } finally {
+        const url = buildSurahAudioUrl(reciterIdRef.current, targetSurah);
+        const key = `${reciterIdRef.current}:${targetSurah}`;
+        pendingKeyRef.current = key;
+        pendingSurahRef.current = targetSurah;
+        SoundPlayer.playUrl(url);
+      } catch (error) {
+        console.log('useQuranAudioPlayer loadAndPlaySurah Error =>', error);
         setIsLoading(false);
+        clearPlaybackState();
       }
     },
-    [onAyahChange, onSurahChange, reciterId],
+    [clearPlaybackState],
   );
 
+  loadAndPlaySurahRef.current = loadAndPlaySurah;
+
   const playAyah = useCallback(
-    async (_ayahNumber?: number) => {
-      await loadAndPlaySurah(surahNumber);
+    (_ayahNumber?: number) => {
+      loadAndPlaySurah(surahNumber);
     },
     [loadAndPlaySurah, surahNumber],
   );
@@ -87,7 +115,6 @@ export const useQuranAudioPlayer = ({
       SoundPlayer.resume();
       setIsPlaying(true);
     } catch (error) {
-      // Some platforms only expose play() after pause.
       try {
         SoundPlayer.play();
         setIsPlaying(true);
@@ -100,13 +127,12 @@ export const useQuranAudioPlayer = ({
   const stop = useCallback(() => {
     try {
       SoundPlayer.stop();
-      setIsPlaying(false);
-      setHasLoadedTrack(false);
-      loadedKeyRef.current = null;
     } catch (error) {
       console.log('useQuranAudioPlayer stop Error =>', error);
     }
-  }, []);
+    setIsLoading(false);
+    clearPlaybackState();
+  }, [clearPlaybackState]);
 
   const togglePlay = useCallback(() => {
     if (isPlaying) {
@@ -120,16 +146,15 @@ export const useQuranAudioPlayer = ({
     playAyah();
   }, [hasLoadedTrack, isPlaying, pause, playAyah, reciterId, resume, surahNumber]);
 
-  /** Previous / next = adjacent surah (continuous chapter playback). */
   const playNext = useCallback(() => {
     const next = Math.min(114, surahNumber + 1);
     if (next !== surahNumber) {
       loadAndPlaySurah(next);
     } else {
       stop();
-      onSurahFinished?.();
+      onSurahFinishedRef.current?.();
     }
-  }, [loadAndPlaySurah, onSurahFinished, stop, surahNumber]);
+  }, [loadAndPlaySurah, stop, surahNumber]);
 
   const playPrevious = useCallback(() => {
     const previous = Math.max(1, surahNumber - 1);
@@ -139,18 +164,69 @@ export const useQuranAudioPlayer = ({
   }, [loadAndPlaySurah, surahNumber]);
 
   useEffect(() => {
-    const finished = SoundPlayer.addEventListener('FinishedPlaying', ({success}) => {
-      if (success) {
-        onSurahFinished?.();
-        setIsPlaying(false);
-      }
-    });
-    return () => finished.remove();
-  }, [onSurahFinished]);
+    const finishedLoading = SoundPlayer.addEventListener(
+      'FinishedLoadingURL',
+      ({success}) => {
+        if (!pendingKeyRef.current) {
+          return;
+        }
+        if (!success) {
+          setIsLoading(false);
+          clearPlaybackState();
+          return;
+        }
+
+        const key = pendingKeyRef.current;
+        const targetSurah = pendingSurahRef.current ?? surahNumberRef.current;
+        loadedKeyRef.current = key;
+        pendingKeyRef.current = null;
+        pendingSurahRef.current = null;
+        setHasLoadedTrack(true);
+        setIsPlaying(true);
+        setIsLoading(false);
+        setActiveAyahNumber(1);
+        onAyahChangeRef.current?.(1);
+
+        if (targetSurah !== surahNumberRef.current) {
+          markSkipExternalReset();
+          onSurahChangeRef.current?.(targetSurah);
+        }
+      },
+    );
+
+    const finishedPlaying = SoundPlayer.addEventListener(
+      'FinishedPlaying',
+      ({success}) => {
+        if (!success) {
+          return;
+        }
+
+        const current = surahNumberRef.current;
+        clearPlaybackState();
+        setIsLoading(false);
+
+        if (current < 114) {
+          loadAndPlaySurahRef.current(current + 1);
+          return;
+        }
+
+        onSurahFinishedRef.current?.();
+      },
+    );
+
+    return () => {
+      finishedLoading.remove();
+      finishedPlaying.remove();
+    };
+  }, [clearPlaybackState, markSkipExternalReset]);
 
   useEffect(() => {
     if (skipExternalResetRef.current) {
       skipExternalResetRef.current = false;
+      if (skipResetTimeoutRef.current) {
+        clearTimeout(skipResetTimeoutRef.current);
+        skipResetTimeoutRef.current = null;
+      }
       setActiveAyahNumber(1);
       return;
     }
@@ -160,14 +236,16 @@ export const useQuranAudioPlayer = ({
     } catch {
       // ignore
     }
+    setIsLoading(false);
+    clearPlaybackState();
     setActiveAyahNumber(initialAyahNumber);
-    setHasLoadedTrack(false);
-    loadedKeyRef.current = null;
-    setIsPlaying(false);
-  }, [initialAyahNumber, surahNumber, reciterId]);
+  }, [clearPlaybackState, initialAyahNumber, surahNumber, reciterId]);
 
   useEffect(
     () => () => {
+      if (skipResetTimeoutRef.current) {
+        clearTimeout(skipResetTimeoutRef.current);
+      }
       try {
         SoundPlayer.stop();
       } catch {

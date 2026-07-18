@@ -152,8 +152,15 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
   };
 
   const onSelectSuggestion = (suggestion: IslamicSearchSuggestion) => {
-    setQuery(suggestion.query);
     add(suggestion.query, 'quran');
+    if (suggestion.surahNumber) {
+      navigation.navigate('QuranTafsirReader', {
+        surahNumber: suggestion.surahNumber,
+        ayahNumber: 1,
+      });
+      return;
+    }
+    setQuery(suggestion.query);
   };
 
   return (

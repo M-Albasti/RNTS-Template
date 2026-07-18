@@ -20,8 +20,16 @@ export const queryKeys = {
   },
   islamic: {
     quranSurahs: () => [...queryKeys.all, 'islamic', 'quran', 'surahs'] as const,
-    quranSurah: (surahNumber: number, tafsirEditionId: string) =>
-      [...queryKeys.all, 'islamic', 'quran', 'surah', surahNumber, tafsirEditionId] as const,
+    quranSurah: (surahNumber: number, tafsirEditionId: string, withTranslation = false) =>
+      [
+        ...queryKeys.all,
+        'islamic',
+        'quran',
+        'surah',
+        surahNumber,
+        tafsirEditionId,
+        withTranslation,
+      ] as const,
     quranJuzList: () => [...queryKeys.all, 'islamic', 'quran', 'juz'] as const,
     quranSurahSearch: (query: string) =>
       [...queryKeys.all, 'islamic', 'quran', 'surah-search', query] as const,

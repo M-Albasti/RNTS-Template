@@ -67,7 +67,7 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
     return source.filter(item => isWeakHadith(item.grades));
   }, [data?.items, filter]);
 
-  // Weak filter is client-side: auto-advance past pages with no weak grades.
+  // Weak filter is client-side: auto-advance past empty weak pages.
   useEffect(() => {
     if (filter !== 'weak' || isLoading || isFetching || isError) {
       return;

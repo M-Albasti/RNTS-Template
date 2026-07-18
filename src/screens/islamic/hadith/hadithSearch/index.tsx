@@ -13,7 +13,10 @@ import TextInputView from '@atoms/TextInputView';
 import TextView from '@atoms/TextView';
 import IslamicSearchSuggestions from '@molecules/islamic/IslamicSearchSuggestions';
 
-import type {HadithCollectionFilter} from '@api/clients/hadithClient';
+import {
+  HADITH_PAGE_SIZE,
+  type HadithCollectionFilter,
+} from '@api/clients/hadithClient';
 import {
   useHadithEditionsQuery,
   useHadithSearchQuery,
@@ -95,7 +98,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
     pageLabel: {flex: 1, alignItems: 'center' as const},
   }));
 
-  const pageSize = data?.pageSize ?? 30;
+  const pageSize = data?.pageSize ?? HADITH_PAGE_SIZE;
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const canGoNext = page < totalPages && !isFetching;

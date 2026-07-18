@@ -17,6 +17,9 @@ export type IslamicSearchSuggestion = {
   label: string;
   query: string;
   kind: 'recent' | 'surah' | 'adhkar' | 'hadith' | 'query';
+  /** Optional deep-link targets for richer suggestion taps. */
+  categoryId?: number;
+  surahNumber?: number;
 };
 
 /** Popular surahs for idle suggestions (number + bilingual labels). */
@@ -57,8 +60,8 @@ export const FEATURED_ADHKAR_SUGGESTIONS: Array<{
   {
     id: 25,
     titleKey: 'islamic.adhkar.afterPrayer',
-    queryAr: 'بعد الصلاة',
-    queryEn: 'prayer',
+    queryAr: 'بعد السلام',
+    queryEn: 'after prayer',
   },
   {
     id: 96,
@@ -166,6 +169,7 @@ export function buildPopularSurahSuggestions(
     label: language === 'ar' ? `${surah.number}. ${surah.ar}` : `${surah.number}. ${surah.en}`,
     query: language === 'ar' ? surah.ar : surah.en,
     kind: 'surah' as const,
+    surahNumber: surah.number,
   }));
   return filterByQuery(items, query, item => item.label);
 }
@@ -180,6 +184,7 @@ export function buildFeaturedAdhkarSuggestions(
     label: resolveTitle(item.titleKey),
     query: language === 'ar' ? item.queryAr : item.queryEn,
     kind: 'adhkar' as const,
+    categoryId: item.id,
   }));
   return filterByQuery(items, query, item => `${item.label} ${item.query}`);
 }

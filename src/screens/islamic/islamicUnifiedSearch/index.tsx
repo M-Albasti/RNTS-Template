@@ -1,8 +1,9 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
+import Button from '@atoms/Button';
 import EmptyView from '@atoms/EmptyView';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -13,6 +14,9 @@ import TextView from '@atoms/TextView';
 import IslamicSearchSuggestions from '@molecules/islamic/IslamicSearchSuggestions';
 
 import {quranClient} from '@api/clients/quranClient';
+import {
+  HADITH_PAGE_SIZE,
+} from '@api/clients/hadithClient';
 import {
   useAdhkarSearchQuery,
   useHadithSearchQuery,
@@ -71,12 +75,17 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
   const [query, setQuery] = useState('');
   const [scope, setScope] = useState<ScopeTab>('all');
   const [quranMode, setQuranMode] = useState<QuranSearchMode>('text');
+  const [hadithPage, setHadithPage] = useState(1);
   const {history, add, clear, remove} = useIslamicSearchHistory();
 
   const trimmedQuery = normalizeSearchQuery(query);
   const debouncedQuery = normalizeSearchQuery(String(useDebounce(query, SEARCH_DEBOUNCE_MS)));
   const isDebouncing = trimmedQuery.length > 0 && trimmedQuery !== debouncedQuery;
   const activeQuery = isDebouncing ? '' : debouncedQuery;
+
+  useEffect(() => {
+    setHadithPage(1);
+  }, [activeQuery, scope]);
 
   const showQuran = scope === 'all' || scope === 'quran';
   const showAdhkar = scope === 'all' || scope === 'adhkar';
@@ -117,11 +126,12 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
   const {
     data: hadithResults,
     isFetching: hadithLoading,
-    isError,
+    isError: hadithError,
   } = useHadithSearchQuery(
     hadithSearchEnabled ? activeQuery : '',
     'all',
     language,
+    hadithPage,
   );
 
   const styles = useThemedStyles(tokens => ({
@@ -156,6 +166,14 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
       paddingVertical: tokens.spacing.xxs,
       marginBottom: tokens.spacing.xxs,
     },
+    footer: {
+      ...tokens.layout.presets.rowBetween,
+      alignItems: 'center' as const,
+      gap: tokens.spacing.sm,
+      paddingTop: tokens.spacing.sm,
+    },
+    pageLabel: {flex: 1, alignItems: 'center' as const},
+    fetchingHint: {marginBottom: tokens.spacing.sm},
   }));
 
   const results = useMemo((): SearchResult[] => {
@@ -240,11 +258,19 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
     textResults,
   ]);
 
-  const isFetching =
+  const localFetching =
     (includeSurahSearch && surahLoading) ||
     (includeTextSearch && textLoading) ||
-    (adhkarSearchEnabled && adhkarLoading) ||
-    (hadithSearchEnabled && hadithLoading);
+    (adhkarSearchEnabled && adhkarLoading);
+  const isFetching = localFetching || (hadithSearchEnabled && hadithLoading);
+
+  const hadithPageSize = hadithResults?.pageSize ?? HADITH_PAGE_SIZE;
+  const hadithTotal = hadithResults?.total ?? 0;
+  const hadithTotalPages = Math.max(1, Math.ceil(hadithTotal / hadithPageSize));
+  const showHadithPager =
+    showHadith &&
+    hadithTotalPages > 1 &&
+    (scope === 'hadith' || (hadithResults?.items?.length ?? 0) > 0);
 
   const recentSuggestions = useMemo(
     () => buildRecentSuggestions(history, trimmedQuery),
@@ -289,10 +315,6 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
           ? t('islamic.search.surahHint')
           : t('islamic.search.textHint');
 
-  const rememberAndSetQuery = (value: string) => {
-    setQuery(value);
-  };
-
   const openResult = (item: SearchResult) => {
     add(trimmedQuery || item.title, scope);
     if (item.kind === 'quran') {
@@ -316,12 +338,28 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
   };
 
   const onSelectSuggestion = (suggestion: IslamicSearchSuggestion) => {
-    rememberAndSetQuery(suggestion.query);
     add(suggestion.query, scope);
+    if (suggestion.categoryId) {
+      navigation.navigate('AdhkarDetail', {
+        categoryId: suggestion.categoryId,
+        title: suggestion.label,
+      });
+      return;
+    }
+    if (suggestion.surahNumber) {
+      navigation.navigate('QuranTafsirReader', {
+        surahNumber: suggestion.surahNumber,
+        ayahNumber: 1,
+      });
+      return;
+    }
+    setQuery(suggestion.query);
   };
 
   const showIdle = trimmedQuery.length === 0;
-  const showLoading = !showIdle && (isDebouncing || isFetching);
+  // Keep partial results visible while slower sources (hadith) finish.
+  const showLoading =
+    !showIdle && (isDebouncing || (isFetching && results.length === 0));
   const minCharsNotMet =
     !showIdle &&
     !isDebouncing &&
@@ -395,7 +433,7 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
         </>
       ) : showLoading ? (
         <IslamicLoadingState />
-      ) : isError && results.length === 0 ? (
+      ) : hadithError && results.length === 0 ? (
         <IslamicErrorState message={t('islamic.errors.loadFailed')} />
       ) : minCharsNotMet ? (
         <EmptyView
@@ -405,33 +443,71 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
           message={t('islamic.search.keepTypingMessage')}
         />
       ) : (
-        <FlashList
-          data={results}
-          style={styles.list}
-          keyExtractor={item => item.id}
-          ListEmptyComponent={
-            <EmptyView
-              compact
-              iconName="file-tray-outline"
-              title={t('islamic.search.noResults')}
-              message={t('islamic.search.noResultsMessage')}
-              actionLabel={t('islamic.search.trySuggestion')}
-              onAction={() => setQuery('')}
+        <>
+          {isFetching && results.length > 0 ? (
+            <TextView
+              text={t('common.loading')}
+              variant="caption"
+              muted
+              style={styles.fetchingHint}
             />
-          }
-          renderItem={({item}) => (
-            <Pressable
-              style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
-              onPress={() => openResult(item)}>
-              <View style={styles.kind}>
-                <TextView text={t(`islamic.search.kinds.${item.kind}`)} variant="caption" />
+          ) : null}
+          <FlashList
+            data={results}
+            style={styles.list}
+            keyExtractor={item => item.id}
+            ListEmptyComponent={
+              <EmptyView
+                compact
+                iconName="file-tray-outline"
+                title={t('islamic.search.noResults')}
+                message={t('islamic.search.noResultsMessage')}
+                actionLabel={t('islamic.search.trySuggestion')}
+                onAction={() => setQuery('')}
+              />
+            }
+            renderItem={({item}) => (
+              <Pressable
+                style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
+                onPress={() => openResult(item)}>
+                <View style={styles.kind}>
+                  <TextView text={t(`islamic.search.kinds.${item.kind}`)} variant="caption" />
+                </View>
+                <Heading text={item.title} level="h3" />
+                <Spacer size="xs" />
+                <TextView text={item.subtitle} variant="body" numberOfLines={3} muted />
+              </Pressable>
+            )}
+          />
+          {showHadithPager ? (
+            <>
+              <Spacer size="md" />
+              <View style={styles.footer}>
+                <Button
+                  label={t('islamic.common.previous')}
+                  variant="secondary"
+                  onPress={() => setHadithPage(current => Math.max(1, current - 1))}
+                  disabled={hadithPage <= 1 || hadithLoading}
+                />
+                <View style={styles.pageLabel}>
+                  <TextView
+                    text={`${hadithPage} / ${hadithTotalPages}`}
+                    variant="caption"
+                    muted
+                  />
+                </View>
+                <Button
+                  label={t('islamic.common.next')}
+                  variant="primary"
+                  onPress={() =>
+                    setHadithPage(current => Math.min(hadithTotalPages, current + 1))
+                  }
+                  disabled={hadithPage >= hadithTotalPages || hadithLoading}
+                />
               </View>
-              <Heading text={item.title} level="h3" />
-              <Spacer size="xs" />
-              <TextView text={item.subtitle} variant="body" numberOfLines={3} muted />
-            </Pressable>
-          )}
-        />
+            </>
+          ) : null}
+        </>
       )}
     </ScreenContainer>
   );

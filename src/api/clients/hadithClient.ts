@@ -31,11 +31,43 @@ const WEAK_SEARCH_EDITIONS = [
   'sunan-an-nasai',
 ];
 
-const PAGE_SIZE = 20;
+/** Hadislam API rejects page_size > 20. */
+export const HADITH_PAGE_SIZE = 20;
+const PAGE_SIZE = HADITH_PAGE_SIZE;
+const MAX_FILTER_SCAN_PAGES = 25;
 
 const resolveEditionObjectId = async (slug: string): Promise<string | null> => {
   const editions = await hadithClient.getEditions();
   return editions.find(edition => edition.slug === slug)?.id ?? null;
+};
+
+const matchesCollectionFilter = (
+  item: HadithSummary,
+  filter: HadithCollectionFilter,
+): boolean => {
+  if (filter === 'all') {
+    return true;
+  }
+  if (filter === 'sahih') {
+    return SAHIH_EDITION_SLUGS.includes(item.editionSlug) || isSahihHadith(item.grades);
+  }
+  // Weak: graded da'eef/mawdu only (grade API param is ignored by Hadislam).
+  return isWeakHadith(item.grades);
+};
+
+const fetchSearchPage = async (query: string, language: string, page: number) => {
+  const {data} = await hadithHttpClient.get<HadislamPaginatedDto<HadislamHadithDto>>(
+    '/hadiths/search',
+    {
+      params: {
+        q: query,
+        page,
+        page_size: PAGE_SIZE,
+        language,
+      },
+    },
+  );
+  return data;
 };
 
 export const hadithClient = {
@@ -93,40 +125,49 @@ export const hadithClient = {
     language = 'en',
     page = 1,
   ): Promise<{items: HadithSummary[]; total: number; page: number; pageSize: number}> => {
-    const params: Record<string, string | number> = {
-      q: query,
-      page,
-      page_size: 30,
-      language,
-    };
-
-    if (filter === 'weak') {
-      params.grade = 'Da`eef';
+    if (filter === 'all') {
+      const data = await fetchSearchPage(query, language, page);
+      return {
+        items: data.items.map(item => mapHadithSummary(item, language)),
+        total: data.total,
+        page: data.page,
+        pageSize: data.page_size ?? PAGE_SIZE,
+      };
     }
 
-    const {data} = await hadithHttpClient.get<HadislamPaginatedDto<HadislamHadithDto>>(
-      '/hadiths/search',
-      {params},
-    );
+    // Client-side sahih/weak filters: scan API pages until we can fill the
+    // requested logical page (Hadislam ignores grade= params).
+    const needed = page * PAGE_SIZE;
+    const matched: HadithSummary[] = [];
+    let apiPage = 1;
+    let apiTotal = 0;
+    let scannedRaw = 0;
 
-    let items = data.items.map(item => mapHadithSummary(item, language));
-
-    if (filter === 'sahih') {
-      items = items.filter(
-        item =>
-          SAHIH_EDITION_SLUGS.includes(item.editionSlug) || isSahihHadith(item.grades),
-      );
+    while (matched.length < needed && apiPage <= MAX_FILTER_SCAN_PAGES) {
+      const data = await fetchSearchPage(query, language, apiPage);
+      apiTotal = data.total;
+      const mapped = data.items.map(item => mapHadithSummary(item, language));
+      scannedRaw += mapped.length;
+      matched.push(...mapped.filter(item => matchesCollectionFilter(item, filter)));
+      if (mapped.length === 0) {
+        break;
+      }
+      apiPage += 1;
     }
 
-    if (filter === 'weak') {
-      items = items.filter(item => isWeakHadith(item.grades));
-    }
+    const start = (page - 1) * PAGE_SIZE;
+    const items = matched.slice(start, start + PAGE_SIZE);
+    const exhausted = scannedRaw === 0 || apiPage > Math.ceil(apiTotal / PAGE_SIZE);
+    const ratio = scannedRaw > 0 ? matched.length / scannedRaw : 0;
+    const estimatedTotal = exhausted
+      ? matched.length
+      : Math.max(matched.length, Math.floor(apiTotal * ratio));
 
     return {
       items,
-      total: data.total,
-      page: data.page,
-      pageSize: data.page_size ?? 30,
+      total: estimatedTotal,
+      page,
+      pageSize: PAGE_SIZE,
     };
   },
 

@@ -20,7 +20,7 @@ export const useQuranSurahQuery = (
   withTranslation = false,
 ) =>
   useQuery({
-    queryKey: queryKeys.islamic.quranSurah(surahNumber, tafsirEditionId),
+    queryKey: queryKeys.islamic.quranSurah(surahNumber, tafsirEditionId, withTranslation),
     queryFn: () => quranClient.getSurahReading(surahNumber, tafsirEditionId, withTranslation),
     enabled: surahNumber > 0,
     staleTime: 1000 * 60 * 60 * 24,

@@ -42,6 +42,8 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   const initialAyahNumber = route.params.ayahNumber ?? 1;
   const reciterId = useAppSelector(state => state.islamic.quranPreferences.reciterId);
   const [pageNumber, setPageNumber] = useState(1);
+  /** Audio surah is independent of the visible mushaf page (pages can span surahs). */
+  const [audioSurahNumber, setAudioSurahNumber] = useState(surahNumber);
 
   const {data: resolvedPage} = useQuranPageForAyahQuery(surahNumber, initialAyahNumber);
   const mushafQuery = useQuranMushafPageQuery(pageNumber);
@@ -52,30 +54,35 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
     }
   }, [resolvedPage]);
 
+  useEffect(() => {
+    setAudioSurahNumber(surahNumber);
+  }, [surahNumber]);
+
   const pageSurahNumber = mushafQuery.data?.ayahs[0]?.surahNumber ?? surahNumber;
 
   const handleAyahChange = useCallback(
     (ayahNumber: number) => {
-      dispatch(setLastReadPosition({surahNumber: pageSurahNumber, ayahNumber}));
+      dispatch(setLastReadPosition({surahNumber: audioSurahNumber, ayahNumber}));
     },
-    [dispatch, pageSurahNumber],
+    [audioSurahNumber, dispatch],
   );
 
   const handleSurahChange = useCallback(
     async (nextSurah: number) => {
+      setAudioSurahNumber(nextSurah);
       dispatch(setLastReadPosition({surahNumber: nextSurah, ayahNumber: 1}));
       try {
         const page = await quranClient.getPageForAyah(nextSurah, 1);
         setPageNumber(page);
       } catch {
-        // keep current page if lookup fails
+        // keep current page if lookup fails — audio surah already updated
       }
     },
     [dispatch],
   );
 
   const audio = useQuranAudioPlayer({
-    surahNumber: pageSurahNumber,
+    surahNumber: audioSurahNumber,
     reciterId,
     initialAyahNumber,
     onAyahChange: handleAyahChange,
@@ -224,7 +231,7 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
 
       <QuranAudioBar
         reciterId={reciterId}
-        surahNumber={pageSurahNumber}
+        surahNumber={audioSurahNumber}
         isPlaying={audio.isPlaying}
         isLoading={audio.isLoading}
         continuous
