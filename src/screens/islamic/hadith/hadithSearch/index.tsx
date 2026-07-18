@@ -14,7 +14,7 @@ import TextView from '@atoms/TextView';
 import IslamicSearchSuggestions from '@molecules/islamic/IslamicSearchSuggestions';
 
 import {
-  HADITH_PAGE_SIZE,
+  HADITH_SEARCH_PAGE_SIZE,
   type HadithCollectionFilter,
 } from '@api/clients/hadithClient';
 import {
@@ -29,6 +29,7 @@ import {
   normalizeSearchQuery,
   type IslamicSearchSuggestion,
 } from '@helpers/islamicSearchHelpers';
+import {isHadithRateLimitError} from '@helpers/hadithRateLimit';
 import {useDebounce} from '@hooks/useInputDebounce';
 import {useIslamicSearchHistory} from '@hooks/useIslamicSearchHistory';
 import {useThemedStyles} from '@theme/createThemedStyles';
@@ -57,13 +58,14 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
     setPage(1);
   }, [activeQuery, filter]);
 
-  const {data, isFetching, isError} = useHadithSearchQuery(
+  const {data, isFetching, isError, error, refetch} = useHadithSearchQuery(
     activeQuery.length >= 2 ? activeQuery : '',
     filter,
     language,
     page,
   );
   const {data: editions} = useHadithEditionsQuery();
+  const rateLimited = isError && isHadithRateLimitError(error);
 
   const styles = useThemedStyles(tokens => ({
     list: {flex: tokens.layout.flex.fill},
@@ -80,15 +82,27 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
       paddingVertical: tokens.spacing.xs,
     },
     chipActive: {
-      backgroundColor: tokens.colors.primary,
-      borderColor: tokens.colors.primary,
+      backgroundColor: tokens.colors.hadithChrome,
+      borderColor: tokens.colors.hadithChrome,
     },
+    chipTextActive: {color: tokens.colors.hadithOnChrome},
     row: {
-      paddingVertical: tokens.spacing.md,
-      borderBottomWidth: tokens.layout.borderWidth.sm,
-      borderBottomColor: tokens.colors.border,
+      backgroundColor: tokens.colors.surface,
+      borderRadius: tokens.radius.lg,
+      padding: tokens.spacing.md,
+      marginBottom: tokens.spacing.sm,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
+      borderStartWidth: tokens.layout.borderWidth.lg,
+      borderStartColor: tokens.colors.hadithChrome,
+      ...tokens.shadows.sm,
     },
-    rowPressed: {backgroundColor: tokens.colors.surfaceSecondary},
+    rowPressed: {backgroundColor: tokens.colors.surfaceSecondary, ...tokens.shadows.none},
+    arabicPreview: {
+      textAlign: 'right' as const,
+      writingDirection: 'rtl' as const,
+      marginBottom: tokens.spacing.xs,
+    },
     footer: {
       ...tokens.layout.presets.rowBetween,
       alignItems: 'center' as const,
@@ -98,7 +112,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
     pageLabel: {flex: 1, alignItems: 'center' as const},
   }));
 
-  const pageSize = data?.pageSize ?? HADITH_PAGE_SIZE;
+  const pageSize = data?.pageSize ?? HADITH_SEARCH_PAGE_SIZE;
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const canGoNext = page < totalPages && !isFetching;
@@ -174,7 +188,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
             <TextView
               text={t(`islamic.hadith.filters.${item}`)}
               variant="caption"
-              style={filter === item ? {color: '#fff'} : undefined}
+              style={filter === item ? styles.chipTextActive : undefined}
             />
           </Pressable>
         ))}
@@ -209,7 +223,22 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
           message={t('islamic.search.keepTypingMessage')}
         />
       ) : isError ? (
-        <IslamicErrorState message={t('islamic.errors.loadFailed')} />
+        <>
+          <IslamicErrorState
+            message={
+              rateLimited
+                ? t('islamic.hadith.rateLimited')
+                : t('islamic.errors.loadFailed')
+            }
+          />
+          <Spacer size="md" />
+          <Button
+            label={t('islamic.common.retry')}
+            variant="primary"
+            loading={isFetching}
+            onPress={() => void refetch()}
+          />
+        </>
       ) : showResults ? (
         <>
           {total > 0 ? (
@@ -226,6 +255,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
             data={data?.items ?? []}
             style={styles.list}
             keyExtractor={item => item.id}
+            drawDistance={600}
             ListEmptyComponent={
               <EmptyView
                 compact
@@ -242,7 +272,20 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
                 onPress={() => openResult(item.id, item.editionName)}>
                 <Heading text={item.editionName} level="h3" />
                 <Spacer size="xs" />
-                <TextView text={item.text} variant="body" numberOfLines={4} muted />
+                {item.arabicText ? (
+                  <TextView
+                    text={item.arabicText}
+                    variant="body"
+                    numberOfLines={2}
+                    style={styles.arabicPreview}
+                  />
+                ) : null}
+                <TextView
+                  text={item.englishText || item.text}
+                  variant="bodySmall"
+                  numberOfLines={3}
+                  muted
+                />
               </Pressable>
             )}
           />
@@ -253,6 +296,8 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
                 <Button
                   label={t('islamic.common.previous')}
                   variant="secondary"
+                  size="sm"
+                  loading={isFetching && page > 1}
                   onPress={() => setPage(current => Math.max(1, current - 1))}
                   disabled={!canGoPrev}
                 />
@@ -262,6 +307,8 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
                 <Button
                   label={t('islamic.common.next')}
                   variant="primary"
+                  size="sm"
+                  loading={isFetching && page < totalPages}
                   onPress={() => setPage(current => Math.min(totalPages, current + 1))}
                   disabled={!canGoNext}
                 />

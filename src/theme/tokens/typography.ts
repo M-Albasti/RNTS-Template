@@ -17,7 +17,10 @@ export const typography: Record<
   | 'body'
   | 'bodySmall'
   | 'caption'
-  | 'button',
+  | 'button'
+  | 'mushafBody'
+  | 'mushafBasmala'
+  | 'mushafMarker',
   TypographyStyle
 > = {
   display: {
@@ -74,6 +77,22 @@ export const typography: Record<
     fontSize: 16,
     lineHeight: 20,
     fontWeight: '600' as TextStyle['fontWeight'],
+  },
+  /** Uthmani mushaf body — taller line height for diacritics. */
+  mushafBody: {
+    fontSize: 26,
+    lineHeight: 48,
+    fontWeight: '500' as TextStyle['fontWeight'],
+  },
+  mushafBasmala: {
+    fontSize: 22,
+    lineHeight: 40,
+    fontWeight: '600' as TextStyle['fontWeight'],
+  },
+  mushafMarker: {
+    fontSize: 18,
+    lineHeight: 28,
+    fontWeight: '700' as TextStyle['fontWeight'],
   },
 };
 
@@ -135,5 +154,17 @@ export const applyFontFamilies = (
   button: {
     ...base.button,
     fontFamily: weightToFont(fonts, base.button.fontWeight),
+  },
+  mushafBody: {
+    ...base.mushafBody,
+    fontFamily: fonts.regular,
+  },
+  mushafBasmala: {
+    ...base.mushafBasmala,
+    fontFamily: weightToFont(fonts, base.mushafBasmala.fontWeight),
+  },
+  mushafMarker: {
+    ...base.mushafMarker,
+    fontFamily: fonts.bold ?? fonts.semiBold ?? fonts.regular,
   },
 });

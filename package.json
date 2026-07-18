@@ -65,6 +65,7 @@
     "react-i18next": "^15.7.4",
     "react-native": "0.85.0",
     "react-native-blob-util": "^0.24.7",
+    "react-native-compass-heading": "^2.0.2",
     "react-native-country-codes-picker": "^2.3.5",
     "react-native-fbsdk-next": "^13.4.3",
     "react-native-gesture-handler": "^2.31.1",

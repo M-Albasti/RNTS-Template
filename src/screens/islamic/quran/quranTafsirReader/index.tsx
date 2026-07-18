@@ -3,16 +3,18 @@ import {Pressable, View} from 'react-native';
 import {FlashList, type FlashListRef} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
-import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 import TouchableIcon from '@atoms/TouchableIcon';
 
-import {useQuranSurahQuery} from '@api/query/hooks/useIslamicQueries';
+import {
+  useQuranAyahTimingQuery,
+  useQuranSurahQuery,
+} from '@api/query/hooks/useIslamicQueries';
 import QuranAudioBar from '@molecules/islamic/QuranAudioBar';
-import {QURAN_RECITERS} from '@constants/quranReciters';
+import {getTimingReadId, QURAN_RECITERS} from '@constants/quranReciters';
 import {QURAN_TAFSIR_EDITIONS} from '@constants/quranTafsirEditions';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
@@ -32,7 +34,7 @@ type Props = {
 
 /**
  * Surah ayah-by-ayah study reader with tafsir editions + translation.
- * Separate from the mushaf page reader (QuranReader).
+ * Audio is continuous surah; highlight uses mp3quran ayat_timing when available.
  */
 const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
   const {t, i18n} = useTranslation();
@@ -43,20 +45,32 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
   const initialAyahNumber = route.params.ayahNumber ?? 1;
   const quranPreferences = useAppSelector(state => state.islamic.quranPreferences);
   const {reciterId, tafsirEditionId, showTafsir, showTranslation} = quranPreferences;
+  const timingReadId = getTimingReadId(reciterId);
 
   const {data, isLoading, isError} = useQuranSurahQuery(
     surahNumber,
     tafsirEditionId,
     showTranslation,
   );
-
+  const ayahTimingQuery = useQuranAyahTimingQuery(surahNumber, timingReadId);
   const ayahs = useMemo(() => data?.ayahs ?? [], [data?.ayahs]);
+  const ayahPageMap = useMemo(
+    () =>
+      timingReadId == null
+        ? ayahs.map(ayah => ({ayahNumber: ayah.numberInSurah, pageNumber: ayah.page}))
+        : undefined,
+    [ayahs, timingReadId],
+  );
   const [focusedAyahNumber, setFocusedAyahNumber] = useState(initialAyahNumber);
 
   const handleAyahChange = useCallback(
-    (ayahNumber: number) => {
+    (playingSurah: number, ayahNumber: number) => {
+      // Ignore ticks from another surah while browsing this list.
+      if (playingSurah !== surahNumber) {
+        return;
+      }
       setFocusedAyahNumber(ayahNumber);
-      dispatch(setLastReadPosition({surahNumber, ayahNumber}));
+      dispatch(setLastReadPosition({surahNumber: playingSurah, ayahNumber}));
     },
     [dispatch, surahNumber],
   );
@@ -74,6 +88,8 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
     surahNumber,
     reciterId,
     initialAyahNumber,
+    ayahTimings: ayahTimingQuery.data,
+    ayahPageMap,
     onAyahChange: handleAyahChange,
     onSurahChange: handleSurahChange,
   });
@@ -142,20 +158,48 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
         listRef.current?.scrollToIndex({index, animated: true, viewOffset: 80});
       });
     }
+    // Don't overwrite last-read of a surah still playing in the background.
+    if (audio.isPlaying || audio.isLoading || audio.hasLoadedTrack) {
+      return;
+    }
     dispatch(setLastReadPosition({surahNumber, ayahNumber: initialAyahNumber}));
-  }, [ayahs.length, dispatch, initialAyahNumber, surahNumber]);
+  }, [
+    ayahs.length,
+    audio.hasLoadedTrack,
+    audio.isLoading,
+    audio.isPlaying,
+    dispatch,
+    initialAyahNumber,
+    surahNumber,
+  ]);
 
   useEffect(() => {
-    if (focusedAyahNumber !== audio.activeAyahNumber) {
-      const index = ayahs.findIndex(item => item.numberInSurah === audio.activeAyahNumber);
-      if (index >= 0) {
-        listRef.current?.scrollToIndex({index, animated: true, viewOffset: 80});
-      }
+    if (!audio.isViewingPlayingSurah) {
+      return;
     }
-  }, [audio.activeAyahNumber, ayahs, focusedAyahNumber]);
+    if (focusedAyahNumber === audio.activeAyahNumber) {
+      return;
+    }
+    const index = ayahs.findIndex(item => item.numberInSurah === audio.activeAyahNumber);
+    if (index < 0) {
+      return;
+    }
+    setFocusedAyahNumber(audio.activeAyahNumber);
+    requestAnimationFrame(() => {
+      listRef.current?.scrollToIndex({index, animated: false, viewOffset: 80});
+    });
+  }, [
+    audio.activeAyahNumber,
+    audio.isViewingPlayingSurah,
+    ayahs,
+    focusedAyahNumber,
+  ]);
 
   const renderAyah = ({item}: {item: QuranAyah}) => {
-    const isActive = item.numberInSurah === audio.activeAyahNumber && audio.hasLoadedTrack;
+    const isActive =
+      audio.isViewingPlayingSurah &&
+      item.numberInSurah === audio.activeAyahNumber &&
+      (audio.hasLoadedTrack || audio.isPlaying || audio.isLoading);
     return (
       <Pressable
         style={[styles.ayahWrap, isActive && styles.ayahActive]}
@@ -259,7 +303,8 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
           />
           <QuranAudioBar
             reciterId={reciterId}
-            surahNumber={surahNumber}
+            surahNumber={audio.playingSurahNumber}
+            activeAyahNumber={audio.activeAyahNumber}
             isPlaying={audio.isPlaying}
             isLoading={audio.isLoading}
             continuous

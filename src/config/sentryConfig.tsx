@@ -25,6 +25,8 @@ const sentryDsn =
   SENTRY_DSN ||
   'https://f1bb5369b467a106d557661d309a730c@o4509320259764229.ingest.us.sentry.io/4509320267366400';
 
+const isDevelopment = __DEV__ || APP_ENV === 'development';
+
 if (!getClient() && isEmpty(getClient()) && sentryDsn) {
   init({
     dsn: sentryDsn,
@@ -40,17 +42,17 @@ if (!getClient() && isEmpty(getClient()) && sentryDsn) {
     // Sessions close after app is 10 seconds in the background.
     sessionTrackingIntervalMillis: 10000,
     // Lower sample rates in production to control quota (1.0 = 100%).
-    tracesSampleRate: __DEV__ ? 1.0 : 0.2,
-    profilesSampleRate: __DEV__ ? 1.0 : 0.1,
-    // Record Session Replays for 10% of Sessions and 100% of Errors
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1,
+    tracesSampleRate: isDevelopment ? 1.0 : 0.2,
+    profilesSampleRate: isDevelopment ? 1.0 : 0.1,
+    // Session Replay is production-only — noisy and unnecessary while developing.
+    replaysSessionSampleRate: isDevelopment ? 0 : 0.1,
+    replaysOnErrorSampleRate: isDevelopment ? 0 : 1,
     integrations: [
-      mobileReplayIntegration(),
+      ...(isDevelopment ? [] : [mobileReplayIntegration()]),
       feedbackIntegration(),
       navigationIntegration,
     ],
-    environment: APP_ENV || (__DEV__ ? 'development' : 'production'),
+    environment: APP_ENV || (isDevelopment ? 'development' : 'production'),
     // Android native bridge requires string values in breadcrumb.data (see sentryBreadcrumbSanitizer).
     beforeBreadcrumb: breadcrumb => sanitizeBreadcrumb(breadcrumb),
     beforeSend: event => sanitizeSentryEvent(event),

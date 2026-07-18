@@ -1,5 +1,6 @@
 import React, {useMemo} from 'react';
-import {Alert, FlatList, Pressable, Switch, View} from 'react-native';
+import {Alert, Pressable, Switch, View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -188,7 +189,7 @@ const DeliveryDriver = ({navigation}: Props): React.JSX.Element => {
       ) : openJobs.length === 0 ? (
         <TextView text={t('delivery.noOpenJobs')} muted />
       ) : (
-        <FlatList
+        <FlashList
           data={openJobs}
           keyExtractor={item => item.id}
           scrollEnabled={false}

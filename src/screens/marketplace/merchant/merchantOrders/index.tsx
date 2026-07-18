@@ -1,5 +1,6 @@
 import React from 'react';
-import {FlatList, Pressable} from 'react-native';
+import {Pressable} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
@@ -28,7 +29,7 @@ const MerchantOrders = ({navigation}: Props): React.JSX.Element => {
       {merchantOrders.length === 0 ? (
         <TextView text={t('marketplace.merchant.noOrders')} align="center" muted />
       ) : (
-        <FlatList
+        <FlashList
           data={merchantOrders}
           keyExtractor={item => item.id}
           scrollEnabled={false}

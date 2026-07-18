@@ -16,6 +16,18 @@ export type AdhkarItem = {
   audioUrl?: string;
 };
 
+/** Full-text adhkar match (dhikr body or category title). */
+export type AdhkarSearchMatch = {
+  itemId: number;
+  categoryId: number;
+  categoryTitle: string;
+  arabicText: string;
+  translatedText: string;
+  repeat: number;
+  /** True when only the category title matched (no specific dhikr body). */
+  isCategoryMatch?: boolean;
+};
+
 export type QuranSurahSummary = {
   number: number;
   name: string;
@@ -53,6 +65,11 @@ export type QuranPreferences = {
   showTranslation: boolean;
 };
 
+/** Preferred adhkar voice — Hisn sequential or continuous session reciters. */
+export type AdhkarPreferences = {
+  reciterId: string;
+};
+
 export type QuranLastRead = {
   surahNumber: number;
   ayahNumber: number;
@@ -78,10 +95,18 @@ export type HadithEdition = {
   id: string;
   slug: string;
   name: string;
+  nameAr: string;
   hadithCount: number;
   bookCount: number;
   availableLanguages: string[];
   category: 'sahih' | 'sunan' | 'special';
+};
+
+export type HadithLastRead = {
+  hadithId: string;
+  editionSlug: string;
+  editionName: string;
+  hadithIndex: number;
 };
 
 export type HadithBook = {
@@ -102,8 +127,13 @@ export type HadithSummary = {
   editionName: string;
   bookName?: string;
   hadithIndex: number;
+  /** Preferred preview text for the active UI language. */
   text: string;
+  arabicText?: string;
+  englishText?: string;
   grades: HadithGrade[];
+  /** Scholar notes / explanation when the API provides one. */
+  tafsir?: string;
 };
 
 export type HadithDetail = HadithSummary & {
@@ -111,15 +141,53 @@ export type HadithDetail = HadithSummary & {
   bookHadithIndex?: number;
 };
 
+/** Ordered prayer / solar times shown in the prayer schedule UI. */
+export type PrayerTimeKey =
+  | 'fajr'
+  | 'sunrise'
+  | 'duha'
+  | 'dhuhr'
+  | 'asr'
+  | 'maghrib'
+  | 'isha'
+  | 'midnight';
+
 export type PrayerTimings = {
   fajr: string;
   sunrise: string;
+  duha: string;
   dhuhr: string;
   asr: string;
   maghrib: string;
   isha: string;
+  midnight: string;
   date: string;
   hijriDate: string;
+  /** Hijri month in Arabic when available from Aladhan. */
+  hijriDateAr?: string;
+};
+
+/** Per-prayer local reminder toggles (Notifee). */
+export type PrayerReminderKey = PrayerTimeKey;
+
+export type PrayerReminderSettings = {
+  /** When true, all prayer keys are treated as enabled. */
+  enabledAll: boolean;
+  byKey: Partial<Record<PrayerReminderKey, boolean>>;
+};
+
+/** How the user chose prayer-location source. */
+export type PrayerLocationMode = 'gps' | 'city' | 'timezone' | 'unset';
+
+export type PrayerLocation = {
+  mode: PrayerLocationMode;
+  city: string;
+  country: string;
+  latitude: number | null;
+  longitude: number | null;
+  timezone: string | null;
+  timezoneId: string | null;
+  label: string;
 };
 
 export type IslamicNotificationKind =

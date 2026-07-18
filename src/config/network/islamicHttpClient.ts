@@ -41,3 +41,10 @@ export const prayerHttpClient = axios.create({
   timeout: 20000,
   headers: {Accept: 'application/json'},
 });
+
+/** mp3quran.net public API (reciter timing / metadata). */
+export const mp3quranHttpClient = axios.create({
+  baseURL: 'https://www.mp3quran.net/api/v3',
+  timeout: 20000,
+  headers: {Accept: 'application/json'},
+});

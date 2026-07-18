@@ -49,6 +49,7 @@ const ApiErrorView = ({
             text={title ?? t('errors.somethingWentWrong')}
             level="h3"
             align="center"
+            style={styles.title}
           />
           <TextView
             text={message ?? t('errors.loadFailed')}

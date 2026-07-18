@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import {
   mapQuranSearchMatch,
   mapSurahDetail,
@@ -12,6 +14,7 @@ import type {
   SurahSummaryDto,
 } from '@api/server/islamic.dto';
 import {quranHttpClient} from '@config/network/islamicHttpClient';
+import {queryHasArabicScript} from '@helpers/islamicSearchHelpers';
 import {parseAyahReference} from '@helpers/quranAudioHelpers';
 import type {
   QuranJuzSummary,
@@ -22,6 +25,31 @@ import type {
 
 const arabicEdition = 'quran-uthmani';
 const translationEdition = 'en.sahih';
+/**
+ * Diacritic-stripped Arabic edition — Al Quran Cloud search rejects
+ * `quran-simple` / `quran-uthmani` for `/search` (404); this edition works.
+ */
+const arabicSearchEdition = 'quran-simple-clean';
+/** Fallback Arabic tafsir-text edition that also supports `/search`. */
+const arabicSearchEditionFallback = 'ar.muyassar';
+
+/** Al Quran Cloud returns HTTP 404 when a search has zero matches. */
+const isQuranSearchNotFound = (error: unknown): boolean =>
+  axios.isAxiosError(error) && error.response?.status === 404;
+
+const searchEdition = async (
+  query: string,
+  edition: string,
+): Promise<QuranSearchMatch[]> => {
+  const {data} = await quranHttpClient.get<AlQuranApiResponse<QuranSearchResponseDto>>(
+    `/search/${encodeURIComponent(query)}/all/${edition}`,
+  );
+  const matches = data.data?.matches;
+  if (!Array.isArray(matches)) {
+    return [];
+  }
+  return matches.map(mapQuranSearchMatch);
+};
 
 const mergeSurahEditions = (
   arabic: SurahDetailDto,
@@ -163,12 +191,42 @@ export const quranClient = {
     };
   },
 
+  /**
+   * Full-text ayah search via Al Quran Cloud.
+   * Uses Arabic clean edition for Arabic queries, Sahih International for Latin.
+   * Treats API 404 ("nothing matching") as an empty result — not a failure.
+   */
   searchQuranText: async (query: string, language = 'ar'): Promise<QuranSearchMatch[]> => {
-    const edition = language === 'ar' ? 'quran-simple' : language;
-    const {data} = await quranHttpClient.get<AlQuranApiResponse<QuranSearchResponseDto>>(
-      `/search/${encodeURIComponent(query)}/all/${edition}`,
-    );
-    return data.data.matches.map(mapQuranSearchMatch);
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return [];
+    }
+
+    // Prefer script detection over app language so Arabic ayahs are found in EN UI too.
+    const editions = queryHasArabicScript(trimmed)
+      ? [arabicSearchEdition, arabicSearchEditionFallback]
+      : language === 'ar'
+        ? [arabicSearchEdition, arabicSearchEditionFallback]
+        : [translationEdition, arabicSearchEdition];
+
+    let sawNotFound = false;
+    for (const edition of editions) {
+      try {
+        return await searchEdition(trimmed, edition);
+      } catch (error) {
+        if (isQuranSearchNotFound(error)) {
+          sawNotFound = true;
+          continue;
+        }
+        throw error;
+      }
+    }
+
+    // Every edition returned 404 → no matching ayahs.
+    if (sawNotFound) {
+      return [];
+    }
+    return [];
   },
 
   /** @deprecated */
@@ -238,5 +296,21 @@ export const quranClient = {
       AlQuranApiResponse<{page: number}>
     >(`/ayah/${surahNumber}:${ayahNumber}/${arabicEdition}`);
     return data.data.page;
+  },
+
+  /**
+   * Lightweight ayah→page map for proportional audio sync when mp3quran
+   * timing is unavailable for the selected reciter.
+   */
+  getSurahAyahPages: async (
+    surahNumber: number,
+  ): Promise<Array<{ayahNumber: number; pageNumber: number}>> => {
+    const {data} = await quranHttpClient.get<AlQuranApiResponse<SurahDetailDto>>(
+      `/surah/${surahNumber}/${arabicEdition}`,
+    );
+    return data.data.ayahs.map(ayah => ({
+      ayahNumber: ayah.numberInSurah,
+      pageNumber: ayah.page,
+    }));
   },
 };

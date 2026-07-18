@@ -33,15 +33,14 @@ import {IslamicErrorState, IslamicLoadingState} from '@screens/islamic/islamicHu
 
 type Props = {navigation: AppStackNavigationProp<'QuranSearch'>};
 
-type QuranResult =
-  | {
-      kind: 'ayah-ref' | 'surah' | 'text';
-      id: string;
-      title: string;
-      subtitle: string;
-      surahNumber: number;
-      ayahNumber?: number;
-    };
+type QuranResult = {
+  kind: 'ayah-ref' | 'surah' | 'text';
+  id: string;
+  title: string;
+  subtitle: string;
+  surahNumber: number;
+  ayahNumber?: number;
+};
 
 const QuranSearch = ({navigation}: Props): React.JSX.Element => {
   const {t, i18n} = useTranslation();
@@ -59,13 +58,20 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
     [activeQuery],
   );
 
-  const {data: surahResults, isFetching: surahLoading} = useQuranSurahNameSearchQuery(
-    activeQuery.length >= 1 ? activeQuery : '',
-  );
-  const {data: textResults, isFetching: textLoading, isError} = useQuranSearchQuery(
-    activeQuery.length >= 2 ? activeQuery : '',
-    language === 'ar' ? 'ar' : 'en',
-  );
+  const textSearchEnabled = activeQuery.length >= 2;
+  const {
+    data: surahResults,
+    isFetching: surahLoading,
+    isError: surahError,
+    refetch: refetchSurahs,
+  } = useQuranSurahNameSearchQuery(activeQuery.length >= 1 ? activeQuery : '');
+  const {
+    data: textResults,
+    isFetching: textLoading,
+    isError: textError,
+    refetch: refetchText,
+    isFetched: textFetched,
+  } = useQuranSearchQuery(textSearchEnabled ? activeQuery : '', language);
 
   const styles = useThemedStyles(tokens => ({
     list: {flex: tokens.layout.flex.fill},
@@ -83,6 +89,7 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
       paddingVertical: tokens.spacing.xxs,
       marginBottom: tokens.spacing.xxs,
     },
+    fetchingHint: {marginBottom: tokens.spacing.sm},
   }));
 
   const results = useMemo((): QuranResult[] => {
@@ -102,7 +109,7 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
       });
     }
 
-    if (surahResults) {
+    if (surahResults?.length) {
       merged.push(
         ...surahResults.map(item => ({
           kind: 'surah' as const,
@@ -114,7 +121,7 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
       );
     }
 
-    if (textResults) {
+    if (textResults?.length) {
       merged.push(
         ...textResults.map(item => ({
           kind: 'text' as const,
@@ -132,7 +139,16 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
 
   const isFetching = surahLoading || textLoading;
   const showIdle = trimmedQuery.length === 0;
-  const showLoading = !showIdle && (isDebouncing || isFetching);
+  // Keep partial results visible while slower text search finishes.
+  const showLoading =
+    !showIdle && (isDebouncing || (isFetching && results.length === 0));
+  const hardError =
+    !showIdle &&
+    !isDebouncing &&
+    results.length === 0 &&
+    ((textSearchEnabled && textError) || (activeQuery.length >= 1 && surahError && textError));
+  const minCharsNotMet =
+    !showIdle && !isDebouncing && !textSearchEnabled && !ayahRef && !(surahResults?.length);
 
   const recentSuggestions = useMemo(
     () => buildRecentSuggestions(history, trimmedQuery),
@@ -161,6 +177,15 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
       return;
     }
     setQuery(suggestion.query);
+  };
+
+  const retrySearch = () => {
+    if (activeQuery.length >= 1) {
+      void refetchSurahs();
+    }
+    if (textSearchEnabled) {
+      void refetchText();
+    }
   };
 
   return (
@@ -198,43 +223,64 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
         </>
       ) : showLoading ? (
         <IslamicLoadingState />
-      ) : isError && results.length === 0 ? (
-        <IslamicErrorState message={t('islamic.errors.loadFailed')} />
-      ) : (
-        <FlashList
-          data={results}
-          style={styles.list}
-          keyExtractor={item => item.id}
-          ListEmptyComponent={
-            <EmptyView
-              compact
-              iconName="file-tray-outline"
-              title={t('islamic.quran.noResults')}
-              message={t('islamic.search.noResultsMessage')}
-              actionLabel={t('islamic.search.trySuggestion')}
-              onAction={() => setQuery('')}
-            />
-          }
-          renderItem={({item}) => (
-            <Pressable
-              style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
-              onPress={() => openResult(item)}>
-              <View style={styles.kind}>
-                <TextView
-                  text={
-                    item.kind === 'surah'
-                      ? t('islamic.search.quranModes.surah')
-                      : t('islamic.search.quranModes.ayah')
-                  }
-                  variant="caption"
-                />
-              </View>
-              <Heading text={item.title} level="h3" />
-              <Spacer size="xs" />
-              <TextView text={item.subtitle} variant="body" numberOfLines={3} muted />
-            </Pressable>
-          )}
+      ) : hardError ? (
+        <IslamicErrorState message={t('islamic.errors.loadFailed')} onRetry={retrySearch} />
+      ) : minCharsNotMet ? (
+        <EmptyView
+          compact
+          iconName="search-outline"
+          title={t('islamic.search.keepTypingTitle')}
+          message={t('islamic.search.keepTypingMessage')}
         />
+      ) : (
+        <>
+          {isFetching && results.length > 0 ? (
+            <TextView
+              text={t('common.loading')}
+              variant="caption"
+              muted
+              style={styles.fetchingHint}
+            />
+          ) : null}
+          <FlashList
+            data={results}
+            style={styles.list}
+            keyExtractor={item => item.id}
+            ListEmptyComponent={
+              <EmptyView
+                compact
+                iconName="file-tray-outline"
+                title={t('islamic.quran.noResults')}
+                message={
+                  textFetched || !textSearchEnabled
+                    ? t('islamic.search.noResultsMessage')
+                    : t('islamic.search.keepTypingMessage')
+                }
+                actionLabel={t('islamic.search.trySuggestion')}
+                onAction={() => setQuery('')}
+              />
+            }
+            renderItem={({item}) => (
+              <Pressable
+                style={({pressed}) => [styles.row, pressed && styles.rowPressed]}
+                onPress={() => openResult(item)}>
+                <View style={styles.kind}>
+                  <TextView
+                    text={
+                      item.kind === 'surah'
+                        ? t('islamic.search.quranModes.surah')
+                        : t('islamic.search.quranModes.ayah')
+                    }
+                    variant="caption"
+                  />
+                </View>
+                <Heading text={item.title} level="h3" />
+                <Spacer size="xs" />
+                <TextView text={item.subtitle} variant="body" numberOfLines={3} muted />
+              </Pressable>
+            )}
+          />
+        </>
       )}
     </ScreenContainer>
   );

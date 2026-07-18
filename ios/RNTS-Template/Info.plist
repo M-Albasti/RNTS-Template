@@ -99,6 +99,7 @@
 	<string>$(PRODUCT_NAME) shares your live courier location with customers during active deliveries, even when the app is in the background.</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>audio</string>
 		<string>location</string>
 		<string>remote-notification</string>
 	</array>

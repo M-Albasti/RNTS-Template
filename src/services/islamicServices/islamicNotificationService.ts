@@ -1,6 +1,5 @@
 import notifee, {
   AndroidImportance,
-  RepeatFrequency,
   TimestampTrigger,
   TriggerType,
 } from '@notifee/react-native';
@@ -15,13 +14,19 @@ import type {
 } from '@Types/islamicTypes';
 
 const CHANNEL_ID = 'islamic-reminders';
-const NOTIFICATION_IDS = Array.from({length: 24}, (_, index) => `islamic-hourly-${index}`);
+/** Random adhkar reminders per day (not fixed hourly slots). */
+const RANDOM_PER_DAY = 8;
+const DAYS_AHEAD = 2;
+const NOTIFICATION_IDS = Array.from(
+  {length: DAYS_AHEAD * RANDOM_PER_DAY},
+  (_, index) => `islamic-random-adhkar-${index}`,
+);
 
 const truncate = (value: string, max = 180) =>
   value.length <= max ? value : `${value.slice(0, max - 1)}…`;
 
-const getTimeBucket = (): 'morning' | 'evening' | 'general' => {
-  const hour = new Date().getHours();
+const getTimeBucket = (date: Date = new Date()): 'morning' | 'evening' | 'general' => {
+  const hour = date.getHours();
   if (hour >= 5 && hour < 12) {
     return 'morning';
   }
@@ -31,10 +36,14 @@ const getTimeBucket = (): 'morning' | 'evening' | 'general' => {
   return 'general';
 };
 
+/**
+ * Builds a random Islamic reminder — prefers adhkar, then Quran/hadith fallbacks.
+ */
 export const buildIslamicNotificationPayload = async (
   settings: IslamicNotificationSettings,
+  at: Date = new Date(),
 ): Promise<IslamicNotificationPayload> => {
-  const bucket = getTimeBucket();
+  const bucket = getTimeBucket(at);
   const options: IslamicNotificationPayload[] = [];
 
   if (settings.includeAdhkar && bucket === 'morning') {
@@ -48,7 +57,7 @@ export const buildIslamicNotificationPayload = async (
         reference: item.translatedText || 'أذكار الصباح — حصن المسلم',
       });
     } catch {
-      // fall through to other content types
+      // fall through
     }
   }
 
@@ -61,6 +70,20 @@ export const buildIslamicNotificationPayload = async (
         title: 'ذكر مسائي',
         body: truncate(item.arabicText),
         reference: item.translatedText || 'أذكار المساء — حصن المسلم',
+      });
+    } catch {
+      // fall through
+    }
+  }
+
+  if (settings.includeAdhkar) {
+    try {
+      const dhikr = await adhkarClient.getRandomDhikr('ar');
+      options.push({
+        kind: 'general_dhikr',
+        title: 'ذكر',
+        body: truncate(dhikr.arabicText),
+        reference: dhikr.translatedText,
       });
     } catch {
       // fall through
@@ -95,20 +118,6 @@ export const buildIslamicNotificationPayload = async (
     }
   }
 
-  if (settings.includeAdhkar) {
-    try {
-      const dhikr = await adhkarClient.getRandomDhikr('ar');
-      options.push({
-        kind: 'general_dhikr',
-        title: 'ذكر',
-        body: truncate(dhikr.arabicText),
-        reference: dhikr.translatedText,
-      });
-    } catch {
-      // fall through
-    }
-  }
-
   if (options.length === 0) {
     return {
       kind: 'general_dhikr',
@@ -117,7 +126,15 @@ export const buildIslamicNotificationPayload = async (
     };
   }
 
-  return options[Math.floor(Math.random() * options.length)];
+  // Prefer adhkar when available.
+  const adhkarOnly = options.filter(
+    item =>
+      item.kind === 'morning_adhkar' ||
+      item.kind === 'evening_adhkar' ||
+      item.kind === 'general_dhikr',
+  );
+  const pool = adhkarOnly.length > 0 ? adhkarOnly : options;
+  return pool[Math.floor(Math.random() * pool.length)];
 };
 
 export const ensureIslamicNotificationChannel = async () => {
@@ -125,7 +142,8 @@ export const ensureIslamicNotificationChannel = async () => {
     await notifee.createChannel({
       id: CHANNEL_ID,
       name: 'Islamic reminders',
-      importance: AndroidImportance.HIGH,
+      importance: AndroidImportance.DEFAULT,
+      sound: 'default',
     });
   }
 };
@@ -136,6 +154,7 @@ export const displayIslamicNotification = async (payload: IslamicNotificationPay
     title: payload.title,
     body: payload.body,
     subtitle: payload.reference,
+    data: {kind: 'random_adhkar'},
     android: {
       channelId: CHANNEL_ID,
       pressAction: {id: 'default'},
@@ -148,9 +167,60 @@ export const displayIslamicNotification = async (payload: IslamicNotificationPay
 };
 
 export const cancelIslamicHourlyNotifications = async () => {
-  await notifee.cancelTriggerNotifications(NOTIFICATION_IDS);
+  // Cancel both legacy hourly ids and new random ids.
+  const legacy = Array.from({length: 24}, (_, index) => `islamic-hourly-${index}`);
+  await Promise.all(
+    [...legacy, ...NOTIFICATION_IDS].map(id =>
+      notifee.cancelNotification(id).catch(() => undefined),
+    ),
+  );
 };
 
+/**
+ * Picks random wall-clock times within waking hours for a given day.
+ * Avoids clustering by sorting and spacing ~45+ minutes apart when possible.
+ */
+const pickRandomTimesForDay = (day: Date, count: number): Date[] => {
+  const startHour = 7;
+  const endHour = 22;
+  const windowMinutes = (endHour - startHour) * 60;
+  const candidates: number[] = [];
+
+  for (let i = 0; i < count * 3; i += 1) {
+    candidates.push(Math.floor(Math.random() * windowMinutes));
+  }
+  candidates.sort((a, b) => a - b);
+
+  const picked: number[] = [];
+  for (const minute of candidates) {
+    if (picked.length >= count) {
+      break;
+    }
+    const last = picked[picked.length - 1];
+    if (last == null || minute - last >= 45) {
+      picked.push(minute);
+    }
+  }
+
+  while (picked.length < count) {
+    picked.push(Math.floor(Math.random() * windowMinutes));
+  }
+
+  return picked
+    .slice(0, count)
+    .sort((a, b) => a - b)
+    .map(offset => {
+      const at = new Date(day);
+      at.setHours(startHour, 0, 0, 0);
+      at.setMinutes(at.getMinutes() + offset);
+      return at;
+    });
+};
+
+/**
+ * Schedules random-time notifications with random adhkar (and optional Quran/hadith).
+ * Replaces the old fixed hourly schedule.
+ */
 export const scheduleIslamicHourlyNotifications = async (
   settings: IslamicNotificationSettings,
 ) => {
@@ -163,27 +233,56 @@ export const scheduleIslamicHourlyNotifications = async (
   await ensureIslamicNotificationChannel();
 
   const now = Date.now();
-  for (let hourOffset = 1; hourOffset <= 24; hourOffset += 1) {
-    const triggerAt = now + hourOffset * 60 * 60 * 1000;
-    const trigger: TimestampTrigger = {
-      type: TriggerType.TIMESTAMP,
-      timestamp: triggerAt,
-      repeatFrequency: RepeatFrequency.HOURLY,
-    };
+  let idIndex = 0;
 
-    await notifee.createTriggerNotification(
-      {
-        id: NOTIFICATION_IDS[hourOffset - 1],
-        title: 'Islamic reminder',
-        body: 'Tap to refresh your daily adhkar and Quranic reflection.',
-        android: {
-          channelId: CHANNEL_ID,
-          pressAction: {id: 'default'},
-          smallIcon: 'ic_launcher',
-        },
-      },
-      trigger,
-    );
+  for (let dayOffset = 0; dayOffset < DAYS_AHEAD; dayOffset += 1) {
+    const day = new Date();
+    day.setHours(12, 0, 0, 0);
+    day.setDate(day.getDate() + dayOffset);
+    const times = pickRandomTimesForDay(day, RANDOM_PER_DAY);
+
+    for (const at of times) {
+      if (idIndex >= NOTIFICATION_IDS.length) {
+        break;
+      }
+      if (at.getTime() <= now + 60_000) {
+        idIndex += 1;
+        continue;
+      }
+
+      const payload = await buildIslamicNotificationPayload(settings, at);
+      const trigger: TimestampTrigger = {
+        type: TriggerType.TIMESTAMP,
+        timestamp: at.getTime(),
+      };
+
+      try {
+        await notifee.createTriggerNotification(
+          {
+            id: NOTIFICATION_IDS[idIndex],
+            title: payload.title,
+            body: payload.body,
+            subtitle: payload.reference,
+            data: {
+              kind: 'random_adhkar',
+              contentKind: payload.kind,
+            },
+            android: {
+              channelId: CHANNEL_ID,
+              pressAction: {id: 'default'},
+              smallIcon: 'ic_launcher',
+            },
+            ios: {
+              sound: 'default',
+            },
+          },
+          trigger,
+        );
+      } catch (error) {
+        console.log('islamicNotificationService.schedule random Error =>', error);
+      }
+      idIndex += 1;
+    }
   }
 };
 

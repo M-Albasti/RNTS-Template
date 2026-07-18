@@ -60,6 +60,7 @@ type SearchResult =
       title: string;
       subtitle: string;
       categoryId: number;
+      itemId?: number;
     }
   | {
       kind: 'hadith';
@@ -104,7 +105,7 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
     showQuran &&
     (scope === 'all' || quranMode === 'ayah') &&
     activeQuery.length >= 1;
-  const adhkarSearchEnabled = showAdhkar && activeQuery.length >= 1;
+  const adhkarSearchEnabled = showAdhkar && activeQuery.length >= 2;
   const hadithSearchEnabled = showHadith && activeQuery.length >= 2;
 
   const ayahRef = useMemo(
@@ -115,18 +116,17 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
   const {data: surahResults, isFetching: surahLoading} = useQuranSurahNameSearchQuery(
     includeSurahSearch ? activeQuery : '',
   );
-  const {data: textResults, isFetching: textLoading} = useQuranSearchQuery(
+  const {data: textResults, isFetching: textLoading, isError: textError} = useQuranSearchQuery(
     includeTextSearch ? activeQuery : '',
     language === 'ar' ? 'ar' : 'en',
   );
-  const {data: adhkarResults, isFetching: adhkarLoading} = useAdhkarSearchQuery(
-    adhkarSearchEnabled ? activeQuery : '',
-    language as 'ar' | 'en',
-  );
+  const {data: adhkarResults, isFetching: adhkarLoading, isError: adhkarError} =
+    useAdhkarSearchQuery(adhkarSearchEnabled ? activeQuery : '', language as 'ar' | 'en');
   const {
     data: hadithResults,
     isFetching: hadithLoading,
     isError: hadithError,
+    refetch: refetchHadith,
   } = useHadithSearchQuery(
     hadithSearchEnabled ? activeQuery : '',
     'all',
@@ -222,10 +222,17 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
       merged.push(
         ...adhkarResults.map(item => ({
           kind: 'adhkar' as const,
-          id: `adhkar-${item.id}`,
-          title: item.title,
-          subtitle: t('islamic.search.adhkarCategory'),
-          categoryId: item.id,
+          id: item.isCategoryMatch
+            ? `adhkar-cat-${item.categoryId}`
+            : `adhkar-${item.categoryId}-${item.itemId}`,
+          title: item.categoryTitle,
+          subtitle: item.isCategoryMatch
+            ? t('islamic.search.adhkarCategory')
+            : `${t('islamic.search.adhkarDhikr')} · ${
+                item.arabicText || item.translatedText
+              }`,
+          categoryId: item.categoryId,
+          itemId: item.isCategoryMatch ? undefined : item.itemId,
         })),
       );
     }
@@ -309,11 +316,15 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
   const idleHint =
     scope === 'all'
       ? t('islamic.search.allHint')
-      : quranMode === 'ayah'
-        ? t('islamic.search.ayahHint')
-        : quranMode === 'surah'
-          ? t('islamic.search.surahHint')
-          : t('islamic.search.textHint');
+      : scope === 'adhkar'
+        ? t('islamic.search.adhkarHint')
+        : scope === 'hadith'
+          ? t('islamic.search.hadithHint')
+          : quranMode === 'ayah'
+            ? t('islamic.search.ayahHint')
+            : quranMode === 'surah'
+              ? t('islamic.search.surahHint')
+              : t('islamic.search.textHint');
 
   const openResult = (item: SearchResult) => {
     add(trimmedQuery || item.title, scope);
@@ -328,6 +339,7 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
       navigation.navigate('AdhkarDetail', {
         categoryId: item.categoryId,
         title: item.title,
+        itemId: item.itemId,
       });
       return;
     }
@@ -363,9 +375,14 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
   const minCharsNotMet =
     !showIdle &&
     !isDebouncing &&
-    ((showHadith && !showQuran && !showAdhkar && activeQuery.length < 2) ||
+    results.length === 0 &&
+    ((scope === 'hadith' && activeQuery.length < 2) ||
+      (scope === 'adhkar' && activeQuery.length < 2) ||
       (scope === 'quran' && quranMode === 'text' && activeQuery.length < 2) ||
-      (scope === 'hadith' && activeQuery.length < 2));
+      (scope === 'all' &&
+        activeQuery.length < 2 &&
+        !ayahRef &&
+        !(surahResults && surahResults.length > 0)));
 
   return (
     <ScreenContainer bottomPadding="xxl">
@@ -433,8 +450,19 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
         </>
       ) : showLoading ? (
         <IslamicLoadingState />
-      ) : hadithError && results.length === 0 ? (
-        <IslamicErrorState message={t('islamic.errors.loadFailed')} />
+      ) : results.length === 0 &&
+        ((hadithSearchEnabled && hadithError) ||
+          (includeTextSearch && textError) ||
+          (adhkarSearchEnabled && adhkarError)) &&
+        !localFetching ? (
+        <IslamicErrorState
+          message={t('islamic.errors.loadFailed')}
+          onRetry={() => {
+            if (hadithSearchEnabled) {
+              void refetchHadith();
+            }
+          }}
+        />
       ) : minCharsNotMet ? (
         <EmptyView
           compact
