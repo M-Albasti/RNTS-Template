@@ -76,13 +76,35 @@ export type RootStackParamList = {
   QuranSearch: undefined;
   IslamicUnifiedSearch: undefined;
   AdhkarCategories: undefined;
-  AdhkarDetail: {categoryId: number; title: string};
+  /** Hisn chapters for one browse group (Daily, Home, Other, …). */
+  AdhkarGroup: {
+    groupId: 'daily' | 'home' | 'prayer' | 'travel' | 'protection' | 'other';
+    title?: string;
+  };
+  AdhkarDetail: {categoryId: number; title: string; itemId?: number};
+  /**
+   * Guided adhkar reader with audio.
+   * Pass `sessionId` for daily sessions (multi-reciter) or `categoryId` for any Hisn category.
+   */
+  AdhkarReader: {
+    sessionId?:
+      | 'morning'
+      | 'evening'
+      | 'sleep'
+      | 'waking'
+      | 'afterPrayer'
+      | 'dayNight';
+    categoryId?: number;
+    title?: string;
+  };
   HadithHub: undefined;
   HadithEditions: {filter: 'all' | 'sahih' | 'weak'; title: string};
   HadithList: {slug: string; title: string; filter?: 'all' | 'sahih' | 'weak'};
   HadithDetail: {hadithId: string; title: string};
   HadithSearch: undefined;
   PrayerTimes: undefined;
+  PrayerLocationSetup: undefined;
+  Qibla: undefined;
   IslamicSettings: undefined;
   CameraHub: undefined;
   SnapCamera: undefined;

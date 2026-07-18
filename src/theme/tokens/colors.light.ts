@@ -59,4 +59,23 @@ export const lightColors: SemanticColors = {
     '#67E8F9', // cyan
     '#A3E635', // lime
   ],
+  mushafPage: '#F7F0E2',
+  mushafBorderOuter: '#8B6914',
+  mushafBorder: '#C4A574',
+  mushafBanner: '#E8D5A8',
+  mushafInk: '#1A1208',
+  mushafMeta: '#5C4A32',
+  mushafHighlight: '#A8D4E899',
+  mushafOrnament: '#9A7B2F',
+  hadithChrome: '#0F5C4C',
+  hadithChromeMuted: '#147A66',
+  hadithOnChrome: '#FFFFFF',
+  hadithReaderBg: '#121212',
+  hadithReaderInk: '#F5F5F5',
+  hadithAccent: '#D4A017',
+  prayerHero: '#0B3D5C',
+  prayerHeroMuted: '#145A86',
+  prayerAccent: '#F5C16C',
+  prayerOnHero: '#FFFFFF',
+  prayerActiveMuted: '#E0F2FE',
 };

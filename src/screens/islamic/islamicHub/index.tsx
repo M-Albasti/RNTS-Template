@@ -164,8 +164,14 @@ export const IslamicLoadingState = (): React.JSX.Element => (
   </View>
 );
 
-export const IslamicErrorState = ({message}: {message: string}): React.JSX.Element => (
-  <ApiErrorView message={message} />
+export const IslamicErrorState = ({
+  message,
+  onRetry,
+}: {
+  message: string;
+  onRetry?: () => void;
+}): React.JSX.Element => (
+  <ApiErrorView message={message} onRetry={onRetry} compact />
 );
 
 export default IslamicHub;

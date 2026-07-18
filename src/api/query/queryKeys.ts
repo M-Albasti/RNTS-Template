@@ -39,6 +39,10 @@ export const queryKeys = {
       [...queryKeys.all, 'islamic', 'quran', 'mushaf', page] as const,
     quranPageForAyah: (surah: number, ayah: number) =>
       [...queryKeys.all, 'islamic', 'quran', 'page-for', surah, ayah] as const,
+    quranAyahTiming: (surah: number, readId: number) =>
+      [...queryKeys.all, 'islamic', 'quran', 'ayah-timing', surah, readId] as const,
+    quranSurahAyahPages: (surah: number) =>
+      [...queryKeys.all, 'islamic', 'quran', 'ayah-pages', surah] as const,
     adhkarCategories: (lang: AdhkarLanguage) =>
       [...queryKeys.all, 'islamic', 'adhkar', 'categories', lang] as const,
     adhkarCategory: (categoryId: number, lang: AdhkarLanguage) =>
@@ -50,6 +54,8 @@ export const queryKeys = {
       [...queryKeys.all, 'islamic', 'hadith', 'books', slug] as const,
     hadithList: (slug: string, page: number, language: string) =>
       [...queryKeys.all, 'islamic', 'hadith', 'list', slug, page, language] as const,
+    hadithListInfinite: (slug: string, language: string) =>
+      [...queryKeys.all, 'islamic', 'hadith', 'list-infinite', slug, language] as const,
     hadithDetail: (id: string, language: string) =>
       [...queryKeys.all, 'islamic', 'hadith', 'detail', id, language] as const,
     hadithSearch: (
@@ -59,7 +65,23 @@ export const queryKeys = {
       page = 1,
     ) =>
       [...queryKeys.all, 'islamic', 'hadith', 'search', query, filter, language, page] as const,
-    prayerTimings: (city: string, country: string) =>
-      [...queryKeys.all, 'islamic', 'prayer', city, country] as const,
+    prayerTimings: (city: string, country: string, dateKey = '') =>
+      [...queryKeys.all, 'islamic', 'prayer', 'city', city, country, dateKey] as const,
+    prayerTimingsCoords: (
+      lat: number,
+      lng: number,
+      timezone?: string | null,
+      dateKey = '',
+    ) =>
+      [
+        ...queryKeys.all,
+        'islamic',
+        'prayer',
+        'coords',
+        lat,
+        lng,
+        timezone ?? '',
+        dateKey,
+      ] as const,
   },
 } as const;

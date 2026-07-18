@@ -1,5 +1,6 @@
 import React from 'react';
-import {FlatList, Pressable, View} from 'react-native';
+import {Pressable, View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Card from '@atoms/Card';
@@ -40,7 +41,7 @@ const ActiveOrders = ({navigation}: Props): React.JSX.Element => {
           onAction={() => navigation.navigate('NewDelivery')}
         />
       ) : (
-        <FlatList
+        <FlashList
           data={orders}
           keyExtractor={item => item.id}
           scrollEnabled={false}
