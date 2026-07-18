@@ -63,9 +63,11 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
 
   const handleSurahChange = useCallback(
     (nextSurah: number) => {
-      navigation.replace('QuranTafsirReader', {surahNumber: nextSurah, ayahNumber: 1});
+      // Keep the same screen mounted so continuous audio is not stopped by unmount.
+      navigation.setParams({surahNumber: nextSurah, ayahNumber: 1});
+      dispatch(setLastReadPosition({surahNumber: nextSurah, ayahNumber: 1}));
     },
-    [navigation],
+    [dispatch, navigation],
   );
 
   const audio = useQuranAudioPlayer({

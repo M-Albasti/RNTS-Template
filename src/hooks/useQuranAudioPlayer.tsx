@@ -30,6 +30,10 @@ export const useQuranAudioPlayer = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasLoadedTrack, setHasLoadedTrack] = useState(false);
   const loadedKeyRef = useRef<string | null>(null);
+  /** When we advance surah ourselves, skip the hard reset so audio keeps playing. */
+  const skipExternalResetRef = useRef(false);
+  const surahNumberRef = useRef(surahNumber);
+  surahNumberRef.current = surahNumber;
 
   const loadAndPlaySurah = useCallback(
     async (targetSurah: number) => {
@@ -37,24 +41,25 @@ export const useQuranAudioPlayer = ({
         setIsLoading(true);
         const url = buildSurahAudioUrl(reciterId, targetSurah);
         const key = `${reciterId}:${targetSurah}`;
-        SoundPlayer.loadUrl(url);
-        SoundPlayer.play();
+        SoundPlayer.playUrl(url);
         loadedKeyRef.current = key;
         setHasLoadedTrack(true);
         setIsPlaying(true);
         setActiveAyahNumber(1);
         onAyahChange?.(1);
-        if (targetSurah !== surahNumber) {
+        if (targetSurah !== surahNumberRef.current) {
+          skipExternalResetRef.current = true;
           onSurahChange?.(targetSurah);
         }
       } catch (error) {
         console.log('useQuranAudioPlayer loadAndPlaySurah Error =>', error);
         setIsPlaying(false);
+        setHasLoadedTrack(false);
       } finally {
         setIsLoading(false);
       }
     },
-    [onAyahChange, onSurahChange, reciterId, surahNumber],
+    [onAyahChange, onSurahChange, reciterId],
   );
 
   const playAyah = useCallback(
@@ -75,16 +80,22 @@ export const useQuranAudioPlayer = ({
 
   const resume = useCallback(() => {
     try {
-      if (!hasLoadedTrack) {
+      if (!hasLoadedTrack || loadedKeyRef.current !== `${reciterId}:${surahNumber}`) {
         loadAndPlaySurah(surahNumber);
         return;
       }
-      SoundPlayer.play();
+      SoundPlayer.resume();
       setIsPlaying(true);
     } catch (error) {
-      console.log('useQuranAudioPlayer resume Error =>', error);
+      // Some platforms only expose play() after pause.
+      try {
+        SoundPlayer.play();
+        setIsPlaying(true);
+      } catch (playError) {
+        console.log('useQuranAudioPlayer resume Error =>', playError ?? error);
+      }
     }
-  }, [hasLoadedTrack, loadAndPlaySurah, surahNumber]);
+  }, [hasLoadedTrack, loadAndPlaySurah, reciterId, surahNumber]);
 
   const stop = useCallback(() => {
     try {
@@ -102,12 +113,12 @@ export const useQuranAudioPlayer = ({
       pause();
       return;
     }
-    if (hasLoadedTrack) {
+    if (hasLoadedTrack && loadedKeyRef.current === `${reciterId}:${surahNumber}`) {
       resume();
       return;
     }
     playAyah();
-  }, [hasLoadedTrack, isPlaying, pause, playAyah, resume]);
+  }, [hasLoadedTrack, isPlaying, pause, playAyah, reciterId, resume, surahNumber]);
 
   /** Previous / next = adjacent surah (continuous chapter playback). */
   const playNext = useCallback(() => {
@@ -138,6 +149,17 @@ export const useQuranAudioPlayer = ({
   }, [onSurahFinished]);
 
   useEffect(() => {
+    if (skipExternalResetRef.current) {
+      skipExternalResetRef.current = false;
+      setActiveAyahNumber(1);
+      return;
+    }
+
+    try {
+      SoundPlayer.stop();
+    } catch {
+      // ignore
+    }
     setActiveAyahNumber(initialAyahNumber);
     setHasLoadedTrack(false);
     loadedKeyRef.current = null;

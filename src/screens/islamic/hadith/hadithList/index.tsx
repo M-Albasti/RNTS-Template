@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -66,6 +66,16 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
     }
     return source.filter(item => isWeakHadith(item.grades));
   }, [data?.items, filter]);
+
+  // Weak filter is client-side: auto-advance past pages with no weak grades.
+  useEffect(() => {
+    if (filter !== 'weak' || isLoading || isFetching || isError) {
+      return;
+    }
+    if (items.length === 0 && page < totalPages) {
+      setPage(current => current + 1);
+    }
+  }, [filter, isError, isFetching, isLoading, items.length, page, totalPages]);
 
   const canGoNext = page < totalPages && !isFetching;
   const canGoPrev = page > 1 && !isFetching;

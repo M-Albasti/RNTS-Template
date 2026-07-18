@@ -25,8 +25,8 @@ export const queryKeys = {
     quranJuzList: () => [...queryKeys.all, 'islamic', 'quran', 'juz'] as const,
     quranSurahSearch: (query: string) =>
       [...queryKeys.all, 'islamic', 'quran', 'surah-search', query] as const,
-    quranSearch: (query: string) =>
-      [...queryKeys.all, 'islamic', 'quran', 'search', query] as const,
+    quranSearch: (query: string, language = 'ar') =>
+      [...queryKeys.all, 'islamic', 'quran', 'search', query, language] as const,
     quranMushafPage: (page: number) =>
       [...queryKeys.all, 'islamic', 'quran', 'mushaf', page] as const,
     quranPageForAyah: (surah: number, ayah: number) =>
@@ -44,8 +44,13 @@ export const queryKeys = {
       [...queryKeys.all, 'islamic', 'hadith', 'list', slug, page, language] as const,
     hadithDetail: (id: string, language: string) =>
       [...queryKeys.all, 'islamic', 'hadith', 'detail', id, language] as const,
-    hadithSearch: (query: string, filter: HadithCollectionFilter, language: string) =>
-      [...queryKeys.all, 'islamic', 'hadith', 'search', query, filter, language] as const,
+    hadithSearch: (
+      query: string,
+      filter: HadithCollectionFilter,
+      language: string,
+      page = 1,
+    ) =>
+      [...queryKeys.all, 'islamic', 'hadith', 'search', query, filter, language, page] as const,
     prayerTimings: (city: string, country: string) =>
       [...queryKeys.all, 'islamic', 'prayer', city, country] as const,
   },

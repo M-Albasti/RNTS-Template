@@ -51,7 +51,11 @@ export const adhkarClient = {
     if (!normalized) {
       return categories;
     }
-    return categories.filter(category => category.title.toLowerCase().includes(normalized));
+    return categories.filter(
+      category =>
+        category.title.toLowerCase().includes(normalized) ||
+        String(category.id) === normalized,
+    );
   },
 };
 

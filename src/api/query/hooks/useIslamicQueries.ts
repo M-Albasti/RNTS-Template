@@ -38,13 +38,15 @@ export const useQuranSurahNameSearchQuery = (query: string) =>
     queryKey: queryKeys.islamic.quranSurahSearch(query),
     queryFn: () => quranClient.searchSurahByName(query),
     enabled: query.trim().length >= 1,
+    staleTime: 1000 * 60 * 60,
   });
 
 export const useQuranSearchQuery = (query: string, language = 'ar') =>
   useQuery({
-    queryKey: queryKeys.islamic.quranSearch(query),
+    queryKey: queryKeys.islamic.quranSearch(query, language),
     queryFn: () => quranClient.searchQuranText(query, language),
     enabled: query.trim().length >= 2,
+    staleTime: 1000 * 60 * 5,
   });
 
 export const useQuranMushafPageQuery = (pageNumber: number) =>
@@ -84,6 +86,7 @@ export const useAdhkarSearchQuery = (query: string, lang: AdhkarLanguage) =>
     queryFn: () => adhkarClient.searchCategories(query, lang),
     enabled: query.trim().length >= 1,
     staleTime: 1000 * 60 * 60 * 12,
+    placeholderData: previous => previous,
   });
 
 export const useHadithEditionsQuery = () =>
@@ -119,11 +122,13 @@ export const useHadithSearchQuery = (
   query: string,
   filter: HadithCollectionFilter = 'all',
   language = 'en',
+  page = 1,
 ) =>
   useQuery({
-    queryKey: queryKeys.islamic.hadithSearch(query, filter, language),
-    queryFn: () => hadithClient.searchHadiths(query, filter, language),
+    queryKey: queryKeys.islamic.hadithSearch(query, filter, language, page),
+    queryFn: () => hadithClient.searchHadiths(query, filter, language, page),
     enabled: query.trim().length >= 2,
+    staleTime: 1000 * 60 * 5,
   });
 
 export const usePrayerTimingsQuery = (city: string, country: string) =>
