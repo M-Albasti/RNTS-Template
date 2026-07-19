@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
-  FlatList,
   LayoutChangeEvent,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useIsFocused} from '@react-navigation/native';
 import {useTranslation} from 'react-i18next';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -163,7 +163,7 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
           <TextView text={t('camera.snapTitle')} style={styles.overlayText} />
         </View>
 
-        <FlatList
+        <FlashList
           horizontal
           data={CAMERA_FILTERS}
           keyExtractor={item => item.id}

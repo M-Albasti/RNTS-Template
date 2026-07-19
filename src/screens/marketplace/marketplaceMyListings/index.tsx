@@ -1,5 +1,6 @@
 import React from 'react';
-import {Alert, FlatList} from 'react-native';
+import {Alert} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -46,7 +47,7 @@ const MarketplaceMyListings = ({navigation}: Props): React.JSX.Element => {
           />
         </>
       ) : (
-        <FlatList
+        <FlashList
           data={listings}
           keyExtractor={item => item.id}
           scrollEnabled={false}

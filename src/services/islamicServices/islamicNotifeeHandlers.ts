@@ -1,33 +1,44 @@
-import notifee, {EventType} from '@notifee/react-native';
+import notifee, {EventType, type Event} from '@notifee/react-native';
 
-import {
-  buildIslamicNotificationPayload,
-  displayIslamicNotification,
-} from '@services/islamicServices/islamicNotificationService';
-import type {IslamicNotificationSettings} from '@Types/islamicTypes';
+import {playAdhan} from '@services/islamicServices/adhanAudioService';
+import {handleQuranMediaNotifeeEvent} from '@services/quranAudioService/quranMediaNotification';
 
 declare global {
-  // eslint-disable-next-line no-var
   var __RNTS_ISLAMIC_NOTIFEE_HANDLERS__: boolean | undefined;
 }
 
-const defaultSettings: IslamicNotificationSettings = {
-  enabled: true,
-  hourlyReminders: true,
-  includeQuran: true,
-  includeHadith: true,
-  includeAdhkar: true,
+const getNotificationKind = (event: Event): string | undefined => {
+  const data = event.detail.notification?.data;
+  if (!data || typeof data !== 'object') {
+    return undefined;
+  }
+  const kind = (data as {kind?: unknown}).kind;
+  return typeof kind === 'string' ? kind : undefined;
 };
 
-export const handleIslamicNotifeeEvent = async (type: EventType) => {
-  if (
-    type === EventType.DELIVERED ||
-    type === EventType.TRIGGER_NOTIFICATION_CREATED ||
-    type === EventType.PRESS
-  ) {
-    const payload = await buildIslamicNotificationPayload(defaultSettings);
-    await displayIslamicNotification(payload);
+/**
+ * Routes Notifee events:
+ * - prayer_adhan → play Adhan audio
+ * - random_adhkar / islamic content → already has body; no duplicate display
+ * - quran_playback → media controls (handled separately)
+ */
+export const handleIslamicNotifeeEvent = async (event: Event) => {
+  const kind = getNotificationKind(event);
+  const {type} = event;
+
+  if (kind === 'prayer_adhan') {
+    // Play Adhan on press only — avoids overlap with OS notification sound on DELIVERED.
+    if (type === EventType.PRESS) {
+      const data = event.detail.notification?.data as
+        | {adhanUrl?: string; adhanSoundId?: string}
+        | undefined;
+      playAdhan(data?.adhanUrl || data?.adhanSoundId);
+    }
+    return;
   }
+
+  // Random adhkar / other content notifications already include their text.
+  // Do not spawn a second notification on DELIVERED (old bug).
 };
 
 export const registerIslamicNotifeeHandlers = () => {
@@ -37,11 +48,22 @@ export const registerIslamicNotifeeHandlers = () => {
 
   globalThis.__RNTS_ISLAMIC_NOTIFEE_HANDLERS__ = true;
 
-  notifee.onForegroundEvent(async ({type}) => {
-    await handleIslamicNotifeeEvent(type);
+  // Keeps the Android FGS alive while Quran / Adhan audio plays from the shade.
+  notifee.registerForegroundService(() => new Promise(() => undefined));
+
+  notifee.onForegroundEvent(async event => {
+    await handleQuranMediaNotifeeEvent(event);
+    if (getNotificationKind(event) === 'quran_playback') {
+      return;
+    }
+    await handleIslamicNotifeeEvent(event);
   });
 
-  notifee.onBackgroundEvent(async ({type}) => {
-    await handleIslamicNotifeeEvent(type);
+  notifee.onBackgroundEvent(async event => {
+    await handleQuranMediaNotifeeEvent(event);
+    if (getNotificationKind(event) === 'quran_playback') {
+      return;
+    }
+    await handleIslamicNotifeeEvent(event);
   });
 };

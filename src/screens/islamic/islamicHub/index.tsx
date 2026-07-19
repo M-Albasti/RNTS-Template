@@ -4,25 +4,51 @@ import {useTranslation} from 'react-i18next';
 
 import ApiErrorView from '@atoms/ApiErrorView';
 import Heading from '@atoms/Heading';
+import IconView from '@atoms/Icon';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
+import {useAppSelector} from '@hooks/useAppSelector';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'IslamicHub'>};
 
 const IslamicHub = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
+  const {sizes} = useThemeTokens();
+  const lastRead = useAppSelector(state => state.islamic.lastRead);
+
   const styles = useThemedStyles(tokens => ({
     hero: {
-      backgroundColor: tokens.colors.primary,
-      borderRadius: tokens.radius.lg,
+      borderRadius: tokens.radius.xl ?? tokens.radius.lg,
       padding: tokens.spacing.lg,
+      backgroundColor: '#0F3D2E',
+      overflow: 'hidden' as const,
+      ...tokens.shadows.md,
     },
-    heroText: {color: tokens.colors.textInverse},
+    heroGlow: {
+      position: 'absolute' as const,
+      top: -40,
+      right: -20,
+      width: 160,
+      height: 160,
+      borderRadius: 80,
+      backgroundColor: 'rgba(212, 175, 55, 0.18)',
+    },
+    heroText: {color: '#F5E6C8'},
+    heroTitle: {color: '#F8F1E3'},
+    continueCard: {
+      marginTop: tokens.spacing.md,
+      backgroundColor: 'rgba(255,255,255,0.1)',
+      borderRadius: tokens.radius.md,
+      padding: tokens.spacing.md,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: 'rgba(245, 230, 200, 0.25)',
+    },
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
     card: {
       flex: tokens.layout.flex.fill,
@@ -32,8 +58,18 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
       padding: tokens.spacing.md,
       borderWidth: tokens.layout.borderWidth.sm,
       borderColor: tokens.colors.border,
+      minHeight: 120,
+      ...tokens.shadows.sm,
     },
     cardPressed: {backgroundColor: tokens.colors.surfaceSecondary},
+    iconWrap: {
+      width: 40,
+      height: 40,
+      borderRadius: tokens.radius.md,
+      backgroundColor: 'rgba(15, 61, 46, 0.1)',
+      ...tokens.layout.presets.center,
+      marginBottom: tokens.spacing.sm,
+    },
   }));
 
   const modules = [
@@ -41,31 +77,37 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
       title: t('islamic.modules.quran.title'),
       subtitle: t('islamic.modules.quran.subtitle'),
       route: 'QuranHub' as const,
+      icon: 'book-outline',
     },
     {
       title: t('islamic.search.title'),
       subtitle: t('islamic.search.hubSubtitle'),
       route: 'IslamicUnifiedSearch' as const,
+      icon: 'search-outline',
     },
     {
       title: t('islamic.modules.adhkar.title'),
       subtitle: t('islamic.modules.adhkar.subtitle'),
       route: 'AdhkarCategories' as const,
+      icon: 'heart-outline',
     },
     {
       title: t('islamic.modules.hadith.title'),
       subtitle: t('islamic.modules.hadith.subtitle'),
       route: 'HadithHub' as const,
+      icon: 'library-outline',
     },
     {
       title: t('islamic.modules.prayer.title'),
       subtitle: t('islamic.modules.prayer.subtitle'),
       route: 'PrayerTimes' as const,
+      icon: 'time-outline',
     },
     {
       title: t('islamic.modules.settings.title'),
       subtitle: t('islamic.modules.settings.subtitle'),
       route: 'IslamicSettings' as const,
+      icon: 'notifications-outline',
     },
   ];
 
@@ -73,13 +115,28 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader title={t('islamic.title')} showBack={false} />
       <View style={styles.hero}>
-        <TextView
-          text={t('islamic.hubSubtitle')}
-          variant="bodySmall"
-          style={styles.heroText}
-        />
+        <View style={styles.heroGlow} />
+        <TextView text={t('islamic.hubSubtitle')} variant="bodySmall" style={styles.heroText} />
         <Spacer size="xs" />
-        <Heading text={t('islamic.hubTitle')} level="h2" align="center" />
+        <Heading text={t('islamic.hubTitle')} level="h1" style={styles.heroTitle} />
+        <Pressable
+          style={styles.continueCard}
+          onPress={() =>
+            navigation.navigate('QuranReader', {
+              surahNumber: lastRead.surahNumber,
+              ayahNumber: lastRead.ayahNumber,
+            })
+          }>
+          <TextView text={t('islamic.quran.continueReading')} variant="caption" style={styles.heroText} />
+          <Heading
+            text={t('islamic.quran.continueReadingRef', {
+              surah: lastRead.surahNumber,
+              ayah: lastRead.ayahNumber,
+            })}
+            level="h3"
+            style={styles.heroTitle}
+          />
+        </Pressable>
       </View>
       <Spacer size="lg" />
       <View style={styles.grid}>
@@ -88,6 +145,9 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
             key={module.route}
             style={({pressed}) => [styles.card, pressed && styles.cardPressed]}
             onPress={() => navigation.navigate(module.route)}>
+            <View style={styles.iconWrap}>
+              <IconView iconType="Ionicons" name={module.icon} size={sizes.iconSm} />
+            </View>
             <Heading text={module.title} level="h3" />
             <Spacer size="xs" />
             <TextView text={module.subtitle} variant="caption" muted />
@@ -98,19 +158,11 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
   );
 };
 
-export default IslamicHub;
-
-export const IslamicLoadingState = (): React.JSX.Element => {
-  const styles = useThemedStyles(tokens => ({
-    wrap: {...tokens.layout.presets.center, padding: tokens.spacing.xl},
-  }));
-
-  return (
-    <View style={styles.wrap}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
-};
+export const IslamicLoadingState = (): React.JSX.Element => (
+  <View style={{padding: 24, alignItems: 'center'}}>
+    <ActivityIndicator />
+  </View>
+);
 
 export const IslamicErrorState = ({
   message,
@@ -121,3 +173,5 @@ export const IslamicErrorState = ({
 }): React.JSX.Element => (
   <ApiErrorView message={message} onRetry={onRetry} compact />
 );
+
+export default IslamicHub;

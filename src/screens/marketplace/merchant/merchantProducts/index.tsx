@@ -1,5 +1,6 @@
 import React from 'react';
-import {Alert, FlatList, Switch, View} from 'react-native';
+import {Alert, Switch, View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -49,7 +50,7 @@ const MerchantProducts = ({navigation}: Props): React.JSX.Element => {
       {merchantProducts.length === 0 ? (
         <TextView text={t('marketplace.merchant.noProducts')} align="center" muted />
       ) : (
-        <FlatList
+        <FlashList
           data={merchantProducts}
           keyExtractor={item => item.id}
           scrollEnabled={false}

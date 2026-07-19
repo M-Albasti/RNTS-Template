@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import ProductCard from '@molecules/marketplace/ProductCard';
@@ -12,8 +12,6 @@ import {addToCart} from '@redux/slices/marketplaceSlice';
 import {filterProducts} from '@helpers/marketplaceHelpers';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
-import {useThemedStyles} from '@theme/createThemedStyles';
-import {resolveMarketplaceProductsStyles} from './styles/resolveMarketplaceProductsStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {
@@ -29,8 +27,6 @@ const MarketplaceProducts = ({navigation, route}: Props): React.JSX.Element => {
   const searchQuery = route.params?.searchQuery;
   const filtered = filterProducts(products, {categoryId, searchQuery});
 
-  const styles = useThemedStyles(resolveMarketplaceProductsStyles);
-
   const category = MARKETPLACE_CATEGORIES.find(c => c.id === categoryId);
   const title = category
     ? t(category.nameKey)
@@ -44,11 +40,10 @@ const MarketplaceProducts = ({navigation, route}: Props): React.JSX.Element => {
       {filtered.length === 0 ? (
         <TextView text={t('marketplace.noProducts')} align="center" muted />
       ) : (
-        <FlatList
+        <FlashList
           data={filtered}
           keyExtractor={item => item.id}
           numColumns={2}
-          columnWrapperStyle={styles.grid}
           scrollEnabled={false}
           renderItem={({item}) => (
             <ProductCard

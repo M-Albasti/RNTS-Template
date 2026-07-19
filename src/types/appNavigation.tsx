@@ -69,18 +69,46 @@ export type RootStackParamList = {
   IslamicHub: undefined;
   QuranHub: undefined;
   QuranIndex: undefined;
-  QuranList: undefined;
+  QuranList: {mode?: 'mushaf' | 'tafsir'} | undefined;
   QuranReader: {surahNumber: number; ayahNumber?: number};
+  /** Ayah-by-ayah study reader with tafsir editions (separate from mushaf pages). */
+  QuranTafsirReader: {surahNumber: number; ayahNumber?: number};
   QuranSearch: undefined;
   IslamicUnifiedSearch: undefined;
   AdhkarCategories: undefined;
-  AdhkarDetail: {categoryId: number; title: string};
+  /** Hisn chapters for one browse group (Daily, Home, Other, …). */
+  AdhkarGroup: {
+    groupId: 'daily' | 'home' | 'prayer' | 'travel' | 'protection' | 'other';
+    title?: string;
+  };
+  AdhkarDetail: {categoryId: number; title: string; itemId?: number};
+  /**
+   * Guided adhkar reader with audio.
+   * Require `sessionId` (daily sessions) or `categoryId` (any Hisn category) — not both empty.
+   */
+  AdhkarReader:
+    | {
+        sessionId:
+          | 'morning'
+          | 'evening'
+          | 'sleep'
+          | 'waking'
+          | 'afterPrayer'
+          | 'dayNight';
+        title?: string;
+      }
+    | {
+        categoryId: number;
+        title?: string;
+      };
   HadithHub: undefined;
   HadithEditions: {filter: 'all' | 'sahih' | 'weak'; title: string};
   HadithList: {slug: string; title: string; filter?: 'all' | 'sahih' | 'weak'};
   HadithDetail: {hadithId: string; title: string};
   HadithSearch: undefined;
   PrayerTimes: undefined;
+  PrayerLocationSetup: undefined;
+  Qibla: undefined;
   IslamicSettings: undefined;
   CameraHub: undefined;
   SnapCamera: undefined;

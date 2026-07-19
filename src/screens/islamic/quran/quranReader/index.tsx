@@ -1,26 +1,35 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Pressable, View} from 'react-native';
-import {FlashList, type FlashListRef} from '@shopify/flash-list';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
-import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
 import ScreenHeader from '@atoms/ScreenHeader';
-import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 import TouchableIcon from '@atoms/TouchableIcon';
 
-import {useQuranSurahQuery} from '@api/query/hooks/useIslamicQueries';
+import {quranClient} from '@api/clients/quranClient';
+import {
+  useQuranAyahTimingQuery,
+  useQuranMushafPageQuery,
+  useQuranPageForAyahQuery,
+  useQuranSurahAyahPagesQuery,
+} from '@api/query/hooks/useIslamicQueries';
+import MushafPageSheet from '@molecules/islamic/MushafPageSheet';
 import QuranAudioBar from '@molecules/islamic/QuranAudioBar';
-import {QURAN_TAFSIR_EDITIONS} from '@constants/quranTafsirEditions';
+import {
+  getTimingReadId,
+  MUSHAF_PAGE_COUNT,
+  QURAN_RECITERS,
+} from '@constants/quranReciters';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useQuranAudioPlayer} from '@hooks/useQuranAudioPlayer';
 import {setLastReadPosition, updateQuranPreferences} from '@redux/slices/islamicSlice';
+import {quranAudioController} from '@services/quranAudioService/quranAudioController';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
-import type {QuranAyah} from '@Types/islamicTypes';
+import type {MushafPageAyah} from '@helpers/mushafPageHelpers';
 
 import {IslamicErrorState, IslamicLoadingState} from '@screens/islamic/islamicHub';
 
@@ -29,239 +38,249 @@ type Props = {
   route: AppRouteProp<'QuranReader'>;
 };
 
+/**
+ * Madinah mushaf page reader + continuous surah audio.
+ * Highlight uses mp3quran ayat_timing for the *playing* surah.
+ */
 const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   const {t, i18n} = useTranslation();
   const dispatch = useAppDispatch();
   const {sizes} = useThemeTokens();
-  const listRef = useRef<FlashListRef<QuranAyah>>(null);
-  const surahNumber = route.params.surahNumber;
+  const isAr = i18n.language.startsWith('ar');
+  const viewedSurahNumber = route.params.surahNumber;
   const initialAyahNumber = route.params.ayahNumber ?? 1;
-  const quranPreferences = useAppSelector(state => state.islamic.quranPreferences);
-  const {reciterId, tafsirEditionId, showTafsir, showTranslation} = quranPreferences;
+  const reciterId = useAppSelector(state => state.islamic.quranPreferences.reciterId);
+  const timingReadId = getTimingReadId(reciterId);
+  const [pageNumber, setPageNumber] = useState(1);
 
-  const {data, isLoading, isError} = useQuranSurahQuery(
-    surahNumber,
-    tafsirEditionId,
-    showTranslation,
+  const {data: resolvedPage} = useQuranPageForAyahQuery(
+    viewedSurahNumber,
+    initialAyahNumber,
+  );
+  const mushafQuery = useQuranMushafPageQuery(pageNumber);
+  const ayahTimingQuery = useQuranAyahTimingQuery(viewedSurahNumber, timingReadId);
+  const ayahPagesQuery = useQuranSurahAyahPagesQuery(
+    viewedSurahNumber,
+    timingReadId == null,
   );
 
-  const ayahs = useMemo(() => data?.ayahs ?? [], [data?.ayahs]);
-  const [focusedAyahNumber, setFocusedAyahNumber] = useState(initialAyahNumber);
+  useEffect(() => {
+    if (resolvedPage) {
+      setPageNumber(resolvedPage);
+    }
+  }, [resolvedPage]);
+
+  const pageFirstAyah = mushafQuery.data?.ayahs[0];
+  const pageSurahNumber = pageFirstAyah?.surahNumber ?? viewedSurahNumber;
+  const pageFirstAyahNumber = pageFirstAyah?.numberInSurah ?? 1;
 
   const handleAyahChange = useCallback(
-    (ayahNumber: number) => {
-      setFocusedAyahNumber(ayahNumber);
-      dispatch(setLastReadPosition({surahNumber, ayahNumber}));
+    (playingSurah: number, ayahNumber: number) => {
+      dispatch(setLastReadPosition({surahNumber: playingSurah, ayahNumber}));
     },
-    [dispatch, surahNumber],
+    [dispatch],
+  );
+
+  const handlePageChange = useCallback((nextPage: number) => {
+    setPageNumber(current => (current === nextPage ? current : nextPage));
+  }, []);
+
+  const handleSurahChange = useCallback(
+    async (nextSurah: number) => {
+      // Keep route in sync with continuous playback so highlight gating
+      // (`isViewingPlayingSurah`) stays true across surah boundaries.
+      navigation.setParams({surahNumber: nextSurah, ayahNumber: 1});
+      dispatch(setLastReadPosition({surahNumber: nextSurah, ayahNumber: 1}));
+      try {
+        const page = await quranClient.getPageForAyah(nextSurah, 1);
+        setPageNumber(page);
+      } catch {
+        // keep current page
+      }
+    },
+    [dispatch, navigation],
   );
 
   const audio = useQuranAudioPlayer({
-    surahNumber,
-    ayahs,
+    surahNumber: viewedSurahNumber,
     reciterId,
     initialAyahNumber,
+    ayahTimings: ayahTimingQuery.data,
+    ayahPageMap: ayahPagesQuery.data,
     onAyahChange: handleAyahChange,
+    onPageChange: handlePageChange,
+    onSurahChange: handleSurahChange,
   });
 
   const styles = useThemedStyles(tokens => ({
     body: {flex: tokens.layout.flex.fill},
-    toolbar: {
-      ...tokens.layout.presets.wrapRow,
-      gap: tokens.spacing.xs,
-      marginBottom: tokens.spacing.sm,
+    pageNav: {
+      ...tokens.layout.presets.rowBetween,
+      alignItems: 'center' as const,
+      paddingHorizontal: tokens.spacing.md,
+      paddingVertical: tokens.spacing.xs,
     },
-    chip: {
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xxs,
-    },
-    chipActive: {
-      backgroundColor: tokens.colors.primaryMuted,
-      borderColor: tokens.colors.primary,
-    },
-    ayahWrap: {
-      marginBottom: tokens.spacing.lg,
-      padding: tokens.spacing.md,
-      borderRadius: tokens.radius.lg,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: 'transparent',
-    },
-    ayahActive: {
-      backgroundColor: tokens.colors.primaryMuted,
-      borderColor: tokens.colors.primary,
-      shadowColor: tokens.colors.primary,
-      shadowOffset: {width: 0, height: 4},
-      shadowOpacity: 0.18,
-      shadowRadius: 8,
-      elevation: 4,
-    },
-    badge: {
-      alignSelf: 'flex-start' as const,
-      backgroundColor: tokens.colors.surfaceSecondary,
-      borderRadius: tokens.radius.full,
-      paddingHorizontal: tokens.spacing.sm,
-      paddingVertical: tokens.spacing.xxs,
-    },
-    badgeActive: {backgroundColor: tokens.colors.primary},
-    arabic: {
-      fontSize: tokens.typography.h2.fontSize,
-      lineHeight: (tokens.typography.h2.lineHeight ?? 32) * 1.6,
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
-    },
-    tafsir: {
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
-    },
-    headerMeta: {marginBottom: tokens.spacing.sm},
   }));
 
+  const pageAyahs = mushafQuery.data?.ayahs ?? [];
+
+  // Keep route/audio anchor aligned with the visible mushaf page so pause /
+  // resume and bindRoute do not restart the wrong surah after page flips.
+  // Prefer the playing surah's first ayah on the page when audio is active —
+  // mushaf pages often begin with the previous surah's leftover ayahs.
   useEffect(() => {
-    if (!ayahs.length) {
+    const ayahs = mushafQuery.data?.ayahs;
+    if (!ayahs?.length) {
       return;
     }
-    const index = ayahs.findIndex(item => item.numberInSurah === initialAyahNumber);
-    if (index >= 0) {
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToIndex({index, animated: true, viewOffset: 80});
-      });
+    const playingAnchor =
+      (audio.isPlaying || audio.isLoading) &&
+      ayahs.find(ayah => ayah.surahNumber === audio.playingSurahNumber);
+    const anchor = playingAnchor || ayahs[0];
+    if (
+      anchor.surahNumber === viewedSurahNumber &&
+      anchor.numberInSurah === initialAyahNumber
+    ) {
+      return;
     }
-    dispatch(setLastReadPosition({surahNumber, ayahNumber: initialAyahNumber}));
-  }, [ayahs.length, dispatch, initialAyahNumber, surahNumber]);
+    navigation.setParams({
+      surahNumber: anchor.surahNumber,
+      ayahNumber: anchor.numberInSurah,
+    });
+  }, [
+    audio.isLoading,
+    audio.isPlaying,
+    audio.playingSurahNumber,
+    initialAyahNumber,
+    mushafQuery.data?.ayahs,
+    navigation,
+    viewedSurahNumber,
+  ]);
 
   useEffect(() => {
-    if (focusedAyahNumber !== audio.activeAyahNumber) {
-      const index = ayahs.findIndex(item => item.numberInSurah === audio.activeAyahNumber);
-      if (index >= 0) {
-        listRef.current?.scrollToIndex({index, animated: true, viewOffset: 80});
-      }
+    // Don't overwrite last-read of the playing surah while browsing another.
+    if (audio.isPlaying || audio.isLoading || audio.hasLoadedTrack) {
+      return;
     }
-  }, [audio.activeAyahNumber, ayahs, focusedAyahNumber]);
-
-  const togglePlay = () => {
-    if (audio.isPlaying) {
-      audio.pause();
-    } else if (audio.activeAyahNumber) {
-      audio.resume();
-    } else {
-      audio.playAyah(initialAyahNumber);
-    }
-  };
-
-  const renderAyah = ({item}: {item: QuranAyah}) => {
-    const isActive = item.numberInSurah === audio.activeAyahNumber;
-    return (
-      <Pressable
-        style={[styles.ayahWrap, isActive && styles.ayahActive]}
-        onPress={() => {
-          setFocusedAyahNumber(item.numberInSurah);
-          audio.playAyah(item.numberInSurah);
-        }}>
-        <View style={[styles.badge, isActive && styles.badgeActive]}>
-          <TextView
-            text={String(item.numberInSurah)}
-            variant="caption"
-            style={isActive ? {color: '#fff'} : undefined}
-          />
-        </View>
-        <Spacer size="xs" />
-        <TextView text={item.text} variant="body" style={styles.arabic} />
-        {showTranslation && item.translation ? (
-          <>
-            <Spacer size="sm" />
-            <TextView text={item.translation} variant="bodySmall" muted />
-          </>
-        ) : null}
-        {showTafsir && item.tafsir ? (
-          <>
-            <Spacer size="sm" />
-            <TextView
-              text={t('islamic.quran.tafsirLabel')}
-              variant="caption"
-              muted
-            />
-            <Spacer size="xxs" />
-            <TextView text={item.tafsir} variant="bodySmall" style={styles.tafsir} />
-          </>
-        ) : null}
-      </Pressable>
+    dispatch(
+      setLastReadPosition({
+        surahNumber: viewedSurahNumber,
+        ayahNumber: initialAyahNumber,
+      }),
     );
+  }, [
+    audio.hasLoadedTrack,
+    audio.isLoading,
+    audio.isPlaying,
+    dispatch,
+    initialAyahNumber,
+    viewedSurahNumber,
+  ]);
+
+  const goPage = (delta: number) => {
+    setPageNumber(current => Math.min(MUSHAF_PAGE_COUNT, Math.max(1, current + delta)));
   };
+
+  const handleAyahPress = useCallback(
+    (ayah: MushafPageAyah) => {
+      dispatch(
+        setLastReadPosition({
+          surahNumber: ayah.surahNumber,
+          ayahNumber: ayah.numberInSurah,
+        }),
+      );
+      quranAudioController.playAyah(ayah.numberInSurah, ayah.surahNumber, reciterId);
+    },
+    [dispatch, reciterId],
+  );
+
+  // Prefer route match; also allow highlight when the open mushaf page
+  // already contains the playing ayah (surah auto-advance race).
+  const pageHasPlayingAyah = pageAyahs.some(
+    ayah =>
+      ayah.surahNumber === audio.playingSurahNumber &&
+      ayah.numberInSurah === audio.activeAyahNumber,
+  );
+  const showHighlight =
+    (audio.hasLoadedTrack || audio.isPlaying || audio.isLoading) &&
+    audio.activeAyahNumber > 0 &&
+    (audio.isViewingPlayingSurah || pageHasPlayingAyah);
 
   return (
     <ScreenContainer bottomPadding="none" style={styles.body}>
       <ScreenHeader
-        title={data?.name ?? t('islamic.quran.title')}
+        title={t('islamic.quran.mushafTitle', {page: pageNumber})}
         onBack={() => navigation.goBack()}
         rightAccessory={
           <TouchableIcon
             iconType="Ionicons"
-            name="search-outline"
+            name="document-text-outline"
             size={sizes.iconSm}
-            onPress={() => navigation.navigate('IslamicUnifiedSearch')}
+            onPress={() =>
+              navigation.navigate('QuranTafsirReader', {
+                surahNumber: pageSurahNumber,
+                ayahNumber: pageFirstAyahNumber,
+              })
+            }
           />
         }
       />
-      {isLoading ? (
+
+      {mushafQuery.isLoading ? (
         <IslamicLoadingState />
-      ) : isError || !data ? (
+      ) : mushafQuery.isError ? (
         <IslamicErrorState message={t('islamic.errors.loadFailed')} />
       ) : (
         <>
-          <View style={styles.headerMeta}>
+          <View style={styles.pageNav}>
+            <TouchableIcon
+              iconType="Ionicons"
+              name={isAr ? 'chevron-forward' : 'chevron-back'}
+              size={sizes.iconSm}
+              onPress={() => goPage(isAr ? 1 : -1)}
+            />
             <TextView
-              text={`${data.englishName} · ${data.englishNameTranslation}`}
+              text={t('islamic.quran.pageOf', {page: pageNumber, total: MUSHAF_PAGE_COUNT})}
               variant="caption"
               muted
             />
+            <TouchableIcon
+              iconType="Ionicons"
+              name={isAr ? 'chevron-back' : 'chevron-forward'}
+              size={sizes.iconSm}
+              onPress={() => goPage(isAr ? -1 : 1)}
+            />
           </View>
-          <View style={styles.toolbar}>
-            <Pressable
-              style={[styles.chip, showTafsir && styles.chipActive]}
-              onPress={() => dispatch(updateQuranPreferences({showTafsir: !showTafsir}))}>
-              <TextView text={t('islamic.quran.showTafsir')} variant="caption" />
-            </Pressable>
-            <Pressable
-              style={[styles.chip, showTranslation && styles.chipActive]}
-              onPress={() =>
-                dispatch(updateQuranPreferences({showTranslation: !showTranslation}))
-              }>
-              <TextView text={t('islamic.quran.showTranslation')} variant="caption" />
-            </Pressable>
-            {QURAN_TAFSIR_EDITIONS.map(edition => (
-              <Pressable
-                key={edition.id}
-                style={[styles.chip, tafsirEditionId === edition.id && styles.chipActive]}
-                onPress={() => dispatch(updateQuranPreferences({tafsirEditionId: edition.id}))}>
-                <TextView
-                  text={i18n.language.startsWith('ar') ? edition.nameAr : edition.nameEn}
-                  variant="caption"
-                />
-              </Pressable>
-            ))}
-          </View>
-          <FlashList
-            ref={listRef}
-            data={ayahs}
-            style={styles.body}
-            keyExtractor={item => String(item.number)}
-            renderItem={renderAyah}
+          <TextView
+            text={t('islamic.quran.tapAyahHint')}
+            variant="caption"
+            muted
+            style={styles.pageNav}
           />
-          <QuranAudioBar
-            reciterId={reciterId}
+          <MushafPageSheet
+            pageNumber={pageNumber}
+            ayahs={pageAyahs}
+            audioSurahNumber={audio.playingSurahNumber}
             activeAyahNumber={audio.activeAyahNumber}
-            isPlaying={audio.isPlaying}
-            isLoading={audio.isLoading}
-            onSelectReciter={id => dispatch(updateQuranPreferences({reciterId: id}))}
-            onTogglePlay={togglePlay}
-            onPrevious={audio.playPrevious}
-            onNext={audio.playNext}
+            showAyahHighlight={showHighlight}
+            onAyahPress={handleAyahPress}
           />
         </>
       )}
+
+      <QuranAudioBar
+        reciterId={reciterId}
+        surahNumber={audio.playingSurahNumber}
+        activeAyahNumber={audio.activeAyahNumber}
+        isPlaying={audio.isPlaying}
+        isLoading={audio.isLoading}
+        continuous
+        onSelectReciter={id => dispatch(updateQuranPreferences({reciterId: id}))}
+        onTogglePlay={audio.togglePlay}
+        onPrevious={audio.playPrevious}
+        onNext={audio.playNext}
+        reciters={QURAN_RECITERS}
+      />
     </ScreenContainer>
   );
 };

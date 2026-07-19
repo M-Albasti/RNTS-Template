@@ -5,7 +5,6 @@ import ReactAppDependencyProvider
 import Firebase
 import GoogleMaps
 import GoogleSignIn
-// import FacebookCore
 import FBSDKCoreKit
 
 @main
@@ -51,30 +50,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     open url: URL,
     options: [UIApplication.OpenURLOptionsKey : Any] = [:]
   ) -> Bool {
-    // Add any other URL handlers you're using (e.g. Facebook SDK)
-    return ApplicationDelegate.shared.application(
-        app,
-        open: url,
-        sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
-        annotation: options[UIApplication.OpenURLOptionsKey.annotation]
-    ) || GIDSignIn.sharedInstance.handle(url)
+    if ApplicationDelegate.shared.application(
+      app,
+      open: url,
+      sourceApplication: options[.sourceApplication] as? String,
+      annotation: options[.annotation]
+    ) {
+      return true
+    }
+    if GIDSignIn.sharedInstance.handle(url) {
+      return true
+    }
+    return RCTLinkingManager.application(app, open: url, options: options)
   }
-}
 
-func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-  return RCTLinkingManager.application(app, open: url, options: options)
-}
-
-func application(
-  _ application: UIApplication,
-  continue userActivity: NSUserActivity,
-  restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+  func application(
+    _ application: UIApplication,
+    continue userActivity: NSUserActivity,
+    restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void
+  ) -> Bool {
     return RCTLinkingManager.application(
       application,
       continue: userActivity,
       restorationHandler: restorationHandler
     )
   }
+}
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
   override func sourceURL(for bridge: RCTBridge) -> URL? {

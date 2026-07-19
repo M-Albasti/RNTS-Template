@@ -1,4 +1,4 @@
-import type {TextStyle, ViewStyle} from 'react-native';
+import type {ViewStyle} from 'react-native';
 
 import {
   alignContent,
@@ -74,6 +74,44 @@ export type SemanticColors = {
    * Prefer these over hard-coded hex in components.
    */
   selectionAccents: readonly string[];
+  /** Madinah-style mushaf page surface (parchment). */
+  mushafPage: string;
+  /** Outer ornamental frame. */
+  mushafBorderOuter: string;
+  /** Inner frame / divider lines. */
+  mushafBorder: string;
+  /** Surah title banner fill. */
+  mushafBanner: string;
+  /** Body ink for Uthmani text. */
+  mushafInk: string;
+  /** Juz / surah meta labels. */
+  mushafMeta: string;
+  /** Soft blue follow-along ayah highlight. */
+  mushafHighlight: string;
+  /** Gold/bronze ornaments (corners, markers). */
+  mushafOrnament: string;
+  /** Hadith library chrome (teal header / reference bars). */
+  hadithChrome: string;
+  /** Slightly lighter chrome for meta sub-headers. */
+  hadithChromeMuted: string;
+  /** Text/icons on hadith chrome. */
+  hadithOnChrome: string;
+  /** Dark immersive hadith reading surface. */
+  hadithReaderBg: string;
+  /** Large body text on the hadith reader. */
+  hadithReaderInk: string;
+  /** Gold accent for quick-action icons on the hadith hub. */
+  hadithAccent: string;
+  /** Prayer times sky / hero surface. */
+  prayerHero: string;
+  /** Secondary wash on the prayer hero (sun path / night). */
+  prayerHeroMuted: string;
+  /** Accent for countdown pills and active prayer cards. */
+  prayerAccent: string;
+  /** Text/icons on prayer hero. */
+  prayerOnHero: string;
+  /** Soft fill for the active prayer row. */
+  prayerActiveMuted: string;
 };
 
 export type AppPalette = typeof appPalette;

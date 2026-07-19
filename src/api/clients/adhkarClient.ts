@@ -1,12 +1,92 @@
 import {mapHisnCategory, mapHisnItem} from '@api/mappers/islamic.mapper';
 import type {HisnCategoryDto, HisnItemDto} from '@api/server/islamic.dto';
 import {adhkarHttpClient} from '@config/network/islamicHttpClient';
-import type {AdhkarCategory, AdhkarItem, AdhkarLanguage} from '@Types/islamicTypes';
+import {normalizeSearchText} from '@helpers/islamicSearchHelpers';
+import type {
+  AdhkarCategory,
+  AdhkarItem,
+  AdhkarLanguage,
+  AdhkarSearchMatch,
+} from '@Types/islamicTypes';
 
 const categoryListPath = (lang: AdhkarLanguage) =>
   lang === 'ar' ? '/ar/husn_ar.json' : '/en/husn_en.json';
 
 const categoryListKey = (lang: AdhkarLanguage) => (lang === 'ar' ? 'العربية' : 'English');
+
+const SEARCH_INDEX_BATCH = 12;
+const SEARCH_RESULT_LIMIT = 60;
+
+/** In-memory full-text index (Hisn has no search API). */
+const searchIndexCache: Partial<Record<AdhkarLanguage, AdhkarSearchMatch[]>> = {};
+const searchIndexPromises: Partial<Record<AdhkarLanguage, Promise<AdhkarSearchMatch[]>>> =
+  {};
+
+type SearchIndexBuild = {
+  matches: AdhkarSearchMatch[];
+  /** False when one or more category fetches failed — do not permanently cache. */
+  complete: boolean;
+};
+
+const buildSearchIndex = async (lang: AdhkarLanguage): Promise<SearchIndexBuild> => {
+  const categories = await adhkarClient.getCategories(lang);
+  const matches: AdhkarSearchMatch[] = [];
+  let hadFailure = false;
+
+  for (let offset = 0; offset < categories.length; offset += SEARCH_INDEX_BATCH) {
+    const batch = categories.slice(offset, offset + SEARCH_INDEX_BATCH);
+    const batchResults = await Promise.all(
+      batch.map(async category => {
+        try {
+          const {items} = await adhkarClient.getCategoryItems(category.id, lang);
+          return items.map(
+            (item): AdhkarSearchMatch => ({
+              itemId: item.id,
+              categoryId: category.id,
+              categoryTitle: category.title,
+              arabicText: item.arabicText,
+              translatedText: item.translatedText,
+              repeat: item.repeat,
+            }),
+          );
+        } catch {
+          hadFailure = true;
+          return [];
+        }
+      }),
+    );
+    matches.push(...batchResults.flat());
+  }
+
+  return {matches, complete: !hadFailure};
+};
+
+const getSearchIndex = async (lang: AdhkarLanguage): Promise<AdhkarSearchMatch[]> => {
+  const cached = searchIndexCache[lang];
+  if (cached) {
+    return cached;
+  }
+
+  const pending = searchIndexPromises[lang];
+  if (pending) {
+    return pending;
+  }
+
+  const promise = buildSearchIndex(lang)
+    .then(({matches, complete}) => {
+      // Only cache a full index — partial builds from silent failures must retry.
+      if (complete) {
+        searchIndexCache[lang] = matches;
+      }
+      return matches;
+    })
+    .finally(() => {
+      delete searchIndexPromises[lang];
+    });
+
+  searchIndexPromises[lang] = promise;
+  return promise;
+};
 
 export const adhkarClient = {
   getCategories: async (lang: AdhkarLanguage = 'ar'): Promise<AdhkarCategory[]> => {
@@ -45,21 +125,65 @@ export const adhkarClient = {
     return item;
   },
 
+  /** @deprecated Prefer searchItems for dhikr body text. */
   searchCategories: async (query: string, lang: AdhkarLanguage = 'ar'): Promise<AdhkarCategory[]> => {
     const categories = await adhkarClient.getCategories(lang);
-    const normalized = query.trim().toLowerCase();
+    const normalized = normalizeSearchText(query);
     if (!normalized) {
       return categories;
     }
-    return categories.filter(category => category.title.toLowerCase().includes(normalized));
+    return categories.filter(
+      category =>
+        normalizeSearchText(category.title).includes(normalized) ||
+        String(category.id) === normalized,
+    );
+  },
+
+  /**
+   * Full-text search across every Hisn al-Muslim dhikr (Arabic + translation)
+   * and category titles. Builds a cached index on first use.
+   */
+  searchItems: async (
+    query: string,
+    lang: AdhkarLanguage = 'ar',
+  ): Promise<AdhkarSearchMatch[]> => {
+    const normalized = normalizeSearchText(query);
+    if (!normalized) {
+      return [];
+    }
+
+    const index = await getSearchIndex(lang);
+    const seenCategories = new Set<number>();
+    const itemHits: AdhkarSearchMatch[] = [];
+    const categoryHits: AdhkarSearchMatch[] = [];
+
+    for (const entry of index) {
+      const arabicHit = normalizeSearchText(entry.arabicText).includes(normalized);
+      const translationHit = normalizeSearchText(entry.translatedText).includes(normalized);
+      const categoryHit = normalizeSearchText(entry.categoryTitle).includes(normalized);
+
+      if (arabicHit || translationHit) {
+        itemHits.push(entry);
+      } else if (categoryHit && !seenCategories.has(entry.categoryId)) {
+        seenCategories.add(entry.categoryId);
+        categoryHits.push({...entry, isCategoryMatch: true});
+      }
+
+      if (itemHits.length + categoryHits.length >= SEARCH_RESULT_LIMIT) {
+        break;
+      }
+    }
+
+    return [...itemHits, ...categoryHits].slice(0, SEARCH_RESULT_LIMIT);
   },
 };
 
+/** Hisn Muslim category IDs (verified against hisnmuslim.com/api). */
 export const ADHKAR_FEATURED_CATEGORY_IDS = {
   morningEvening: 27,
   sleep: 28,
   waking: 1,
-  afterPrayer: 16,
+  afterPrayer: 25, // الأذكار بعد السلام من الصلاة
   mosque: 12,
   travel: 96,
   food: 69,

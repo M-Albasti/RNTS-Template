@@ -59,4 +59,24 @@ export const darkColors: SemanticColors = {
     '#A3E635', // lime
     '#34D399', // emerald
   ],
+  // Keep a parchment mushaf even in dark mode — closer to a printed Madinah page.
+  mushafPage: '#2C261C',
+  mushafBorderOuter: '#C4A574',
+  mushafBorder: '#8B7355',
+  mushafBanner: '#3D3420',
+  mushafInk: '#F5E6C8',
+  mushafMeta: '#D4C4A8',
+  mushafHighlight: '#5B8FA699',
+  mushafOrnament: '#D4AF37',
+  hadithChrome: '#0D4A3E',
+  hadithChromeMuted: '#126655',
+  hadithOnChrome: '#F5F5F5',
+  hadithReaderBg: '#0A0A0A',
+  hadithReaderInk: '#F5F5F5',
+  hadithAccent: '#D4AF37',
+  prayerHero: '#071E30',
+  prayerHeroMuted: '#0F3A55',
+  prayerAccent: '#E8B45A',
+  prayerOnHero: '#F8FAFC',
+  prayerActiveMuted: '#0F3A55',
 };

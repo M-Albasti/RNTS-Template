@@ -83,6 +83,10 @@ export type HadislamHadithDto = {
   bookHadithIndex: number;
   text: Record<string, string>;
   grades: Array<{name: string; grade: string}>;
+  /** Optional explanation fields (not always present on Hadislam). */
+  tafsir?: string | Record<string, string>;
+  commentary?: string | Record<string, string>;
+  explanation?: string | Record<string, string>;
   edition?: HadislamEditionDto;
   book?: {
     _id: string;
@@ -108,10 +112,13 @@ export type PrayerTimingsResponseDto = {
       Asr: string;
       Maghrib: string;
       Isha: string;
+      Midnight?: string;
+      Imsak?: string;
+      Sunset?: string;
     };
     date: {
       readable: string;
-      hijri: {day: string; month: {en: string; ar: string}; year: string};
+      hijri: {day: string; month: {en: string; ar: string; number?: number}; year: string};
     };
   };
 };

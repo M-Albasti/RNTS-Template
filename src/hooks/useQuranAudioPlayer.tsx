@@ -1,136 +1,119 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
-import SoundPlayer from 'react-native-sound-player';
+import {useFocusEffect} from '@react-navigation/native';
 
-import {buildAyahAudioUrl} from '@helpers/quranAudioHelpers';
-import type {QuranAyah} from '@Types/islamicTypes';
+import type {QuranAyahTiming} from '@helpers/quranAudioHelpers';
+import {
+  quranAudioController,
+  type QuranAudioSnapshot,
+} from '@services/quranAudioService/quranAudioController';
 
 type UseQuranAudioPlayerArgs = {
+  /** Surah the screen is displaying (may differ from the playing surah). */
   surahNumber: number;
-  ayahs: QuranAyah[];
   reciterId: string;
+  /** Resume / start ayah when the user presses play on this screen. */
   initialAyahNumber?: number;
-  onAyahChange?: (ayahNumber: number) => void;
+  /** mp3quran `/ayat_timing` cues for `surahNumber` (preferred). */
+  ayahTimings?: readonly QuranAyahTiming[];
+  /** Fallback ayah→page map when timing is unavailable for the reciter. */
+  ayahPageMap?: ReadonlyArray<{ayahNumber: number; pageNumber: number}>;
+  onAyahChange?: (surahNumber: number, ayahNumber: number) => void;
+  onPageChange?: (pageNumber: number) => void;
+  onSurahChange?: (surahNumber: number) => void;
+  onSurahFinished?: () => void;
 };
 
+/**
+ * Screen-facing Quran audio API — continuous surah playback.
+ * Current ayah comes from mp3quran ayat_timing (React Query cached).
+ * Highlight always reflects the *playing* surah, not the browsed one.
+ */
 export const useQuranAudioPlayer = ({
   surahNumber,
-  ayahs,
   reciterId,
   initialAyahNumber = 1,
+  ayahTimings,
+  ayahPageMap,
   onAyahChange,
+  onPageChange,
+  onSurahChange,
+  onSurahFinished,
 }: UseQuranAudioPlayerArgs) => {
-  const [activeAyahNumber, setActiveAyahNumber] = useState(initialAyahNumber);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const activeAyahRef = useRef(initialAyahNumber);
-
-  const playAyah = useCallback(
-    async (ayahNumber: number) => {
-      const ayah = ayahs.find(item => item.numberInSurah === ayahNumber);
-      if (!ayah) {
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        activeAyahRef.current = ayahNumber;
-        setActiveAyahNumber(ayahNumber);
-        onAyahChange?.(ayahNumber);
-
-        const url = buildAyahAudioUrl(
-          reciterId,
-          ayah.number,
-          surahNumber,
-          ayah.numberInSurah,
-        );
-        SoundPlayer.loadUrl(url);
-        SoundPlayer.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.log('useQuranAudioPlayer playAyah Error =>', error);
-        setIsPlaying(false);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [ayahs, onAyahChange, reciterId, surahNumber],
+  const [snapshot, setSnapshot] = useState<QuranAudioSnapshot>(() =>
+    quranAudioController.getSnapshot(),
   );
-
-  const pause = useCallback(() => {
-    try {
-      SoundPlayer.pause();
-      setIsPlaying(false);
-    } catch (error) {
-      console.log('useQuranAudioPlayer pause Error =>', error);
-    }
-  }, []);
-
-  const resume = useCallback(() => {
-    try {
-      SoundPlayer.play();
-      setIsPlaying(true);
-    } catch (error) {
-      console.log('useQuranAudioPlayer resume Error =>', error);
-    }
-  }, []);
-
-  const stop = useCallback(() => {
-    try {
-      SoundPlayer.stop();
-      setIsPlaying(false);
-    } catch (error) {
-      console.log('useQuranAudioPlayer stop Error =>', error);
-    }
-  }, []);
-
-  const playNext = useCallback(() => {
-    const currentIndex = ayahs.findIndex(item => item.numberInSurah === activeAyahRef.current);
-    const next = ayahs[currentIndex + 1];
-    if (next) {
-      playAyah(next.numberInSurah);
-    } else {
-      stop();
-    }
-  }, [ayahs, playAyah, stop]);
-
-  const playPrevious = useCallback(() => {
-    const currentIndex = ayahs.findIndex(item => item.numberInSurah === activeAyahRef.current);
-    const previous = ayahs[currentIndex - 1];
-    if (previous) {
-      playAyah(previous.numberInSurah);
-    }
-  }, [ayahs, playAyah]);
+  const callbacksRef = useRef({
+    onAyahChange,
+    onPageChange,
+    onSurahChange,
+    onSurahFinished,
+  });
 
   useEffect(() => {
-    const finished = SoundPlayer.addEventListener('FinishedPlaying', ({success}) => {
-      if (success) {
-        playNext();
-      }
-    });
-    return () => finished.remove();
-  }, [playNext]);
+    callbacksRef.current = {
+      onAyahChange,
+      onPageChange,
+      onSurahChange,
+      onSurahFinished,
+    };
+  }, [onAyahChange, onPageChange, onSurahChange, onSurahFinished]);
 
   useEffect(() => {
-    activeAyahRef.current = initialAyahNumber;
-    setActiveAyahNumber(initialAyahNumber);
-  }, [initialAyahNumber, surahNumber]);
+    return quranAudioController.subscribe(setSnapshot);
+  }, []);
 
-  useEffect(
-    () => () => {
-      stop();
-    },
-    [stop],
+  // Own the process-wide callback slot only while this screen is focused.
+  useFocusEffect(
+    useCallback(() => {
+      return quranAudioController.setCallbacks({
+        onAyahChange: (surah, ayah) => callbacksRef.current.onAyahChange?.(surah, ayah),
+        onPageChange: page => callbacksRef.current.onPageChange?.(page),
+        onSurahChange: surah => callbacksRef.current.onSurahChange?.(surah),
+        onSurahFinished: () => callbacksRef.current.onSurahFinished?.(),
+      });
+    }, []),
   );
+
+  useEffect(() => {
+    quranAudioController.setTimings(ayahTimings, ayahPageMap, surahNumber);
+  }, [ayahTimings, ayahPageMap, surahNumber]);
+
+  useEffect(() => {
+    quranAudioController.bindRoute(surahNumber, reciterId, initialAyahNumber);
+  }, [surahNumber, reciterId, initialAyahNumber]);
+
+  const isViewingPlayingSurah = snapshot.surahNumber === surahNumber;
 
   return {
-    activeAyahNumber,
-    isPlaying,
-    isLoading,
-    playAyah,
-    pause,
-    resume,
-    stop,
-    playNext,
-    playPrevious,
+    playingSurahNumber: snapshot.surahNumber,
+    activeAyahNumber: snapshot.activeAyahNumber,
+    isPlaying: snapshot.isPlaying,
+    isLoading: snapshot.isLoading,
+    hasLoadedTrack: snapshot.hasLoadedTrack,
+    isViewingPlayingSurah,
+    playAyah: (ayahNumber?: number) =>
+      quranAudioController.playAyah(ayahNumber ?? initialAyahNumber, surahNumber, reciterId),
+    pause: quranAudioController.pause,
+    resume: quranAudioController.resume,
+    stop: quranAudioController.stop,
+    togglePlay: () => {
+      if (snapshot.isPlaying && isViewingPlayingSurah) {
+        quranAudioController.pause();
+        return;
+      }
+      if (snapshot.isPlaying && !isViewingPlayingSurah) {
+        quranAudioController.playAyah(initialAyahNumber, surahNumber, reciterId);
+        return;
+      }
+      quranAudioController.togglePlay(
+        isViewingPlayingSurah
+          ? snapshot.activeAyahNumber || initialAyahNumber
+          : initialAyahNumber,
+      );
+    },
+    playNext: quranAudioController.playNext,
+    playPrevious: quranAudioController.playPrevious,
+    loadAndPlaySurah: (targetSurah: number) =>
+      quranAudioController.playAyah(1, targetSurah, reciterId),
   };
 };

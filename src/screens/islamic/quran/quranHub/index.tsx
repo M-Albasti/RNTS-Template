@@ -21,19 +21,22 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
 
   const styles = useThemedStyles(tokens => ({
     hero: {
-      backgroundColor: tokens.colors.primary,
+      backgroundColor: '#0F3D2E',
       borderRadius: tokens.radius.lg,
       padding: tokens.spacing.lg,
+      ...tokens.shadows.md,
     },
-    heroText: {color: tokens.colors.textInverse},
+    heroText: {color: '#F5E6C8'},
     continueCard: {
-      backgroundColor: tokens.colors.surface,
+      backgroundColor: '#F7F0E2',
       borderRadius: tokens.radius.lg,
       padding: tokens.spacing.md,
       borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
+      borderColor: '#D4C4A8',
+      ...tokens.shadows.sm,
     },
-    continuePressed: {backgroundColor: tokens.colors.surfaceSecondary},
+    continuePressed: {backgroundColor: '#EFE4D0'},
+    sectionTitle: {marginBottom: tokens.spacing.sm},
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
   }));
 
@@ -70,7 +73,23 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
         />
       </Pressable>
       <Spacer size="lg" />
+      <Heading text={t('islamic.quran.readingModes')} level="h3" />
+      <Spacer size="sm" />
       <View style={styles.grid}>
+        <FeatureHubCard
+          title={t('islamic.quran.mushafMode')}
+          subtitle={t('islamic.quran.mushafModeSubtitle')}
+          iconType="Ionicons"
+          iconName="book-outline"
+          onPress={() => navigation.navigate('QuranList', {mode: 'mushaf'})}
+        />
+        <FeatureHubCard
+          title={t('islamic.quran.tafsirMode')}
+          subtitle={t('islamic.quran.tafsirModeSubtitle')}
+          iconType="Ionicons"
+          iconName="document-text-outline"
+          onPress={() => navigation.navigate('QuranList', {mode: 'tafsir'})}
+        />
         <FeatureHubCard
           title={t('islamic.quran.index')}
           subtitle={t('islamic.quran.indexSubtitle')}
@@ -84,13 +103,6 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
           iconType="Ionicons"
           iconName="search-outline"
           onPress={() => navigation.navigate('IslamicUnifiedSearch')}
-        />
-        <FeatureHubCard
-          title={t('islamic.quran.allSurahs')}
-          subtitle={t('islamic.quran.allSurahsSubtitle')}
-          iconType="Ionicons"
-          iconName="book-outline"
-          onPress={() => navigation.navigate('QuranList')}
         />
       </View>
     </ScreenContainer>
