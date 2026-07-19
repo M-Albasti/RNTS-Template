@@ -11,6 +11,7 @@ import type {
   QuranPreferences,
 } from '@Types/islamicTypes';
 import {PRAYER_SCHEDULE_KEYS} from '@helpers/prayerScheduleHelpers';
+import {DEFAULT_ADHAN_SOUND_ID} from '@constants/adhanAudio';
 import {DEFAULT_ADHKAR_RECITER_ID} from '@constants/adhkarReciters';
 import {DEFAULT_QURAN_RECITER_ID} from '@constants/quranReciters';
 import {DEFAULT_TAFSIR_EDITION_ID} from '@constants/quranTafsirEditions';
@@ -43,6 +44,7 @@ const defaultNotificationSettings: IslamicNotificationSettings = {
 const defaultPrayerReminders = (): PrayerReminderSettings => ({
   enabledAll: false,
   byKey: {},
+  adhanSoundId: DEFAULT_ADHAN_SOUND_ID,
 });
 
 const defaultQuranPreferences: QuranPreferences = {
@@ -209,6 +211,9 @@ const islamicSlice = createSlice({
         state.prayerReminders.enabledAll = allOn;
       }
     },
+    setAdhanSoundId: (state, action: PayloadAction<string>) => {
+      state.prayerReminders.adhanSoundId = action.payload;
+    },
     setFcmToken: (state, action: PayloadAction<string | null>) => {
       state.fcmToken = action.payload;
     },
@@ -229,20 +234,32 @@ export const {
   updateNotificationSettings,
   setPrayerReminderEnabledAll,
   togglePrayerReminder,
+  setAdhanSoundId,
   setFcmToken,
 } = islamicSlice.actions;
 
 /** Fill fields added after older app versions were persisted. */
 const normalizeIslamicState = (state: IslamicState): IslamicState => {
+  const prayerReminders: PrayerReminderSettings = {
+    ...defaultPrayerReminders(),
+    ...state.prayerReminders,
+    byKey: {
+      ...defaultPrayerReminders().byKey,
+      ...state.prayerReminders?.byKey,
+    },
+    adhanSoundId:
+      state.prayerReminders?.adhanSoundId ?? defaultPrayerReminders().adhanSoundId,
+  };
+
   if (
     state.adhkarPreferences &&
     state.prayerLocation &&
     state.quranPreferences &&
     state.notificationSettings &&
-    state.prayerReminders &&
+    state.prayerReminders?.adhanSoundId &&
     state.lastRead
   ) {
-    return state;
+    return {...state, prayerReminders};
   }
   return {
     ...initialState,
@@ -255,14 +272,7 @@ const normalizeIslamicState = (state: IslamicState): IslamicState => {
       ...defaultNotificationSettings,
       ...state.notificationSettings,
     },
-    prayerReminders: {
-      ...defaultPrayerReminders(),
-      ...state.prayerReminders,
-      byKey: {
-        ...defaultPrayerReminders().byKey,
-        ...state.prayerReminders?.byKey,
-      },
-    },
+    prayerReminders,
     quranPreferences: {
       ...defaultQuranPreferences,
       ...state.quranPreferences,

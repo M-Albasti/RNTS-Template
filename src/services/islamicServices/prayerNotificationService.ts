@@ -6,6 +6,7 @@ import notifee, {
 import {Platform} from 'react-native';
 
 import {prayerClient} from '@api/clients/prayerClient';
+import {resolveAdhanAudioUrl} from '@constants/adhanAudio';
 import {
   addCalendarDays,
   buildPrayerSchedule,
@@ -110,6 +111,7 @@ export const syncPrayerReminderNotifications = async ({
   }
 
   const now = Date.now();
+  const adhanUrl = resolveAdhanAudioUrl(settings.adhanSoundId);
 
   for (let dayOffset = 0; dayOffset < DAYS_AHEAD; dayOffset += 1) {
     const day = addCalendarDays(new Date(), dayOffset);
@@ -141,6 +143,8 @@ export const syncPrayerReminderNotifications = async ({
             data: {
               kind: 'prayer_adhan',
               prayerKey: entry.key,
+              adhanSoundId: settings.adhanSoundId ?? '',
+              adhanUrl,
             },
             android: {
               channelId: CHANNEL_ID,
