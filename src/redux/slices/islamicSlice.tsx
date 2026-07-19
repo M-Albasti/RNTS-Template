@@ -10,7 +10,7 @@ import type {
   QuranLastRead,
   QuranPreferences,
 } from '@Types/islamicTypes';
-import {PRAYER_SCHEDULE_KEYS} from '@helpers/prayerScheduleHelpers';
+import {PRAYER_ADHAN_KEYS} from '@helpers/prayerScheduleHelpers';
 import {DEFAULT_ADHAN_SOUND_ID} from '@constants/adhanAudio';
 import {DEFAULT_ADHKAR_RECITER_ID} from '@constants/adhkarReciters';
 import {DEFAULT_QURAN_RECITER_ID} from '@constants/quranReciters';
@@ -81,7 +81,7 @@ const LEGACY_RECITER_MAP: Record<string, string> = {
   'ar.minshawi': '112',
   'ar.mahermuaiqly': '102',
   'ar.abdulbasitmurattal': '51',
-  'ar.hudhaify': '4',
+  'ar.hudhaify': '74',
   'ar.shaatree': '4',
 };
 
@@ -192,7 +192,7 @@ const islamicSlice = createSlice({
       state.prayerReminders.enabledAll = action.payload;
       if (action.payload) {
         const byKey: Partial<Record<PrayerReminderKey, boolean>> = {};
-        for (const key of PRAYER_SCHEDULE_KEYS) {
+        for (const key of PRAYER_ADHAN_KEYS) {
           byKey[key] = true;
         }
         state.prayerReminders.byKey = byKey;
@@ -207,7 +207,7 @@ const islamicSlice = createSlice({
       if (!next) {
         state.prayerReminders.enabledAll = false;
       } else {
-        const allOn = PRAYER_SCHEDULE_KEYS.every(item => state.prayerReminders.byKey[item]);
+        const allOn = PRAYER_ADHAN_KEYS.every(item => state.prayerReminders.byKey[item]);
         state.prayerReminders.enabledAll = allOn;
       }
     },
@@ -238,29 +238,49 @@ export const {
   setFcmToken,
 } = islamicSlice.actions;
 
-/** Fill fields added after older app versions were persisted. */
+/** Fill fields added after older app versions were persisted. Same identity when unchanged. */
 const normalizeIslamicState = (state: IslamicState): IslamicState => {
+  const rawReciterId = state.quranPreferences?.reciterId;
+  const migratedReciterId =
+    rawReciterId && LEGACY_RECITER_MAP[rawReciterId]
+      ? LEGACY_RECITER_MAP[rawReciterId]
+      : rawReciterId;
+  const needsReciterMigration =
+    Boolean(rawReciterId) && migratedReciterId !== rawReciterId;
+
+  const hasCoreFields =
+    Boolean(state.adhkarPreferences) &&
+    Boolean(state.prayerLocation) &&
+    Boolean(state.quranPreferences) &&
+    Boolean(state.notificationSettings) &&
+    Boolean(state.prayerReminders?.adhanSoundId) &&
+    Boolean(state.lastRead) &&
+    Array.isArray(state.bookmarkedAyahs) &&
+    Array.isArray(state.bookmarkedHadiths);
+
+  if (hasCoreFields && !needsReciterMigration) {
+    return state;
+  }
+
+  const rawByKey = state.prayerReminders?.byKey ?? {};
+  const adhanByKey: Partial<Record<PrayerReminderKey, boolean>> = {};
+  for (const key of PRAYER_ADHAN_KEYS) {
+    if (rawByKey[key] != null) {
+      adhanByKey[key] = rawByKey[key];
+    }
+  }
+
   const prayerReminders: PrayerReminderSettings = {
     ...defaultPrayerReminders(),
     ...state.prayerReminders,
     byKey: {
       ...defaultPrayerReminders().byKey,
-      ...state.prayerReminders?.byKey,
+      ...adhanByKey,
     },
     adhanSoundId:
       state.prayerReminders?.adhanSoundId ?? defaultPrayerReminders().adhanSoundId,
   };
 
-  if (
-    state.adhkarPreferences &&
-    state.prayerLocation &&
-    state.quranPreferences &&
-    state.notificationSettings &&
-    state.prayerReminders?.adhanSoundId &&
-    state.lastRead
-  ) {
-    return {...state, prayerReminders};
-  }
   return {
     ...initialState,
     ...state,
@@ -276,6 +296,7 @@ const normalizeIslamicState = (state: IslamicState): IslamicState => {
     quranPreferences: {
       ...defaultQuranPreferences,
       ...state.quranPreferences,
+      ...(migratedReciterId ? {reciterId: migratedReciterId} : {}),
     },
     adhkarPreferences: {
       ...defaultAdhkarPreferences,
@@ -288,7 +309,10 @@ const normalizeIslamicState = (state: IslamicState): IslamicState => {
   };
 };
 
-const islamicReducer: Reducer<IslamicState> = (state, action) =>
-  normalizeIslamicState(islamicSlice.reducer(state, action));
+/** Normalize persisted/hydrated state before reducing so migrations apply once. */
+const islamicReducer: Reducer<IslamicState> = (state, action) => {
+  const base = state === undefined ? state : normalizeIslamicState(state);
+  return islamicSlice.reducer(base, action);
+};
 
 export default islamicReducer;

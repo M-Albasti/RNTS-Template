@@ -15,7 +15,8 @@ type Props = {
   isActive: boolean;
   isPast: boolean;
   reminderOn: boolean;
-  onToggleReminder: () => void;
+  /** Omit for non-Adhan times (sunrise / duha / midnight). */
+  onToggleReminder?: () => void;
 };
 
 const PrayerTimeRow = ({
@@ -65,12 +66,14 @@ const PrayerTimeRow = ({
         style={styles.label}
       />
       <TextView text={time} variant="body" style={styles.time} />
-      <TouchableIcon
-        iconType="Ionicons"
-        name={reminderOn ? 'notifications' : 'notifications-off-outline'}
-        size={sizes.iconSm}
-        onPress={onToggleReminder}
-      />
+      {onToggleReminder ? (
+        <TouchableIcon
+          iconType="Ionicons"
+          name={reminderOn ? 'notifications' : 'notifications-off-outline'}
+          size={sizes.iconSm}
+          onPress={onToggleReminder}
+        />
+      ) : null}
     </View>
   );
 };

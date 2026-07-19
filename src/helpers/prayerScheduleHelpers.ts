@@ -1,4 +1,4 @@
-import type {PrayerTimeKey, PrayerTimings} from '@Types/islamicTypes';
+import type {PrayerAdhanKey, PrayerTimeKey, PrayerTimings} from '@Types/islamicTypes';
 
 /** Display / reminder order for the prayer schedule. */
 export const PRAYER_SCHEDULE_KEYS: readonly PrayerTimeKey[] = [
@@ -12,14 +12,20 @@ export const PRAYER_SCHEDULE_KEYS: readonly PrayerTimeKey[] = [
   'midnight',
 ] as const;
 
-/** Keys typically used for adhan-style reminders (excludes sunrise). */
-export const PRAYER_REMINDER_DEFAULT_KEYS: readonly PrayerTimeKey[] = [
+/** Keys used for Adhan-style reminders (excludes sunrise / duha / midnight). */
+export const PRAYER_ADHAN_KEYS: readonly PrayerAdhanKey[] = [
   'fajr',
   'dhuhr',
   'asr',
   'maghrib',
   'isha',
 ] as const;
+
+/** @deprecated Prefer PRAYER_ADHAN_KEYS. */
+export const PRAYER_REMINDER_DEFAULT_KEYS = PRAYER_ADHAN_KEYS;
+
+export const isPrayerAdhanKey = (key: PrayerTimeKey): key is PrayerAdhanKey =>
+  (PRAYER_ADHAN_KEYS as readonly string[]).includes(key);
 
 export type PrayerScheduleEntry = {
   key: PrayerTimeKey;

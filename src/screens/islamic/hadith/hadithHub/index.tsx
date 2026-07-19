@@ -145,10 +145,10 @@ const HadithHub = ({navigation}: Props): React.JSX.Element => {
 
   const editions = useMemo(() => {
     let list = data ?? [];
+    // Weak is grade-based at hadith level — keep all editions so users can
+    // open any book with filter=weak (do not equate weak with sunan-only).
     if (filter === 'sahih') {
       list = list.filter(item => item.category === 'sahih');
-    } else if (filter === 'weak') {
-      list = list.filter(item => item.category === 'sunan');
     }
     const q = query.trim().toLowerCase();
     if (!q) {
@@ -178,9 +178,9 @@ const HadithHub = ({navigation}: Props): React.JSX.Element => {
         onPress: () => navigation.navigate('HadithSearch'),
       },
       {
-        id: 'bookmarks',
-        labelKey: 'islamic.hadith.bookmarks',
-        icon: 'bookmark-outline',
+        id: 'sahih',
+        labelKey: 'islamic.hadith.sahih',
+        icon: 'checkmark-circle-outline',
         onPress: () =>
           navigation.navigate('HadithEditions', {
             filter: 'sahih',

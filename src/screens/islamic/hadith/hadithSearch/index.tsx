@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -53,10 +53,6 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
   const debouncedQuery = normalizeSearchQuery(String(useDebounce(query, SEARCH_DEBOUNCE_MS)));
   const isDebouncing = trimmedQuery.length > 0 && trimmedQuery !== debouncedQuery;
   const activeQuery = isDebouncing ? '' : debouncedQuery;
-
-  useEffect(() => {
-    setPage(1);
-  }, [activeQuery, filter]);
 
   const {data, isFetching, isError, error, refetch} = useHadithSearchQuery(
     activeQuery.length >= 2 ? activeQuery : '',
@@ -162,8 +158,19 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
   };
 
   const onSelectSuggestion = (suggestion: IslamicSearchSuggestion) => {
+    setPage(1);
     setQuery(suggestion.query);
     add(suggestion.query, 'hadith');
+  };
+
+  const onChangeQuery = (value: string) => {
+    setPage(1);
+    setQuery(value);
+  };
+
+  const onChangeFilter = (next: HadithCollectionFilter) => {
+    setPage(1);
+    setFilter(next);
   };
 
   return (
@@ -171,7 +178,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
       <ScreenHeader title={t('islamic.hadith.search')} onBack={() => navigation.goBack()} />
       <TextInputView
         value={query}
-        onChangeText={setQuery}
+        onChangeText={onChangeQuery}
         placeholder={t('islamic.hadith.searchPlaceholder')}
         autoFocus
         autoCorrect={false}
@@ -184,7 +191,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
           <Pressable
             key={item}
             style={[styles.chip, filter === item && styles.chipActive]}
-            onPress={() => setFilter(item)}>
+            onPress={() => onChangeFilter(item)}>
             <TextView
               text={t(`islamic.hadith.filters.${item}`)}
               variant="caption"

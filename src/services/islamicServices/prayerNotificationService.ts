@@ -10,7 +10,8 @@ import {resolveAdhanAudioUrl} from '@constants/adhanAudio';
 import {
   addCalendarDays,
   buildPrayerSchedule,
-  PRAYER_SCHEDULE_KEYS,
+  isPrayerAdhanKey,
+  PRAYER_ADHAN_KEYS,
 } from '@helpers/prayerScheduleHelpers';
 import type {
   PrayerLocation,
@@ -21,6 +22,9 @@ import type {
 
 const CHANNEL_ID = 'prayer-adhan';
 const DAYS_AHEAD = 7;
+
+/** Bumps when a newer sync starts so overlapping runs abort cleanly. */
+let syncGeneration = 0;
 
 const notificationIdFor = (dayOffset: number, key: PrayerReminderKey) =>
   `prayer-${dayOffset}-${key}`;
@@ -33,7 +37,8 @@ const ensureChannel = async () => {
     id: CHANNEL_ID,
     name: 'Prayer Adhan',
     importance: AndroidImportance.HIGH,
-    sound: 'default',
+    // Silent channel — Adhan audio is played from JS on notification press.
+    sound: undefined,
     vibration: true,
   });
 };
@@ -78,8 +83,15 @@ const fetchDayTimings = async (
 export const cancelPrayerReminderNotifications = async () => {
   const ids: string[] = [];
   for (let day = 0; day < DAYS_AHEAD; day += 1) {
-    for (const key of PRAYER_SCHEDULE_KEYS) {
+    for (const key of PRAYER_ADHAN_KEYS) {
       ids.push(notificationIdFor(day, key));
+    }
+  }
+  // Also cancel legacy ids that may have scheduled sunrise/duha/midnight.
+  const legacyExtras = ['sunrise', 'duha', 'midnight'] as const;
+  for (let day = 0; day < DAYS_AHEAD; day += 1) {
+    for (const key of legacyExtras) {
+      ids.push(`prayer-${day}-${key}`);
     }
   }
   await Promise.all(ids.map(id => notifee.cancelNotification(id).catch(() => undefined)));
@@ -93,7 +105,8 @@ type ScheduleArgs = {
 };
 
 /**
- * Schedules prayer-time notifications. On delivery, Notifee handlers play Adhan audio.
+ * Schedules prayer-time notifications. Adhan audio plays on notification press
+ * (JS path); notifications stay silent so OS sound does not overlap.
  */
 export const syncPrayerReminderNotifications = async ({
   location,
@@ -101,11 +114,20 @@ export const syncPrayerReminderNotifications = async ({
   titleFor,
   bodyFor,
 }: ScheduleArgs): Promise<void> => {
+  const generation = ++syncGeneration;
+  const isStale = () => generation !== syncGeneration;
+
   await ensureChannel();
+  if (isStale()) {
+    return;
+  }
   await cancelPrayerReminderNotifications();
+  if (isStale()) {
+    return;
+  }
 
   const anyEnabled =
-    settings.enabledAll || PRAYER_SCHEDULE_KEYS.some(key => settings.byKey[key]);
+    settings.enabledAll || PRAYER_ADHAN_KEYS.some(key => settings.byKey[key]);
   if (!anyEnabled) {
     return;
   }
@@ -114,14 +136,23 @@ export const syncPrayerReminderNotifications = async ({
   const adhanUrl = resolveAdhanAudioUrl(settings.adhanSoundId);
 
   for (let dayOffset = 0; dayOffset < DAYS_AHEAD; dayOffset += 1) {
+    if (isStale()) {
+      return;
+    }
     const day = addCalendarDays(new Date(), dayOffset);
     const timings = await fetchDayTimings(location, day);
+    if (isStale()) {
+      return;
+    }
     if (!timings) {
       continue;
     }
     const schedule = buildPrayerSchedule(timings, day);
     for (const entry of schedule) {
-      if (!isKeyEnabled(settings, entry.key)) {
+      if (isStale()) {
+        return;
+      }
+      if (!isPrayerAdhanKey(entry.key) || !isKeyEnabled(settings, entry.key)) {
         continue;
       }
       const triggerAt = entry.at.getTime();
@@ -150,11 +181,12 @@ export const syncPrayerReminderNotifications = async ({
               channelId: CHANNEL_ID,
               pressAction: {id: 'default'},
               smallIcon: 'ic_launcher',
-              // Ongoing-style importance so the Adhan is harder to miss.
               importance: AndroidImportance.HIGH,
+              // Silent — Adhan is played from JS on press to avoid double audio.
+              sound: '',
             },
             ios: {
-              sound: 'default',
+              sound: '',
             },
           },
           trigger,

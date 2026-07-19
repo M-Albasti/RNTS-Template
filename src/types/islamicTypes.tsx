@@ -167,11 +167,17 @@ export type PrayerTimings = {
   hijriDateAr?: string;
 };
 
-/** Per-prayer local reminder toggles (Notifee). */
-export type PrayerReminderKey = PrayerTimeKey;
+/**
+ * Adhan-capable prayer keys only — sunrise / duha / midnight are schedule
+ * display times, not Adhan reminder events.
+ */
+export type PrayerAdhanKey = 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
+
+/** Per-prayer local reminder toggles (Notifee Adhan). */
+export type PrayerReminderKey = PrayerAdhanKey;
 
 export type PrayerReminderSettings = {
-  /** When true, all prayer keys are treated as enabled. */
+  /** When true, all Adhan prayer keys are treated as enabled. */
   enabledAll: boolean;
   byKey: Partial<Record<PrayerReminderKey, boolean>>;
   /** Selected Adhan sound id from ADHAN_AUDIO_OPTIONS. */

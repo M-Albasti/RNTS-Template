@@ -51,6 +51,7 @@ export const useAdhkarAudioPlayer = ({
 
   const clearPlaybackState = useCallback(() => {
     setIsPlaying(false);
+    setIsLoading(false);
     setHasLoadedTrack(false);
     pendingUrlRef.current = null;
   }, []);

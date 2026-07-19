@@ -136,14 +136,14 @@ export const useHadithListQuery = (slug: string, page: number, language = 'en') 
     staleTime: 1000 * 60 * 60,
     gcTime: 1000 * 60 * 60 * 6,
     placeholderData: previous => previous,
+    // 429 retries live in enqueueHadithRequest — avoid double backoff here.
     retry: (failureCount, error) => {
       const status = (error as {response?: {status?: number}})?.response?.status;
       if (status === 429) {
-        return failureCount < 2;
+        return false;
       }
       return failureCount < 1;
     },
-    retryDelay: attempt => Math.min(30_000, 8_000 * (attempt + 1)),
   });
 
 /** Infinite hadith pages for FlashList onEndReached / Load more. */
@@ -166,14 +166,14 @@ export const useHadithListInfiniteQuery = (slug: string, language = 'en') =>
     enabled: Boolean(slug),
     staleTime: 1000 * 60 * 60,
     gcTime: 1000 * 60 * 60 * 6,
+    // 429 retries live in enqueueHadithRequest — avoid double backoff here.
     retry: (failureCount, error) => {
       const status = (error as {response?: {status?: number}})?.response?.status;
       if (status === 429) {
-        return failureCount < 2;
+        return false;
       }
       return failureCount < 1;
     },
-    retryDelay: attempt => Math.min(30_000, 8_000 * (attempt + 1)),
   });
 
 export const useHadithDetailQuery = (hadithId: string, language = 'en') =>
@@ -195,17 +195,14 @@ export const useHadithSearchQuery = (
     queryFn: () => hadithClient.searchHadiths(query, filter, language, page),
     enabled: query.trim().length >= 2,
     staleTime: 1000 * 60 * 30,
+    // 429 retries live in enqueueHadithRequest — avoid double backoff here.
     retry: (failureCount, error) => {
       const status = (error as {response?: {status?: number}})?.response?.status;
-      if (status === 400) {
+      if (status === 400 || status === 429) {
         return false;
-      }
-      if (status === 429) {
-        return failureCount < 2;
       }
       return failureCount < 1;
     },
-    retryDelay: attempt => Math.min(30_000, 10_000 * (attempt + 1)),
   });
 
 export const usePrayerTimingsQuery = (

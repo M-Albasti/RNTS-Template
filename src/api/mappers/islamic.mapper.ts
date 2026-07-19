@@ -116,7 +116,7 @@ export const mapHadithEdition = (dto: HadislamEditionDto): HadithEdition => ({
   id: dto._id,
   slug: dto.slug,
   name: dto.name.en,
-  nameAr: dto.name.ar || getHadithEditionNameAr(dto.slug),
+  nameAr: dto.name.ar || getHadithEditionNameAr(dto.slug, dto.name.en),
   hadithCount: dto.hadithCount,
   bookCount: dto.bookCount,
   availableLanguages: dto.availableLanguages,
