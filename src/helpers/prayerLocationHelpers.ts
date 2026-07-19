@@ -33,13 +33,21 @@ export const resolvePrayerLocation = (slice: IslamicPrayerSlice): PrayerLocation
   return stored ?? defaultPrayerLocation;
 };
 
+const isValidCoordinatePair = (latitude: number, longitude: number): boolean =>
+  Number.isFinite(latitude) &&
+  Number.isFinite(longitude) &&
+  latitude >= -90 &&
+  latitude <= 90 &&
+  longitude >= -180 &&
+  longitude <= 180;
+
 export const isPrayerLocationConfigured = (location: PrayerLocation): boolean => {
   if (location.mode === 'unset') {
     return false;
   }
   // Prefer coordinates (GPS / Places). City+country remains a legacy fallback.
   if (typeof location.latitude === 'number' && typeof location.longitude === 'number') {
-    return true;
+    return isValidCoordinatePair(location.latitude, location.longitude);
   }
   return Boolean(location.city?.trim() && location.country?.trim());
 };

@@ -139,14 +139,18 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
 
   const isFetching = surahLoading || textLoading;
   const showIdle = trimmedQuery.length === 0;
+  const surahSearchEnabled = activeQuery.length >= 1;
   // Keep partial results visible while slower text search finishes.
   const showLoading =
     !showIdle && (isDebouncing || (isFetching && results.length === 0));
+  // Hard error when every enabled search source failed (surah-only for 1-char queries).
   const hardError =
     !showIdle &&
     !isDebouncing &&
     results.length === 0 &&
-    ((textSearchEnabled && textError) || (activeQuery.length >= 1 && surahError && textError));
+    (surahSearchEnabled || textSearchEnabled) &&
+    (!surahSearchEnabled || surahError) &&
+    (!textSearchEnabled || textError);
   const minCharsNotMet =
     !showIdle && !isDebouncing && !textSearchEnabled && !ayahRef && !(surahResults?.length);
 

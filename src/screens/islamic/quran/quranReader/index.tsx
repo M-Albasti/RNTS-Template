@@ -70,7 +70,9 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
     }
   }, [resolvedPage]);
 
-  const pageSurahNumber = mushafQuery.data?.ayahs[0]?.surahNumber ?? viewedSurahNumber;
+  const pageFirstAyah = mushafQuery.data?.ayahs[0];
+  const pageSurahNumber = pageFirstAyah?.surahNumber ?? viewedSurahNumber;
+  const pageFirstAyahNumber = pageFirstAyah?.numberInSurah ?? 1;
 
   const handleAyahChange = useCallback(
     (playingSurah: number, ayahNumber: number) => {
@@ -121,6 +123,39 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   }));
 
   const pageAyahs = mushafQuery.data?.ayahs ?? [];
+
+  // Keep route/audio anchor aligned with the visible mushaf page so pause /
+  // resume and bindRoute do not restart the wrong surah after page flips.
+  // Prefer the playing surah's first ayah on the page when audio is active —
+  // mushaf pages often begin with the previous surah's leftover ayahs.
+  useEffect(() => {
+    const ayahs = mushafQuery.data?.ayahs;
+    if (!ayahs?.length) {
+      return;
+    }
+    const playingAnchor =
+      (audio.isPlaying || audio.isLoading) &&
+      ayahs.find(ayah => ayah.surahNumber === audio.playingSurahNumber);
+    const anchor = playingAnchor || ayahs[0];
+    if (
+      anchor.surahNumber === viewedSurahNumber &&
+      anchor.numberInSurah === initialAyahNumber
+    ) {
+      return;
+    }
+    navigation.setParams({
+      surahNumber: anchor.surahNumber,
+      ayahNumber: anchor.numberInSurah,
+    });
+  }, [
+    audio.isLoading,
+    audio.isPlaying,
+    audio.playingSurahNumber,
+    initialAyahNumber,
+    mushafQuery.data?.ayahs,
+    navigation,
+    viewedSurahNumber,
+  ]);
 
   useEffect(() => {
     // Don't overwrite last-read of the playing surah while browsing another.
@@ -184,7 +219,7 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
             onPress={() =>
               navigation.navigate('QuranTafsirReader', {
                 surahNumber: pageSurahNumber,
-                ayahNumber: 1,
+                ayahNumber: pageFirstAyahNumber,
               })
             }
           />

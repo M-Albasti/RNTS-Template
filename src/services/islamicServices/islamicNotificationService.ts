@@ -90,6 +90,11 @@ export const buildIslamicNotificationPayload = async (
     }
   }
 
+  // Prefer adhkar when available — only hit Quran/Hadith APIs as fallback.
+  if (options.length > 0) {
+    return options[Math.floor(Math.random() * options.length)];
+  }
+
   if (settings.includeQuran) {
     try {
       const ayah = await quranClient.getRandomAyah();
@@ -126,15 +131,7 @@ export const buildIslamicNotificationPayload = async (
     };
   }
 
-  // Prefer adhkar when available.
-  const adhkarOnly = options.filter(
-    item =>
-      item.kind === 'morning_adhkar' ||
-      item.kind === 'evening_adhkar' ||
-      item.kind === 'general_dhikr',
-  );
-  const pool = adhkarOnly.length > 0 ? adhkarOnly : options;
-  return pool[Math.floor(Math.random() * pool.length)];
+  return options[Math.floor(Math.random() * options.length)];
 };
 
 export const ensureIslamicNotificationChannel = async () => {

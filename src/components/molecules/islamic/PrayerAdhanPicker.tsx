@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Pressable, ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
@@ -85,6 +85,13 @@ const PrayerAdhanPicker = ({selectedId, onSelect}: Props): React.JSX.Element => 
     stopAdhan();
     setPreviewId(null);
   };
+
+  useEffect(
+    () => () => {
+      stopAdhan();
+    },
+    [],
+  );
 
   return (
     <View style={styles.card}>

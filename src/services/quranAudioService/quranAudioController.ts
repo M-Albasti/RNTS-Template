@@ -70,6 +70,8 @@ class QuranAudioController {
 
   private listeners = new Set<QuranAudioListener>();
   private callbacks: QuranAudioCallbacks = {};
+  /** Monotonic owner id so only the latest registrant may clear callbacks. */
+  private callbackOwnerId = 0;
   /** Official ms cues from mp3quran ayat_timing for the playing surah. */
   private ayahTimings: readonly QuranAyahTiming[] | undefined;
   private timingsSurah: number | null = null;
@@ -84,6 +86,7 @@ class QuranAudioController {
   private timingFetchGeneration = 0;
   private loadedKey: string | null = null;
   private pendingKey: string | null = null;
+  private pendingUrl: string | null = null;
   private pendingSurah: number | null = null;
   private pendingSeekAyah: number | null = null;
   private previousSurahForNotify: number | null = null;
@@ -107,8 +110,18 @@ class QuranAudioController {
 
   getSnapshot = (): QuranAudioSnapshot => this.snapshot;
 
-  setCallbacks = (callbacks: QuranAudioCallbacks) => {
-    this.callbacks = {...this.callbacks, ...callbacks};
+  /**
+   * Register screen-owned callbacks. Returns a disposer that clears them only
+   * if this registration is still the active owner (blur / unmount safe).
+   */
+  setCallbacks = (callbacks: QuranAudioCallbacks): (() => void) => {
+    const ownerId = ++this.callbackOwnerId;
+    this.callbacks = {...callbacks};
+    return () => {
+      if (this.callbackOwnerId === ownerId) {
+        this.callbacks = {};
+      }
+    };
   };
 
   /**
@@ -356,6 +369,7 @@ class QuranAudioController {
       const url = buildSurahAudioUrl(reciterId, targetSurah);
       const key = `${reciterId}:${targetSurah}`;
       this.pendingKey = key;
+      this.pendingUrl = url;
       this.pendingSurah = targetSurah;
       this.pendingSeekAyah = seekAyah;
       this.loadedKey = null;
@@ -673,6 +687,7 @@ class QuranAudioController {
   private resetLoadState = () => {
     this.loadedKey = null;
     this.pendingKey = null;
+    this.pendingUrl = null;
     this.pendingSurah = null;
     this.pendingSeekAyah = null;
     this.activePage = null;
@@ -706,10 +721,22 @@ class QuranAudioController {
     }
     this.bootstrapped = true;
 
-    SoundPlayer.addEventListener('FinishedLoadingURL', ({success}) => {
+    SoundPlayer.addEventListener('FinishedLoadingURL', ({success, url}) => {
       if (!this.pendingKey) {
         return;
       }
+      // Reject stale load events from a previous playUrl.
+      if (url && this.pendingUrl && url !== this.pendingUrl) {
+        return;
+      }
+
+      // Capture before clearing pending so async work can detect supersession.
+      const generationAtEvent = this.playbackGeneration;
+      const loadedKey = this.pendingKey;
+      const targetSurah = this.pendingSurah ?? this.snapshot.surahNumber;
+      const seekAyah = this.pendingSeekAyah ?? 1;
+      const previousSurah = this.previousSurahForNotify;
+
       if (!success) {
         this.ignoreFinishedPlaying = false;
         this.resetLoadState();
@@ -717,11 +744,9 @@ class QuranAudioController {
         return;
       }
 
-      const targetSurah = this.pendingSurah ?? this.snapshot.surahNumber;
-      const seekAyah = this.pendingSeekAyah ?? 1;
-      const previousSurah = this.previousSurahForNotify;
-      this.loadedKey = this.pendingKey;
+      this.loadedKey = loadedKey;
       this.pendingKey = null;
+      this.pendingUrl = null;
       this.pendingSurah = null;
       this.pendingSeekAyah = null;
       this.previousSurahForNotify = null;
@@ -750,9 +775,15 @@ class QuranAudioController {
         // Duration only needed for proportional fallback; API cues are absolute.
         if (!this.ayahTimings?.length || this.timingsSurah !== targetSurah) {
           const info = await this.safeGetInfo();
+          if (generationAtEvent !== this.playbackGeneration) {
+            return;
+          }
           if (info) {
             this.trackDurationSec = info.duration;
           }
+        }
+        if (generationAtEvent !== this.playbackGeneration) {
+          return;
         }
         this.rebuildResolvedTimings();
 
@@ -764,10 +795,17 @@ class QuranAudioController {
             } catch {
               // seek may fail briefly after load
             }
+            if (generationAtEvent !== this.playbackGeneration) {
+              return;
+            }
             this.applySyncCue(cue, true);
             this.startAyahClockAtAyah(seekAyah);
             return;
           }
+        }
+
+        if (generationAtEvent !== this.playbackGeneration) {
+          return;
         }
 
         if (this.resolvedTimings.length) {
@@ -777,6 +815,9 @@ class QuranAudioController {
 
         // Timings still in flight — clock starts when ensureTimingsForSurah finishes.
         const info = await this.safeGetInfo();
+        if (generationAtEvent !== this.playbackGeneration) {
+          return;
+        }
         if (info && this.resolvedTimings.length) {
           this.startAyahClockFromMs(Math.max(0, info.currentTime * 1000));
         }

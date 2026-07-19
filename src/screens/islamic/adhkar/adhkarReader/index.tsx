@@ -44,9 +44,14 @@ const AdhkarReader = ({navigation, route}: Props): React.JSX.Element => {
     state => state.islamic.adhkarPreferences?.reciterId ?? DEFAULT_ADHKAR_RECITER_ID,
   );
 
-  const sessionId = route.params.sessionId as AdhkarSessionId | undefined;
+  const sessionId =
+    'sessionId' in route.params
+      ? (route.params.sessionId as AdhkarSessionId)
+      : undefined;
   const session = sessionId ? getAdhkarSessionById(sessionId) : undefined;
-  const categoryId = session?.categoryId ?? route.params.categoryId;
+  const categoryId =
+    session?.categoryId ??
+    ('categoryId' in route.params ? route.params.categoryId : undefined);
   const title =
     session != null
       ? t(session.titleKey)
@@ -188,11 +193,12 @@ const AdhkarReader = ({navigation, route}: Props): React.JSX.Element => {
           style={[styles.card, isActive && styles.cardActive]}
           onPress={() => {
             if (!isContinuous) {
-              audio.playIndex(
-                (playableItems.length ? playableItems : items).findIndex(
-                  entry => entry.id === item.id,
-                ),
-              );
+              const playlist = playableItems.length ? playableItems : items;
+              const playlistIndex = playlist.findIndex(entry => entry.id === item.id);
+              if (playlistIndex < 0) {
+                return;
+              }
+              audio.playIndex(playlistIndex);
             }
           }}>
           <View style={styles.repeat}>

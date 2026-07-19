@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Pressable, ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
@@ -37,6 +37,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
   const [search, setSearch] = useState('');
   const [suggestions, setSuggestions] = useState<PlaceCitySuggestion[]>([]);
   const [searching, setSearching] = useState(false);
+  const autocompleteRequestIdRef = useRef(0);
 
   const placesEnabled = placesClient.isConfigured();
 
@@ -72,18 +73,39 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
 
   useEffect(() => {
     if (!placesEnabled || search.trim().length < 2) {
+      autocompleteRequestIdRef.current += 1;
       setSuggestions([]);
+      setSearching(false);
       return;
     }
+    const requestId = ++autocompleteRequestIdRef.current;
     const timer = setTimeout(() => {
       setSearching(true);
       placesClient
         .autocompleteCities(search, isAr ? 'ar' : 'en')
-        .then(setSuggestions)
-        .catch(() => setSuggestions([]))
-        .finally(() => setSearching(false));
+        .then(results => {
+          if (requestId !== autocompleteRequestIdRef.current) {
+            return;
+          }
+          setSuggestions(results);
+        })
+        .catch(() => {
+          if (requestId !== autocompleteRequestIdRef.current) {
+            return;
+          }
+          setSuggestions([]);
+        })
+        .finally(() => {
+          if (requestId === autocompleteRequestIdRef.current) {
+            setSearching(false);
+          }
+        });
     }, 350);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      // Invalidate in-flight responses when the query changes or effect cleans up.
+      autocompleteRequestIdRef.current += 1;
+    };
   }, [isAr, placesEnabled, search]);
 
   const saveAndClose = (location: PrayerLocation) => {

@@ -1,4 +1,5 @@
-import {useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 
 import type {QuranAyahTiming} from '@helpers/quranAudioHelpers';
 import {
@@ -47,25 +48,31 @@ export const useQuranAudioPlayer = ({
     onSurahChange,
     onSurahFinished,
   });
-  callbacksRef.current = {
-    onAyahChange,
-    onPageChange,
-    onSurahChange,
-    onSurahFinished,
-  };
+
+  useEffect(() => {
+    callbacksRef.current = {
+      onAyahChange,
+      onPageChange,
+      onSurahChange,
+      onSurahFinished,
+    };
+  }, [onAyahChange, onPageChange, onSurahChange, onSurahFinished]);
 
   useEffect(() => {
     return quranAudioController.subscribe(setSnapshot);
   }, []);
 
-  useEffect(() => {
-    quranAudioController.setCallbacks({
-      onAyahChange: (surah, ayah) => callbacksRef.current.onAyahChange?.(surah, ayah),
-      onPageChange: page => callbacksRef.current.onPageChange?.(page),
-      onSurahChange: surah => callbacksRef.current.onSurahChange?.(surah),
-      onSurahFinished: () => callbacksRef.current.onSurahFinished?.(),
-    });
-  }, []);
+  // Own the process-wide callback slot only while this screen is focused.
+  useFocusEffect(
+    useCallback(() => {
+      return quranAudioController.setCallbacks({
+        onAyahChange: (surah, ayah) => callbacksRef.current.onAyahChange?.(surah, ayah),
+        onPageChange: page => callbacksRef.current.onPageChange?.(page),
+        onSurahChange: surah => callbacksRef.current.onSurahChange?.(surah),
+        onSurahFinished: () => callbacksRef.current.onSurahFinished?.(),
+      });
+    }, []),
+  );
 
   useEffect(() => {
     quranAudioController.setTimings(ayahTimings, ayahPageMap, surahNumber);

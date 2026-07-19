@@ -255,7 +255,9 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
                 label={t('islamic.common.retry')}
                 variant="secondary"
                 loading={isFetchingNextPage}
-                onPress={() => void refetch()}
+                onPress={() =>
+                  void (isFetchNextPageError ? fetchNextPage() : refetch())
+                }
               />
             </>
           ) : null}

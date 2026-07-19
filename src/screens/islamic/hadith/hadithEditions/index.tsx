@@ -81,10 +81,9 @@ const HadithEditions = ({navigation, route}: Props): React.JSX.Element => {
 
   const editions = useMemo(() => {
     let list = data ?? [];
+    // Weak is grade-based when opening a list — do not equate with sunan-only.
     if (filter === 'sahih') {
       list = list.filter(item => item.category === 'sahih');
-    } else if (filter === 'weak') {
-      list = list.filter(item => item.category === 'sunan');
     }
     const q = query.trim().toLowerCase();
     if (!q) {

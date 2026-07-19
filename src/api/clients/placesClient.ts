@@ -149,7 +149,7 @@ export const placesClient = {
     }>('/place/details/json', {
       params: {
         place_id: placeId,
-        fields: 'geometry,address_component,formatted_address',
+        fields: 'geometry,address_components,formatted_address',
         key: GOOGLE_MAPS_API_KEY,
       },
     });

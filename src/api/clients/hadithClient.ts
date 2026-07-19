@@ -42,7 +42,8 @@ export const HADITH_TEXT_LANGS = ['en', 'ar', 'ar-diacritics'] as const;
 
 const LIST_PAGE_SIZE = HADITH_PAGE_SIZE;
 const SEARCH_PAGE_SIZE = HADITH_SEARCH_PAGE_SIZE;
-const MAX_FILTER_SCAN_PAGES = 3;
+/** Safety cap so a hostile/empty API cannot loop forever while scanning filters. */
+const MAX_FILTER_SCAN_PAGES = 50;
 
 const isArabicQuery = (query: string): boolean => /[\u0600-\u06FF]/.test(query);
 
@@ -128,12 +129,36 @@ export const hadithClient = {
   },
 
   getEditionBooks: async (slug: string): Promise<HadithBook[]> => {
-    const data = await hadithGet<HadislamPaginatedDto<HadislamBookDto> | HadislamBookDto[]>(
+    const first = await hadithGet<HadislamPaginatedDto<HadislamBookDto> | HadislamBookDto[]>(
       `/editions/${slug}/books`,
-      {page_size: LIST_PAGE_SIZE},
+      {page: 1, page_size: LIST_PAGE_SIZE},
     );
-    const items = Array.isArray(data) ? data : data.items ?? [];
-    return items.map(mapHadithBook);
+    if (Array.isArray(first)) {
+      return first.map(mapHadithBook);
+    }
+
+    const books = [...(first.items ?? [])];
+    const total = first.total ?? books.length;
+    const pageSize = first.page_size ?? LIST_PAGE_SIZE;
+    let page = first.page ?? 1;
+
+    while (books.length < total) {
+      page += 1;
+      const next = await hadithGet<HadislamPaginatedDto<HadislamBookDto>>(
+        `/editions/${slug}/books`,
+        {page, page_size: pageSize},
+      );
+      const chunk = next.items ?? [];
+      if (chunk.length === 0) {
+        break;
+      }
+      books.push(...chunk);
+      if (chunk.length < pageSize) {
+        break;
+      }
+    }
+
+    return books.map(mapHadithBook);
   },
 
   getEditionHadiths: async (
@@ -185,22 +210,38 @@ export const hadithClient = {
     let apiPage = 1;
     let apiTotal = 0;
     let scannedRaw = 0;
+    let exhausted = false;
 
+    // Scan API pages until this result page is filled or the corpus is exhausted
+    // (do not cap every filtered page to the first ~60 raw hits).
     while (matched.length < needed && apiPage <= MAX_FILTER_SCAN_PAGES) {
       const data = await fetchSearchPage(query, language, apiPage);
       apiTotal = data.total ?? 0;
-      const mapped = mapAndKeepText(data.items ?? [], language);
-      scannedRaw += data.items?.length ?? 0;
-      matched.push(...mapped.filter(item => matchesCollectionFilter(item, filter)));
-      if (!data.items?.length) {
+      const raw = data.items ?? [];
+      scannedRaw += raw.length;
+      matched.push(
+        ...mapAndKeepText(raw, language).filter(item =>
+          matchesCollectionFilter(item, filter),
+        ),
+      );
+      if (raw.length === 0) {
+        exhausted = true;
+        break;
+      }
+      const apiTotalPages = Math.max(1, Math.ceil(apiTotal / SEARCH_PAGE_SIZE));
+      if (apiPage >= apiTotalPages || raw.length < SEARCH_PAGE_SIZE) {
+        exhausted = true;
         break;
       }
       apiPage += 1;
     }
 
+    if (apiPage > MAX_FILTER_SCAN_PAGES) {
+      exhausted = scannedRaw >= apiTotal;
+    }
+
     const start = (page - 1) * SEARCH_PAGE_SIZE;
     const items = matched.slice(start, start + SEARCH_PAGE_SIZE);
-    const exhausted = scannedRaw === 0 || apiPage > Math.ceil(apiTotal / SEARCH_PAGE_SIZE);
     const ratio = scannedRaw > 0 ? matched.length / scannedRaw : 0;
     const estimatedTotal = exhausted
       ? matched.length

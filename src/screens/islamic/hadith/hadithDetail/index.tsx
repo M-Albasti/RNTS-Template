@@ -319,21 +319,6 @@ const HadithDetail = ({navigation, route}: Props): React.JSX.Element => {
             </Pressable>
             <Pressable
               style={styles.dockBtn}
-              onPress={() => void shareHadith()}>
-              <IconView
-                iconType="Ionicons"
-                name="create-outline"
-                size={sizes.iconMd}
-                color={colors.hadithOnChrome}
-              />
-              <TextView
-                text={t('islamic.hadith.notes')}
-                variant="caption"
-                style={styles.dockLabel}
-              />
-            </Pressable>
-            <Pressable
-              style={styles.dockBtn}
               onPress={() => dispatch(toggleBookmarkHadith(hadithId))}>
               <IconView
                 iconType="Ionicons"

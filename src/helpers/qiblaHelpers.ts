@@ -24,20 +24,31 @@ export const getQiblaBearingDegrees = (
   return (toDegrees(θ) + 360) % 360;
 };
 
+/** Normalize degrees into [0, 360). Returns 0 for non-finite input. */
+const normalizeDegrees = (degrees: number): number => {
+  if (!Number.isFinite(degrees)) {
+    return 0;
+  }
+  return ((degrees % 360) + 360) % 360;
+};
+
 /** Shortest signed turn from device heading to qibla bearing (−180…180). */
 export const getQiblaNeedleRotation = (
   qiblaBearing: number,
   deviceHeading: number,
 ): number => {
-  let delta = qiblaBearing - deviceHeading;
-  while (delta > 180) {
-    delta -= 360;
+  if (!Number.isFinite(qiblaBearing) || !Number.isFinite(deviceHeading)) {
+    return 0;
   }
-  while (delta < -180) {
-    delta += 360;
+  const delta = normalizeDegrees(qiblaBearing) - normalizeDegrees(deviceHeading);
+  if (delta > 180) {
+    return delta - 360;
+  }
+  if (delta < -180) {
+    return delta + 360;
   }
   return delta;
 };
 
 export const formatBearingLabel = (degrees: number): string =>
-  `${Math.round(((degrees % 360) + 360) % 360)}°`;
+  `${Math.round(normalizeDegrees(degrees))}°`;

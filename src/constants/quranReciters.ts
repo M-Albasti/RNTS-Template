@@ -100,6 +100,13 @@ export const QURAN_RECITERS: QuranReciter[] = [
     everyayahFolder: 'Abu_Bakr_Ash-Shaatree_128kbps',
   },
   {
+    id: '74',
+    nameAr: 'علي بن عبدالرحمن الحذيفي',
+    nameEn: 'Ali Al-Hudhaify',
+    server: 'https://server9.mp3quran.net/hthfi/',
+    everyayahFolder: 'Hudhaify_128kbps',
+  },
+  {
     id: '20',
     nameAr: 'خالد الجليل',
     nameEn: 'Khalid Al-Jalil',
@@ -182,7 +189,7 @@ const LEGACY_RECITER_MAP: Record<string, string> = {
   'ar.minshawi': '112',
   'ar.mahermuaiqly': '102',
   'ar.abdulbasitmurattal': '51',
-  'ar.hudhaify': '4',
+  'ar.hudhaify': '74',
   'ar.shaatree': '4',
 };
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
@@ -26,6 +26,7 @@ import {
   formatCountdownParts,
   getCurrentPrayer,
   getNextPrayer,
+  isPrayerAdhanKey,
   isSameLocalDay,
   PRAYER_SCHEDULE_KEYS,
 } from '@helpers/prayerScheduleHelpers';
@@ -44,7 +45,7 @@ import {syncPrayerReminderNotifications} from '@services/islamicServices/prayerN
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
-import type {PrayerTimeKey} from '@Types/islamicTypes';
+import type {PrayerAdhanKey, PrayerTimeKey} from '@Types/islamicTypes';
 
 import {IslamicErrorState, IslamicLoadingState} from '@screens/islamic/islamicHub';
 
@@ -65,6 +66,8 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
     return d;
   });
   const [now, setNow] = useState(() => new Date());
+  /** True while the user is viewing "today"; false after browsing another date. */
+  const trackingTodayRef = useRef(true);
 
   const useCoords =
     configured && location.latitude != null && location.longitude != null;
@@ -83,10 +86,31 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
 
   const {data, isLoading, isError, isFetching} = useCoords ? coordsQuery : cityQuery;
 
+  const browseSelectedDay = useCallback((delta: number) => {
+    setSelectedDay(current => {
+      const next = addCalendarDays(current, delta);
+      trackingTodayRef.current = isSameLocalDay(next, new Date());
+      return next;
+    });
+  }, []);
+
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  // Advance the calendar day when the open screen crosses midnight (today only).
+  useEffect(() => {
+    if (!trackingTodayRef.current) {
+      return;
+    }
+    if (isSameLocalDay(selectedDay, now)) {
+      return;
+    }
+    const next = new Date(now);
+    next.setHours(12, 0, 0, 0);
+    setSelectedDay(next);
+  }, [now, selectedDay]);
 
   useEffect(() => {
     if (!configured) {
@@ -188,12 +212,13 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
   }, [data, i18n.language]);
 
   const isReminderOn = useCallback(
-    (key: PrayerTimeKey) => Boolean(reminders.enabledAll || reminders.byKey[key]),
+    (key: PrayerTimeKey) =>
+      isPrayerAdhanKey(key) && Boolean(reminders.enabledAll || reminders.byKey[key]),
     [reminders],
   );
 
   const handleToggleReminder = useCallback(
-    (key: PrayerTimeKey) => {
+    (key: PrayerAdhanKey) => {
       dispatch(togglePrayerReminder(key));
     },
     [dispatch],
@@ -260,8 +285,8 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
         day={selectedDay}
         gregorianLabel={data?.date ?? selectedDay.toDateString()}
         hijriLabel={hijriLabel}
-        onPrevious={() => setSelectedDay(current => addCalendarDays(current, -1))}
-        onNext={() => setSelectedDay(current => addCalendarDays(current, 1))}
+        onPrevious={() => browseSelectedDay(-1)}
+        onNext={() => browseSelectedDay(1)}
       />
 
       <PrayerRemindersBar
@@ -290,6 +315,7 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
               isSameLocalDay(selectedDay, now) && currentPrayer?.key === key;
             const isPast =
               isSameLocalDay(selectedDay, now) && entry.at.getTime() < now.getTime() && !isActive;
+            const canRemind = isPrayerAdhanKey(key);
             return (
               <PrayerTimeRow
                 key={key}
@@ -298,7 +324,9 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
                 isActive={isActive}
                 isPast={isPast}
                 reminderOn={isReminderOn(key)}
-                onToggleReminder={() => handleToggleReminder(key)}
+                onToggleReminder={
+                  canRemind ? () => handleToggleReminder(key) : undefined
+                }
               />
             );
           })}
