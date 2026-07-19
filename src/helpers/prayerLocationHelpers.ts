@@ -37,10 +37,9 @@ export const isPrayerLocationConfigured = (location: PrayerLocation): boolean =>
   if (location.mode === 'unset') {
     return false;
   }
-  if (location.mode === 'gps' || location.mode === 'timezone') {
-    return (
-      typeof location.latitude === 'number' && typeof location.longitude === 'number'
-    );
+  // Prefer coordinates (GPS / Places). City+country remains a legacy fallback.
+  if (typeof location.latitude === 'number' && typeof location.longitude === 'number') {
+    return true;
   }
   return Boolean(location.city?.trim() && location.country?.trim());
 };

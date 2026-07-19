@@ -2,8 +2,9 @@ import axios from 'axios';
 import {GOOGLE_MAPS_API_KEY} from '@env';
 
 /**
- * Google Places / Geocoding helpers for prayer location setup.
- * Requires Places + Geocoding APIs enabled on the same Maps key.
+ * Google Places / Geocoding / Time Zone helpers for prayer location setup.
+ * Requires Places, Geocoding, and Time Zone APIs on the Maps key.
+ * No static city/timezone lists — everything is resolved dynamically.
  */
 
 type AutocompletePrediction = {
@@ -32,6 +33,9 @@ export type ResolvedPlaceLocation = {
   latitude: number;
   longitude: number;
   label: string;
+  /** IANA timezone from Google Time Zone API when available. */
+  timezone: string | null;
+  timezoneName: string | null;
 };
 
 const mapsHttp = axios.create({
@@ -47,6 +51,28 @@ const componentByType = (
   type: string,
 ): string | undefined =>
   components?.find(item => item.types.includes(type))?.long_name;
+
+const parsePlace = (
+  result: PlaceDetailsResult,
+  latitude: number,
+  longitude: number,
+  fallbackCity: string,
+): Omit<ResolvedPlaceLocation, 'timezone' | 'timezoneName'> => {
+  const components = result.address_components;
+  const city =
+    componentByType(components, 'locality') ||
+    componentByType(components, 'administrative_area_level_2') ||
+    componentByType(components, 'administrative_area_level_1') ||
+    fallbackCity;
+  const country = componentByType(components, 'country') || '';
+  return {
+    city,
+    country,
+    latitude,
+    longitude,
+    label: result.formatted_address || `${city}${country ? `, ${country}` : ''}`,
+  };
+};
 
 export const placesClient = {
   isConfigured: hasMapsKey,
@@ -78,6 +104,41 @@ export const placesClient = {
     }));
   },
 
+  /**
+   * Resolves IANA timezone for coordinates via Google Time Zone API.
+   */
+  getTimezone: async (
+    latitude: number,
+    longitude: number,
+  ): Promise<{timezone: string; timezoneName: string} | null> => {
+    if (!hasMapsKey()) {
+      return null;
+    }
+    try {
+      const {data} = await mapsHttp.get<{
+        status: string;
+        timeZoneId?: string;
+        timeZoneName?: string;
+      }>('/timezone/json', {
+        params: {
+          location: `${latitude},${longitude}`,
+          timestamp: Math.floor(Date.now() / 1000),
+          key: GOOGLE_MAPS_API_KEY,
+        },
+      });
+      if (data.status !== 'OK' || !data.timeZoneId) {
+        return null;
+      }
+      return {
+        timezone: data.timeZoneId,
+        timezoneName: data.timeZoneName ?? data.timeZoneId,
+      };
+    } catch (error) {
+      console.log('placesClient.getTimezone Error =>', error);
+      return null;
+    }
+  },
+
   resolvePlaceId: async (placeId: string): Promise<ResolvedPlaceLocation | null> => {
     if (!hasMapsKey() || !placeId) {
       return null;
@@ -95,19 +156,14 @@ export const placesClient = {
     if (data.status !== 'OK' || !data.result?.geometry?.location) {
       return null;
     }
-    const components = data.result.address_components;
-    const city =
-      componentByType(components, 'locality') ||
-      componentByType(components, 'administrative_area_level_2') ||
-      componentByType(components, 'administrative_area_level_1') ||
-      'Unknown';
-    const country = componentByType(components, 'country') || 'Unknown';
+    const latitude = data.result.geometry.location.lat;
+    const longitude = data.result.geometry.location.lng;
+    const base = parsePlace(data.result, latitude, longitude, 'Unknown');
+    const zone = await placesClient.getTimezone(latitude, longitude);
     return {
-      city,
-      country,
-      latitude: data.result.geometry.location.lat,
-      longitude: data.result.geometry.location.lng,
-      label: data.result.formatted_address || `${city}, ${country}`,
+      ...base,
+      timezone: zone?.timezone ?? null,
+      timezoneName: zone?.timezoneName ?? null,
     };
   },
 
@@ -115,6 +171,8 @@ export const placesClient = {
     latitude: number,
     longitude: number,
   ): Promise<ResolvedPlaceLocation | null> => {
+    const zone = await placesClient.getTimezone(latitude, longitude);
+
     if (!hasMapsKey()) {
       return {
         city: 'Current location',
@@ -122,8 +180,11 @@ export const placesClient = {
         latitude,
         longitude,
         label: `${latitude.toFixed(3)}, ${longitude.toFixed(3)}`,
+        timezone: zone?.timezone ?? null,
+        timezoneName: zone?.timezoneName ?? null,
       };
     }
+
     const {data} = await mapsHttp.get<{
       status: string;
       results?: PlaceDetailsResult[];
@@ -141,21 +202,15 @@ export const placesClient = {
         latitude,
         longitude,
         label: `${latitude.toFixed(3)}, ${longitude.toFixed(3)}`,
+        timezone: zone?.timezone ?? null,
+        timezoneName: zone?.timezoneName ?? null,
       };
     }
-    const components = result.address_components;
-    const city =
-      componentByType(components, 'locality') ||
-      componentByType(components, 'administrative_area_level_2') ||
-      componentByType(components, 'administrative_area_level_1') ||
-      'Current location';
-    const country = componentByType(components, 'country') || '';
+    const base = parsePlace(result, latitude, longitude, 'Current location');
     return {
-      city,
-      country,
-      latitude,
-      longitude,
-      label: result.formatted_address || `${city}, ${country}`,
+      ...base,
+      timezone: zone?.timezone ?? null,
+      timezoneName: zone?.timezoneName ?? null,
     };
   },
 };

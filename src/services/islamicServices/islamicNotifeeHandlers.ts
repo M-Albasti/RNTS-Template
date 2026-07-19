@@ -28,7 +28,10 @@ export const handleIslamicNotifeeEvent = async (event: Event) => {
 
   if (kind === 'prayer_adhan') {
     if (type === EventType.DELIVERED || type === EventType.PRESS) {
-      playAdhan();
+      const data = event.detail.notification?.data as
+        | {adhanUrl?: string; adhanSoundId?: string}
+        | undefined;
+      playAdhan(data?.adhanUrl || data?.adhanSoundId);
     }
     return;
   }

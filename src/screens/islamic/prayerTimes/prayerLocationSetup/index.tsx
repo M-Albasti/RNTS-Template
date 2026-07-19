@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, Pressable, ScrollView, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
@@ -11,11 +11,6 @@ import TextInputView from '@atoms/TextInputView';
 import TextView from '@atoms/TextView';
 
 import {placesClient, type PlaceCitySuggestion} from '@api/clients/placesClient';
-import {
-  getCitiesForCountry,
-  PRAYER_COUNTRIES,
-  PRAYER_TIMEZONES,
-} from '@constants/prayerLocations';
 import {getCurrentPosition, requestLocationPermission} from '@helpers/locationHelpers';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {setPrayerLocation} from '@redux/slices/islamicSlice';
@@ -24,48 +19,25 @@ import type {AppStackNavigationProp} from '@Types/appNavigation';
 import type {PrayerLocation} from '@Types/islamicTypes';
 
 type Props = {navigation: AppStackNavigationProp<'PrayerLocationSetup'>};
-type TabId = 'gps' | 'city' | 'timezone';
-
-const formatZoneNow = (timezone: string, locale: string): string => {
-  try {
-    return new Intl.DateTimeFormat(locale, {
-      timeZone: timezone,
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZoneName: 'shortOffset',
-    }).format(new Date());
-  } catch {
-    return timezone;
-  }
-};
+type TabId = 'gps' | 'search';
 
 /**
- * Choose prayer-location via GPS, country/city (or Places search), or GMT timezone.
+ * Choose prayer location via GPS or Google Places search.
+ * Timezone is resolved dynamically from Google Time Zone API — no static lists.
  */
 const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
   const {t, i18n} = useTranslation();
   const dispatch = useAppDispatch();
   const isAr = i18n.language.startsWith('ar');
-  const locale = isAr ? 'ar' : 'en-GB';
 
   const [tab, setTab] = useState<TabId>('gps');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [country, setCountry] = useState(PRAYER_COUNTRIES[0].country);
-  const [city, setCity] = useState(PRAYER_COUNTRIES[0].cities[0].city);
-  const [showCountries, setShowCountries] = useState(false);
-  const [showCities, setShowCities] = useState(false);
-
   const [search, setSearch] = useState('');
   const [suggestions, setSuggestions] = useState<PlaceCitySuggestion[]>([]);
   const [searching, setSearching] = useState(false);
 
-  const cities = useMemo(() => getCitiesForCountry(country), [country]);
   const placesEnabled = placesClient.isConfigured();
 
   const styles = useThemedStyles(tokens => ({
@@ -95,22 +67,6 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
       paddingVertical: tokens.spacing.sm,
       borderBottomWidth: tokens.layout.borderWidth.sm,
       borderBottomColor: tokens.colors.border,
-    },
-    optionActive: {backgroundColor: tokens.colors.primaryMuted},
-    dropdown: {
-      marginTop: tokens.spacing.xs,
-      maxHeight: tokens.sizes.touchTarget * 6,
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      borderRadius: tokens.radius.md,
-      backgroundColor: tokens.colors.background,
-    },
-    field: {
-      borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: tokens.colors.border,
-      borderRadius: tokens.radius.md,
-      padding: tokens.spacing.sm,
-      backgroundColor: tokens.colors.background,
     },
   }));
 
@@ -142,7 +98,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
       const allowed = await requestLocationPermission();
       if (!allowed) {
         setError(t('islamic.prayer.locationDenied'));
-        setTab('city');
+        setTab('search');
         return;
       }
       const coords = await getCurrentPosition();
@@ -153,32 +109,16 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
         country: place?.country || '',
         latitude: coords.latitude,
         longitude: coords.longitude,
-        timezone: null,
-        timezoneId: null,
+        timezone: place?.timezone ?? null,
+        timezoneId: place?.timezone ?? null,
         label: place?.label || t('islamic.prayer.currentLocation'),
       });
     } catch {
       setError(t('islamic.prayer.locationFailed'));
-      setTab('city');
+      setTab('search');
     } finally {
       setBusy(false);
     }
-  };
-
-  const selectCityLocation = () => {
-    if (!city || !country) {
-      return;
-    }
-    saveAndClose({
-      mode: 'city',
-      city,
-      country,
-      latitude: null,
-      longitude: null,
-      timezone: null,
-      timezoneId: null,
-      label: `${city}, ${country}`,
-    });
   };
 
   const selectPlaceSuggestion = async (suggestion: PlaceCitySuggestion) => {
@@ -191,13 +131,13 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
         return;
       }
       saveAndClose({
-        mode: 'gps',
+        mode: 'city',
         city: place.city,
         country: place.country,
         latitude: place.latitude,
         longitude: place.longitude,
-        timezone: null,
-        timezoneId: null,
+        timezone: place.timezone,
+        timezoneId: place.timezone,
         label: place.label,
       });
     } catch {
@@ -205,23 +145,6 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     } finally {
       setBusy(false);
     }
-  };
-
-  const selectTimezoneLocation = (timezoneId: string) => {
-    const zone = PRAYER_TIMEZONES.find(item => item.id === timezoneId);
-    if (!zone) {
-      return;
-    }
-    saveAndClose({
-      mode: 'timezone',
-      city: zone.city,
-      country: zone.country,
-      latitude: zone.latitude,
-      longitude: zone.longitude,
-      timezone: zone.timezone,
-      timezoneId: zone.id,
-      label: isAr ? zone.labelAr : zone.labelEn,
-    });
   };
 
   return (
@@ -237,8 +160,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
           {(
             [
               ['gps', t('islamic.prayer.tabGps')],
-              ['city', t('islamic.prayer.tabCity')],
-              ['timezone', t('islamic.prayer.tabTimezone')],
+              ['search', t('islamic.prayer.tabCity')],
             ] as const
           ).map(([id, label]) => (
             <Pressable
@@ -282,19 +204,21 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
             <Button
               label={t('islamic.prayer.skipToManual')}
               variant="secondary"
-              onPress={() => setTab('city')}
+              onPress={() => setTab('search')}
             />
           </View>
         ) : null}
 
-        {tab === 'city' ? (
+        {tab === 'search' ? (
           <View style={styles.card}>
             <Heading text={t('islamic.prayer.pickCityTitle')} level="h3" />
             <Spacer size="xs" />
             <TextView text={t('islamic.prayer.pickCityBody')} variant="bodySmall" muted />
             <Spacer size="md" />
 
-            {placesEnabled ? (
+            {!placesEnabled ? (
+              <TextView text={t('islamic.prayer.mapsKeyRequired')} variant="bodySmall" />
+            ) : (
               <>
                 <TextView text={t('islamic.prayer.searchCity')} variant="caption" muted />
                 <Spacer size="xxs" />
@@ -303,7 +227,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
                   value={search}
                   onChangeText={setSearch}
                 />
-                {searching ? <ActivityIndicator /> : null}
+                {searching || busy ? <ActivityIndicator /> : null}
                 {suggestions.map(item => (
                   <Pressable
                     key={item.placeId}
@@ -314,92 +238,11 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
                     <TextView text={item.description} variant="body" />
                   </Pressable>
                 ))}
-                <Spacer size="md" />
-                <TextView text={t('islamic.prayer.orPickDropdown')} variant="caption" muted />
-                <Spacer size="sm" />
+                {search.trim().length >= 2 && !searching && suggestions.length === 0 ? (
+                  <TextView text={t('islamic.prayer.noCityResults')} variant="caption" muted />
+                ) : null}
               </>
-            ) : null}
-
-            <TextView text={t('islamic.prayer.country')} variant="caption" muted />
-            <Spacer size="xxs" />
-            <Pressable
-              style={styles.field}
-              onPress={() => {
-                setShowCountries(current => !current);
-                setShowCities(false);
-              }}>
-              <TextView text={country} variant="body" />
-            </Pressable>
-            {showCountries ? (
-              <ScrollView style={styles.dropdown} nestedScrollEnabled>
-                {PRAYER_COUNTRIES.map(item => (
-                  <Pressable
-                    key={item.country}
-                    style={[styles.option, item.country === country && styles.optionActive]}
-                    onPress={() => {
-                      setCountry(item.country);
-                      setCity(item.cities[0]?.city ?? '');
-                      setShowCountries(false);
-                    }}>
-                    <TextView text={item.country} variant="body" />
-                  </Pressable>
-                ))}
-              </ScrollView>
-            ) : null}
-
-            <Spacer size="md" />
-            <TextView text={t('islamic.prayer.city')} variant="caption" muted />
-            <Spacer size="xxs" />
-            <Pressable
-              style={styles.field}
-              onPress={() => {
-                setShowCities(current => !current);
-                setShowCountries(false);
-              }}>
-              <TextView text={city} variant="body" />
-            </Pressable>
-            {showCities ? (
-              <ScrollView style={styles.dropdown} nestedScrollEnabled>
-                {cities.map(item => (
-                  <Pressable
-                    key={item.city}
-                    style={[styles.option, item.city === city && styles.optionActive]}
-                    onPress={() => {
-                      setCity(item.city);
-                      setShowCities(false);
-                    }}>
-                    <TextView text={item.label} variant="body" />
-                  </Pressable>
-                ))}
-              </ScrollView>
-            ) : null}
-
-            <Spacer size="md" />
-            <Button label={t('islamic.prayer.saveLocation')} onPress={selectCityLocation} />
-          </View>
-        ) : null}
-
-        {tab === 'timezone' ? (
-          <View style={styles.card}>
-            <Heading text={t('islamic.prayer.pickTimezoneTitle')} level="h3" />
-            <Spacer size="xs" />
-            <TextView text={t('islamic.prayer.pickTimezoneBody')} variant="bodySmall" muted />
-            <Spacer size="md" />
-            {PRAYER_TIMEZONES.map(zone => (
-              <Pressable
-                key={zone.id}
-                style={styles.option}
-                onPress={() => selectTimezoneLocation(zone.id)}>
-                <Heading text={isAr ? zone.labelAr : zone.labelEn} level="h3" />
-                <Spacer size="xxs" />
-                <TextView text={zone.gmtLabel} variant="caption" />
-                <TextView
-                  text={formatZoneNow(zone.timezone, locale)}
-                  variant="bodySmall"
-                  muted
-                />
-              </Pressable>
-            ))}
+            )}
           </View>
         ) : null}
       </ScrollView>

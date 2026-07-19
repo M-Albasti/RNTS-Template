@@ -14,6 +14,7 @@ import {
   usePrayerTimingsByCoordsQuery,
   usePrayerTimingsQuery,
 } from '@api/query/hooks/useIslamicQueries';
+import PrayerAdhanPicker from '@molecules/islamic/PrayerAdhanPicker';
 import PrayerDateSwitcher from '@molecules/islamic/PrayerDateSwitcher';
 import PrayerHeroHeader from '@molecules/islamic/PrayerHeroHeader';
 import PrayerRemindersBar from '@molecules/islamic/PrayerRemindersBar';
@@ -35,6 +36,7 @@ import {
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {
+  setAdhanSoundId,
   setPrayerReminderEnabledAll,
   togglePrayerReminder,
 } from '@redux/slices/islamicSlice';
@@ -65,10 +67,7 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
   const [now, setNow] = useState(() => new Date());
 
   const useCoords =
-    configured &&
-    (location.mode === 'gps' || location.mode === 'timezone') &&
-    location.latitude != null &&
-    location.longitude != null;
+    configured && location.latitude != null && location.longitude != null;
 
   const cityQuery = usePrayerTimingsQuery(
     useCoords ? '' : location.city,
@@ -99,7 +98,7 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
     if (!configured || !data || !isSameLocalDay(selectedDay, new Date())) {
       return;
     }
-    void syncPrayerReminderNotifications({
+    syncPrayerReminderNotifications({
       location,
       settings: reminders,
       titleFor: key => t('islamic.prayer.reminderTitle', {prayer: t(`islamic.prayer.${key}`)}),
@@ -108,7 +107,7 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
           prayer: t(`islamic.prayer.${key}`),
           time,
         }),
-    });
+    }).catch(() => undefined);
   }, [configured, data, location, reminders, selectedDay, t]);
 
   const styles = useThemedStyles(tokens => ({
@@ -269,6 +268,11 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
         enabledAll={reminders.enabledAll}
         onEnableAll={() => dispatch(setPrayerReminderEnabledAll(true))}
         onMuteAll={() => dispatch(setPrayerReminderEnabledAll(false))}
+      />
+
+      <PrayerAdhanPicker
+        selectedId={reminders.adhanSoundId}
+        onSelect={id => dispatch(setAdhanSoundId(id))}
       />
 
       {isLoading || isFetching ? (

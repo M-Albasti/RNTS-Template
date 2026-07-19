@@ -174,6 +174,8 @@ export type PrayerReminderSettings = {
   /** When true, all prayer keys are treated as enabled. */
   enabledAll: boolean;
   byKey: Partial<Record<PrayerReminderKey, boolean>>;
+  /** Selected Adhan sound id from ADHAN_AUDIO_OPTIONS. */
+  adhanSoundId: string;
 };
 
 /** How the user chose prayer-location source. */
