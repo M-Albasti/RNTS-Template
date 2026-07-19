@@ -14,10 +14,13 @@ macOS + Xcode). The runnable development surface in this environment is the **Me
 - Copy env before first run: `cp .env.example .env` (required — `src/config/apiConfig.tsx` imports `@env`; babel rejects missing vars).
 
 ### CI/CD
-- Local full pipeline: `npm run ci` (validate i18n → typecheck → lint → test → Android bundle).
+- Local full pipeline: `npm run ci` (validate i18n → typecheck → lint → test → Android + iOS Metro bundles).
 - GitHub Actions: `.github/workflows/ci.yml` on push/PR to `develop` and `master`.
+- Jobs: quality gates (ubuntu) → Metro Android/iOS bundles (ubuntu) → `assembleDebug` (ubuntu) → iOS Simulator `xcodebuild` (`macos-15`).
+- **Why iOS needs macOS:** native iOS compile requires Xcode; Linux runners cannot build iOS. Metro iOS JS bundling still runs on ubuntu.
 - **New Architecture must always stay enabled** — Android: `newArchEnabled=true` in `android/gradle.properties`; iOS: `RCTNewArchEnabled` in `Info.plist`. Never disable for CI or local builds.
 - Android CI builds **arm64-v8a only** with ABI splits disabled (`-PenableAbiSplits=false`) for runner time; this does not affect New Architecture.
+- iOS CI builds Debug for the Simulator with code signing disabled; uses a placeholder `GoogleService-Info.plist` (same pattern as Android `google-services.json`).
 - `stream-chat-react-native` is excluded from native autolinking (`react-native.config.js`) — unused in `src/` (Jest mock only).
 - Commit `package-lock.json` whenever `package.json` deps change — CI uses `npm install --legacy-peer-deps`.
 - ESLint uses `eslint.config.js` (ESLint 9 flat config, ft-flow plugin removed).
