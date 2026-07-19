@@ -291,22 +291,56 @@ jobs:
       - name: Install CocoaPods
         run: bundle exec pod install --project-directory=ios --repo-update
 
+      - name: Resolve Simulator destination
+        id: sim
+        run: |
+          set -euo pipefail
+          # Prefer a concrete arm64 simulator on macos-15; fall back to generic.
+          xcrun simctl list devices available -j > "$RUNNER_TEMP/simulators.json"
+          DEST=$(python3 - "$RUNNER_TEMP/simulators.json" <<'PY'
+          import json, sys
+          with open(sys.argv[1], encoding="utf-8") as fh:
+              data = json.load(fh)
+          preferred = ("iPhone 16", "iPhone 16 Pro", "iPhone 15", "iPhone 15 Pro")
+          devices = []
+          for runtime, items in data.get("devices", {}).items():
+              if "iOS" not in runtime:
+                  continue
+              for d in items:
+                  if d.get("isAvailable") and str(d.get("name", "")).startswith("iPhone"):
+                      devices.append(d["name"])
+          for name in preferred:
+              if name in devices:
+                  print(f"platform=iOS Simulator,name={name}")
+                  raise SystemExit(0)
+          if devices:
+              print(f"platform=iOS Simulator,name={devices[0]}")
+              raise SystemExit(0)
+          print("generic/platform=iOS Simulator")
+          PY
+          )
+          echo "destination=$DEST" >> "$GITHUB_OUTPUT"
+          echo "Using destination: $DEST"
+
       - name: Build iOS (Simulator, no signing)
         working-directory: ios
         env:
           NSUnbufferedIO: YES
         run: |
+          set -euo pipefail
           xcodebuild \
             -workspace RNTS-Template.xcworkspace \
             -scheme RNTS-Template \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination "${{ steps.sim.outputs.destination }}" \
             -derivedDataPath "$RUNNER_TEMP/DerivedData" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY="" \
-            ONLY_ACTIVE_ARCH=NO \
+            ONLY_ACTIVE_ARCH=YES \
+            ARCHS=arm64 \
+            EXCLUDED_ARCHS=x86_64 \
             build
 
       - name: Upload iOS app artifact

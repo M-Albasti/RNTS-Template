@@ -20,7 +20,8 @@ macOS + Xcode). The runnable development surface in this environment is the **Me
 - **Why iOS needs macOS:** native iOS compile requires Xcode; Linux runners cannot build iOS. Metro iOS JS bundling still runs on ubuntu.
 - **New Architecture must always stay enabled** — Android: `newArchEnabled=true` in `android/gradle.properties`; iOS: `RCTNewArchEnabled` in `Info.plist`. Never disable for CI or local builds.
 - Android CI builds **arm64-v8a only** with ABI splits disabled (`-PenableAbiSplits=false`) for runner time; this does not affect New Architecture.
-- iOS CI builds Debug for the Simulator with code signing disabled; uses a placeholder `GoogleService-Info.plist` (same pattern as Android `google-services.json`).
+- iOS CI builds Debug for the Simulator (arm64) with code signing disabled; uses a placeholder `GoogleService-Info.plist` (same pattern as Android `google-services.json`).
+- iOS Podfile forces `RNFB*` pods to **static libraries** (not static frameworks) so Clang modules do not absorb React headers under `use_frameworks!` + prebuilt RNCore (fixes `RCTPromiseRejectBlock` / `RCT_EXPORT_*` failures in RNFBMessaging).
 - `stream-chat-react-native` is excluded from native autolinking (`react-native.config.js`) — unused in `src/` (Jest mock only).
 - Commit `package-lock.json` whenever `package.json` deps change — CI uses `npm install --legacy-peer-deps`.
 - ESLint uses `eslint.config.js` (ESLint 9 flat config, ft-flow plugin removed).
