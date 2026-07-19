@@ -9,7 +9,10 @@ import {
 } from '@helpers/prayerLocationHelpers';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {refreshIslamicNotificationSchedule} from '@services/islamicServices/islamicNotificationService';
-import {syncPrayerReminderNotifications} from '@services/islamicServices/prayerNotificationService';
+import {
+  cancelPrayerReminderNotifications,
+  syncPrayerReminderNotifications,
+} from '@services/islamicServices/prayerNotificationService';
 
 /**
  * Keeps finite-horizon Islamic + prayer notification schedules fresh on mount,
@@ -31,6 +34,9 @@ const IslamicNotificationHost = (): null => {
       prayerReminders.enabledAll ||
       PRAYER_ADHAN_KEYS.some(key => prayerReminders.byKey[key]);
     if (!anyPrayerEnabled || !isPrayerLocationConfigured(location)) {
+      // Cancellation lives inside sync — call it explicitly on the disable path
+      // so previously scheduled Adhan reminders do not keep firing.
+      cancelPrayerReminderNotifications().catch(() => undefined);
       return;
     }
     syncPrayerReminderNotifications({

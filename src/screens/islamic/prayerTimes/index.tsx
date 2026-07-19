@@ -86,13 +86,16 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
 
   const {data, isLoading, isError, isFetching} = useCoords ? coordsQuery : cityQuery;
 
-  const browseSelectedDay = useCallback((delta: number) => {
-    setSelectedDay(current => {
-      const next = addCalendarDays(current, delta);
+  const browseSelectedDay = useCallback(
+    (delta: number) => {
+      // Keep the state updater pure — React may invoke it more than once
+      // (e.g. Strict Mode). Update the tracking ref outside setState.
+      const next = addCalendarDays(selectedDay, delta);
       trackingTodayRef.current = isSameLocalDay(next, new Date());
-      return next;
-    });
-  }, []);
+      setSelectedDay(next);
+    },
+    [selectedDay],
+  );
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
