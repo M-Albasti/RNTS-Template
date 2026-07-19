@@ -22,9 +22,16 @@ const searchIndexCache: Partial<Record<AdhkarLanguage, AdhkarSearchMatch[]>> = {
 const searchIndexPromises: Partial<Record<AdhkarLanguage, Promise<AdhkarSearchMatch[]>>> =
   {};
 
-const buildSearchIndex = async (lang: AdhkarLanguage): Promise<AdhkarSearchMatch[]> => {
+type SearchIndexBuild = {
+  matches: AdhkarSearchMatch[];
+  /** False when one or more category fetches failed — do not permanently cache. */
+  complete: boolean;
+};
+
+const buildSearchIndex = async (lang: AdhkarLanguage): Promise<SearchIndexBuild> => {
   const categories = await adhkarClient.getCategories(lang);
   const matches: AdhkarSearchMatch[] = [];
+  let hadFailure = false;
 
   for (let offset = 0; offset < categories.length; offset += SEARCH_INDEX_BATCH) {
     const batch = categories.slice(offset, offset + SEARCH_INDEX_BATCH);
@@ -43,6 +50,7 @@ const buildSearchIndex = async (lang: AdhkarLanguage): Promise<AdhkarSearchMatch
             }),
           );
         } catch {
+          hadFailure = true;
           return [];
         }
       }),
@@ -50,7 +58,7 @@ const buildSearchIndex = async (lang: AdhkarLanguage): Promise<AdhkarSearchMatch
     matches.push(...batchResults.flat());
   }
 
-  return matches;
+  return {matches, complete: !hadFailure};
 };
 
 const getSearchIndex = async (lang: AdhkarLanguage): Promise<AdhkarSearchMatch[]> => {
@@ -65,9 +73,12 @@ const getSearchIndex = async (lang: AdhkarLanguage): Promise<AdhkarSearchMatch[]
   }
 
   const promise = buildSearchIndex(lang)
-    .then(index => {
-      searchIndexCache[lang] = index;
-      return index;
+    .then(({matches, complete}) => {
+      // Only cache a full index — partial builds from silent failures must retry.
+      if (complete) {
+        searchIndexCache[lang] = matches;
+      }
+      return matches;
     })
     .finally(() => {
       delete searchIndexPromises[lang];

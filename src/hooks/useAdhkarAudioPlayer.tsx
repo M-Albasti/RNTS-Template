@@ -44,10 +44,21 @@ export const useAdhkarAudioPlayer = ({
   const modeRef = useRef(mode);
   const continuousUrlRef = useRef(continuousUrl);
 
-  itemsRef.current = items;
-  onItemChangeRef.current = onItemChange;
-  modeRef.current = mode;
-  continuousUrlRef.current = continuousUrl;
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
+  useEffect(() => {
+    onItemChangeRef.current = onItemChange;
+  }, [onItemChange]);
+
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
+
+  useEffect(() => {
+    continuousUrlRef.current = continuousUrl;
+  }, [continuousUrl]);
 
   const clearPlaybackState = useCallback(() => {
     setIsPlaying(false);
@@ -116,7 +127,9 @@ export const useAdhkarAudioPlayer = ({
     [clearPlaybackState, playContinuous],
   );
 
-  playIndexRef.current = playIndex;
+  useEffect(() => {
+    playIndexRef.current = playIndex;
+  }, [playIndex]);
 
   const pause = useCallback(() => {
     try {

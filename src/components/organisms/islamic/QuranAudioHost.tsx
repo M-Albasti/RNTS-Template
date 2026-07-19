@@ -22,9 +22,24 @@ const QuranAudioHost = (): null => {
   const lastPersistedRef = useRef<string>('');
   const lastMediaKeyRef = useRef<string>('');
   const lastMediaAtRef = useRef(0);
+  const skipFirstSnapshotRef = useRef(true);
+  const notifyQueueRef = useRef<Promise<void>>(Promise.resolve());
 
   useEffect(() => {
+    const enqueueNotification = (task: () => Promise<void>) => {
+      notifyQueueRef.current = notifyQueueRef.current
+        .then(task)
+        .catch(() => undefined);
+    };
+
     const unsubscribe = quranAudioController.subscribe(snapshot => {
+      // subscribe() emits the current snapshot immediately. Ignore that first
+      // tick so the controller's default {1,1} does not overwrite last-read.
+      if (skipFirstSnapshotRef.current) {
+        skipFirstSnapshotRef.current = false;
+        return;
+      }
+
       const key = `${snapshot.surahNumber}:${snapshot.activeAyahNumber}`;
       if (key !== lastPersistedRef.current && snapshot.activeAyahNumber >= 1) {
         lastPersistedRef.current = key;
@@ -46,17 +61,22 @@ const QuranAudioHost = (): null => {
         lastMediaKeyRef.current = mediaKey;
         lastMediaAtRef.current = now;
         const title = `Surah ${snapshot.surahNumber}`;
-        void syncQuranMediaNotification({
-          surahNumber: snapshot.surahNumber,
-          ayahNumber: snapshot.activeAyahNumber,
-          isPlaying: snapshot.isPlaying,
-          surahTitle: title,
-        }).catch(() => undefined);
+        const surahNumber = snapshot.surahNumber;
+        const ayahNumber = snapshot.activeAyahNumber;
+        const isPlaying = snapshot.isPlaying;
+        enqueueNotification(() =>
+          syncQuranMediaNotification({
+            surahNumber,
+            ayahNumber,
+            isPlaying,
+            surahTitle: title,
+          }),
+        );
       }
 
       if (!snapshot.isPlaying && !snapshot.hasLoadedTrack && !snapshot.isLoading) {
         lastMediaKeyRef.current = '';
-        void clearQuranMediaNotification().catch(() => undefined);
+        enqueueNotification(() => clearQuranMediaNotification());
       }
     });
 
