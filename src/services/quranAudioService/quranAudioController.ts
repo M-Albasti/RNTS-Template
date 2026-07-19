@@ -23,6 +23,8 @@ export type QuranAudioSnapshot = {
   isPlaying: boolean;
   isLoading: boolean;
   hasLoadedTrack: boolean;
+  /** When true, finished surahs restart instead of advancing. */
+  isRepeatEnabled: boolean;
 };
 
 type QuranAudioListener = (snapshot: QuranAudioSnapshot) => void;
@@ -66,6 +68,7 @@ class QuranAudioController {
     isPlaying: false,
     isLoading: false,
     hasLoadedTrack: false,
+    isRepeatEnabled: false,
   };
 
   private listeners = new Set<QuranAudioListener>();
@@ -310,6 +313,14 @@ class QuranAudioController {
     if (previous !== this.snapshot.surahNumber) {
       void this.loadAndPlaySurah(previous, this.snapshot.reciterId, 1);
     }
+  };
+
+  toggleRepeat = () => {
+    this.patchSnapshot({isRepeatEnabled: !this.snapshot.isRepeatEnabled});
+  };
+
+  setRepeatEnabled = (enabled: boolean) => {
+    this.patchSnapshot({isRepeatEnabled: enabled});
   };
 
   private loadAndPlaySurah = async (
@@ -844,8 +855,12 @@ class QuranAudioController {
         return;
       }
 
-      // Advance without clearing UI to idle — loadAndPlaySurah keeps the
-      // loading/ayah indicator alive across the surah boundary.
+      // Repeat current surah, otherwise advance without clearing UI to idle.
+      if (this.snapshot.isRepeatEnabled && reciterId) {
+        void this.loadAndPlaySurah(current, reciterId, 1);
+        return;
+      }
+
       if (current < 114 && reciterId) {
         void this.loadAndPlaySurah(current + 1, reciterId, 1);
         return;
@@ -865,7 +880,8 @@ class QuranAudioController {
       next.activeAyahNumber === this.snapshot.activeAyahNumber &&
       next.isPlaying === this.snapshot.isPlaying &&
       next.isLoading === this.snapshot.isLoading &&
-      next.hasLoadedTrack === this.snapshot.hasLoadedTrack
+      next.hasLoadedTrack === this.snapshot.hasLoadedTrack &&
+      next.isRepeatEnabled === this.snapshot.isRepeatEnabled
     ) {
       return;
     }

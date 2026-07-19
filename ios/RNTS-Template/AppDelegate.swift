@@ -43,6 +43,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       launchOptions: launchOptions
     )
 
+    // Shared state for the Quran home-screen widget (App Group).
+    QuranWidgetBridge.bootstrap()
+
     return true
   }
   func application(

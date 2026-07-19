@@ -35,6 +35,8 @@ import DriverBackgroundTrackingHost from '@organisms/delivery/DriverBackgroundTr
 import FirebaseMessagingHost from '@organisms/firebase/FirebaseMessagingHost';
 import IslamicNotificationHost from '@organisms/islamic/IslamicNotificationHost';
 import QuranAudioHost from '@organisms/islamic/QuranAudioHost';
+import QuranWidgetHost from '@organisms/islamic/QuranWidgetHost';
+import PrayerWidgetHost from '@organisms/islamic/PrayerWidgetHost';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -83,6 +85,8 @@ const App = (): React.JSX.Element => {
                 <FirebaseMessagingHost />
                 <IslamicNotificationHost />
                 <QuranAudioHost />
+                <QuranWidgetHost />
+                <PrayerWidgetHost />
                 <NavigationScreens />
               </GestureHandlerRootView>
             </SafeAreaProvider>

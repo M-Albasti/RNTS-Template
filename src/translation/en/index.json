@@ -1144,7 +1144,8 @@
       "ayahN": "Ayah {{n}}",
       "loadingAudio": "Loading recitation…",
       "backgroundHint": "Audio keeps playing if you leave the app (without closing it).",
-      "tapAyahHint": "Tap any ayah to jump the reciter there. Your place is saved automatically."
+      "tapAyahHint": "Tap any ayah to jump the reciter there. Your place is saved automatically.",
+      "widgetHint": "Add the Quran Audio widget from your home screen for play/pause controls."
     },
     "search": {
       "title": "Islamic search",

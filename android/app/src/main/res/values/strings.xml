@@ -1,3 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RNTS-Template</string>
+    <string name="quran_widget_name">Quran Audio</string>
+    <string name="quran_widget_description">Play, pause, and skip Quran recitation from your home screen.</string>
+    <string name="quran_widget_play">Play</string>
+    <string name="quran_widget_pause">Pause</string>
+    <string name="quran_widget_prev">Previous ayah</string>
+    <string name="quran_widget_next">Next ayah</string>
+    <string name="quran_widget_repeat">Repeat</string>
+    <string name="quran_widget_stop">Stop</string>
+    <string name="quran_widget_open">Open mushaf</string>
+    <string name="prayer_widget_name">Prayer Times</string>
+    <string name="prayer_widget_description">See upcoming prayer times and set a reminder from your home screen.</string>
+    <string name="prayer_widget_remind">Remind</string>
+    <string name="prayer_widget_open">Open prayers</string>
+    <string name="prayer_widget_fajr">Fajr</string>
+    <string name="prayer_widget_dhuhr">Dhuhr</string>
+    <string name="prayer_widget_asr">Asr</string>
+    <string name="prayer_widget_maghrib">Maghrib</string>
+    <string name="prayer_widget_isha">Isha</string>
 </resources>
