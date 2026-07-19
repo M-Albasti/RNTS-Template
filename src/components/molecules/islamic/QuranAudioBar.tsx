@@ -80,9 +80,15 @@ const QuranAudioBar = ({
     },
   }));
 
-  const subtitle = continuous
-    ? t('islamic.quran.continuousSurah', {n: surahNumber ?? 1})
-    : t('islamic.quran.ayahN', {n: activeAyahNumber ?? 1});
+  const subtitle =
+    continuous && activeAyahNumber
+      ? t('islamic.quran.ayahAccuratePlayback', {
+          surah: surahNumber ?? 1,
+          ayah: activeAyahNumber,
+        })
+      : continuous
+        ? t('islamic.quran.continuousSurah', {n: surahNumber ?? 1})
+        : t('islamic.quran.ayahN', {n: activeAyahNumber ?? 1});
 
   return (
     <View style={styles.wrap}>
@@ -146,6 +152,8 @@ const QuranAudioBar = ({
           <TextView text={t('islamic.quran.loadingAudio')} variant="caption" muted />
         </>
       ) : null}
+      <Spacer size="xxs" />
+      <TextView text={t('islamic.quran.backgroundHint')} variant="caption" muted />
     </View>
   );
 };

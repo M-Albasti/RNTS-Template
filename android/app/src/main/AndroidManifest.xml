@@ -9,6 +9,10 @@
   <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
   <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!-- Keep Quran / adhkar MediaPlayer alive while the app is backgrounded. -->
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
   <!-- optionally, if you want to record audio: -->
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
@@ -38,7 +42,11 @@
     <meta-data
       android:name="com.google.firebase.messaging.default_notification_channel_id"
       android:value="fcm-default" />
-        <receiver
+    <service
+      android:name="app.notifee.core.ForegroundService"
+      android:foregroundServiceType="mediaPlayback"
+      tools:replace="android:foregroundServiceType" />
+    <receiver
       android:name=".quran.QuranAudioWidgetProvider"
       android:exported="true"
       android:label="@string/quran_widget_name">
@@ -49,6 +57,18 @@
       <meta-data
         android:name="android.appwidget.provider"
         android:resource="@xml/quran_audio_widget_info" />
+    </receiver>
+    <receiver
+      android:name=".prayer.PrayerTimesWidgetProvider"
+      android:exported="true"
+      android:label="@string/prayer_widget_name">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        <action android:name="com.rnts.template.PRAYER_WIDGET_ACTION" />
+      </intent-filter>
+      <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/prayer_times_widget_info" />
     </receiver>
 
     <activity android:name=".MainActivity" android:label="@string/app_name"

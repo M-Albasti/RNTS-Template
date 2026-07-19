@@ -11,13 +11,17 @@ import QuranReader from '@screens/islamic/quran/quranReader';
 import QuranTafsirReader from '@screens/islamic/quran/quranTafsirReader';
 import QuranSearch from '@screens/islamic/quran/quranSearch';
 import AdhkarCategories from '@screens/islamic/adhkar/adhkarCategories';
+import AdhkarGroup from '@screens/islamic/adhkar/adhkarGroup';
 import AdhkarDetail from '@screens/islamic/adhkar/adhkarDetail';
+import AdhkarReader from '@screens/islamic/adhkar/adhkarReader';
 import HadithHub from '@screens/islamic/hadith/hadithHub';
 import HadithEditions from '@screens/islamic/hadith/hadithEditions';
 import HadithList from '@screens/islamic/hadith/hadithList';
 import HadithDetail from '@screens/islamic/hadith/hadithDetail';
 import HadithSearch from '@screens/islamic/hadith/hadithSearch';
 import PrayerTimes from '@screens/islamic/prayerTimes';
+import PrayerLocationSetup from '@screens/islamic/prayerTimes/prayerLocationSetup';
+import Qibla from '@screens/islamic/qibla';
 import IslamicSettings from '@screens/islamic/islamicSettings';
 
 import TextView from '@atoms/TextView';
@@ -56,13 +60,17 @@ const IslamicNavigator = (): React.JSX.Element => (
     <IslamicStack.Screen name="QuranSearch" component={QuranSearch} />
     <IslamicStack.Screen name="IslamicUnifiedSearch" component={IslamicUnifiedSearch} />
     <IslamicStack.Screen name="AdhkarCategories" component={AdhkarCategories} />
+    <IslamicStack.Screen name="AdhkarGroup" component={AdhkarGroup} />
     <IslamicStack.Screen name="AdhkarDetail" component={AdhkarDetail} />
+    <IslamicStack.Screen name="AdhkarReader" component={AdhkarReader} />
     <IslamicStack.Screen name="HadithHub" component={HadithHub} />
     <IslamicStack.Screen name="HadithEditions" component={HadithEditions} />
     <IslamicStack.Screen name="HadithList" component={HadithList} />
     <IslamicStack.Screen name="HadithDetail" component={HadithDetail} />
     <IslamicStack.Screen name="HadithSearch" component={HadithSearch} />
     <IslamicStack.Screen name="PrayerTimes" component={PrayerTimes} />
+    <IslamicStack.Screen name="PrayerLocationSetup" component={PrayerLocationSetup} />
+    <IslamicStack.Screen name="Qibla" component={Qibla} />
     <IslamicStack.Screen name="IslamicSettings" component={IslamicSettings} />
   </IslamicStack.Navigator>
 );

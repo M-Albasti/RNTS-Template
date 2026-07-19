@@ -83,6 +83,8 @@ const IslamicSearchSuggestions = ({
                   <Pressable
                     style={styles.removeBtn}
                     hitSlop={8}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('islamic.search.removeRecent')}
                     onPress={() => onRemoveRecent(item.query)}>
                     <IconView
                       iconType="Ionicons"

@@ -6,16 +6,22 @@ import {
   Platform,
 } from 'react-native';
 
+import {openQuranMushaf} from '@helpers/islamicDeepLinkNavigation';
+
 export type QuranWidgetPlaybackAdapter = {
   resume: () => void;
   pause: () => void;
   togglePlay: () => void;
   playNext: () => void;
   playPrevious: () => void;
+  stop: () => void;
+  toggleRepeat: () => void;
   getSnapshot: () => {
     surahNumber: number;
     ayahNumber: number;
     isPlaying: boolean;
+    isRepeatEnabled: boolean;
+    title?: string;
   };
 };
 
@@ -24,6 +30,7 @@ type QuranWidgetNativeModule = {
     surahNumber: number;
     ayahNumber: number;
     isPlaying: boolean;
+    isRepeat: boolean;
     title: string;
   }) => void;
 };
@@ -41,12 +48,36 @@ export const bindQuranWidgetPlayback = (
   playbackAdapter = adapter;
 };
 
-/** Applies play/pause/next/prev from a home-screen widget or deep link. */
+const openCurrentMushaf = (): boolean => {
+  const snap = playbackAdapter?.getSnapshot();
+  openQuranMushaf(snap?.surahNumber ?? 1, snap?.ayahNumber ?? 1);
+  return true;
+};
+
+/** Applies play/pause/next/prev/stop/repeat/open from a home-screen widget or deep link. */
 export const handleQuranWidgetAction = (action: string): boolean => {
+  const normalized = action.split('?')[0]?.replace(/\/$/, '') ?? '';
+
+  if (normalized === 'open' || normalized.startsWith('open')) {
+    const query = action.includes('?') ? action.slice(action.indexOf('?') + 1) : '';
+    const params = new URLSearchParams(query);
+    const surah = Number(params.get('surah'));
+    const ayah = Number(params.get('ayah'));
+    if (Number.isFinite(surah) && surah > 0) {
+      openQuranMushaf(surah, Number.isFinite(ayah) && ayah > 0 ? ayah : 1);
+      return true;
+    }
+    return openCurrentMushaf();
+  }
+
   if (!playbackAdapter) {
+    if (normalized === 'open') {
+      return openCurrentMushaf();
+    }
     return false;
   }
-  switch (action) {
+
+  switch (normalized) {
     case 'play':
       playbackAdapter.resume();
       return true;
@@ -63,6 +94,12 @@ export const handleQuranWidgetAction = (action: string): boolean => {
     case 'previous':
       playbackAdapter.playPrevious();
       return true;
+    case 'stop':
+      playbackAdapter.stop();
+      return true;
+    case 'repeat':
+      playbackAdapter.toggleRepeat();
+      return true;
     default:
       return false;
   }
@@ -72,21 +109,24 @@ export const parseQuranWidgetUrl = (url: string | null | undefined): string | nu
   if (!url || !url.startsWith(QURAN_WIDGET_URL_PREFIX)) {
     return null;
   }
-  const action = url
-    .slice(QURAN_WIDGET_URL_PREFIX.length)
-    .split('?')[0]
-    ?.replace(/\/$/, '');
-  return action || null;
+  return url.slice(QURAN_WIDGET_URL_PREFIX.length) || null;
 };
 
 export const syncQuranHomeWidget = (payload: {
   surahNumber: number;
   ayahNumber: number;
   isPlaying: boolean;
+  isRepeatEnabled?: boolean;
   title: string;
 }): void => {
   try {
-    NativeWidget?.updateWidget?.(payload);
+    NativeWidget?.updateWidget?.({
+      surahNumber: payload.surahNumber,
+      ayahNumber: payload.ayahNumber,
+      isPlaying: payload.isPlaying,
+      isRepeat: Boolean(payload.isRepeatEnabled),
+      title: payload.title,
+    });
   } catch (error) {
     console.log('syncQuranHomeWidget Error =>', error);
   }
@@ -144,7 +184,8 @@ export const registerQuranWidgetBridge = (): (() => void) => {
         surahNumber: snap.surahNumber,
         ayahNumber: snap.ayahNumber,
         isPlaying: snap.isPlaying,
-        title: `Surah ${snap.surahNumber}`,
+        isRepeatEnabled: snap.isRepeatEnabled,
+        title: snap.title ?? `Surah ${snap.surahNumber}`,
       });
     }
   });

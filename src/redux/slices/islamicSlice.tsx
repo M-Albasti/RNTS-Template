@@ -1,6 +1,18 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice, PayloadAction, type Reducer} from '@reduxjs/toolkit';
 
-import type {IslamicNotificationSettings, QuranLastRead, QuranPreferences} from '@Types/islamicTypes';
+import type {
+  AdhkarPreferences,
+  HadithLastRead,
+  IslamicNotificationSettings,
+  PrayerLocation,
+  PrayerReminderKey,
+  PrayerReminderSettings,
+  QuranLastRead,
+  QuranPreferences,
+} from '@Types/islamicTypes';
+import {PRAYER_ADHAN_KEYS} from '@helpers/prayerScheduleHelpers';
+import {DEFAULT_ADHAN_SOUND_ID} from '@constants/adhanAudio';
+import {DEFAULT_ADHKAR_RECITER_ID} from '@constants/adhkarReciters';
 import {DEFAULT_QURAN_RECITER_ID} from '@constants/quranReciters';
 import {DEFAULT_TAFSIR_EDITION_ID} from '@constants/quranTafsirEditions';
 
@@ -8,11 +20,17 @@ type IslamicState = {
   lastReadSurah: number;
   lastRead: QuranLastRead;
   bookmarkedAyahs: string[];
+  bookmarkedHadiths: string[];
+  lastHadith: HadithLastRead | null;
+  /** @deprecated Prefer prayerLocation — kept in sync for older persisted state. */
   prayerCity: string;
   prayerCountry: string;
+  prayerLocation: PrayerLocation;
   notificationSettings: IslamicNotificationSettings;
+  prayerReminders: PrayerReminderSettings;
   fcmToken: string | null;
   quranPreferences: QuranPreferences;
+  adhkarPreferences: AdhkarPreferences;
 };
 
 const defaultNotificationSettings: IslamicNotificationSettings = {
@@ -23,12 +41,34 @@ const defaultNotificationSettings: IslamicNotificationSettings = {
   includeAdhkar: true,
 };
 
+const defaultPrayerReminders = (): PrayerReminderSettings => ({
+  enabledAll: false,
+  byKey: {},
+  adhanSoundId: DEFAULT_ADHAN_SOUND_ID,
+});
+
 const defaultQuranPreferences: QuranPreferences = {
   /** mp3quran.net continuous surah — Yasser Al-Dosari */
   reciterId: DEFAULT_QURAN_RECITER_ID,
   tafsirEditionId: DEFAULT_TAFSIR_EDITION_ID,
   showTafsir: true,
   showTranslation: false,
+};
+
+const defaultAdhkarPreferences: AdhkarPreferences = {
+  reciterId: DEFAULT_ADHKAR_RECITER_ID,
+};
+
+/** User has not confirmed a location yet — show setup before timings. */
+export const defaultPrayerLocation: PrayerLocation = {
+  mode: 'unset',
+  city: '',
+  country: '',
+  latitude: null,
+  longitude: null,
+  timezone: null,
+  timezoneId: null,
+  label: '',
 };
 
 /** Migrate legacy CDN/everyayah reciter ids to mp3quran continuous ids. */
@@ -41,7 +81,7 @@ const LEGACY_RECITER_MAP: Record<string, string> = {
   'ar.minshawi': '112',
   'ar.mahermuaiqly': '102',
   'ar.abdulbasitmurattal': '51',
-  'ar.hudhaify': '4',
+  'ar.hudhaify': '74',
   'ar.shaatree': '4',
 };
 
@@ -49,11 +89,22 @@ const initialState: IslamicState = {
   lastReadSurah: 1,
   lastRead: {surahNumber: 1, ayahNumber: 1},
   bookmarkedAyahs: [],
-  prayerCity: 'Mecca',
-  prayerCountry: 'Saudi Arabia',
+  bookmarkedHadiths: [],
+  lastHadith: null,
+  prayerCity: '',
+  prayerCountry: '',
+  prayerLocation: defaultPrayerLocation,
   notificationSettings: defaultNotificationSettings,
+  prayerReminders: defaultPrayerReminders(),
   fcmToken: null,
   quranPreferences: defaultQuranPreferences,
+  adhkarPreferences: defaultAdhkarPreferences,
+};
+
+const applyPrayerLocation = (state: IslamicState, location: PrayerLocation) => {
+  state.prayerLocation = location;
+  state.prayerCity = location.city;
+  state.prayerCountry = location.country;
 };
 
 const islamicSlice = createSlice({
@@ -74,6 +125,16 @@ const islamicSlice = createSlice({
       }
       state.quranPreferences = next;
     },
+    updateAdhkarPreferences: (
+      state,
+      action: PayloadAction<Partial<AdhkarPreferences>>,
+    ) => {
+      state.adhkarPreferences = {
+        ...defaultAdhkarPreferences,
+        ...state.adhkarPreferences,
+        ...action.payload,
+      };
+    },
     toggleBookmarkAyah: (state, action: PayloadAction<string>) => {
       const key = action.payload;
       if (state.bookmarkedAyahs.includes(key)) {
@@ -82,12 +143,41 @@ const islamicSlice = createSlice({
         state.bookmarkedAyahs.push(key);
       }
     },
-    setPrayerLocation: (
+    setLastHadith: (state, action: PayloadAction<HadithLastRead>) => {
+      state.lastHadith = action.payload;
+    },
+    toggleBookmarkHadith: (state, action: PayloadAction<string>) => {
+      const id = action.payload;
+      if (!state.bookmarkedHadiths) {
+        state.bookmarkedHadiths = [];
+      }
+      if (state.bookmarkedHadiths.includes(id)) {
+        state.bookmarkedHadiths = state.bookmarkedHadiths.filter(item => item !== id);
+      } else {
+        state.bookmarkedHadiths.push(id);
+      }
+    },
+    setPrayerLocation: (state, action: PayloadAction<PrayerLocation>) => {
+      applyPrayerLocation(state, action.payload);
+    },
+    /** Legacy city/country setter — marks mode as city. */
+    setPrayerCityCountry: (
       state,
       action: PayloadAction<{city: string; country: string}>,
     ) => {
-      state.prayerCity = action.payload.city;
-      state.prayerCountry = action.payload.country;
+      applyPrayerLocation(state, {
+        mode: 'city',
+        city: action.payload.city,
+        country: action.payload.country,
+        latitude: null,
+        longitude: null,
+        timezone: null,
+        timezoneId: null,
+        label: `${action.payload.city}, ${action.payload.country}`,
+      });
+    },
+    clearPrayerLocation: state => {
+      applyPrayerLocation(state, defaultPrayerLocation);
     },
     updateNotificationSettings: (
       state,
@@ -97,6 +187,32 @@ const islamicSlice = createSlice({
         ...state.notificationSettings,
         ...action.payload,
       };
+    },
+    setPrayerReminderEnabledAll: (state, action: PayloadAction<boolean>) => {
+      state.prayerReminders.enabledAll = action.payload;
+      if (action.payload) {
+        const byKey: Partial<Record<PrayerReminderKey, boolean>> = {};
+        for (const key of PRAYER_ADHAN_KEYS) {
+          byKey[key] = true;
+        }
+        state.prayerReminders.byKey = byKey;
+      } else {
+        state.prayerReminders.byKey = {};
+      }
+    },
+    togglePrayerReminder: (state, action: PayloadAction<PrayerReminderKey>) => {
+      const key = action.payload;
+      const next = !state.prayerReminders.byKey[key];
+      state.prayerReminders.byKey[key] = next;
+      if (!next) {
+        state.prayerReminders.enabledAll = false;
+      } else {
+        const allOn = PRAYER_ADHAN_KEYS.every(item => state.prayerReminders.byKey[item]);
+        state.prayerReminders.enabledAll = allOn;
+      }
+    },
+    setAdhanSoundId: (state, action: PayloadAction<string>) => {
+      state.prayerReminders.adhanSoundId = action.payload;
     },
     setFcmToken: (state, action: PayloadAction<string | null>) => {
       state.fcmToken = action.payload;
@@ -108,10 +224,95 @@ export const {
   setLastReadSurah,
   setLastReadPosition,
   updateQuranPreferences,
+  updateAdhkarPreferences,
   toggleBookmarkAyah,
+  setLastHadith,
+  toggleBookmarkHadith,
   setPrayerLocation,
+  setPrayerCityCountry,
+  clearPrayerLocation,
   updateNotificationSettings,
+  setPrayerReminderEnabledAll,
+  togglePrayerReminder,
+  setAdhanSoundId,
   setFcmToken,
 } = islamicSlice.actions;
 
-export default islamicSlice.reducer;
+/** Fill fields added after older app versions were persisted. Same identity when unchanged. */
+const normalizeIslamicState = (state: IslamicState): IslamicState => {
+  const rawReciterId = state.quranPreferences?.reciterId;
+  const migratedReciterId =
+    rawReciterId && LEGACY_RECITER_MAP[rawReciterId]
+      ? LEGACY_RECITER_MAP[rawReciterId]
+      : rawReciterId;
+  const needsReciterMigration =
+    Boolean(rawReciterId) && migratedReciterId !== rawReciterId;
+
+  const hasCoreFields =
+    Boolean(state.adhkarPreferences) &&
+    Boolean(state.prayerLocation) &&
+    Boolean(state.quranPreferences) &&
+    Boolean(state.notificationSettings) &&
+    Boolean(state.prayerReminders?.adhanSoundId) &&
+    Boolean(state.lastRead) &&
+    Array.isArray(state.bookmarkedAyahs) &&
+    Array.isArray(state.bookmarkedHadiths);
+
+  if (hasCoreFields && !needsReciterMigration) {
+    return state;
+  }
+
+  const rawByKey = state.prayerReminders?.byKey ?? {};
+  const adhanByKey: Partial<Record<PrayerReminderKey, boolean>> = {};
+  for (const key of PRAYER_ADHAN_KEYS) {
+    if (rawByKey[key] != null) {
+      adhanByKey[key] = rawByKey[key];
+    }
+  }
+
+  const prayerReminders: PrayerReminderSettings = {
+    ...defaultPrayerReminders(),
+    ...state.prayerReminders,
+    byKey: {
+      ...defaultPrayerReminders().byKey,
+      ...adhanByKey,
+    },
+    adhanSoundId:
+      state.prayerReminders?.adhanSoundId ?? defaultPrayerReminders().adhanSoundId,
+  };
+
+  return {
+    ...initialState,
+    ...state,
+    lastRead: state.lastRead ?? initialState.lastRead,
+    bookmarkedAyahs: state.bookmarkedAyahs ?? [],
+    bookmarkedHadiths: state.bookmarkedHadiths ?? [],
+    lastHadith: state.lastHadith ?? null,
+    notificationSettings: {
+      ...defaultNotificationSettings,
+      ...state.notificationSettings,
+    },
+    prayerReminders,
+    quranPreferences: {
+      ...defaultQuranPreferences,
+      ...state.quranPreferences,
+      ...(migratedReciterId ? {reciterId: migratedReciterId} : {}),
+    },
+    adhkarPreferences: {
+      ...defaultAdhkarPreferences,
+      ...state.adhkarPreferences,
+    },
+    prayerLocation: {
+      ...defaultPrayerLocation,
+      ...state.prayerLocation,
+    },
+  };
+};
+
+/** Normalize persisted/hydrated state before reducing so migrations apply once. */
+const islamicReducer: Reducer<IslamicState> = (state, action) => {
+  const base = state === undefined ? state : normalizeIslamicState(state);
+  return islamicSlice.reducer(base, action);
+};
+
+export default islamicReducer;

@@ -11,7 +11,7 @@ import com.rnts.template.MainActivity
 import com.rnts.template.R
 
 /**
- * Home-screen Quran controls: shows current ayah and play/pause/next/prev.
+ * Home-screen Quran controls: shows current ayah and media-player controls.
  * Buttons emit to JS when the RN bridge is alive; otherwise they deep-link into the app.
  */
 class QuranAudioWidgetProvider : AppWidgetProvider() {
@@ -33,13 +33,20 @@ class QuranAudioWidgetProvider : AppWidgetProvider() {
     if (module != null) {
       module.emitAction(action)
     } else {
+      val prefs = context.getSharedPreferences(QuranWidgetModule.PREFS, Context.MODE_PRIVATE)
+      val surah = prefs.getInt(QuranWidgetModule.KEY_SURAH, 1)
+      val ayah = prefs.getInt(QuranWidgetModule.KEY_AYAH, 1)
+      val deepLink = if (action == "open") {
+        "projectdeeplink://quran/open?surah=$surah&ayah=$ayah"
+      } else {
+        "projectdeeplink://quran/$action"
+      }
       val launch = Intent(context, MainActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        data = Uri.parse("projectdeeplink://quran/$action")
+        data = Uri.parse(deepLink)
       }
       context.startActivity(launch)
     }
-    // Refresh UI after toggle taps.
     val manager = AppWidgetManager.getInstance(context)
     val ids = manager.getAppWidgetIds(
       android.content.ComponentName(context, QuranAudioWidgetProvider::class.java),
@@ -54,18 +61,34 @@ class QuranAudioWidgetProvider : AppWidgetProvider() {
     fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
       val prefs = context.getSharedPreferences(QuranWidgetModule.PREFS, Context.MODE_PRIVATE)
       val title = prefs.getString(QuranWidgetModule.KEY_TITLE, "Quran") ?: "Quran"
-      val surah = prefs.getInt(QuranWidgetModule.KEY_SURAH, 1)
       val ayah = prefs.getInt(QuranWidgetModule.KEY_AYAH, 1)
       val playing = prefs.getBoolean(QuranWidgetModule.KEY_PLAYING, false)
+      val isRepeat = prefs.getBoolean(QuranWidgetModule.KEY_REPEAT, false)
 
       val views = RemoteViews(context.packageName, R.layout.quran_audio_widget)
       views.setTextViewText(R.id.quran_widget_title, title)
-      views.setTextViewText(R.id.quran_widget_subtitle, "Ayah $ayah · Surah $surah")
-      views.setTextViewText(
+      views.setTextViewText(R.id.quran_widget_subtitle, "Ayah $ayah")
+      views.setImageViewResource(
         R.id.quran_widget_play,
-        if (playing) context.getString(R.string.quran_widget_pause) else context.getString(R.string.quran_widget_play),
+        if (playing) R.drawable.ic_widget_pause else R.drawable.ic_widget_play,
+      )
+      views.setContentDescription(
+        R.id.quran_widget_play,
+        if (playing) {
+          context.getString(R.string.quran_widget_pause)
+        } else {
+          context.getString(R.string.quran_widget_play)
+        },
+      )
+      views.setImageViewResource(
+        R.id.quran_widget_repeat,
+        if (isRepeat) R.drawable.ic_widget_repeat_on else R.drawable.ic_widget_repeat,
       )
 
+      views.setOnClickPendingIntent(
+        R.id.quran_widget_title,
+        actionPendingIntent(context, "open", appWidgetId, 0),
+      )
       views.setOnClickPendingIntent(
         R.id.quran_widget_prev,
         actionPendingIntent(context, "prev", appWidgetId, 1),
@@ -79,8 +102,12 @@ class QuranAudioWidgetProvider : AppWidgetProvider() {
         actionPendingIntent(context, "next", appWidgetId, 3),
       )
       views.setOnClickPendingIntent(
-        R.id.quran_widget_root,
-        openAppPendingIntent(context, appWidgetId),
+        R.id.quran_widget_repeat,
+        actionPendingIntent(context, "repeat", appWidgetId, 4),
+      )
+      views.setOnClickPendingIntent(
+        R.id.quran_widget_stop,
+        actionPendingIntent(context, "stop", appWidgetId, 5),
       )
 
       appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -100,19 +127,6 @@ class QuranAudioWidgetProvider : AppWidgetProvider() {
       return PendingIntent.getBroadcast(
         context,
         requestCode + appWidgetId * 10,
-        intent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
-      )
-    }
-
-    private fun openAppPendingIntent(context: Context, appWidgetId: Int): PendingIntent {
-      val intent = Intent(context, MainActivity::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        data = Uri.parse("projectdeeplink://quran/toggle")
-      }
-      return PendingIntent.getActivity(
-        context,
-        1000 + appWidgetId,
         intent,
         PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
       )

@@ -1,5 +1,6 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {View} from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';
@@ -37,7 +38,7 @@ const MarketplaceCart = ({navigation}: Props): React.JSX.Element => {
         <TextView text={t('marketplace.emptyCart')} align="center" muted />
       ) : (
         <>
-          <FlatList
+          <FlashList
             data={lines}
             keyExtractor={item => item.product.id}
             scrollEnabled={false}

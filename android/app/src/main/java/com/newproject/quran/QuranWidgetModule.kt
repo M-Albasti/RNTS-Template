@@ -26,6 +26,7 @@ class QuranWidgetModule(
       .putInt(KEY_SURAH, if (payload.hasKey("surahNumber")) payload.getInt("surahNumber") else 1)
       .putInt(KEY_AYAH, if (payload.hasKey("ayahNumber")) payload.getInt("ayahNumber") else 1)
       .putBoolean(KEY_PLAYING, payload.hasKey("isPlaying") && payload.getBoolean("isPlaying"))
+      .putBoolean(KEY_REPEAT, payload.hasKey("isRepeat") && payload.getBoolean("isRepeat"))
       .putString(KEY_TITLE, if (payload.hasKey("title")) payload.getString("title") else "Quran")
       .apply()
 
@@ -67,6 +68,7 @@ class QuranWidgetModule(
     const val KEY_SURAH = "surahNumber"
     const val KEY_AYAH = "ayahNumber"
     const val KEY_PLAYING = "isPlaying"
+    const val KEY_REPEAT = "isRepeat"
     const val KEY_TITLE = "title"
 
     @Volatile

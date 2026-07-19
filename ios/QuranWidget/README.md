@@ -1,53 +1,41 @@
-# Quran Audio Widget (iOS + Android)
+# Home-screen widgets (iOS + Android)
+
+Two widgets ship with this feature:
+
+1. **Quran Audio** — play / pause / prev / next / repeat / stop, plus tap the surah title to open the current mushaf ayah.
+2. **Prayer Times** — location + timezone, next-prayer countdown, Adhan reminder toggle, open Prayer Times in-app.
 
 ## iOS WidgetKit setup
 
 1. Open `ios/RNTS-Template.xcworkspace`.
-2. **File → New → Target → Widget Extension**.
+2. **File → New → Target → Widget Extension** (if not already added).
 3. Product Name: `QuranWidget` (bundle id `com.rnts.template.QuranWidget`).
-4. Replace the generated Swift files with the ones in this folder (`QuranWidget.swift`, `Info.plist`, entitlements).
-5. Enable App Group `group.com.rnts.template` on **both** the app target and the widget target (Signing & Capabilities).
+4. Replace generated Swift with `ios/QuranWidget/QuranWidget.swift` (contains a `WidgetBundle` with both widgets).
+5. Enable App Group `group.com.rnts.template` on **both** the app target and the widget target.
 6. Embed the widget extension in the `RNTS-Template` app target.
+7. Ensure `PrayerWidgetModule.swift` / `.m` are in the app target (same as QuranWidgetModule).
 
 ## Android
 
-The App Widget is registered in `AndroidManifest.xml`. After installing a build, long-press the home screen → Widgets → **Quran Audio**.
+Widgets are registered in `AndroidManifest.xml`:
 
-## Wire playback after merge
+- **Quran Audio** → `QuranAudioWidgetProvider`
+- **Prayer Times** → `PrayerTimesWidgetProvider`
 
-Controls open `projectdeeplink://quran/{play|pause|next|prev}`.
+After installing a build: long-press home → Widgets → add either widget.
 
-After the Quran audio controller is on `develop`, bind it once (e.g. in `QuranAudioHost`):
+## Deep links
 
-```ts
-import {
-  bindQuranWidgetPlayback,
-  syncQuranHomeWidget,
-} from '@services/quranAudioService/quranWidgetBridge';
-import {quranAudioController} from '@services/quranAudioService/quranAudioController';
+| URL | Action |
+|---|---|
+| `projectdeeplink://quran/play` | Resume |
+| `projectdeeplink://quran/pause` | Pause |
+| `projectdeeplink://quran/next` | Next surah |
+| `projectdeeplink://quran/prev` | Previous surah |
+| `projectdeeplink://quran/stop` | Stop |
+| `projectdeeplink://quran/repeat` | Toggle surah repeat |
+| `projectdeeplink://quran/open?surah=2&ayah=255` | Open mushaf at ayah |
+| `projectdeeplink://prayer/open` | Open Prayer Times screen |
+| `projectdeeplink://prayer/remind` | Toggle reminder for upcoming prayer |
 
-bindQuranWidgetPlayback({
-  resume: quranAudioController.resume,
-  pause: quranAudioController.pause,
-  togglePlay: () => quranAudioController.togglePlay(),
-  playNext: quranAudioController.playNext,
-  playPrevious: quranAudioController.playPrevious,
-  getSnapshot: () => {
-    const snap = quranAudioController.getSnapshot();
-    return {
-      surahNumber: snap.surahNumber,
-      ayahNumber: snap.activeAyahNumber,
-      isPlaying: snap.isPlaying,
-    };
-  },
-});
-
-quranAudioController.subscribe(snapshot => {
-  syncQuranHomeWidget({
-    surahNumber: snapshot.surahNumber,
-    ayahNumber: snapshot.activeAyahNumber,
-    isPlaying: snapshot.isPlaying,
-    title: `Surah ${snapshot.surahNumber}`,
-  });
-});
-```
+JS hosts (`QuranWidgetHost`, `PrayerWidgetHost`) are mounted from `App.tsx` and bind live Redux / audio controller state.

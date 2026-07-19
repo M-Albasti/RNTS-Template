@@ -105,6 +105,27 @@ export function normalizeSearchQuery(query: string): string {
   return query.trim().replace(/\s+/g, ' ');
 }
 
+/**
+ * Normalizes Arabic/Latin text for includes-matching:
+ * strips harakat, unifies alef/ya/ta-marbuta variants, lowercases Latin.
+ */
+export function normalizeSearchText(value: string): string {
+  return value
+    .normalize('NFKD')
+    .replace(/[\u064B-\u065F\u0670\u0640]/g, '')
+    .replace(/[أإآٱا]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** True when the query contains Arabic letters (prefer Quran Arabic edition). */
+export function queryHasArabicScript(query: string): boolean {
+  return /[\u0600-\u06FF]/.test(query);
+}
+
 export function loadSearchHistory(): IslamicSearchHistoryEntry[] {
   const stored = load<IslamicSearchHistoryEntry[]>(ISLAMIC_SEARCH_HISTORY_KEY);
   if (!Array.isArray(stored)) {

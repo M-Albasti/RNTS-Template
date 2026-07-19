@@ -11,6 +11,7 @@
     android:id="@+id/quran_widget_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:contentDescription="@string/quran_widget_open"
     android:text="Quran"
     android:textColor="#FFFFFF"
     android:textSize="16sp"
@@ -21,7 +22,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="2dp"
-    android:text="Ayah 1 · Surah 1"
+    android:text="Ayah 1"
     android:textColor="#E0F2F1"
     android:textSize="13sp" />
 
@@ -32,39 +33,58 @@
     android:gravity="center"
     android:orientation="horizontal">
 
-    <Button
+    <ImageButton
       android:id="@+id/quran_widget_prev"
-      android:layout_width="0dp"
+      android:layout_width="36dp"
       android:layout_height="36dp"
-      android:layout_marginEnd="6dp"
-      android:layout_weight="1"
-      android:background="@drawable/quran_widget_button"
-      android:text="@string/quran_widget_prev"
-      android:textAllCaps="false"
-      android:textColor="#004D40"
-      android:textSize="12sp" />
+      android:layout_marginEnd="4dp"
+      android:background="@drawable/quran_widget_control_bg"
+      android:contentDescription="@string/quran_widget_prev"
+      android:padding="8dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_widget_prev" />
 
-    <Button
+    <ImageButton
       android:id="@+id/quran_widget_play"
-      android:layout_width="0dp"
-      android:layout_height="36dp"
-      android:layout_marginEnd="6dp"
-      android:layout_weight="1"
-      android:background="@drawable/quran_widget_button"
-      android:text="@string/quran_widget_play"
-      android:textAllCaps="false"
-      android:textColor="#004D40"
-      android:textSize="12sp" />
+      android:layout_width="48dp"
+      android:layout_height="48dp"
+      android:layout_marginEnd="4dp"
+      android:background="@drawable/quran_widget_control_bg"
+      android:contentDescription="@string/quran_widget_play"
+      android:padding="10dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_widget_play" />
 
-    <Button
+    <ImageButton
       android:id="@+id/quran_widget_next"
-      android:layout_width="0dp"
+      android:layout_width="36dp"
       android:layout_height="36dp"
-      android:layout_weight="1"
-      android:background="@drawable/quran_widget_button"
-      android:text="@string/quran_widget_next"
-      android:textAllCaps="false"
-      android:textColor="#004D40"
-      android:textSize="12sp" />
+      android:layout_marginEnd="4dp"
+      android:background="@drawable/quran_widget_control_bg"
+      android:contentDescription="@string/quran_widget_next"
+      android:padding="8dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_widget_next" />
+
+    <ImageButton
+      android:id="@+id/quran_widget_repeat"
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:layout_marginEnd="4dp"
+      android:background="@drawable/quran_widget_control_bg"
+      android:contentDescription="@string/quran_widget_repeat"
+      android:padding="8dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_widget_repeat" />
+
+    <ImageButton
+      android:id="@+id/quran_widget_stop"
+      android:layout_width="36dp"
+      android:layout_height="36dp"
+      android:background="@drawable/quran_widget_control_bg"
+      android:contentDescription="@string/quran_widget_stop"
+      android:padding="8dp"
+      android:scaleType="fitCenter"
+      android:src="@drawable/ic_widget_stop" />
   </LinearLayout>
 </LinearLayout>

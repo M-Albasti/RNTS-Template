@@ -1,13 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
-  FlatList,
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
   View,
-  type ListRenderItemInfo,
 } from 'react-native';
+import {FlashList, type FlashListRef} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 import Animated, {
   Easing,
@@ -126,7 +125,7 @@ const ClueCardCarousel = ({
   onIndexChange,
 }: Props): React.JSX.Element => {
   const [pageWidth, setPageWidth] = useState(0);
-  const listRef = useRef<FlatList<WordPuzzleItem>>(null);
+  const listRef = useRef<FlashListRef<WordPuzzleItem>>(null);
   const isProgrammaticScrollRef = useRef(false);
   const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {t} = useTranslation();
@@ -273,23 +272,26 @@ const ClueCardCarousel = ({
     [pageWidth, puzzles.length, scrollToCard, setActiveIndex],
   );
 
-  const renderItem = ({item, index}: ListRenderItemInfo<WordPuzzleItem>) => (
-    <ClueCard
-      item={item}
-      solved={solvedIds.has(item.id)}
-      language={language}
-      levelLabel={levelLabel}
-      isActive={index === activeIndex}
-      pageWidth={pageWidth}
-      styles={styles}
-    />
+  const renderItem = useCallback(
+    ({item, index}: {item: WordPuzzleItem; index: number}) => (
+      <ClueCard
+        item={item}
+        solved={solvedIds.has(item.id)}
+        language={language}
+        levelLabel={levelLabel}
+        isActive={index === activeIndex}
+        pageWidth={pageWidth}
+        styles={styles}
+      />
+    ),
+    [activeIndex, language, levelLabel, pageWidth, solvedIds, styles],
   );
 
   return (
     <Animated.View entering={FadeIn.duration(280)} style={styles.wrap} onLayout={onLayout}>
       {pageWidth > 0 ? (
         <View style={styles.list}>
-          <FlatList
+          <FlashList
             ref={listRef}
             data={puzzles}
             extraData={`${scrollRequest}-${activeIndex}-${[...solvedIds].join(',')}`}
@@ -307,14 +309,6 @@ const ClueCardCarousel = ({
             onScrollEndDrag={onScrollEndDrag}
             onScroll={onScroll}
             scrollEventThrottle={16}
-            onScrollToIndexFailed={({index}) => {
-              scrollToCard(index, false);
-            }}
-            getItemLayout={(_, itemIndex) => ({
-              length: pageWidth,
-              offset: pageWidth * itemIndex,
-              index: itemIndex,
-            })}
           />
         </View>
       ) : (
