@@ -27,7 +27,8 @@ export const handleIslamicNotifeeEvent = async (event: Event) => {
   const {type} = event;
 
   if (kind === 'prayer_adhan') {
-    if (type === EventType.DELIVERED || type === EventType.PRESS) {
+    // Play Adhan on press only — avoids overlap with OS notification sound on DELIVERED.
+    if (type === EventType.PRESS) {
       const data = event.detail.notification?.data as
         | {adhanUrl?: string; adhanSoundId?: string}
         | undefined;

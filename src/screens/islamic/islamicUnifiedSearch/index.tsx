@@ -113,15 +113,28 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
     [includeAyahSearch, activeQuery],
   );
 
-  const {data: surahResults, isFetching: surahLoading} = useQuranSurahNameSearchQuery(
-    includeSurahSearch ? activeQuery : '',
-  );
-  const {data: textResults, isFetching: textLoading, isError: textError} = useQuranSearchQuery(
+  const {
+    data: surahResults,
+    isFetching: surahLoading,
+    isError: surahError,
+    refetch: refetchSurahs,
+  } = useQuranSurahNameSearchQuery(includeSurahSearch ? activeQuery : '');
+  const {
+    data: textResults,
+    isFetching: textLoading,
+    isError: textError,
+    refetch: refetchText,
+  } = useQuranSearchQuery(
     includeTextSearch ? activeQuery : '',
     language === 'ar' ? 'ar' : 'en',
   );
-  const {data: adhkarResults, isFetching: adhkarLoading, isError: adhkarError} =
-    useAdhkarSearchQuery(adhkarSearchEnabled ? activeQuery : '', language as 'ar' | 'en');
+  const {
+    data: adhkarResults,
+    isFetching: adhkarLoading,
+    isError: adhkarError,
+    isPlaceholderData: adhkarPlaceholder,
+    refetch: refetchAdhkar,
+  } = useAdhkarSearchQuery(adhkarSearchEnabled ? activeQuery : '', language as 'ar' | 'en');
   const {
     data: hadithResults,
     isFetching: hadithLoading,
@@ -218,7 +231,7 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
       );
     }
 
-    if (showAdhkar && adhkarResults) {
+    if (showAdhkar && adhkarResults && !adhkarPlaceholder) {
       merged.push(
         ...adhkarResults.map(item => ({
           kind: 'adhkar' as const,
@@ -251,6 +264,7 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
 
     return merged;
   }, [
+    adhkarPlaceholder,
     adhkarResults,
     ayahRef,
     hadithResults,
@@ -453,11 +467,21 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
       ) : results.length === 0 &&
         ((hadithSearchEnabled && hadithError) ||
           (includeTextSearch && textError) ||
+          (includeSurahSearch && surahError) ||
           (adhkarSearchEnabled && adhkarError)) &&
         !localFetching ? (
         <IslamicErrorState
           message={t('islamic.errors.loadFailed')}
           onRetry={() => {
+            if (includeSurahSearch) {
+              void refetchSurahs();
+            }
+            if (includeTextSearch) {
+              void refetchText();
+            }
+            if (adhkarSearchEnabled) {
+              void refetchAdhkar();
+            }
             if (hadithSearchEnabled) {
               void refetchHadith();
             }

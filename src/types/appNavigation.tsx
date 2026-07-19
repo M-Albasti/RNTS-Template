@@ -84,19 +84,23 @@ export type RootStackParamList = {
   AdhkarDetail: {categoryId: number; title: string; itemId?: number};
   /**
    * Guided adhkar reader with audio.
-   * Pass `sessionId` for daily sessions (multi-reciter) or `categoryId` for any Hisn category.
+   * Require `sessionId` (daily sessions) or `categoryId` (any Hisn category) — not both empty.
    */
-  AdhkarReader: {
-    sessionId?:
-      | 'morning'
-      | 'evening'
-      | 'sleep'
-      | 'waking'
-      | 'afterPrayer'
-      | 'dayNight';
-    categoryId?: number;
-    title?: string;
-  };
+  AdhkarReader:
+    | {
+        sessionId:
+          | 'morning'
+          | 'evening'
+          | 'sleep'
+          | 'waking'
+          | 'afterPrayer'
+          | 'dayNight';
+        title?: string;
+      }
+    | {
+        categoryId: number;
+        title?: string;
+      };
   HadithHub: undefined;
   HadithEditions: {filter: 'all' | 'sahih' | 'weak'; title: string};
   HadithList: {slug: string; title: string; filter?: 'all' | 'sahih' | 'weak'};

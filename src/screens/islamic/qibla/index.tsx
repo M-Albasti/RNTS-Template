@@ -24,6 +24,8 @@ import {useThemedStyles} from '@theme/createThemedStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
+import {IslamicErrorState, IslamicLoadingState} from '@screens/islamic/islamicHub';
+
 type Props = {navigation: AppStackNavigationProp<'Qibla'>};
 
 /**
@@ -35,7 +37,8 @@ const Qibla = ({navigation}: Props): React.JSX.Element => {
   const islamic = useAppSelector(state => state.islamic);
   const location = resolvePrayerLocation(islamic);
   const configured = isPrayerLocationConfigured(location);
-  const [heading, setHeading] = useState(0);
+  const [heading, setHeading] = useState<number | null>(null);
+  const [sensorFailed, setSensorFailed] = useState(false);
 
   const hasCoords =
     configured && location.latitude != null && location.longitude != null;
@@ -47,20 +50,35 @@ const Qibla = ({navigation}: Props): React.JSX.Element => {
     return getQiblaBearingDegrees(location.latitude as number, location.longitude as number);
   }, [hasCoords, location.latitude, location.longitude]);
 
-  const needleRotation = getQiblaNeedleRotation(qiblaBearing, heading);
+  const needleRotation =
+    heading == null ? 0 : getQiblaNeedleRotation(qiblaBearing, heading);
 
   useEffect(() => {
     if (!hasCoords) {
       return;
     }
+    let gotSample = false;
+    setHeading(null);
+    setSensorFailed(false);
+
+    const timeoutId = setTimeout(() => {
+      if (!gotSample) {
+        setSensorFailed(true);
+      }
+    }, 5000);
+
     try {
       CompassHeading.start(3, ({heading: next}: {heading: number}) => {
+        gotSample = true;
+        setSensorFailed(false);
         setHeading(next);
       });
     } catch (error) {
       console.log('Qibla CompassHeading.start Error =>', error);
+      setSensorFailed(true);
     }
     return () => {
+      clearTimeout(timeoutId);
       try {
         CompassHeading.stop();
       } catch {
@@ -139,60 +157,81 @@ const Qibla = ({navigation}: Props): React.JSX.Element => {
           style={styles.meta}
         />
 
-        <View style={styles.dialWrap}>
-          <Svg width={size} height={size}>
-            <Circle
-              cx={center}
-              cy={center}
-              r={radius}
-              stroke={colors.borderStrong}
-              strokeWidth={2}
-              fill={colors.prayerActiveMuted}
+        {sensorFailed ? (
+          <>
+            <Spacer size="lg" />
+            <IslamicErrorState message={t('islamic.prayer.qiblaSensorUnavailable')} />
+          </>
+        ) : heading == null ? (
+          <>
+            <Spacer size="lg" />
+            <IslamicLoadingState />
+            <Spacer size="sm" />
+            <TextView
+              text={t('islamic.prayer.qiblaSensorLoading')}
+              variant="caption"
+              muted
+              style={styles.meta}
             />
-            <Circle
-              cx={center}
-              cy={center}
-              r={radius * 0.7}
-              stroke={colors.border}
-              strokeWidth={1}
-              fill="none"
-            />
-            <Line
-              x1={center}
-              y1={spacing.sm}
-              x2={center}
-              y2={spacing.lg}
-              stroke={colors.textMuted}
-              strokeWidth={2}
-            />
-          </Svg>
-          <View
-            style={[
-              styles.needleLayer,
-              {transform: [{rotate: `${needleRotation}deg`}]},
-            ]}
-            pointerEvents="none">
-            <Svg width={size} height={size}>
-              <Polygon
-                points={`${center},${center - radius + spacing.md} ${center - spacing.sm},${center + spacing.xs} ${center + spacing.sm},${center + spacing.xs}`}
-                fill={colors.prayerAccent}
-              />
-              <Circle cx={center} cy={center} r={6} fill={colors.prayerHero} />
-            </Svg>
-          </View>
-        </View>
+          </>
+        ) : (
+          <>
+            <View style={styles.dialWrap}>
+              <Svg width={size} height={size}>
+                <Circle
+                  cx={center}
+                  cy={center}
+                  r={radius}
+                  stroke={colors.borderStrong}
+                  strokeWidth={2}
+                  fill={colors.prayerActiveMuted}
+                />
+                <Circle
+                  cx={center}
+                  cy={center}
+                  r={radius * 0.7}
+                  stroke={colors.border}
+                  strokeWidth={1}
+                  fill="none"
+                />
+                <Line
+                  x1={center}
+                  y1={spacing.sm}
+                  x2={center}
+                  y2={spacing.lg}
+                  stroke={colors.textMuted}
+                  strokeWidth={2}
+                />
+              </Svg>
+              <View
+                style={[
+                  styles.needleLayer,
+                  {transform: [{rotate: `${needleRotation}deg`}]},
+                ]}
+                pointerEvents="none">
+                <Svg width={size} height={size}>
+                  <Polygon
+                    points={`${center},${center - radius + spacing.md} ${center - spacing.sm},${center + spacing.xs} ${center + spacing.sm},${center + spacing.xs}`}
+                    fill={colors.prayerAccent}
+                  />
+                  <Circle cx={center} cy={center} r={6} fill={colors.prayerHero} />
+                </Svg>
+              </View>
+            </View>
 
-        <View style={styles.card}>
-          <TextView text={t('islamic.prayer.qiblaHint')} variant="bodySmall" muted />
-          <Spacer size="xs" />
-          <TextView
-            text={t('islamic.prayer.qiblaDeviceHeading', {
-              degrees: formatBearingLabel(heading),
-            })}
-            variant="caption"
-            muted
-          />
-        </View>
+            <View style={styles.card}>
+              <TextView text={t('islamic.prayer.qiblaHint')} variant="bodySmall" muted />
+              <Spacer size="xs" />
+              <TextView
+                text={t('islamic.prayer.qiblaDeviceHeading', {
+                  degrees: formatBearingLabel(heading),
+                })}
+                variant="caption"
+                muted
+              />
+            </View>
+          </>
+        )}
       </View>
     </ScreenContainer>
   );
