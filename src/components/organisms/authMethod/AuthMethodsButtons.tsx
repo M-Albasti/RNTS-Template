@@ -4,12 +4,11 @@ import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 //* components import
-import Button from '@atoms/Button';
-import Heading from '@atoms/Heading';
-import Spacer from '@atoms/Spacer';
+import AuthMethodRow from '@molecules/authMethodRow';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import {resolveAuthMethodsButtonsStyles} from './styles/resolveAuthMethodsButtonsStyles';
 
 //* types import
@@ -23,37 +22,41 @@ const AuthMethodsButtons = ({
   navigation,
 }: AuthMethodsButtonsProps): React.JSX.Element => {
   const {t} = useTranslation();
+  const {colors} = useThemeTokens();
   const styles = useThemedStyles(resolveAuthMethodsButtonsStyles);
-
-  const navigateToFirebaseLogin = () => {
-    navigation.navigate('FirebaseAuthStack');
-  };
 
   return (
     <View style={styles.container}>
-      <Heading text={t('auth.chooseSignInMethod')} level="h2" align="center" />
-      <Spacer size="md" />
-      <Button
+      <AuthMethodRow
         label={t('auth.loginWithFirebase')}
-        fullWidth
-        onPress={navigateToFirebaseLogin}
+        subtitle={t('loginOptions.firebaseSubtitle')}
+        iconType="MaterialCommunityIcons"
+        iconName="firebase"
+        iconColor="#FFA000"
+        onPress={() => navigation.navigate('FirebaseAuthStack')}
       />
-      <Button
+      <AuthMethodRow
         label={t('auth.mockApiLogin')}
-        variant="secondary"
-        fullWidth
+        subtitle={t('loginOptions.mockLoginSubtitle')}
+        iconType="Ionicons"
+        iconName="mail-outline"
+        iconColor={colors.primary}
         onPress={() => navigation.navigate('Login')}
       />
-      <Button
+      <AuthMethodRow
         label={t('auth.mockRegister')}
-        variant="outline"
-        fullWidth
+        subtitle={t('loginOptions.registerSubtitle')}
+        iconType="Ionicons"
+        iconName="person-add-outline"
+        iconColor={colors.success}
         onPress={() => navigation.navigate('Register')}
       />
-      <Button
+      <AuthMethodRow
         label={t('auth.forgotPasswordFlow')}
-        variant="ghost"
-        fullWidth
+        subtitle={t('loginOptions.forgotPasswordSubtitle')}
+        iconType="Ionicons"
+        iconName="key-outline"
+        iconColor={colors.warning}
         onPress={() => navigation.navigate('ForgetPassword')}
       />
     </View>

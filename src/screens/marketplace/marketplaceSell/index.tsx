@@ -56,7 +56,7 @@ const MarketplaceSell = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.sellItem')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.sellItem')} navigation={navigation} />
       <TextInputView label={t('marketplace.listingTitle')} value={title} onChangeText={setTitle} />
       <TextInputView
         label={t('marketplace.listingDescription')}

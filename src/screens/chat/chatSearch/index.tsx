@@ -40,7 +40,7 @@ const ChatSearch = ({navigation}: ChatSearchProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('chat.searchMessages')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('chat.searchMessages')} navigation={navigation} />
       <TextInputView
         placeholder={t('chat.searchInConversations')}
         value={query}

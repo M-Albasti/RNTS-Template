@@ -140,7 +140,7 @@ const HadithEditions = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={title} navigation={navigation} />
       <View style={styles.banner}>
         <TextView
           text={t('islamic.hadith.editionsBanner')}

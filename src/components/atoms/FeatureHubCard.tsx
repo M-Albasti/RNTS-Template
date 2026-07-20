@@ -28,13 +28,19 @@ const FeatureHubCard = ({
   accentColor,
   onPress,
 }: FeatureHubCardProps): React.JSX.Element => {
-  const {sizes} = useThemeTokens();
+  const {colors, sizes} = useThemeTokens();
   const styles = useThemedStyles(tokens => resolveFeatureHubCardStyles(tokens, accentColor), [accentColor]);
+  const iconColor = accentColor ?? colors.primary;
 
   return (
     <AnimatedScalePressable style={styles.card} onPress={onPress}>
       <View style={styles.iconWrap}>
-        <IconView iconType={iconType} name={iconName} size={sizes.iconSm} />
+        <IconView
+          iconType={iconType}
+          name={iconName}
+          size={sizes.iconSm}
+          color={iconColor}
+        />
       </View>
       <Heading text={title} level="h3" />
       <TextView text={subtitle} variant="caption" muted />

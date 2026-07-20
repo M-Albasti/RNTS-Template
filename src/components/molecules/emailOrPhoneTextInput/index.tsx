@@ -1,27 +1,42 @@
-//* packages import
 import React from 'react';
+import {KeyboardTypeOptions} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-//* components import
 import TextInputView from '@atoms/TextInputView';
 import IconView from '@atoms/Icon';
 
-//* types import
+import {useThemeTokens} from '@theme/useThemeTokens';
 import type {Dispatch, SetStateAction} from 'react';
-import {KeyboardTypeOptions} from 'react-native';
 
 interface EmailOrPhoneTextInputProps {
   emailOrPhone: string;
   setEmailOrPhone: Dispatch<SetStateAction<string>>;
   keyboardType?: KeyboardTypeOptions;
+  label?: string;
+  placeholder?: string;
 }
 
 const EmailOrPhoneTextInput = (props: EmailOrPhoneTextInputProps) => {
+  const {t} = useTranslation();
+  const {colors} = useThemeTokens();
+
   return (
     <TextInputView
+      label={props.label ?? t('auth.emailLabel')}
       value={props.emailOrPhone}
       onChangeText={props.setEmailOrPhone}
-      leftIcon={<IconView iconType={'Zocial'} name={'email'} size={25} />}
-      keyboardType={props.keyboardType}
+      placeholder={props.placeholder ?? t('auth.emailPlaceholder')}
+      keyboardType={props.keyboardType ?? 'email-address'}
+      autoCapitalize="none"
+      autoCorrect={false}
+      leftIcon={
+        <IconView
+          iconType="Ionicons"
+          name="mail-outline"
+          size={20}
+          color={colors.textMuted}
+        />
+      }
     />
   );
 };

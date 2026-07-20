@@ -69,7 +69,7 @@ const DeliveryDriver = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('delivery.driverPanel')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('delivery.driverPanel')} navigation={navigation} />
       <Card>
         <View style={styles.switchRow}>
           <TextView text={t('delivery.driverMode')} variant="h3" />

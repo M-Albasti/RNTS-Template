@@ -74,9 +74,10 @@ const WordAnswerSlots = ({
       height: 34,
     },
     letter: {
-      fontSize: 16,
-      lineHeight: 20,
-      fontWeight: '700' as const,
+      fontSize: tokens.typography.body.fontSize,
+      lineHeight: tokens.typography.body.lineHeight,
+      fontFamily: tokens.typography.h3.fontFamily,
+      fontWeight: 'normal' as const,
       includeFontPadding: false,
       textAlign: 'center' as const,
       writingDirection: isRtl ? ('rtl' as const) : ('ltr' as const),

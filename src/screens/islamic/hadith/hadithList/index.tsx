@@ -217,7 +217,7 @@ const HadithList = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={title} navigation={navigation} />
       {isLoading && !data ? (
         <IslamicLoadingState />
       ) : isError && !data ? (

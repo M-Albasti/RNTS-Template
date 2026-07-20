@@ -8,15 +8,13 @@ import {StyleSheet, View} from 'react-native';
 import List from '@molecules/videos/videosList/list';
 import Buttons from '@molecules/videos/videosList/buttons';
 
-//* constants import
-import {videos} from '@constants/videos';
-
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
 import {VideoProps} from '@Types/videoProps';
 
 interface VideosListWithButtonsProps {
   navigation: AppStackNavigationProp<'VideosList'>;
+  videosData: VideoProps[];
 }
 
 const ListWithButtons = (
@@ -34,7 +32,7 @@ const ListWithButtons = (
 
   return (
     <View style={styles.container}>
-      <List videosData={videos} onVideoItemPress={onVideoItemPress} />
+      <List videosData={props.videosData} onVideoItemPress={onVideoItemPress} />
       <Buttons navigateToRecordVideo={navigateToRecordVideo} />
     </View>
   );

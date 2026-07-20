@@ -11,11 +11,19 @@ import {FontsFamily} from '@Types/fontsFamily';
 
 interface TouchableIconProps extends IconButtonProps {
   iconType: FontsFamily;
+  accessibilityLabel?: string;
+  disabled?: boolean;
 }
 
 const TouchableIcon = (props: TouchableIconProps): React.JSX.Element => {
   return (
-    <TouchableOpacity onPress={props.onPress} style={props.style}>
+    <TouchableOpacity
+      onPress={props.onPress}
+      style={props.style}
+      disabled={props.disabled}
+      accessibilityRole="button"
+      accessibilityLabel={props.accessibilityLabel}
+      accessibilityState={props.disabled ? {disabled: true} : undefined}>
       <Icon
         name={props.name}
         size={props.size}

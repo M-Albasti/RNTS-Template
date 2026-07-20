@@ -35,7 +35,7 @@ export const createShowcaseScreen = (
 ): ShowcaseScreenComponent => {
   const ShowcaseScreen = ({navigation}: ShowcaseScreenProps): React.JSX.Element => (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={config.title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={config.title} navigation={navigation} />
       {config.subtitle ? (
         <>
           <TextView text={config.subtitle} variant="bodySmall" muted />

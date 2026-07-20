@@ -51,7 +51,7 @@ const MerchantHub = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.merchant.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.merchant.title')} navigation={navigation} />
       <View style={styles.hero}>
         <Heading text={merchantStore.name} level="h2" />
         <TextView text={merchantStore.description} muted />

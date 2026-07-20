@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -12,6 +12,7 @@ import TextView from '@atoms/TextView';
 import {useQuranSurahsQuery} from '@api/query/hooks/useIslamicQueries';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {setLastReadSurah} from '@redux/slices/islamicSlice';
+import {arabicScriptFonts} from '@theme/fonts';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -39,11 +40,47 @@ const QuranList = ({navigation, route}: Props): React.JSX.Element => {
     },
     row: {
       paddingVertical: tokens.spacing.md,
+      paddingHorizontal: tokens.spacing.xxs,
       borderBottomWidth: tokens.layout.borderWidth.sm,
       borderBottomColor: tokens.colors.border,
     },
     rowPressed: {backgroundColor: tokens.colors.surfaceSecondary},
-    meta: {...tokens.layout.presets.row, gap: tokens.spacing.sm},
+    // Lock LTR row order so AR UI does not reverse badge/name and clip Arabic.
+    meta: {
+      flexDirection: 'row' as const,
+      alignItems: 'center' as const,
+      gap: tokens.spacing.md,
+      direction: 'ltr' as const,
+    },
+    // minWidth: 0 is required or flex text overflows and clips at the screen edge.
+    copy: {
+      flex: 1,
+      minWidth: 0,
+      gap: tokens.spacing.xxs,
+      justifyContent: 'center' as const,
+    },
+    numberBadge: {
+      width: tokens.sizes.touchTarget,
+      height: tokens.sizes.touchTarget,
+      borderRadius: tokens.radius.full,
+      backgroundColor: tokens.colors.primaryMuted,
+      ...tokens.layout.presets.center,
+      flexShrink: 0,
+    },
+    arabicName: {
+      fontFamily: arabicScriptFonts.regular,
+      fontWeight: 'normal' as const,
+      fontSize: tokens.typography.h3.fontSize ?? 18,
+      lineHeight: Math.round((tokens.typography.h3.fontSize ?? 18) * 1.65),
+      color: tokens.colors.textPrimary,
+      textAlign: 'right' as const,
+      writingDirection: 'rtl' as const,
+      includeFontPadding: false,
+      width: '100%' as const,
+    },
+    englishMeta: {
+      textAlign: 'right' as const,
+    },
   }));
 
   const filtered = data ?? [];
@@ -56,8 +93,7 @@ const QuranList = ({navigation, route}: Props): React.JSX.Element => {
             ? t('islamic.quran.tafsirMode')
             : t('islamic.quran.mushafMode')
         }
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <Pressable style={styles.search} onPress={() => navigation.navigate('QuranSearch')}>
         <TextView text={t('islamic.quran.searchPlaceholder')} variant="body" muted />
       </Pressable>
@@ -83,14 +119,17 @@ const QuranList = ({navigation, route}: Props): React.JSX.Element => {
                 }
               }}>
               <View style={styles.meta}>
-                <Heading text={String(item.number)} level="h3" />
-                <View>
-                  <Heading text={item.name} level="h3" />
+                <View style={styles.copy}>
+                  <Text style={styles.arabicName}>{item.name}</Text>
                   <TextView
                     text={`${item.englishName} · ${item.numberOfAyahs} ${t('islamic.quran.ayahs')}`}
                     variant="caption"
                     muted
+                    style={styles.englishMeta}
                   />
+                </View>
+                <View style={styles.numberBadge}>
+                  <Heading text={String(item.number)} level="h3" />
                 </View>
               </View>
             </Pressable>

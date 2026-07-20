@@ -50,8 +50,7 @@ const MerchantOrderDetail = ({navigation, route}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('marketplace.merchant.orderDetail')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <Card>
         <TextView text={`#${order.id}`} variant="caption" muted />
         <TextView text={t(`marketplace.status.${order.status}`)} variant="h3" />

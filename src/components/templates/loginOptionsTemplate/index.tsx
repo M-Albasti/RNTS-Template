@@ -1,16 +1,15 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
+import AuthScreenShell from '@organisms/auth/AuthScreenShell';
+import AuthMethodRow from '@molecules/authMethodRow';
 import Button from '@atoms/Button';
-import Card from '@atoms/Card';
-import FeatureHubCard from '@atoms/FeatureHubCard';
-import Heading from '@atoms/Heading';
-import ScreenContainer from '@atoms/ScreenContainer';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import {resolveLoginOptionsTemplateStyles} from './styles/resolveLoginOptionsTemplateStyles';
 import type {AppStackNavigationProp} from '@Types/appNavigation';
 
@@ -18,69 +17,84 @@ interface LoginOptionsTemplateProps {
   navigation: AppStackNavigationProp<'LoginOptions'>;
 }
 
+/** Focusify welcome: primary CTAs + icon method rows. */
 const LoginOptionsTemplate = ({
   navigation,
 }: LoginOptionsTemplateProps): React.JSX.Element => {
   const {t} = useTranslation();
+  const {colors} = useThemeTokens();
   const styles = useThemedStyles(resolveLoginOptionsTemplateStyles);
 
   return (
-    <ScreenContainer scroll alignContent="center" bottomPadding="xxl">
-      <View style={styles.hero}>
-        <Heading text={t('loginOptions.welcomeTitle')} level="h1" align="center" />
-        <Spacer size="sm" />
-        <TextView text={t('loginOptions.subtitle')} align="center" muted />
+    <AuthScreenShell
+      title={t('loginOptions.welcomeTitle')}
+      subtitle={t('loginOptions.subtitle')}>
+      <Button
+        label={t('loginOptions.mockLogin')}
+        fullWidth
+        size="lg"
+        onPress={() => navigation.navigate('Login')}
+      />
+      <Spacer size="sm" />
+      <Button
+        label={t('Register')}
+        variant="secondary"
+        fullWidth
+        size="lg"
+        onPress={() => navigation.navigate('Register')}
+      />
+
+      <View style={styles.dividerRow}>
+        <View style={styles.dividerLine} />
+        <TextView text={t('loginOptions.orContinue')} variant="caption" muted />
+        <View style={styles.dividerLine} />
       </View>
 
-      <Spacer size="lg" />
-      <Heading text={t('loginOptions.signInOptions')} level="h2" />
-      <Spacer size="md" />
-
-      <View style={styles.grid}>
-        <FeatureHubCard
-          title={t('loginOptions.firebase')}
-          subtitle={t('loginOptions.firebaseSubtitle')}
-          iconType="MaterialCommunityIcons"
-          iconName="firebase"
-          onPress={() => navigation.navigate('FirebaseAuthStack')}
-        />
-        <FeatureHubCard
-          title={t('loginOptions.mockLogin')}
-          subtitle={t('loginOptions.mockLoginSubtitle')}
-          iconType="Ionicons"
-          iconName="log-in-outline"
-          onPress={() => navigation.navigate('Login')}
-        />
-        <FeatureHubCard
-          title={t('Register')}
-          subtitle={t('loginOptions.registerSubtitle')}
-          iconType="Ionicons"
-          iconName="person-add-outline"
-          onPress={() => navigation.navigate('Register')}
-        />
-        <FeatureHubCard
-          title={t('loginOptions.forgotPasswordTitle')}
-          subtitle={t('loginOptions.forgotPasswordSubtitle')}
-          iconType="Ionicons"
-          iconName="key-outline"
-          onPress={() => navigation.navigate('ForgetPassword')}
-        />
-      </View>
-
-      <Spacer size="lg" />
-      <Card constrained>
-        <View style={styles.footer}>
-          <TextView text={t('loginOptions.jumpHint')} variant="bodySmall" muted />
-          <Spacer size="sm" />
-          <Button
-            label={t('loginOptions.classicAuthMenu')}
-            variant="outline"
-            fullWidth
-            onPress={() => navigation.navigate('AuthMethod')}
-          />
-        </View>
-      </Card>
-    </ScreenContainer>
+      <AuthMethodRow
+        label={t('loginOptions.firebase')}
+        subtitle={t('loginOptions.firebaseSubtitle')}
+        iconType="MaterialCommunityIcons"
+        iconName="firebase"
+        iconColor="#FFA000"
+        onPress={() => navigation.navigate('FirebaseAuthStack')}
+      />
+      <Spacer size="sm" />
+      <AuthMethodRow
+        label={t('auth.google')}
+        subtitle={t('auth.googleSubtitle', {defaultValue: 'Continue with Google'})}
+        iconType="AntDesign"
+        iconName="google"
+        iconColor="#EA4335"
+        onPress={() => navigation.navigate('FirebaseAuthStack')}
+      />
+      <Spacer size="sm" />
+      <AuthMethodRow
+        label={t('auth.apple')}
+        subtitle={t('auth.appleSubtitle', {defaultValue: 'Continue with Apple'})}
+        iconType="AntDesign"
+        iconName="apple1"
+        iconColor={colors.textPrimary}
+        onPress={() => navigation.navigate('FirebaseAuthStack')}
+      />
+      <Spacer size="sm" />
+      <AuthMethodRow
+        label={t('loginOptions.classicAuthMenu')}
+        subtitle={t('loginOptions.signInOptions')}
+        iconType="Ionicons"
+        iconName="apps-outline"
+        iconColor={colors.primary}
+        onPress={() => navigation.navigate('AuthMethod')}
+      />
+      <Spacer size="sm" />
+      <AuthMethodRow
+        label={t('loginOptions.forgotPasswordTitle')}
+        subtitle={t('loginOptions.forgotPasswordSubtitle')}
+        iconType="Ionicons"
+        iconName="key-outline"
+        iconColor={colors.warning}
+        onPress={() => navigation.navigate('ForgetPassword')}
+      />
+    </AuthScreenShell>
   );
 };
 

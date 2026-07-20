@@ -12,7 +12,7 @@
       "bold": "Inter-Bold"
     }
   },
-  "arabic": {
+  "arabicUi": {
     "family": "Cairo",
     "files": [
       "Cairo/Cairo-Regular.ttf",
@@ -25,6 +25,28 @@
       "bold": "Cairo-Bold"
     }
   },
+  "arabicScript": {
+    "family": "Amiri",
+    "files": [
+      "Amiri/Amiri-Regular.ttf",
+      "Amiri/Amiri-Bold.ttf"
+    ],
+    "postScriptNames": {
+      "regular": "Amiri-Regular",
+      "bold": "Amiri-Bold"
+    },
+    "notes": "Naskh for vocalized Arabic content (adhkar, hadith). Cairo is UI-only."
+  },
+  "mushaf": {
+    "family": "Amiri Quran",
+    "files": [
+      "AmiriQuran/AmiriQuran-Regular.ttf"
+    ],
+    "postScriptNames": {
+      "regular": "AmiriQuran-Regular"
+    },
+    "notes": "Dedicated Quran face for Uthmani mushaf pages."
+  },
   "setup": "Fonts are bundled under src/assets/fonts/. After adding or replacing files run: npx react-native-asset && rebuild iOS/Android.",
-  "regenerate": "Optional: bun run copy-fonts (copies from @expo-google-fonts packages in node_modules)."
+  "regenerate": "Optional: bun run copy-fonts (copies Inter/Cairo from @expo-google-fonts; Amiri fonts are vendored under src/assets/fonts/)."
 }

@@ -19,21 +19,29 @@ export const resolveHeadingStyles = (
       ...tokens.typography.display,
       color: toneColor,
       textAlign: align,
+      // Cairo/Arabic ascenders clip without top padding on Android.
+      paddingTop: tokens.spacing.sm,
+      includeFontPadding: false,
     },
     h1: {
       ...tokens.typography.h1,
       color: toneColor,
       textAlign: align,
+      paddingTop: tokens.spacing.sm,
+      includeFontPadding: false,
     },
     h2: {
       ...tokens.typography.h2,
       color: toneColor,
       textAlign: align,
+      paddingTop: tokens.spacing.xs,
+      includeFontPadding: false,
     },
     h3: {
       ...tokens.typography.h3,
       color: toneColor,
       textAlign: align,
+      includeFontPadding: false,
     },
   };
 };

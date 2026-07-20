@@ -22,7 +22,8 @@ export const resolveFeatureHubCardStyles = (tokens: ThemeTokens, accentColor?: s
     height: tokens.sizes.touchTarget,
     borderRadius: tokens.radius.lg,
     ...tokens.layout.presets.center,
-    backgroundColor: accentColor || tokens.colors.primaryMuted,
+    // Always a muted wash so icons stay visible in dark mode (accent is left border only).
+    backgroundColor: tokens.colors.primaryMuted,
     marginBottom: tokens.spacing.sm,
   },
 });

@@ -62,7 +62,7 @@ const PostDetail = ({navigation, route}: PostDetailProps): React.JSX.Element => 
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('posts.postTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.postTitle')} navigation={navigation} />
       <Card>
         <View style={styles.header}>
           <Image source={{uri: post.avatar}} style={styles.avatar as ImageStyle} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
@@ -27,13 +27,37 @@ const TodoHub = ({navigation}: TodoHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('todos.title')} showBack={false} />
+      <ScreenHeader
+        title={t('todos.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'list',
+            iconName: 'list-outline',
+            onPress: () => navigation.navigate('TodoList'),
+            accessibilityLabel: t('todos.list', {defaultValue: 'Todo list'}),
+          },
+          {
+            key: 'focus',
+            iconName: 'timer-outline',
+            onPress: () => navigation.navigate('TodoFocus'),
+            accessibilityLabel: t('todos.focusMode'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
-        <Heading text={t('todos.stayOrganized')} level="h2" align="center" />
-        <Spacer size="xs" />
+        <Heading text={t('todos.stayOrganized')} level="h2" />
         <View style={styles.stats}>
-          <TextView text={t('home.openTasks', {count: open})} variant="bodySmall" />
-          <TextView text={`${high} high priority`} variant="bodySmall" />
+          <View style={styles.statChip}>
+            <TextView text={`${open}`} variant="h3" align="center" />
+            <TextView text={t('home.todos')} variant="caption" muted align="center" />
+          </View>
+          <View style={styles.statChip}>
+            <TextView text={`${high}`} variant="h3" align="center" />
+            <TextView text={t('todos.highPriority')} variant="caption" muted align="center" />
+          </View>
         </View>
       </View>
       <Spacer size="lg" />

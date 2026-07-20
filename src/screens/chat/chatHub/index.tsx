@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
@@ -27,16 +27,42 @@ const ChatHub = ({navigation}: ChatHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('chat.title')} showBack={false} />
+      <ScreenHeader
+        title={t('chat.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'search',
+            iconName: 'search-outline',
+            onPress: () => navigation.navigate('ChatSearch'),
+            accessibilityLabel: t('chat.searchMessages'),
+          },
+          {
+            key: 'new',
+            iconName: 'create-outline',
+            onPress: () => navigation.navigate('NewChat'),
+            accessibilityLabel: t('chat.newChat'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
-        <Heading text={t('chat.messages')} level="h2" align="center" />
-        <Spacer size="xs" />
-        <TextView text={t('chat.hubSubtitle')} align="center" muted />
-        <Spacer size="md" />
+        <Heading text={t('chat.messages')} level="h2" />
+        <TextView text={t('chat.hubSubtitle')} muted />
         <View style={styles.stats}>
-          <TextView text={`${threads.length} threads`} variant="bodySmall" />
-          <TextView text={t('home.unreadCount', {count: unread})} variant="bodySmall" />
-          <TextView text={`${contacts.length} contacts`} variant="bodySmall" />
+          <View style={styles.statChip}>
+            <TextView text={`${threads.length}`} variant="h3" align="center" />
+            <TextView text={t('chat.inbox')} variant="caption" muted align="center" />
+          </View>
+          <View style={styles.statChip}>
+            <TextView text={`${unread}`} variant="h3" align="center" />
+            <TextView text={t('profile.unreadChats')} variant="caption" muted align="center" />
+          </View>
+          <View style={styles.statChip}>
+            <TextView text={`${contacts.length}`} variant="h3" align="center" />
+            <TextView text={t('chat.contacts')} variant="caption" muted align="center" />
+          </View>
         </View>
       </View>
       <Spacer size="lg" />

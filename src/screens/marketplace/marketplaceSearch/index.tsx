@@ -26,7 +26,7 @@ const MarketplaceSearch = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.search')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.search')} navigation={navigation} />
       <TextInputView
         label={t('marketplace.searchLabel')}
         value={query}

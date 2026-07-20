@@ -105,8 +105,7 @@ const BarcodeScanner = ({navigation}: BarcodeScannerProps): React.JSX.Element =>
         <View style={[styles.header, {paddingTop: insets.top}]}>
           <ScreenHeader
             title={t('camera.barcodeTitle')}
-            onBack={() => navigation.goBack()}
-          />
+            navigation={navigation} />
         </View>
         {!scanResult ? <View style={styles.line} pointerEvents="none" /> : null}
         {!scanResult ? (

@@ -178,9 +178,11 @@ class QuranAudioController {
   };
 
   /**
-   * UI navigated to a surah. Never mutates playing ayah/surah while audio is active.
+   * UI navigated to a surah/ayah. Never mutates playing ayah/surah while audio
+   * is active or a track is loaded (paused resume point stays authoritative).
+   * When idle, mirrors the route so the player badge tracks the mushaf page.
    */
-  bindRoute = (surahNumber: number, reciterId: string, _resumeAyahNumber = 1) => {
+  bindRoute = (surahNumber: number, reciterId: string, resumeAyahNumber = 1) => {
     this.ensureBootstrapped();
     this.boundRouteSurah = surahNumber;
 
@@ -198,11 +200,13 @@ class QuranAudioController {
       return;
     }
 
+    const maxAyah = getSurahAyahCount(surahNumber) || 1;
+    const nextAyah = Math.min(maxAyah, Math.max(1, resumeAyahNumber || 1));
+
     this.patchSnapshot({
       surahNumber,
       reciterId,
-      activeAyahNumber:
-        surahNumber === this.snapshot.surahNumber ? this.snapshot.activeAyahNumber : 1,
+      activeAyahNumber: nextAyah,
       hasLoadedTrack: false,
     });
     this.loadedKey = null;

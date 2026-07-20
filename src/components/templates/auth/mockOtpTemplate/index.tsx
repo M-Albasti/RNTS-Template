@@ -1,17 +1,12 @@
 import React, {useState} from 'react';
-import {Alert, View} from 'react-native';
+import {Alert} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
+import AuthScreenShell from '@organisms/auth/AuthScreenShell';
 import Button from '@atoms/Button';
-import Card from '@atoms/Card';
-import Heading from '@atoms/Heading';
-import ScreenContainer from '@atoms/ScreenContainer';
 import Spacer from '@atoms/Spacer';
-import TextView from '@atoms/TextView';
 import OTPTextInput from '@molecules/otpTextInput';
 
-import {useThemedStyles} from '@theme/createThemedStyles';
-import {resolveMockOtpTemplateStyles} from './styles/resolveMockOtpTemplateStyles';
 import {AppStackNavigationProp} from '@Types/appNavigation';
 
 interface MockOtpTemplateProps {
@@ -23,7 +18,6 @@ const MockOtpTemplate = ({
 }: MockOtpTemplateProps): React.JSX.Element => {
   const {t} = useTranslation();
   const [code, setCode] = useState('');
-  const styles = useThemedStyles(resolveMockOtpTemplateStyles);
 
   const verifyCode = () => {
     if (code.length < 4) {
@@ -36,31 +30,26 @@ const MockOtpTemplate = ({
   };
 
   return (
-    <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <Heading text={t('auth.verificationCode')} level="h1" align="center" />
+    <AuthScreenShell
+      title={t('auth.verificationCode')}
+      subtitle={t('auth.otpHint')}
+      iconName="keypad-outline">
+      <OTPTextInput
+        onFocus={() => undefined}
+        onBlur={() => undefined}
+        onTextChange={setCode}
+        onFilled={setCode}
+      />
+      <Spacer size="md" />
+      <Button label={t('auth.verify')} fullWidth onPress={verifyCode} />
       <Spacer size="sm" />
-      <TextView text={t('auth.otpHint')} variant="bodySmall" muted align="center" />
-      <Spacer size="lg" />
-      <View style={styles.form}>
-        <Card>
-          <OTPTextInput
-            onFocus={() => undefined}
-            onBlur={() => undefined}
-            onTextChange={setCode}
-            onFilled={setCode}
-          />
-          <Spacer size="md" />
-          <Button label={t('auth.verify')} fullWidth onPress={verifyCode} />
-          <Spacer size="sm" />
-          <Button
-            label={t('common.goBack')}
-            variant="ghost"
-            fullWidth
-            onPress={() => navigation.goBack()}
-          />
-        </Card>
-      </View>
-    </ScreenContainer>
+      <Button
+        label={t('common.goBack')}
+        variant="ghost"
+        fullWidth
+        onPress={() => navigation.goBack()}
+      />
+    </AuthScreenShell>
   );
 };
 

@@ -48,7 +48,7 @@ const GameAchievements = ({navigation}: GameAchievementsProps): React.JSX.Elemen
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('game.achievements')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.achievements')} navigation={navigation} />
       <Button
         label={lastDaily === today ? t('game.dailyClaimed') : t('game.claimDaily')}
         fullWidth

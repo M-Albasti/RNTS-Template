@@ -62,6 +62,8 @@ const DesignSystemHub = ({navigation}: HubProps): React.JSX.Element => {
       <ScreenHeader
         title={t('designSystem.hubTitle', {defaultValue: 'Design System'})}
         showBack={false}
+        showDrawer
+        navigation={navigation}
       />
       <TextView
         text={t('designSystem.hubSubtitle', {

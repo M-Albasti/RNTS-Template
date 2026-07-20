@@ -19,16 +19,17 @@ type Props = {navigation: AppStackNavigationProp<'IslamicHub'>};
 
 const IslamicHub = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
-  const {sizes} = useThemeTokens();
+  const {colors, sizes} = useThemeTokens();
   const lastRead = useAppSelector(state => state.islamic.lastRead);
 
   const styles = useThemedStyles(tokens => ({
     hero: {
-      borderRadius: tokens.radius.xl ?? tokens.radius.lg,
+      borderRadius: tokens.radius.xl,
       padding: tokens.spacing.lg,
-      backgroundColor: '#0F3D2E',
+      backgroundColor: tokens.colors.surface,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
       overflow: 'hidden' as const,
-      ...tokens.shadows.md,
     },
     heroGlow: {
       position: 'absolute' as const,
@@ -37,17 +38,17 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
       width: 160,
       height: 160,
       borderRadius: 80,
-      backgroundColor: 'rgba(212, 175, 55, 0.18)',
+      backgroundColor: tokens.colors.primaryMuted,
     },
-    heroText: {color: '#F5E6C8'},
-    heroTitle: {color: '#F8F1E3'},
+    heroText: {color: tokens.colors.textMuted},
+    heroTitle: {color: tokens.colors.textPrimary},
     continueCard: {
       marginTop: tokens.spacing.md,
-      backgroundColor: 'rgba(255,255,255,0.1)',
-      borderRadius: tokens.radius.md,
+      backgroundColor: tokens.colors.primaryMuted,
+      borderRadius: tokens.radius.lg,
       padding: tokens.spacing.md,
       borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: 'rgba(245, 230, 200, 0.25)',
+      borderColor: tokens.colors.border,
     },
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
     card: {
@@ -66,7 +67,7 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
       width: 40,
       height: 40,
       borderRadius: tokens.radius.md,
-      backgroundColor: 'rgba(15, 61, 46, 0.1)',
+      backgroundColor: tokens.colors.primaryMuted,
       ...tokens.layout.presets.center,
       marginBottom: tokens.spacing.sm,
     },
@@ -113,7 +114,26 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.title')} showBack={false} />
+      <ScreenHeader
+        title={t('islamic.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'search',
+            iconName: 'search-outline',
+            onPress: () => navigation.navigate('IslamicUnifiedSearch'),
+            accessibilityLabel: t('islamic.search.title'),
+          },
+          {
+            key: 'settings',
+            iconName: 'settings-outline',
+            onPress: () => navigation.navigate('IslamicSettings'),
+            accessibilityLabel: t('islamic.settings.title'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
         <View style={styles.heroGlow} />
         <TextView text={t('islamic.hubSubtitle')} variant="bodySmall" style={styles.heroText} />
@@ -146,7 +166,12 @@ const IslamicHub = ({navigation}: Props): React.JSX.Element => {
             style={({pressed}) => [styles.card, pressed && styles.cardPressed]}
             onPress={() => navigation.navigate(module.route)}>
             <View style={styles.iconWrap}>
-              <IconView iconType="Ionicons" name={module.icon} size={sizes.iconSm} />
+              <IconView
+                iconType="Ionicons"
+                name={module.icon}
+                size={sizes.iconSm}
+                color={colors.primary}
+              />
             </View>
             <Heading text={module.title} level="h3" />
             <Spacer size="xs" />

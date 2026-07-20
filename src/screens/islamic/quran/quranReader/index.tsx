@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
@@ -52,6 +52,15 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   const reciterId = useAppSelector(state => state.islamic.quranPreferences.reciterId);
   const timingReadId = getTimingReadId(reciterId);
   const [pageNumber, setPageNumber] = useState(1);
+  /** False until the route ayah's mushaf page has been applied at least once. */
+  const routePageReadyRef = useRef(false);
+  /**
+   * Why the current `pageNumber` changed.
+   * `'init'` = deep-link / resolvedPage — never rewrite route params (avoids
+   * setParams ↔ resolvedPage ↔ setPageNumber update loops on open).
+   * `'user'` | `'audio'` = page flip — sync route to an ayah on the new page.
+   */
+  const pageChangeSourceRef = useRef<'init' | 'user' | 'audio'>('init');
 
   const {data: resolvedPage} = useQuranPageForAyahQuery(
     viewedSurahNumber,
@@ -65,9 +74,12 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   );
 
   useEffect(() => {
-    if (resolvedPage) {
-      setPageNumber(resolvedPage);
+    if (resolvedPage == null) {
+      return;
     }
+    pageChangeSourceRef.current = 'init';
+    setPageNumber(current => (current === resolvedPage ? current : resolvedPage));
+    routePageReadyRef.current = true;
   }, [resolvedPage]);
 
   const pageFirstAyah = mushafQuery.data?.ayahs[0];
@@ -82,6 +94,7 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   );
 
   const handlePageChange = useCallback((nextPage: number) => {
+    pageChangeSourceRef.current = 'audio';
     setPageNumber(current => (current === nextPage ? current : nextPage));
   }, []);
 
@@ -93,6 +106,7 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
       dispatch(setLastReadPosition({surahNumber: nextSurah, ayahNumber: 1}));
       try {
         const page = await quranClient.getPageForAyah(nextSurah, 1);
+        pageChangeSourceRef.current = 'audio';
         setPageNumber(page);
       } catch {
         // keep current page
@@ -126,11 +140,27 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
 
   // Keep route/audio anchor aligned with the visible mushaf page so pause /
   // resume and bindRoute do not restart the wrong surah after page flips.
-  // Prefer the playing surah's first ayah on the page when audio is active —
-  // mushaf pages often begin with the previous surah's leftover ayahs.
+  // Only runs for user/audio page changes — never on initial deep-link resolve.
   useEffect(() => {
-    const ayahs = mushafQuery.data?.ayahs;
-    if (!ayahs?.length) {
+    if (!routePageReadyRef.current) {
+      return;
+    }
+    if (pageChangeSourceRef.current === 'init') {
+      return;
+    }
+    const pageData = mushafQuery.data;
+    if (!pageData?.ayahs.length || pageData.page !== pageNumber) {
+      return;
+    }
+    const ayahs = pageData.ayahs;
+    if (
+      ayahs.some(
+        ayah =>
+          ayah.surahNumber === viewedSurahNumber &&
+          ayah.numberInSurah === initialAyahNumber,
+      )
+    ) {
+      pageChangeSourceRef.current = 'init';
       return;
     }
     const playingAnchor =
@@ -141,8 +171,11 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
       anchor.surahNumber === viewedSurahNumber &&
       anchor.numberInSurah === initialAyahNumber
     ) {
+      pageChangeSourceRef.current = 'init';
       return;
     }
+    // Mark init before setParams so the re-run from param changes is a no-op.
+    pageChangeSourceRef.current = 'init';
     navigation.setParams({
       surahNumber: anchor.surahNumber,
       ayahNumber: anchor.numberInSurah,
@@ -152,14 +185,15 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
     audio.isPlaying,
     audio.playingSurahNumber,
     initialAyahNumber,
-    mushafQuery.data?.ayahs,
+    mushafQuery.data,
     navigation,
+    pageNumber,
     viewedSurahNumber,
   ]);
 
   useEffect(() => {
-    // Don't overwrite last-read of the playing surah while browsing another.
-    if (audio.isPlaying || audio.isLoading || audio.hasLoadedTrack) {
+    // Don't overwrite last-read of the playing surah while audio is advancing.
+    if (audio.isPlaying || audio.isLoading) {
       return;
     }
     dispatch(
@@ -169,7 +203,6 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
       }),
     );
   }, [
-    audio.hasLoadedTrack,
     audio.isLoading,
     audio.isPlaying,
     dispatch,
@@ -178,6 +211,7 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
   ]);
 
   const goPage = (delta: number) => {
+    pageChangeSourceRef.current = 'user';
     setPageNumber(current => Math.min(MUSHAF_PAGE_COUNT, Math.max(1, current + delta)));
   };
 
@@ -210,20 +244,19 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
     <ScreenContainer bottomPadding="none" style={styles.body}>
       <ScreenHeader
         title={t('islamic.quran.mushafTitle', {page: pageNumber})}
-        onBack={() => navigation.goBack()}
-        rightAccessory={
-          <TouchableIcon
-            iconType="Ionicons"
-            name="document-text-outline"
-            size={sizes.iconSm}
-            onPress={() =>
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'tafsir',
+            iconName: 'document-text-outline',
+            onPress: () =>
               navigation.navigate('QuranTafsirReader', {
                 surahNumber: pageSurahNumber,
                 ayahNumber: pageFirstAyahNumber,
-              })
-            }
-          />
-        }
+              }),
+            accessibilityLabel: t('islamic.quran.tafsir', {defaultValue: 'Tafsir'}),
+          },
+        ]}
       />
 
       {mushafQuery.isLoading ? (
@@ -270,8 +303,16 @@ const QuranReader = ({navigation, route}: Props): React.JSX.Element => {
 
       <QuranAudioBar
         reciterId={reciterId}
-        surahNumber={audio.playingSurahNumber}
-        activeAyahNumber={audio.activeAyahNumber}
+        surahNumber={
+          audio.isPlaying || audio.isLoading
+            ? audio.playingSurahNumber
+            : viewedSurahNumber
+        }
+        activeAyahNumber={
+          audio.isPlaying || audio.isLoading
+            ? audio.activeAyahNumber
+            : initialAyahNumber
+        }
         isPlaying={audio.isPlaying}
         isLoading={audio.isLoading}
         continuous

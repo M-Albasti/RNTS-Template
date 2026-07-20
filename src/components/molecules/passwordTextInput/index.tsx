@@ -1,12 +1,11 @@
-//* packages import
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
-//* components import
 import TextInputView from '@atoms/TextInputView';
 import IconView from '@atoms/Icon';
 import TouchableIcon from '@atoms/TouchableIcon';
 
-//* types import
+import {useThemeTokens} from '@theme/useThemeTokens';
 import type {Dispatch, SetStateAction} from 'react';
 
 interface PasswordTextInputProps {
@@ -14,21 +13,38 @@ interface PasswordTextInputProps {
   setPassword: Dispatch<SetStateAction<string>>;
   showPassword: boolean;
   toggleShowPassword: () => void;
+  label?: string;
+  placeholder?: string;
 }
 
 const PasswordTextInput = (props: PasswordTextInputProps) => {
+  const {t} = useTranslation();
+  const {colors} = useThemeTokens();
+
   return (
     <TextInputView
+      label={props.label ?? t('auth.passwordLabel')}
       value={props.password}
       onChangeText={props.setPassword}
-      leftIcon={<IconView iconType={'FontAwesome'} name={'lock'} size={25} />}
+      placeholder={props.placeholder ?? t('auth.passwordPlaceholder')}
       secureTextEntry={!props.showPassword}
+      autoCapitalize="none"
+      autoCorrect={false}
+      leftIcon={
+        <IconView
+          iconType="Ionicons"
+          name="lock-closed-outline"
+          size={20}
+          color={colors.textMuted}
+        />
+      }
       rightIcon={
         <TouchableIcon
-          iconType={'FontAwesome'}
-          name={props.showPassword ? 'eye-slash' : 'eye'}
+          iconType="Ionicons"
+          name={props.showPassword ? 'eye-off-outline' : 'eye-outline'}
           onPress={props.toggleShowPassword}
-          size={25}
+          size={20}
+          color={colors.textMuted}
         />
       }
     />

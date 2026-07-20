@@ -75,7 +75,7 @@ const NewChat = ({navigation}: NewChatProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('chat.newChat')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('chat.newChat')} navigation={navigation} />
       <FlashList
         data={contacts}
         renderItem={renderItem}

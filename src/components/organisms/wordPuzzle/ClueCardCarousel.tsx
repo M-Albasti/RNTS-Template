@@ -1,12 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
+  FlatList,
   LayoutChangeEvent,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Platform,
   Pressable,
   View,
+  type ListRenderItemInfo,
+  type ViewToken,
 } from 'react-native';
-import {FlashList, type FlashListRef} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 import Animated, {
   Easing,
@@ -115,6 +118,10 @@ const ClueCard = ({
   );
 };
 
+/**
+ * Horizontal clue pager. Uses FlatList + getItemLayout (not FlashList) so
+ * Android snap/paging stays reliable while the active index updates.
+ */
 const ClueCardCarousel = ({
   puzzles,
   language,
@@ -125,7 +132,7 @@ const ClueCardCarousel = ({
   onIndexChange,
 }: Props): React.JSX.Element => {
   const [pageWidth, setPageWidth] = useState(0);
-  const listRef = useRef<FlashListRef<WordPuzzleItem>>(null);
+  const listRef = useRef<FlatList<WordPuzzleItem>>(null);
   const isProgrammaticScrollRef = useRef(false);
   const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {t} = useTranslation();
@@ -198,7 +205,7 @@ const ClueCardCarousel = ({
           isProgrammaticScrollRef.current = false;
           programmaticTimerRef.current = null;
         },
-        animated ? 400 : 50,
+        animated ? 450 : 50,
       );
     },
     [pageWidth, puzzles.length],
@@ -225,7 +232,7 @@ const ClueCardCarousel = ({
       return;
     }
     scrollToCard(activeIndex, true);
-    // intentionally not depending on activeIndex — user swipes update dots via onMomentumScrollEnd only
+    // intentionally not depending on activeIndex — user swipes update via viewability
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollRequest, pageWidth, puzzles.length]);
 
@@ -241,25 +248,38 @@ const ClueCardCarousel = ({
   );
 
   const onMomentumScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    syncIndexFromOffset(event.nativeEvent.contentOffset.x);
+    if (!isProgrammaticScrollRef.current) {
+      syncIndexFromOffset(event.nativeEvent.contentOffset.x);
+    }
     isProgrammaticScrollRef.current = false;
   };
 
   const onScrollEndDrag = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const vx = event.nativeEvent.velocity?.x ?? 0;
-    if (Math.abs(vx) < 0.1) {
-      syncIndexFromOffset(event.nativeEvent.contentOffset.x);
+    // Android often skips momentum events on short swipes — sync when velocity is low.
+    if (Platform.OS === 'android' && !isProgrammaticScrollRef.current) {
+      const vx = event.nativeEvent.velocity?.x ?? 0;
+      if (Math.abs(vx) < 0.15) {
+        syncIndexFromOffset(event.nativeEvent.contentOffset.x);
+      }
     }
   };
 
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (isProgrammaticScrollRef.current || pageWidth <= 0) {
-      return;
-    }
-    // Keep the active dot in sync while the user is swiping.
-    const next = Math.round(event.nativeEvent.contentOffset.x / pageWidth);
-    setActiveIndex(Math.min(Math.max(next, 0), puzzles.length - 1));
-  };
+  const onViewableItemsChanged = useRef(
+    ({viewableItems}: {viewableItems: ViewToken[]}) => {
+      if (isProgrammaticScrollRef.current || viewableItems.length === 0) {
+        return;
+      }
+      const first = viewableItems[0];
+      if (typeof first.index === 'number') {
+        setActiveIndex(first.index);
+      }
+    },
+  ).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 60,
+    minimumViewTime: 40,
+  }).current;
 
   const goToIndex = useCallback(
     (index: number) => {
@@ -272,8 +292,17 @@ const ClueCardCarousel = ({
     [pageWidth, puzzles.length, scrollToCard, setActiveIndex],
   );
 
+  const getItemLayout = useCallback(
+    (_: ArrayLike<WordPuzzleItem> | null | undefined, index: number) => ({
+      length: pageWidth,
+      offset: pageWidth * index,
+      index,
+    }),
+    [pageWidth],
+  );
+
   const renderItem = useCallback(
-    ({item, index}: {item: WordPuzzleItem; index: number}) => (
+    ({item, index}: ListRenderItemInfo<WordPuzzleItem>) => (
       <ClueCard
         item={item}
         solved={solvedIds.has(item.id)}
@@ -291,7 +320,7 @@ const ClueCardCarousel = ({
     <Animated.View entering={FadeIn.duration(280)} style={styles.wrap} onLayout={onLayout}>
       {pageWidth > 0 ? (
         <View style={styles.list}>
-          <FlashList
+          <FlatList
             ref={listRef}
             data={puzzles}
             extraData={`${scrollRequest}-${activeIndex}-${[...solvedIds].join(',')}`}
@@ -300,15 +329,19 @@ const ClueCardCarousel = ({
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             decelerationRate="fast"
-            snapToInterval={pageWidth}
-            snapToAlignment="start"
-            disableIntervalMomentum
             bounces={false}
+            nestedScrollEnabled
+            overScrollMode="never"
+            getItemLayout={getItemLayout}
             renderItem={renderItem}
             onMomentumScrollEnd={onMomentumScrollEnd}
             onScrollEndDrag={onScrollEndDrag}
-            onScroll={onScroll}
-            scrollEventThrottle={16}
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
+            windowSize={3}
+            initialNumToRender={2}
+            maxToRenderPerBatch={2}
+            removeClippedSubviews={Platform.OS === 'android'}
           />
         </View>
       ) : (

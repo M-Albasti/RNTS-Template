@@ -67,7 +67,7 @@ const OrderTracking = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('delivery.trackOrder')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('delivery.trackOrder')} navigation={navigation} />
       <LocationPermissionGate>
         <DeliveryMap
           height={340}

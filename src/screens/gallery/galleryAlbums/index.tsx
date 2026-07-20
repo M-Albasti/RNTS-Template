@@ -59,7 +59,7 @@ const GalleryAlbums = ({navigation, route}: GalleryAlbumsProps): React.JSX.Eleme
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('gallery.albums')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.albums')} navigation={navigation} />
       <FlashList
         data={albums}
         keyExtractor={item => item.id}

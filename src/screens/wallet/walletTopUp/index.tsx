@@ -40,7 +40,7 @@ const WalletTopUp = ({navigation}: WalletTopUpProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('wallet.topUp')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.topUp')} navigation={navigation} />
       <Card>
         <Heading
           text={t('wallet.currentBalance', {balance: balance.toFixed(2)})}

@@ -24,7 +24,7 @@ const MarketplaceOrders = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.myOrders')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.myOrders')} navigation={navigation} />
       {orders.length === 0 ? (
         <TextView text={t('marketplace.noOrders')} align="center" muted />
       ) : (

@@ -47,7 +47,7 @@ const WalletTransactions = ({
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('wallet.transactionsTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.transactionsTitle')} navigation={navigation} />
       <FlashList
         data={transactions}
         renderItem={renderItem}

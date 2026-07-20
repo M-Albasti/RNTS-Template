@@ -13,6 +13,7 @@ export const resolveScreenContainerStyles = (
   root: {
     flex: tokens.layout.flex.fill,
     backgroundColor: tokens.colors.background,
+    overflow: 'visible' as const,
   },
   content: {
     paddingHorizontal: tokens.spacing.lg,
@@ -21,6 +22,16 @@ export const resolveScreenContainerStyles = (
     paddingBottom: bottomPadding
       ? tokens.spacing[bottomPadding]
       : tokens.spacing.lg,
+    overflow: 'visible' as const,
+  },
+  stickyHeader: {
+    paddingHorizontal: tokens.spacing.lg,
+    paddingTop: tokens.spacing.sm,
+    backgroundColor: tokens.colors.background,
+    zIndex: 10,
+  },
+  contentBelowSticky: {
+    paddingTop: tokens.spacing.md,
   },
   contentCentered: {
     flexGrow: tokens.layout.flexGrow.fill,

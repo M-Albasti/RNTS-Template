@@ -15,31 +15,43 @@ import type {AppStackNavigationProp} from '@Types/appNavigation';
 
 type Props = {navigation: AppStackNavigationProp<'WordPuzzleHub'>};
 
+/** Quizzo-inspired word puzzle hub: gamey gem badge + world cards. */
 const WordPuzzleHub = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
   const gems = useAppSelector(state => state.wordPuzzle.gems);
 
   const styles = useThemedStyles(tokens => ({
     hero: {
-      backgroundColor: '#6abf69',
-      borderRadius: tokens.radius.lg,
+      backgroundColor: tokens.colors.surface,
+      borderRadius: tokens.radius.xl,
       padding: tokens.spacing.lg,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
+      gap: tokens.spacing.sm,
+      alignItems: 'center' as const,
     },
-    heroText: {color: tokens.colors.textInverse},
+    gemBadge: {
+      backgroundColor: tokens.colors.primaryMuted,
+      borderRadius: tokens.radius.full,
+      paddingHorizontal: tokens.spacing.md,
+      paddingVertical: tokens.spacing.xs,
+    },
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
-    gemRow: {...tokens.layout.presets.rowBetween, alignItems: 'center' as const},
   }));
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('wordPuzzle.title')} showBack={false} />
+      <ScreenHeader title={t('wordPuzzle.title')} showBack={false} showDrawer navigation={navigation} />
       <View style={styles.hero}>
-        <Heading text={t('wordPuzzle.hubTitle')} level="h2" align="center" style={styles.heroText} />
-        <Spacer size="xs" />
-        <TextView text={t('wordPuzzle.hubSubtitle')} variant="bodySmall" style={styles.heroText} align="center" />
-        <Spacer size="md" />
-        <View style={styles.gemRow}>
-          <TextView text={t('wordPuzzle.gems', {count: gems})} style={styles.heroText} />
+        <Heading text={t('wordPuzzle.hubTitle')} level="h2" align="center" />
+        <TextView
+          text={t('wordPuzzle.hubSubtitle')}
+          variant="bodySmall"
+          muted
+          align="center"
+        />
+        <View style={styles.gemBadge}>
+          <TextView text={t('wordPuzzle.gems', {count: gems})} />
         </View>
       </View>
       <Spacer size="lg" />
@@ -49,7 +61,6 @@ const WordPuzzleHub = ({navigation}: Props): React.JSX.Element => {
           subtitle={t('wordPuzzle.arabicWorldSubtitle')}
           iconType="Ionicons"
           iconName="book-outline"
-          accentColor="#d4efdf"
           onPress={() => navigation.navigate('WordPuzzleLibrary', {language: 'ar'})}
         />
         <FeatureHubCard
@@ -57,7 +68,6 @@ const WordPuzzleHub = ({navigation}: Props): React.JSX.Element => {
           subtitle={t('wordPuzzle.englishWorldSubtitle')}
           iconType="Ionicons"
           iconName="book-outline"
-          accentColor="#d6eaf8"
           onPress={() => navigation.navigate('WordPuzzleLibrary', {language: 'en'})}
         />
       </View>

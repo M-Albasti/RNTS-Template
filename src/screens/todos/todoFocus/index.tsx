@@ -45,7 +45,7 @@ const TodoFocus = ({navigation}: TodoFocusProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll centered alignContent="center">
-      <ScreenHeader title={t('todos.focusMode')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('todos.focusMode')} navigation={navigation} />
       <Card constrained>
         <TextView text={t('todos.tasksWaiting', {count: openTasks})} align="center" muted />
         <Spacer size="lg" />
