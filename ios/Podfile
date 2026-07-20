@@ -69,7 +69,11 @@ target 'RNTS-Template' do
 
   pre_install do |installer|
     installer.pod_targets.each do |pod|
-      if pod.name.eql?('op-sqlite')
+      # RNFB* as static frameworks still emit Clang modules that absorb React
+      # headers (RCTPromiseRejectBlock, RCT_EXPORT_*), which breaks consumers
+      # like RNFBMessaging under use_frameworks! + prebuilt RNCore.
+      # Force static libraries for RNFB (and op-sqlite) instead.
+      if pod.name.start_with?('RNFB') || pod.name.eql?('op-sqlite')
         def pod.build_type
           Pod::BuildType.static_library
         end
@@ -85,10 +89,12 @@ target 'RNTS-Template' do
       # :ccache_enabled => true
     )
     installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        # config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
-        # config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
-        config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      target.build_configurations.each do |bc|
+        # bc.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++20'
+        # bc.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+        bc.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        # Apple Silicon CI / local simulators: skip x86_64 slice.
+        bc.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'i386 x86_64'
       end
     end
   end
