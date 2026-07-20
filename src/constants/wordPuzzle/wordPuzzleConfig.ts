@@ -6,6 +6,14 @@ export const WORD_PUZZLE_PUZZLES_PER_STAGE_MAX = 10;
 export const WORD_PUZZLE_PUZZLES_PER_STAGE = WORD_PUZZLE_PUZZLES_PER_STAGE_MIN;
 export const WORD_PUZZLE_FETCH_BATCH = 12;
 
+/** Answer phrase may contain at most this many space-separated words. */
+export const WORD_PUZZLE_MAX_ANSWER_WORDS = 3;
+/**
+ * Max letters for the whole answer (spaces/diacritics stripped).
+ * Applies to matching, board paths, and display — not per word.
+ */
+export const WORD_PUZZLE_MAX_ANSWER_LETTERS = 13;
+
 const PUZZLES_PER_STAGE_SPAN =
   WORD_PUZZLE_PUZZLES_PER_STAGE_MAX - WORD_PUZZLE_PUZZLES_PER_STAGE_MIN + 1;
 

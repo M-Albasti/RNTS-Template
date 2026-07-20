@@ -83,7 +83,7 @@ const IslamicSettings = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.settings.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('islamic.settings.title')} navigation={navigation} />
       <View style={styles.stack}>
         <SettingToggle
           label={t('islamic.settings.notifications')}

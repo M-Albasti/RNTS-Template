@@ -14,6 +14,36 @@ const categoryListPath = (lang: AdhkarLanguage) =>
 
 const categoryListKey = (lang: AdhkarLanguage) => (lang === 'ar' ? 'العربية' : 'English');
 
+/**
+ * Hisn list payloads are `{ "English": [...] }` / `{ "العربية": [...] }`.
+ * Fall back to the first array value so a BOM-prefixed key on iOS does not
+ * silently resolve to an empty category list.
+ */
+const extractHisnArray = <T>(data: unknown, preferredKey: string): T[] => {
+  if (Array.isArray(data)) {
+    return data as T[];
+  }
+  if (!data || typeof data !== 'object') {
+    return [];
+  }
+  const record = data as Record<string, unknown>;
+  const preferred = record[preferredKey];
+  if (Array.isArray(preferred)) {
+    return preferred as T[];
+  }
+  for (const [key, value] of Object.entries(record)) {
+    if (Array.isArray(value) && key.replace(/^\uFEFF/, '') === preferredKey) {
+      return value as T[];
+    }
+  }
+  for (const value of Object.values(record)) {
+    if (Array.isArray(value)) {
+      return value as T[];
+    }
+  }
+  return [];
+};
+
 const SEARCH_INDEX_BATCH = 12;
 const SEARCH_RESULT_LIMIT = 60;
 
@@ -93,7 +123,10 @@ export const adhkarClient = {
     const {data} = await adhkarHttpClient.get<Record<string, HisnCategoryDto[]>>(
       categoryListPath(lang),
     );
-    const categories = data[categoryListKey(lang)] ?? [];
+    const categories = extractHisnArray<HisnCategoryDto>(data, categoryListKey(lang));
+    if (!categories.length) {
+      throw new Error('HisnMuslim categories response was empty');
+    }
     return categories.map(category => mapHisnCategory(category, lang));
   },
 
@@ -104,10 +137,19 @@ export const adhkarClient = {
     const {data} = await adhkarHttpClient.get<Record<string, HisnItemDto[]>>(
       `/${lang}/${categoryId}.json`,
     );
-    const [title, items] = Object.entries(data)[0] ?? ['', []];
+    const entries =
+      data && typeof data === 'object' && !Array.isArray(data)
+        ? Object.entries(data as Record<string, HisnItemDto[]>)
+        : [];
+    const [rawTitle, items] = entries[0] ?? ['', [] as HisnItemDto[]];
+    const title = String(rawTitle).replace(/^\uFEFF/, '');
+    const list = Array.isArray(items) ? items : [];
+    if (!list.length) {
+      throw new Error(`HisnMuslim category ${categoryId} response was empty`);
+    }
     return {
       title,
-      items: items.map(mapHisnItem),
+      items: list.map(mapHisnItem),
     };
   },
 

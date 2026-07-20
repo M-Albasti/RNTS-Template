@@ -29,7 +29,7 @@ const WalletBudget = ({navigation}: WalletBudgetProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('wallet.budgetAndGoals')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.budgetAndGoals')} navigation={navigation} />
       <Heading text={t('wallet.monthlyBudgets')} level="h3" />
       <Spacer size="sm" />
       {budgetCategories.map(cat => {

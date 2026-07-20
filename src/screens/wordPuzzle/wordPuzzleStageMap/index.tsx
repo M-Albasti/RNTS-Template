@@ -69,7 +69,7 @@ const WordPuzzleStageMap = ({navigation, route}: Props): React.JSX.Element => {
   if (bookLoading || stagesLoading) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('wordPuzzle.title')} navigation={navigation} />
         <View style={styles.center}>
           <ActivityIndicator size="large" />
         </View>
@@ -80,7 +80,7 @@ const WordPuzzleStageMap = ({navigation, route}: Props): React.JSX.Element => {
   if (isError || !book || !stages) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('wordPuzzle.title')} navigation={navigation} />
         <ApiErrorView
           message={t('wordPuzzle.errors.loadFailed')}
           retryLabel={t('wordPuzzle.retry')}
@@ -94,7 +94,7 @@ const WordPuzzleStageMap = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={book.title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={book.title} navigation={navigation} />
       <TextView text={t('wordPuzzle.mapHint')} variant="bodySmall" muted />
       <Spacer size="md" />
       <ScrollView>

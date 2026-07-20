@@ -99,7 +99,14 @@ export const initLanguage = syncLanguage;
 export const changeLanguage = async (dispatch: AppDispatch) => {
   const currentLanguage = normalizeLanguageCode(i18next.language);
   const newLang: Languages = currentLanguage === 'ar' ? 'en' : 'ar';
+  await setAppLanguage(dispatch, newLang);
+};
 
+/** Set an explicit app language (used by settings bottom sheet). */
+export const setAppLanguage = async (
+  dispatch: AppDispatch,
+  newLang: Languages,
+) => {
   try {
     await dispatch(addLanguage(newLang)).then(async res => {
       if (res.meta.requestStatus === 'fulfilled') {
@@ -117,7 +124,7 @@ export const changeLanguage = async (dispatch: AppDispatch) => {
       }
     });
   } catch (error) {
-    console.log('Error i18n changeLanguage: =>', error);
+    console.log('Error i18n setAppLanguage: =>', error);
   }
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 
 import OTPInput from '@atoms/OTPInput';
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import {resolveOtpTextInputStyles} from './styles/resolveOtpTextInputStyles';
 
 interface OTPTextInputProps {
@@ -13,14 +14,15 @@ interface OTPTextInputProps {
 
 const OTPTextInput = (props: OTPTextInputProps): React.JSX.Element => {
   const styles = useThemedStyles(resolveOtpTextInputStyles);
+  const {colors} = useThemeTokens();
 
   return (
     <OTPInput
       numberOfDigits={6}
-      focusColor="green"
+      focusColor={colors.primary}
       autoFocus={false}
       hideStick={true}
-      placeholder="******"
+      placeholder="·"
       blurOnFilled={true}
       disabled={false}
       type="numeric"

@@ -173,8 +173,7 @@ const PrayerLocationSetup = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer bottomPadding="xxl">
       <ScreenHeader
         title={t('islamic.prayer.chooseLocation')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <ScrollView>
         <TextView text={t('islamic.prayer.chooseLocationSubtitle')} variant="bodySmall" muted />
         <Spacer size="md" />

@@ -55,7 +55,8 @@ export const mapIslamicQuestionToPuzzle = (
     return null;
   }
   const spellable = pickBoardWord(correct, 'ar');
-  if (!spellable) {
+  const answers = buildAnswerVariants(correct, 'ar');
+  if (!spellable || answers.length === 0) {
     return null;
   }
   const {grid, solutionPath} = buildGridForWord(spellable, 'ar', seed);
@@ -63,7 +64,7 @@ export const mapIslamicQuestionToPuzzle = (
     id: `ar-q-${question.id}`,
     type: 'text_riddle',
     clue: {type: 'text_riddle', text: question.q},
-    answers: buildAnswerVariants(correct, 'ar'),
+    answers,
     grid,
     solutionPath,
     sourceUrl: question.link,
@@ -76,7 +77,8 @@ export const mapEnglishRiddleToPuzzle = (
   category: string,
 ): WordPuzzleItem | null => {
   const spellable = pickBoardWord(riddle.answer, 'en');
-  if (!spellable) {
+  const answers = buildAnswerVariants(riddle.answer, 'en');
+  if (!spellable || answers.length === 0) {
     return null;
   }
   const {grid, solutionPath} = buildGridForWord(spellable, 'en', index);
@@ -84,7 +86,7 @@ export const mapEnglishRiddleToPuzzle = (
     id: `en-${category}-${index}`,
     type: 'text_riddle',
     clue: {type: 'text_riddle', text: riddle.riddle},
-    answers: buildAnswerVariants(riddle.answer, 'en'),
+    answers,
     grid,
     solutionPath,
   };

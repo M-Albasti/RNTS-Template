@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
+import ScreenHeader from '@atoms/ScreenHeader';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {resolveScreenContainerStyles} from './styles/resolveScreenContainerStyles';
 import {spacing} from '@theme/tokens';
@@ -19,6 +20,13 @@ interface ScreenContainerProps {
   scroll?: boolean;
   centered?: boolean;
   safe?: boolean;
+  /**
+   * When scrolling, pin the first `ScreenHeader` (or `header` slot) above
+   * the ScrollView so it stays sticky. Defaults to true.
+   */
+  stickyHeader?: boolean;
+  /** Explicit sticky header — preferred when header is not the first child. */
+  header?: React.ReactNode;
   /** Horizontal alignment of scroll/content area */
   alignContent?: 'center' | 'stretch';
   /** Extra bottom padding using spacing tokens */
@@ -28,11 +36,25 @@ interface ScreenContainerProps {
   scrollProps?: Omit<ScrollViewProps, 'style' | 'contentContainerStyle'>;
 }
 
+const isScreenHeaderElement = (node: React.ReactNode): boolean => {
+  if (!React.isValidElement(node)) {
+    return false;
+  }
+  const type = node.type as {displayName?: string; name?: string};
+  return (
+    type === ScreenHeader ||
+    type?.displayName === 'ScreenHeader' ||
+    type?.name === 'ScreenHeader'
+  );
+};
+
 const ScreenContainer = ({
   children,
   scroll = false,
   centered = false,
   safe = true,
+  stickyHeader = true,
+  header,
   alignContent = 'stretch',
   bottomPadding,
   style,
@@ -66,23 +88,46 @@ const ScreenContainer = ({
     contentStyle,
   ];
 
+  const childList = React.Children.toArray(children);
+  const autoHeader =
+    stickyHeader && !header && childList.length > 0 && isScreenHeaderElement(childList[0])
+      ? childList[0]
+      : null;
+  const stickyNode = header ?? autoHeader;
+  const bodyChildren = autoHeader ? childList.slice(1) : childList;
+
   if (scroll) {
     return (
       <View style={[styles.root, safeStyles.safe, style]}>
+        {stickyNode ? (
+          <View style={styles.stickyHeader}>{stickyNode}</View>
+        ) : null}
         <ScrollView
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={contentStyles}
+          contentContainerStyle={[
+            contentStyles,
+            stickyNode ? styles.contentBelowSticky : null,
+          ]}
           {...scrollProps}>
-          {children}
+          {bodyChildren}
         </ScrollView>
       </View>
     );
   }
 
   return (
-    <View style={[styles.root, safeStyles.safe, styles.content, centered && styles.contentCentered, contentStyle, style]}>
-      {children}
+    <View
+      style={[
+        styles.root,
+        safeStyles.safe,
+        styles.content,
+        centered && styles.contentCentered,
+        contentStyle,
+        style,
+      ]}>
+      {stickyNode}
+      {bodyChildren}
     </View>
   );
 };

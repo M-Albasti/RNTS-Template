@@ -54,7 +54,7 @@ const WalletCards = ({navigation}: WalletCardsProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('wallet.myCards')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.myCards')} navigation={navigation} />
       <FlashList
         data={cards}
         renderItem={renderItem}

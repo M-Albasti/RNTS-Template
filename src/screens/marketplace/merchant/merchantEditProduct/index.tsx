@@ -98,8 +98,7 @@ const MerchantEditProduct = ({navigation, route}: Props): React.JSX.Element => {
             ? t('marketplace.merchant.editProduct')
             : t('marketplace.merchant.addProduct')
         }
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <TextInputView label={t('marketplace.listingTitle')} value={title} onChangeText={setTitle} />
       <TextInputView
         label={t('marketplace.listingDescription')}

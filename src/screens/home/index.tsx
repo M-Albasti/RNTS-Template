@@ -1,17 +1,19 @@
 //* packages import
-import React, {useCallback, useMemo} from 'react';
-import {Pressable, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {Alert, Pressable, View} from 'react-native';
 import {DrawerNavigationProp} from '@react-navigation/drawer';
 import {useTranslation} from 'react-i18next';
 import {isEmpty} from 'lodash';
 
 //* components import
+import BottomSheet from '@atoms/BottomSheet';
 import Button from '@atoms/Button';
-import Card from '@atoms/Card';
 import FeatureHubCard from '@atoms/FeatureHubCard';
-import AnimatedEntrance from '@atoms/AnimatedEntrance';
 import Heading from '@atoms/Heading';
+import IconView from '@atoms/Icon';
 import ScreenContainer from '@atoms/ScreenContainer';
+import ScreenHeader from '@atoms/ScreenHeader';
+import {FLOATING_TAB_CONTENT_INSET} from '@navigation/TabNavigator/styles/resolveFloatingTabBarStyles';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 import SectionHeader from '@molecules/SectionHeader';
@@ -24,7 +26,6 @@ import {navigate as rootNavigate} from '@services/navigationServices/NavigationS
 import {useDashboardQuery} from '@api/query/hooks/useDashboardQuery';
 
 //* config import
-import {WORKFLOW_STEP_IDS} from '@config/appWorkflow';
 import {apiConfig} from '@config/apiConfig';
 
 //* hooks import
@@ -32,14 +33,17 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 
 //* translation import
-import {changeLanguage} from '@translation/i18n';
+import {setAppLanguage} from '@translation/i18n';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import {resolveHomeStyles} from './styles/resolveHomeStyles';
 
 //* types import
 import {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
+import type {FontsFamily} from '@Types/fontsFamily';
+import type {Languages} from '@Types/languages';
 
 interface HomeProps {
   navigation: AppStackNavigationProp<'Home'>;
@@ -51,11 +55,8 @@ type HubModule = {
   route: keyof DrawerParamList;
   iconType: 'Ionicons' | 'MaterialCommunityIcons' | 'Feather';
   iconName: string;
-  accent?: string;
   section: 'social' | 'commerce' | 'media';
 };
-
-const MODULE_SECTIONS: Array<'social' | 'commerce' | 'media'> = ['social', 'commerce', 'media'];
 
 const MODULES: HubModule[] = [
   {
@@ -156,8 +157,15 @@ const MODULES: HubModule[] = [
   },
 ];
 
+const MODULE_SECTIONS: Array<'social' | 'commerce' | 'media'> = [
+  'social',
+  'commerce',
+  'media',
+];
+
 const Home = ({navigation}: HomeProps): React.JSX.Element => {
   const user = useAppSelector(state => state?.auth?.user);
+  const lang = useAppSelector(state => state.appSettings.lang);
   const localPostsCount = useAppSelector(state => state.posts.posts.length);
   const localOpenTodos = useAppSelector(
     state => state.todos.items.filter(todo => !todo.done).length,
@@ -175,7 +183,25 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
   const coins = dashboard?.gameCoins ?? localCoins;
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
+  const {colors, sizes} = useThemeTokens();
   const styles = useThemedStyles(resolveHomeStyles);
+  const [languageSheetOpen, setLanguageSheetOpen] = useState(false);
+  const [draftLang, setDraftLang] = useState<Languages>(lang);
+
+  useEffect(() => {
+    if (languageSheetOpen) {
+      setDraftLang(lang);
+    }
+  }, [lang, languageSheetOpen]);
+
+  const closeLanguageSheet = () => setLanguageSheetOpen(false);
+
+  const confirmLanguage = () => {
+    if (draftLang !== lang) {
+      void setAppLanguage(dispatch, draftLang);
+    }
+    closeLanguageSheet();
+  };
 
   const drawerNav = navigation.getParent<DrawerNavigationProp<DrawerParamList>>();
 
@@ -187,10 +213,55 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
   );
 
   const logout = useCallback(() => {
-    if (!isEmpty(user)) {
-      logoutService(user?.loginType, dispatch);
+    if (isEmpty(user)) {
+      return;
     }
-  }, [dispatch, user]);
+    Alert.alert(t('drawer.logout'), t('drawer.logoutConfirm'), [
+      {text: t('common.cancel'), style: 'cancel'},
+      {
+        text: t('drawer.logout'),
+        style: 'destructive',
+        onPress: () => {
+          void logoutService(user.loginType, dispatch);
+        },
+      },
+    ]);
+  }, [dispatch, t, user]);
+
+  const quickActions = useMemo(
+    () =>
+      [
+        {
+          key: 'profile',
+          label: t('home.profile'),
+          icon: 'person-outline',
+          iconType: 'Ionicons' as FontsFamily,
+          onPress: () => openModule('Profile'),
+        },
+        {
+          key: 'settings',
+          label: t('home.settings'),
+          icon: 'settings-outline',
+          iconType: 'Ionicons' as FontsFamily,
+          onPress: () => rootNavigate('Settings', undefined),
+        },
+        {
+          key: 'language',
+          label: t('home.changeLanguage'),
+          icon: 'language-outline',
+          iconType: 'Ionicons' as FontsFamily,
+          onPress: () => setLanguageSheetOpen(true),
+        },
+        {
+          key: 'menu',
+          label: t('home.openMenu'),
+          icon: 'menu-outline',
+          iconType: 'Ionicons' as FontsFamily,
+          onPress: () => drawerNav?.openDrawer(),
+        },
+      ] as const,
+    [drawerNav, openModule, t],
+  );
 
   const displayName = user?.email?.split('@')[0] || t('common.guest');
 
@@ -205,104 +276,70 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
     return 'home.greetingEvening';
   }, []);
 
-  const workflowSteps = useMemo(
-    () =>
-      WORKFLOW_STEP_IDS.map(id => ({
-        id,
-        title: t(`home.workflow.${id}.title`),
-        description: t(`home.workflow.${id}.description`),
-      })),
-    [t],
-  );
-
   return (
-    <ScreenContainer scroll bottomPadding="xxl">
+    <ScreenContainer
+      scroll
+      bottomPadding="xxl"
+      contentStyle={{paddingBottom: FLOATING_TAB_CONTENT_INSET}}>
+      <ScreenHeader
+        title={t('home.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'services',
+            iconName: 'grid-outline',
+            onPress: () => navigation.navigate('ServicesHub'),
+            accessibilityLabel: t('tabs.services'),
+          },
+          {
+            key: 'profile',
+            iconName: 'person-outline',
+            onPress: () => navigation.navigate('Profile'),
+            accessibilityLabel: t('tabs.profile'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
-        <Heading
-          text={t(greetingKey, {name: displayName})}
-          level="h1"
-          align="center"
-          style={styles.heroText}
-        />
-        <Spacer size="xs" />
-        <TextView text={t('home.purpose')} align="center" style={styles.heroText} />
-        {apiConfig.useMocks ? (
-          <>
-            <Spacer size="xs" />
+        <View style={styles.heroCopy}>
+          <TextView
+            text={t(greetingKey, {name: displayName})}
+            variant="caption"
+            style={styles.heroEyebrow}
+          />
+          <Heading text={t('home.purpose')} level="h2" />
+          {apiConfig.useMocks ? (
             <View style={styles.apiBadge}>
-              <TextView
-                text={t('home.mockApiActive')}
-                variant="caption"
-                muted
-              />
+              <TextView text={t('home.mockApiActive')} variant="caption" muted />
             </View>
-          </>
-        ) : null}
+          ) : null}
+        </View>
       </View>
-
-      <Spacer size="lg" />
 
       {isDashboardLoading ? (
         <TextView text={t('home.loadingDashboard')} variant="bodySmall" muted />
       ) : null}
-      <Spacer size={isDashboardLoading ? 'sm' : 'none'} />
 
       <View style={styles.statsRow}>
         <Pressable style={styles.statPill} onPress={() => openModule('PostStack')}>
-          <TextView
-            text={t('home.postsCount', {count: postsCount})}
-            variant="bodySmall"
-            muted
-          />
-          <Heading text={t('home.feed')} level="h3" />
+          <TextView text={`${postsCount}`} variant="h3" align="center" />
+          <TextView text={t('home.feed')} variant="caption" muted align="center" />
         </Pressable>
         <Pressable style={styles.statPill} onPress={() => openModule('TodoStack')}>
-          <TextView
-            text={t('home.openTasks', {count: openTodos})}
-            variant="bodySmall"
-            muted
-          />
-          <Heading text={t('home.todos')} level="h3" />
+          <TextView text={`${openTodos}`} variant="h3" align="center" />
+          <TextView text={t('home.todos')} variant="caption" muted align="center" />
         </Pressable>
         <Pressable style={styles.statPill} onPress={() => openModule('ChatStack')}>
-          <TextView
-            text={t('home.unreadCount', {count: unreadChats})}
-            variant="bodySmall"
-            muted
-          />
-          <Heading text={t('home.chat')} level="h3" />
+          <TextView text={`${unreadChats}`} variant="h3" align="center" />
+          <TextView text={t('home.chat')} variant="caption" muted align="center" />
         </Pressable>
         <Pressable style={styles.statPill} onPress={() => openModule('WalletStack')}>
-          <TextView
-            text={t('home.walletCoins', {
-              balance: balance.toFixed(0),
-              coins,
-            })}
-            variant="bodySmall"
-            muted
-          />
-          <Heading text={t('home.walletGame')} level="h3" />
+          <TextView text={`$${balance.toFixed(0)}`} variant="h3" align="center" />
+          <TextView text={t('home.walletGame')} variant="caption" muted align="center" />
         </Pressable>
       </View>
 
-      <Spacer size="lg" />
-      <Heading text={t('home.appModules')} level="h2" />
-      <Spacer size="md" />
-
-      <View style={styles.grid}>
-        {MODULES.map((module, index) => (
-          <AnimatedEntrance key={module.route} delay={index * 40}>
-            <FeatureHubCard
-              title={t(module.titleKey)}
-              subtitle={t(module.subtitleKey)}
-              iconType={module.iconType}
-              iconName={module.iconName}
-              accentColor={module.accent}
-              onPress={() => openModule(module.route)}
-            />
-          </AnimatedEntrance>
-        ))}
-      </View>
       <SectionHeader
         title={t('home.appModules')}
         subtitle={t('home.appModulesSubtitle')}
@@ -313,7 +350,7 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
       {MODULE_SECTIONS.map(section => {
         const sectionModules = MODULES.filter(module => module.section === section);
         return (
-          <View key={section}>
+          <View key={section} style={styles.sectionBlock}>
             <Heading text={t(`home.sections.${section}`)} level="h3" />
             <Spacer size="sm" />
             <View style={styles.grid}>
@@ -324,70 +361,107 @@ const Home = ({navigation}: HomeProps): React.JSX.Element => {
                   subtitle={t(module.subtitleKey)}
                   iconType={module.iconType}
                   iconName={module.iconName}
-                  accentColor={module.accent}
                   onPress={() => openModule(module.route)}
                 />
               ))}
             </View>
-            <Spacer size="lg" />
           </View>
         );
       })}
 
-      <Card elevated={false}>
-        <Heading text={t('home.howItWorks')} level="h3" />
-        <Spacer size="md" />
-        {workflowSteps.map(step => (
-          <View key={step.id}>
-            <View style={styles.workflowStep}>
-              <Heading text={step.title} level="h3" />
-              <TextView text={step.description} variant="bodySmall" muted />
-            </View>
-            <Spacer size="sm" />
-          </View>
-        ))}
-      </Card>
-
-      <Spacer size="lg" />
-
-      <Card elevated={false}>
+      <View style={styles.quickBlock}>
         <Heading text={t('home.quickActions')} level="h3" />
-        <Spacer size="md" />
-        <View style={styles.actions}>
-          <Button
-            label={t('home.openMenu')}
-            variant="secondary"
-            flat
-            fullWidth
-            onPress={() => drawerNav?.openDrawer()}
-          />
-          <Button
-            label={t('home.profile')}
-            flat
-            fullWidth
-            onPress={() => openModule('Profile')}
-          />
-          <Button
-            label={t('home.settings')}
-            variant="outline"
-            fullWidth
-            onPress={() => rootNavigate('Settings', undefined)}
-          />
-          <Button
-            label={t('home.changeLanguage')}
-            variant="ghost"
-            fullWidth
-            onPress={() => changeLanguage(dispatch)}
-          />
-          <Button
-            label={t('home.logout')}
-            variant="danger"
-            flat
-            fullWidth
-            onPress={logout}
-          />
+        <View style={styles.quickGrid}>
+          {quickActions.map(action => (
+            <Pressable
+              key={action.key}
+              accessibilityRole="button"
+              accessibilityLabel={action.label}
+              onPress={action.onPress}
+              style={({pressed}) => [
+                styles.quickTile,
+                pressed && styles.quickTilePressed,
+              ]}>
+              <View style={styles.quickIcon}>
+                <IconView
+                  iconType={action.iconType}
+                  name={action.icon}
+                  size={sizes.iconSm}
+                  color={colors.primary}
+                />
+              </View>
+              <TextView text={action.label} variant="bodySmall" />
+            </Pressable>
+          ))}
         </View>
-      </Card>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('home.logout')}
+          onPress={logout}
+          style={({pressed}) => [
+            styles.logoutRow,
+            pressed && styles.logoutRowPressed,
+          ]}>
+          <IconView
+            iconType="Ionicons"
+            name="log-out-outline"
+            size={20}
+            color={colors.error}
+          />
+          <TextView text={t('home.logout')} variant="body" style={styles.logoutLabel} />
+        </Pressable>
+      </View>
+
+      <BottomSheet
+        visible={languageSheetOpen}
+        onClose={closeLanguageSheet}
+        title={t('settings.language')}
+        subtitle={t('settings.languageSheetHint')}
+        footer={
+          <View style={styles.sheetActions}>
+            <Button
+              label={t('common.cancel')}
+              variant="outline"
+              flat
+              fullWidth
+              style={styles.sheetActionButton}
+              onPress={closeLanguageSheet}
+            />
+            <Button
+              label={t('common.confirm')}
+              variant="primary"
+              flat
+              fullWidth
+              style={styles.sheetActionButton}
+              onPress={confirmLanguage}
+            />
+          </View>
+        }>
+        {(
+          [
+            {code: 'en' as Languages, labelKey: 'common.english'},
+            {code: 'ar' as Languages, labelKey: 'common.arabic'},
+          ] as const
+        ).map(option => {
+          const active = draftLang === option.code;
+          return (
+            <Pressable
+              key={option.code}
+              style={[styles.sheetOption, active && styles.sheetOptionActive]}
+              onPress={() => setDraftLang(option.code)}>
+              <TextView text={t(option.labelKey)} variant="body" />
+              {active ? (
+                <IconView
+                  iconType="Ionicons"
+                  name="checkmark-circle"
+                  size={22}
+                  color={colors.primary}
+                />
+              ) : null}
+            </Pressable>
+          );
+        })}
+      </BottomSheet>
     </ScreenContainer>
   );
 };

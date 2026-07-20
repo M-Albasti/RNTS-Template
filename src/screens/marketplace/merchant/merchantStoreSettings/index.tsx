@@ -47,8 +47,7 @@ const MerchantStoreSettings = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('marketplace.merchant.storeSettings')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <Card style={styles.settingsCard}>
         <View style={styles.row}>
           <TextView text={t('marketplace.merchant.acceptOrders')} variant="bodySmall" />

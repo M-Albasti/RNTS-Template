@@ -53,7 +53,7 @@ const PostSearch = ({navigation}: PostSearchProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('posts.searchPosts')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.searchPosts')} navigation={navigation} />
       <TextInputView
         placeholder={t('posts.searchPlaceholder')}
         value={query}

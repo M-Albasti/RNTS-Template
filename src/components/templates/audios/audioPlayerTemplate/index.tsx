@@ -42,11 +42,7 @@ const AudioPlayerTemplate = ({
     <ScreenContainer>
       <ScreenHeader
         title={audioDetails.title || t('media.nowPlaying')}
-        onBack={() => {
-          if (navigation.canGoBack()) {
-            navigation.goBack();
-          }
-        }}
+        navigation={navigation}
       />
       <Spacer size="md" />
       <View style={styles.playerCard}>

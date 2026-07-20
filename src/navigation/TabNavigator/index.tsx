@@ -1,12 +1,8 @@
-import {layout} from '@theme/tokens';
-
 //* packages import
 import React, {Suspense} from 'react';
-import {View} from 'react-native';
-import {
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
-import {useTheme} from '@react-navigation/native';
+import {Platform, View} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createNativeBottomTabNavigator} from '@react-navigation/bottom-tabs/unstable';
 import {useTranslation} from 'react-i18next';
 
 //* screens import
@@ -18,134 +14,142 @@ import ServicesHub from '@screens/servicesHub';
 import {RootStackParamList} from '@Types/appNavigation';
 
 //* components import
-import IconView from '@atoms/Icon';
 import TextView from '@atoms/TextView';
 import ErrorBoundary from '@atoms/ErrorBoundary';
 
+import {layout} from '@theme/tokens';
 import {useThemeTokens} from '@theme/useThemeTokens';
 
 //* styles import
 import {useTabNavigatorStyles} from './styles';
+import FloatingTabBar from './FloatingTabBar';
 
-interface TabBarIconProps {
-  focused: boolean;
-  color: string;
-  size: number;
-}
-
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const NativeTab = createNativeBottomTabNavigator<RootStackParamList>();
+const JsTab = createBottomTabNavigator<RootStackParamList>();
 
 const TabNavigator = (): React.JSX.Element => {
   const {t} = useTranslation();
-  const {colors} = useTheme();
-  const {colors: themeColors} = useThemeTokens();
+  const {colors} = useThemeTokens();
   const styles = useTabNavigatorStyles();
 
-  return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        tabBarShowLabel: false,
-        headerShown: false,
-        tabBarHideOnKeyboard: true,
-        animation: 'fade',
-        tabBarStyle: styles.tabBarStyle,
-      }}
-      layout={({children, state, descriptors, navigation}) => (
-        <ErrorBoundary>
-          <Suspense
-            fallback={
-              <TextView
-                text={t('common.loading')}
-                style={styles.fallbackText}
-                containerStyle={styles.fallback}
+  const labels = {
+    home: t('tabs.home'),
+    services: t('tabs.services'),
+    profile: t('tabs.profile'),
+  };
+
+  const fallback = (
+    <TextView
+      text={t('common.loading')}
+      style={styles.fallbackText}
+      containerStyle={styles.fallback}
+    />
+  );
+
+  // Android: floating pill detached from edges (native Material bar can't do this).
+  // iOS: keep native bottom tabs for Liquid Glass.
+  if (Platform.OS === 'android') {
+    return (
+      <ErrorBoundary>
+        <Suspense fallback={fallback}>
+          <View style={{flex: layout.flex.fill, backgroundColor: colors.background}}>
+            <JsTab.Navigator
+              initialRouteName="Home"
+              tabBar={props => <FloatingTabBar {...props} />}
+              screenOptions={{
+                headerShown: false,
+                tabBarActiveTintColor: colors.primary,
+                tabBarInactiveTintColor: colors.textMuted,
+                // Transparent absolute bar — content draws underneath the float.
+                tabBarStyle: {
+                  position: 'absolute',
+                  backgroundColor: 'transparent',
+                  borderTopWidth: 0,
+                  elevation: 0,
+                  shadowOpacity: 0,
+                },
+                tabBarBackground: () => null,
+                sceneStyle: {
+                  backgroundColor: colors.background,
+                },
+              }}>
+              <JsTab.Screen
+                name="Home"
+                component={Home}
+                options={{title: labels.home, tabBarLabel: labels.home}}
               />
-            }>
-            <View style={{flex: layout.flex.fill}}>{children}</View>
-          </Suspense>
-        </ErrorBoundary>
-      )}>
-      <Tab.Group>
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarLabel: t('tabs.home'),
-            tabBarItemStyle: styles.tabBarItemStyle,
-            tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
-              return (
-                <IconView
-                  iconType={'Ionicons'}
-                  name="home"
-                  size={size + 5}
-                  color={focused ? themeColors.textPrimary : themeColors.textInverse}
-                  iconContainerStyle={
-                    focused
-                      ? {
-                          ...styles.iconContainerStyle,
-                          backgroundColor: colors.primary,
-                        }
-                      : styles.iconContainerStyle
-                  }
-                />
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="ServicesHub"
-          component={ServicesHub}
-          options={{
-            tabBarLabel: t('tabs.services'),
-            tabBarItemStyle: styles.tabBarItemStyle,
-            tabBarIcon: ({focused, size}: TabBarIconProps) => {
-              return (
-                <IconView
-                  iconType={'Ionicons'}
-                  name="grid"
-                  size={size + 5}
-                  color={focused ? themeColors.textPrimary : themeColors.textInverse}
-                  iconContainerStyle={
-                    focused
-                      ? {
-                          ...styles.iconContainerStyle,
-                          backgroundColor: colors.primary,
-                        }
-                      : styles.iconContainerStyle
-                  }
-                />
-              );
-            },
-          }}
-        />
-        <Tab.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            tabBarLabel: t('tabs.profile'),
-            tabBarItemStyle: styles.tabBarItemStyle,
-            tabBarIcon: ({focused, color, size}: TabBarIconProps) => {
-              return (
-                <IconView
-                  iconType={'Ionicons'}
-                  name="person-circle-sharp"
-                  size={size + 5}
-                  color={focused ? themeColors.textPrimary : themeColors.textInverse}
-                  iconContainerStyle={
-                    focused
-                      ? {
-                          ...styles.iconContainerStyle,
-                          backgroundColor: colors.primary,
-                        }
-                      : styles.iconContainerStyle
-                  }
-                />
-              );
-            },
-          }}
-        />
-      </Tab.Group>
-    </Tab.Navigator>
+              <JsTab.Screen
+                name="ServicesHub"
+                component={ServicesHub}
+                options={{title: labels.services, tabBarLabel: labels.services}}
+              />
+              <JsTab.Screen
+                name="Profile"
+                component={Profile}
+                options={{title: labels.profile, tabBarLabel: labels.profile}}
+              />
+            </JsTab.Navigator>
+          </View>
+        </Suspense>
+      </ErrorBoundary>
+    );
+  }
+
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={fallback}>
+        <View style={{flex: layout.flex.fill}}>
+          <NativeTab.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+              headerShown: false,
+              tabBarActiveTintColor: colors.primary,
+              tabBarInactiveTintColor: colors.textMuted,
+              tabBarBlurEffect: 'systemDefault',
+              tabBarActiveIndicatorColor: colors.primaryMuted,
+              tabBarActiveIndicatorEnabled: true,
+              tabBarLabelVisibilityMode: 'labeled',
+            }}>
+            <NativeTab.Screen
+              name="Home"
+              component={Home}
+              options={{
+                title: labels.home,
+                tabBarLabel: labels.home,
+                tabBarIcon: {
+                  type: 'sfSymbol',
+                  name: 'house.fill',
+                },
+              }}
+            />
+            <NativeTab.Screen
+              name="ServicesHub"
+              component={ServicesHub}
+              options={{
+                title: labels.services,
+                tabBarLabel: labels.services,
+                tabBarIcon: {
+                  type: 'sfSymbol',
+                  name: 'square.grid.2x2.fill',
+                },
+              }}
+            />
+            <NativeTab.Screen
+              name="Profile"
+              component={Profile}
+              options={{
+                title: labels.profile,
+                tabBarLabel: labels.profile,
+                tabBarIcon: {
+                  type: 'sfSymbol',
+                  name: 'person.crop.circle.fill',
+                },
+              }}
+            />
+          </NativeTab.Navigator>
+        </View>
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

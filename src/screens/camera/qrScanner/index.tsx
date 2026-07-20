@@ -103,7 +103,7 @@ const QrScanner = ({navigation}: QrScannerProps): React.JSX.Element => {
           codeScanner={codeScanner}
         />
         <View style={[styles.header, {paddingTop: insets.top}]}>
-          <ScreenHeader title={t('camera.qrTitle')} onBack={() => navigation.goBack()} />
+          <ScreenHeader title={t('camera.qrTitle')} navigation={navigation} />
         </View>
         {!scanResult ? <View style={styles.frame} pointerEvents="none" /> : null}
         {!scanResult ? (

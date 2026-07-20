@@ -153,50 +153,54 @@ const HexLetterGrid = ({
   const activeLetterColor =
     scheme === 'dark' ? colors.textInverse : colors.textPrimary;
 
-  const styles = useThemedStyles(() => ({
-    container: {
-      width: maxBoardWidth,
-      maxWidth: '100%' as const,
-      alignSelf: 'center' as const,
-      alignItems: 'center' as const,
-      justifyContent: 'center' as const,
-      marginVertical: spacing.sm,
-    },
-    board: {
-      width: boardWidth,
-      height: boardHeight,
-    },
-    hex: {
-      position: 'absolute' as const,
-      width: hexSize * 2,
-      height: hexSize * 2,
-      marginLeft: -hexSize,
-      marginTop: -hexSize,
-      alignItems: 'center' as const,
-      justifyContent: 'center' as const,
-    },
-    letter: {
-      // Slightly smaller + matching lineHeight keeps Arabic glyphs optically centered.
-      fontSize: Math.max(8, hexSize * 0.55),
-      lineHeight: Math.max(10, hexSize * 0.55),
-      fontWeight: '700' as const,
-      textAlign: 'center' as const,
-      includeFontPadding: false,
-      textAlignVertical: 'center' as const,
-      color: idleLetterColor,
-    },
-    letterActive: {
-      color: activeLetterColor,
-    },
-  }), [
-    activeLetterColor,
-    boardHeight,
-    boardWidth,
-    hexSize,
-    idleLetterColor,
-    maxBoardWidth,
-    spacing.sm,
-  ]);
+  const styles = useThemedStyles(
+    tokens => ({
+      container: {
+        width: maxBoardWidth,
+        maxWidth: '100%' as const,
+        alignSelf: 'center' as const,
+        alignItems: 'center' as const,
+        justifyContent: 'center' as const,
+        marginVertical: spacing.sm,
+      },
+      board: {
+        width: boardWidth,
+        height: boardHeight,
+      },
+      hex: {
+        position: 'absolute' as const,
+        width: hexSize * 2,
+        height: hexSize * 2,
+        marginLeft: -hexSize,
+        marginTop: -hexSize,
+        alignItems: 'center' as const,
+        justifyContent: 'center' as const,
+      },
+      letter: {
+        // Slightly smaller + matching lineHeight keeps Arabic glyphs optically centered.
+        fontSize: Math.max(8, hexSize * 0.55),
+        lineHeight: Math.max(10, hexSize * 0.55),
+        fontFamily: tokens.typography.h3.fontFamily,
+        fontWeight: 'normal' as const,
+        textAlign: 'center' as const,
+        includeFontPadding: false,
+        textAlignVertical: 'center' as const,
+        color: idleLetterColor,
+      },
+      letterActive: {
+        color: activeLetterColor,
+      },
+    }),
+    [
+      activeLetterColor,
+      boardHeight,
+      boardWidth,
+      hexSize,
+      idleLetterColor,
+      maxBoardWidth,
+      spacing.sm,
+    ],
+  );
 
   const publishPath = useCallback(
     (next: HexCoord[]) => {

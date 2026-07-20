@@ -33,7 +33,7 @@ const MarketplaceCart = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.cart')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.cart')} navigation={navigation} />
       {lines.length === 0 ? (
         <TextView text={t('marketplace.emptyCart')} align="center" muted />
       ) : (

@@ -42,7 +42,7 @@ const ImageViewer = ({navigation, route}: ImageViewerProps): React.JSX.Element =
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={image.title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={image.title} navigation={navigation} />
       <Image source={{uri: image.uri}} style={styles.image as ImageStyle} resizeMode="cover" />
       <Spacer size="md" />
       <Heading text={image.title} level="h2" align="center" />

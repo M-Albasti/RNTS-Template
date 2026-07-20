@@ -50,7 +50,7 @@ const GameShop = ({navigation}: GameShopProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('game.coinShop')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.coinShop')} navigation={navigation} />
       <TextView text={t('game.balanceCoins', {count: coins})} variant="bodySmall" muted />
       <Spacer size="md" />
       <FlashList

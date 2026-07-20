@@ -1,14 +1,13 @@
 //* packages import
 import React, {useState} from 'react';
-import {KeyboardTypeOptions, View} from 'react-native';
+import {KeyboardTypeOptions, Pressable, View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 //* components import
-import Card from '@atoms/Card';
 import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
 import LoginButton from '@molecules/loginButton';
 import PasswordTextInput from '@molecules/passwordTextInput';
-import Button from '@atoms/Button';
+import IconView from '@atoms/Icon';
 import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
@@ -22,6 +21,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 
 //* theme import
 import {useThemedStyles} from '@theme/createThemedStyles';
+import {useThemeTokens} from '@theme/useThemeTokens';
 import {resolveLoginFormStyles} from './styles/resolveLoginFormStyles';
 
 //* types import
@@ -40,8 +40,10 @@ const LoginForm = (props: LoginFormProps): React.JSX.Element => {
   const [emailOrPhone, setEmailOrPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const {colors} = useThemeTokens();
   const styles = useThemedStyles(resolveLoginFormStyles);
 
   const toggleShowPassword = () => {
@@ -59,40 +61,64 @@ const LoginForm = (props: LoginFormProps): React.JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Card>
-        <View style={styles.inputs}>
-          <EmailOrPhoneTextInput
-            emailOrPhone={emailOrPhone}
-            setEmailOrPhone={setEmailOrPhone}
-            keyboardType={props.keyboardType}
-          />
-          <PasswordTextInput
-            password={password}
-            setPassword={setPassword}
-            showPassword={showPassword}
-            toggleShowPassword={toggleShowPassword}
-          />
-        </View>
-        <LoginButton onLogin={onLogin} loading={loading} />
-        {props.loginType === 'Normal' && apiConfig.useMocks ? (
-          <>
-            <Spacer size="sm" />
-            <TextView
-              text={t('auth.mockLoginHint')}
-              variant="caption"
-              muted
-              align="center"
-            />
-          </>
-        ) : null}
-        <Spacer size="sm" />
-        <Button
-          label={t('auth.forgotPassword')}
-          variant="ghost"
-          fullWidth
-          onPress={() => rootNavigate('ForgetPassword', undefined)}
+      <View style={styles.inputs}>
+        <EmailOrPhoneTextInput
+          emailOrPhone={emailOrPhone}
+          setEmailOrPhone={setEmailOrPhone}
+          keyboardType={props.keyboardType}
         />
-      </Card>
+        <PasswordTextInput
+          password={password}
+          setPassword={setPassword}
+          showPassword={showPassword}
+          toggleShowPassword={toggleShowPassword}
+        />
+      </View>
+
+      <View style={styles.optionsRow}>
+        <Pressable
+          style={styles.rememberRow}
+          onPress={() => setRememberMe(prev => !prev)}
+          accessibilityRole="checkbox"
+          accessibilityState={{checked: rememberMe}}>
+          <View
+            style={[
+              styles.checkbox,
+              rememberMe && {backgroundColor: colors.primary, borderColor: colors.primary},
+            ]}>
+            {rememberMe ? (
+              <IconView
+                iconType="Ionicons"
+                name="checkmark"
+                size={14}
+                color={colors.textInverse}
+              />
+            ) : null}
+          </View>
+          <TextView text={t('auth.rememberMe')} variant="bodySmall" />
+        </Pressable>
+        <Pressable onPress={() => rootNavigate('ForgetPassword', undefined)}>
+          <TextView
+            text={t('auth.forgotPassword')}
+            variant="bodySmall"
+            style={styles.forgotLink}
+          />
+        </Pressable>
+      </View>
+
+      <Spacer size="md" />
+      <LoginButton onLogin={onLogin} loading={loading} />
+      {props.loginType === 'Normal' && apiConfig.useMocks ? (
+        <>
+          <Spacer size="sm" />
+          <TextView
+            text={t('auth.mockLoginHint')}
+            variant="caption"
+            muted
+            align="center"
+          />
+        </>
+      ) : null}
     </View>
   );
 };

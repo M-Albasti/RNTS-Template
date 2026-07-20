@@ -44,8 +44,7 @@ const MerchantReviews = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('marketplace.merchant.reviews')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <Rating
         value={merchantStore.rating}
         showValue

@@ -57,7 +57,7 @@ const CameraHub = ({navigation}: CameraHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('camera.title')} showBack={false} />
+      <ScreenHeader title={t('camera.title')} showBack={false} showDrawer navigation={navigation} />
       <View style={styles.hero}>
         <Heading text={t('camera.hubTitle')} level="h2" align="center" />
         <Spacer size="xs" />

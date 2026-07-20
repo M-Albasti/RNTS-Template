@@ -194,7 +194,7 @@ const QuranSearch = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.quran.search')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('islamic.quran.search')} navigation={navigation} />
       <TextInputView
         value={query}
         onChangeText={setQuery}

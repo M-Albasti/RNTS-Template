@@ -74,11 +74,7 @@ const RecordAudioTemplate = ({
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('media.recordAudio')}
-        onBack={() => {
-          if (navigation.canGoBack()) {
-            navigation.goBack();
-          }
-        }}
+        navigation={navigation}
       />
 
       <Spacer size="lg" />

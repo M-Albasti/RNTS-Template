@@ -26,13 +26,32 @@ const MarketplaceHub = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.title')} showBack={false} />
+      <ScreenHeader
+        title={t('marketplace.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'search',
+            iconName: 'search-outline',
+            onPress: () => navigation.navigate('MarketplaceSearch'),
+            accessibilityLabel: t('marketplace.searchPlaceholder'),
+          },
+          {
+            key: 'cart',
+            iconName: 'cart-outline',
+            onPress: () => navigation.navigate('MarketplaceCart'),
+            accessibilityLabel: t('marketplace.cart'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
         <Heading text={t('marketplace.hubTitle')} level="h2" />
-        <Spacer size="xs" />
         <TextView text={t('marketplace.hubSubtitle')} muted />
-        <Spacer size="sm" />
-        <Pressable onPress={() => navigation.navigate('MarketplaceSearch')}>
+        <Pressable
+          style={styles.searchHint}
+          onPress={() => navigation.navigate('MarketplaceSearch')}>
           <TextView text={t('marketplace.searchPlaceholder')} muted />
         </Pressable>
       </View>

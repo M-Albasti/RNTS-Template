@@ -39,8 +39,7 @@ const MerchantProducts = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('marketplace.merchant.products')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <Button
         label={t('marketplace.merchant.addProduct')}
         fullWidth

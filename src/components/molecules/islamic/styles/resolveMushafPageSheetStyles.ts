@@ -41,17 +41,17 @@ export const resolveMushafPageSheetStyles = (tokens: ThemeTokens) => ({
   },
   headerText: {
     flex: tokens.layout.flex.fill,
+    ...tokens.typography.mushafMarker,
     color: tokens.colors.mushafMeta,
     fontSize: tokens.typography.caption.fontSize,
     lineHeight: tokens.typography.caption.lineHeight,
-    fontWeight: '600' as const,
     writingDirection: 'rtl' as const,
   },
   headerJuz: {
+    ...tokens.typography.mushafMarker,
     color: tokens.colors.mushafMeta,
     fontSize: tokens.typography.caption.fontSize,
     lineHeight: tokens.typography.caption.lineHeight,
-    fontWeight: '700' as const,
     writingDirection: 'rtl' as const,
   },
   body: {
@@ -76,10 +76,10 @@ export const resolveMushafPageSheetStyles = (tokens: ThemeTokens) => ({
     backgroundColor: tokens.colors.mushafBanner,
   },
   surahBannerText: {
+    ...tokens.typography.mushafBasmala,
     color: tokens.colors.mushafInk,
     fontSize: tokens.typography.h3.fontSize,
     lineHeight: tokens.typography.h3.lineHeight,
-    fontWeight: '700' as const,
     textAlign: 'center' as const,
     writingDirection: 'rtl' as const,
   },
@@ -92,6 +92,8 @@ export const resolveMushafPageSheetStyles = (tokens: ThemeTokens) => ({
   },
   ayahFlow: {
     ...tokens.typography.mushafBody,
+    includeFontPadding: false,
+    textAlignVertical: 'center' as const,
     textAlign: 'center' as const,
     writingDirection: 'rtl' as const,
     color: tokens.colors.mushafInk,
@@ -102,6 +104,7 @@ export const resolveMushafPageSheetStyles = (tokens: ThemeTokens) => ({
   },
   ayahMarker: {
     ...tokens.typography.mushafMarker,
+    includeFontPadding: false,
     color: tokens.colors.mushafOrnament,
   },
   footer: {

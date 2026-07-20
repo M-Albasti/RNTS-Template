@@ -44,7 +44,7 @@ const GameLeaderboard = ({navigation}: GameLeaderboardProps): React.JSX.Element 
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('game.leaderboard')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.leaderboard')} navigation={navigation} />
       <FlashList
         data={leaderboard}
         renderItem={renderItem}

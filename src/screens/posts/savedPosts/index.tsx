@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
@@ -22,8 +22,11 @@ interface SavedPostsProps {
 
 const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const posts = useAppSelector(state =>
-    state.posts.posts.filter(p => state.posts.savedIds.includes(p.id)),
+  const postsRaw = useAppSelector(state => state.posts.posts);
+  const savedIds = useAppSelector(state => state.posts.savedIds);
+  const posts = useMemo(
+    () => postsRaw.filter(p => savedIds.includes(p.id)),
+    [postsRaw, savedIds],
   );
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(resolveSavedPostsStyles);
@@ -41,7 +44,7 @@ const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
   if (posts.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('posts.savedPosts')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('posts.savedPosts')} navigation={navigation} />
         <EmptyView
           title={t('posts.noSavedPosts')}
           message={t('posts.savedSubtitle')}
@@ -53,7 +56,7 @@ const SavedPosts = ({navigation}: SavedPostsProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('posts.savedPosts')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.savedPosts')} navigation={navigation} />
       <FlashList
         data={posts}
         renderItem={renderItem}

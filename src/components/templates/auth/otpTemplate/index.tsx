@@ -1,8 +1,7 @@
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
-import ScreenContainer from '@atoms/ScreenContainer';
-import Spacer from '@atoms/Spacer';
-import OTPHeader from '@organisms/auth/otp/OTPHeader';
+import AuthScreenShell from '@organisms/auth/AuthScreenShell';
 import OTPForm from '@organisms/auth/otp/OTPForm';
 import OTPFooter from '@organisms/auth/otp/OTPFooter';
 
@@ -18,18 +17,20 @@ interface OTPTemplateProps {
 }
 
 const OTPTemplate = (props: OTPTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
-    <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <OTPHeader />
-      <Spacer size="lg" />
+    <AuthScreenShell
+      title={t('auth.phoneVerification')}
+      subtitle={t('auth.enterSmsCode')}
+      iconName="chatbubble-ellipses-outline"
+      footer={<OTPFooter />}>
       <OTPForm
         navigation={props.navigation}
         confirmation={props.confirmation}
         loginType={props.loginType}
       />
-      <Spacer size="md" />
-      <OTPFooter />
-    </ScreenContainer>
+    </AuthScreenShell>
   );
 };
 

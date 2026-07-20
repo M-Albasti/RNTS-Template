@@ -114,8 +114,7 @@ const SnapCamera = ({navigation}: SnapCameraProps): React.JSX.Element => {
       <ScreenContainer>
         <ScreenHeader
           title={t('camera.snapTitle')}
-          onBack={() => navigation.goBack()}
-        />
+          navigation={navigation} />
         <EmptyView
           title={t('camera.snapDisabledTitle')}
           message={t('camera.snapDisabledMessage')}

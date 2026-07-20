@@ -1,11 +1,14 @@
 import React, {useEffect} from 'react';
 import {Pressable, View} from 'react-native';
 import Animated, {
+  Extrapolation,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
   withSequence,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import IconView from '@atoms/Icon';
@@ -68,24 +71,41 @@ const RatingStar = ({
 }: RatingStarProps): React.JSX.Element => {
   const tokens = useThemeTokens();
   const {animation} = tokens.rating;
-  const fillWidth = useSharedValue(animated ? 0 : fill * size);
+  const fillProgress = useSharedValue(animated ? 0 : fill);
   const scale = useSharedValue(1);
 
   const styles = useThemedStyles(resolveRatingStyles);
 
   useEffect(() => {
-    const target = fill * size;
-    fillWidth.value = animated
-      ? withDelay(
-          index * animation.staggerMs,
-          withSpring(target, animation.spring),
-        )
-      : target;
-  }, [animated, animation.spring, animation.staggerMs, fill, fillWidth, index, size]);
+    // Interactive taps: snap fill immediately (no stagger/overshoot spill).
+    // Display mode: timed fill — clamp width so spring never bleeds into next stars.
+    if (!animated || interactive) {
+      fillProgress.value = fill;
+      return;
+    }
+    fillProgress.value = withDelay(
+      index * animation.staggerMs,
+      withTiming(fill, {duration: animation.fillDurationMs}),
+    );
+  }, [
+    animated,
+    animation.fillDurationMs,
+    animation.staggerMs,
+    fill,
+    fillProgress,
+    index,
+    interactive,
+  ]);
 
-  const fillStyle = useAnimatedStyle(() => ({
-    width: fillWidth.value,
-  }));
+  const fillStyle = useAnimatedStyle(() => {
+    const clamped = interpolate(
+      fillProgress.value,
+      [0, 1],
+      [0, size],
+      Extrapolation.CLAMP,
+    );
+    return {width: clamped};
+  });
 
   const starStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
@@ -100,14 +120,18 @@ const RatingStar = ({
     const next =
       allowHalf && event.nativeEvent.locationX < size / 2 ? halfValue : fullValue;
     scale.value = withSequence(
-      withSpring(animation.pressScale, animation.pressSpring),
-      withSpring(1, animation.spring),
+      withSpring(animation.pressScale, {
+        ...animation.pressSpring,
+        overshootClamping: true,
+      }),
+      withSpring(1, {...animation.spring, overshootClamping: true}),
     );
     onSelect(next);
   };
 
   const starBody = (
-    <Animated.View style={[{width: size, height: size}, starStyle]}>
+    <Animated.View
+      style={[{width: size, height: size, overflow: 'hidden'}, starStyle]}>
       <IconView
         iconType="Ionicons"
         name="star-outline"

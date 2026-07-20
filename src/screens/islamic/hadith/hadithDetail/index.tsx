@@ -13,6 +13,7 @@ import {useHadithDetailQuery} from '@api/query/hooks/useIslamicQueries';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {setLastHadith, toggleBookmarkHadith} from '@redux/slices/islamicSlice';
+import {resolveArabicBodyTextStyle} from '@theme/arabicText';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
@@ -72,13 +73,11 @@ const HadithDetail = ({navigation, route}: Props): React.JSX.Element => {
       flex: tokens.layout.flex.fill,
       padding: tokens.spacing.lg,
     },
-    arabic: {
+    arabic: resolveArabicBodyTextStyle(tokens, {
+      fontSize: tokens.typography.h2.fontSize ?? 22,
+      lineHeightRatio: 1.7,
       color: tokens.colors.hadithReaderInk,
-      fontSize: tokens.typography.h2.fontSize,
-      lineHeight: (tokens.typography.h2.lineHeight ?? 32) * 1.45,
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
-    },
+    }),
     english: {
       color: tokens.colors.hadithReaderInk,
       opacity: 0.88,

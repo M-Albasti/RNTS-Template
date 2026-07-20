@@ -32,7 +32,7 @@ const WalletRequest = ({navigation}: WalletRequestProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('wallet.requestMoneyTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.requestMoneyTitle')} navigation={navigation} />
       <Card>
         <Heading text={t('wallet.acceptMoneyRequest')} level="h3" />
         <Spacer size="md" />

@@ -79,6 +79,21 @@ export const getFirebaseMessagingToken = async (): Promise<string | null> => {
     const token = await getToken(getFirebaseMessaging());
     return token || null;
   } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : String((error as {message?: string})?.message ?? error);
+    // Common on iOS Simulator / before APNS registration — not an app crash.
+    if (
+      message.includes('No APNS token') ||
+      message.includes('apns-token-not-set') ||
+      message.includes('messaging/unknown')
+    ) {
+      console.log(
+        'Firebase Messaging: APNS token not ready — skipping FCM getToken',
+      );
+      return null;
+    }
     console.log('Firebase Messaging getToken Error =>', error);
     recordCrashError(error, 'getFirebaseMessagingToken');
     return null;

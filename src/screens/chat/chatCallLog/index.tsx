@@ -60,7 +60,7 @@ const ChatCallLog = ({navigation}: ChatCallLogProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('chat.callLog')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('chat.callLog')} navigation={navigation} />
       <Button label={t('chat.startAudioCall')} fullWidth onPress={() => startCall('audio')} />
       <Spacer size="sm" />
       <Button

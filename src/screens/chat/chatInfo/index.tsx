@@ -43,7 +43,7 @@ const ChatInfo = ({navigation, route}: ChatInfoProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('chat.chatInfo')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('chat.chatInfo')} navigation={navigation} />
       <Card>
         <Image source={{uri: thread.avatar}} style={styles.avatar as ImageStyle} />
         <Spacer size="md" />

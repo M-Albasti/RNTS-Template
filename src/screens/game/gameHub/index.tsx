@@ -30,7 +30,7 @@ const GameHub = ({navigation}: GameHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('game.center')} showBack={false} />
+      <ScreenHeader title={t('game.center')} showBack={false} showDrawer navigation={navigation} />
       <AnimatedPulse>
         <View style={styles.hero}>
           <Heading text={t('game.luckyArcade')} level="h2" align="center" />

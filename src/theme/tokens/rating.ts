@@ -1,6 +1,6 @@
 import {spacing} from './spacing';
 
-/** Rating component tokens — sizes, gaps, and spring animation config. */
+/** Rating component tokens — sizes, gaps, and animation config. */
 export const rating = {
   size: {
     sm: 14,
@@ -11,8 +11,10 @@ export const rating = {
   starGap: spacing.xxs,
   animation: {
     staggerMs: 45,
+    /** Timed fill avoids spring overshoot spilling into neighboring stars. */
+    fillDurationMs: 220,
     spring: {damping: 14, stiffness: 180},
-    pressSpring: {damping: 8, stiffness: 320},
-    pressScale: 1.18,
+    pressSpring: {damping: 12, stiffness: 320},
+    pressScale: 1.12,
   },
 } as const;

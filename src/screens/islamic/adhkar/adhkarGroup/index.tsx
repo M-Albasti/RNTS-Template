@@ -130,7 +130,7 @@ const AdhkarGroup = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={title} navigation={navigation} />
       {isLoading ? (
         <IslamicLoadingState />
       ) : isError ? (

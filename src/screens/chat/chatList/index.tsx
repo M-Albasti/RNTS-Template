@@ -1,11 +1,10 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, Pressable, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
 
 import TouchableIcon from '@atoms/TouchableIcon';
 import Button from '@atoms/Button';
-import Card from '@atoms/Card';
 import EmptyView from '@atoms/EmptyView';
 import Heading from '@atoms/Heading';
 import ScreenContainer from '@atoms/ScreenContainer';
@@ -27,50 +26,52 @@ interface ChatListProps {
 const ChatList = ({navigation}: ChatListProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {sizes} = useThemeTokens();
-  const threads = useAppSelector(state =>
-    [...state.chat.threads].sort((a, b) => Number(b.pinned) - Number(a.pinned)),
+  const threadsRaw = useAppSelector(state => state.chat.threads);
+  const threads = useMemo(
+    () => [...threadsRaw].sort((a, b) => Number(b.pinned) - Number(a.pinned)),
+    [threadsRaw],
   );
-  const styles = useThemedStyles(resolveChatListStyles)
+  const styles = useThemedStyles(resolveChatListStyles);
 
   const renderItem = ({item}: {item: ChatThread}) => (
-    <Card>
-      <Pressable onPress={() => navigation.navigate('ChatRoom', {threadId: item.id})}>
-        <View style={styles.row}>
-          <Image source={{uri: item.avatar}} style={styles.avatar as ImageStyle} />
-          <View style={styles.meta}>
-            <Heading text={item.name} level="h3" />
-            <TextView
-              text={
-                item.muted
-                  ? `${item.lastMessage}${t('common.mutedSuffix')}`
-                  : item.lastMessage
-              }
-              variant="bodySmall"
-              muted
-            />
-          </View>
-          {item.unread > 0 ? (
-            <View style={styles.badge}>
-              <TextView text={`${item.unread}`} style={styles.badgeText} />
-            </View>
-          ) : (
-            <TouchableIcon
-              iconType="Ionicons"
-              name="information-circle-outline"
-              size={sizes.iconSm}
-              onPress={() => navigation.navigate('ChatInfo', {threadId: item.id})}
-            />
-          )}
+    <Pressable
+      style={styles.thread}
+      onPress={() => navigation.navigate('ChatRoom', {threadId: item.id})}>
+      <Image source={{uri: item.avatar}} style={styles.avatar as ImageStyle} />
+      <View style={styles.meta}>
+        <Heading text={item.name} level="h3" />
+          <TextView
+            text={
+              item.muted
+                ? `${item.lastMessage}${t('common.mutedSuffix')}`
+                : item.lastMessage
+            }
+            variant="bodySmall"
+            muted
+            numberOfLines={1}
+          />
+      </View>
+      {item.unread > 0 ? (
+        <View style={styles.badge}>
+          <TextView text={`${item.unread}`} style={styles.badgeText} />
         </View>
-      </Pressable>
-    </Card>
+      ) : (
+        <TouchableIcon
+          iconType="Ionicons"
+          name="information-circle-outline"
+          size={sizes.iconSm}
+          onPress={() => navigation.navigate('ChatInfo', {threadId: item.id})}
+        />
+      )}
+    </Pressable>
   );
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('chat.messages')} onBack={() => navigation.goBack()} />
-      <Button label={t('chat.newChat')} fullWidth onPress={() => navigation.navigate('NewChat')} />
-      <Spacer size="md" />
+      <ScreenHeader title={t('chat.messages')} navigation={navigation} />
+      <View style={styles.composerBar}>
+        <Button label={t('chat.newChat')} fullWidth onPress={() => navigation.navigate('NewChat')} />
+      </View>
       <FlashList
         data={threads}
         renderItem={renderItem}

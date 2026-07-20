@@ -21,36 +21,30 @@ const QuranHub = ({navigation}: Props): React.JSX.Element => {
 
   const styles = useThemedStyles(tokens => ({
     hero: {
-      backgroundColor: '#0F3D2E',
-      borderRadius: tokens.radius.lg,
+      backgroundColor: tokens.colors.surface,
+      borderRadius: tokens.radius.xl,
       padding: tokens.spacing.lg,
-      ...tokens.shadows.md,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
+      gap: tokens.spacing.xs,
     },
-    heroText: {color: '#F5E6C8'},
     continueCard: {
-      backgroundColor: '#F7F0E2',
-      borderRadius: tokens.radius.lg,
+      backgroundColor: tokens.colors.surface,
+      borderRadius: tokens.radius.xl,
       padding: tokens.spacing.md,
       borderWidth: tokens.layout.borderWidth.sm,
-      borderColor: '#D4C4A8',
-      ...tokens.shadows.sm,
+      borderColor: tokens.colors.border,
     },
-    continuePressed: {backgroundColor: '#EFE4D0'},
-    sectionTitle: {marginBottom: tokens.spacing.sm},
+    continuePressed: {backgroundColor: tokens.colors.surfaceSecondary},
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
   }));
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.quran.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('islamic.quran.title')} navigation={navigation} />
       <View style={styles.hero}>
-        <TextView
-          text={t('islamic.quran.hubSubtitle')}
-          variant="bodySmall"
-          style={styles.heroText}
-        />
-        <Spacer size="xs" />
-        <Heading text={t('islamic.quran.hubTitle')} level="h2" align="center" />
+        <TextView text={t('islamic.quran.hubSubtitle')} variant="bodySmall" muted />
+        <Heading text={t('islamic.quran.hubTitle')} level="h2" />
       </View>
       <Spacer size="md" />
       <Pressable

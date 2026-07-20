@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import {KeyboardTypeOptions, View} from 'react-native';
 
-import Card from '@atoms/Card';
-import Spacer from '@atoms/Spacer';
 import EmailOrPhoneTextInput from '@molecules/emailOrPhoneTextInput';
 import PasswordTextInput from '@molecules/passwordTextInput';
 import RegisterButton from '@molecules/registerButton';
@@ -38,7 +36,7 @@ const RegisterForm = (props: RegisterFormProps): React.JSX.Element => {
   };
 
   return (
-    <Card>
+    <View style={styles.container}>
       <View style={styles.inputs}>
         <EmailOrPhoneTextInput
           emailOrPhone={emailOrPhone}
@@ -59,7 +57,7 @@ const RegisterForm = (props: RegisterFormProps): React.JSX.Element => {
         />
       </View>
       <RegisterButton onRegister={onRegister} registerType={props.registerType} />
-    </Card>
+    </View>
   );
 };
 

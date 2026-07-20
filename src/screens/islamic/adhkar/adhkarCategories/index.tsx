@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
-import {ScrollView, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import FeatureHubCard from '@atoms/FeatureHubCard';
@@ -57,7 +57,7 @@ const AdhkarCategories = ({navigation}: Props): React.JSX.Element => {
   const {t, i18n} = useTranslation();
   const lang = i18n.language.startsWith('ar') ? 'ar' : 'en';
   const {colors} = useThemeTokens();
-  const {data, isLoading, isError} = useAdhkarCategoriesQuery(lang);
+  const {data, isLoading, isError, refetch} = useAdhkarCategoriesQuery(lang);
 
   const styles = useThemedStyles(tokens => ({
     hero: {
@@ -123,34 +123,63 @@ const AdhkarCategories = ({navigation}: Props): React.JSX.Element => {
   );
 
   return (
-    <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.adhkar.title')} onBack={() => navigation.goBack()} />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.hero}>
-          <View style={styles.heroInner}>
-            <Heading
-              text={t('islamic.adhkar.hubTitle')}
-              level="h2"
-              align="center"
-              style={styles.heroTitle}
-            />
-            <Spacer size="xs" />
-            <TextView
-              text={t('islamic.adhkar.hubSubtitle')}
-              variant="bodySmall"
-              align="center"
-              style={styles.heroCaption}
-            />
-          </View>
+    <ScreenContainer scroll bottomPadding="xxl">
+      <ScreenHeader title={t('islamic.adhkar.title')} navigation={navigation} />
+      <View style={styles.hero}>
+        <View style={styles.heroInner}>
+          <Heading
+            text={t('islamic.adhkar.hubTitle')}
+            level="h2"
+            align="center"
+            style={styles.heroTitle}
+          />
+          <Spacer size="xs" />
+          <TextView
+            text={t('islamic.adhkar.hubSubtitle')}
+            variant="bodySmall"
+            align="center"
+            style={styles.heroCaption}
+          />
         </View>
+      </View>
 
-        <Spacer size="lg" />
-        <Heading text={t('islamic.adhkar.readers')} level="h3" />
-        <Spacer size="xxs" />
-        <TextView text={t('islamic.adhkar.readersSubtitle')} variant="caption" muted />
-        <Spacer size="sm" />
+      <Spacer size="lg" />
+      <Heading text={t('islamic.adhkar.readers')} level="h3" />
+      <Spacer size="xxs" />
+      <TextView text={t('islamic.adhkar.readersSubtitle')} variant="caption" muted />
+      <Spacer size="sm" />
+      <View style={styles.grid}>
+        {sessions.map(item => (
+          <FeatureHubCard
+            key={item.id}
+            title={item.title}
+            subtitle={item.subtitle}
+            iconType="Ionicons"
+            iconName={item.icon}
+            accentColor={item.accent}
+            onPress={() => openSession(item.id)}
+          />
+        ))}
+      </View>
+
+      <Spacer size="lg" />
+      <Heading text={t('islamic.adhkar.browseCategories')} level="h3" />
+      <Spacer size="xxs" />
+      <TextView text={t('islamic.adhkar.browseSubtitle')} variant="caption" muted />
+      <Spacer size="sm" />
+
+      {isLoading ? (
+        <IslamicLoadingState />
+      ) : isError || groupCards.length === 0 ? (
+        <IslamicErrorState
+          message={t('islamic.errors.loadFailed')}
+          onRetry={() => {
+            void refetch();
+          }}
+        />
+      ) : (
         <View style={styles.grid}>
-          {sessions.map(item => (
+          {groupCards.map(item => (
             <FeatureHubCard
               key={item.id}
               title={item.title}
@@ -158,38 +187,12 @@ const AdhkarCategories = ({navigation}: Props): React.JSX.Element => {
               iconType="Ionicons"
               iconName={item.icon}
               accentColor={item.accent}
-              onPress={() => openSession(item.id)}
+              onPress={() => openGroup(item.id, item.title)}
             />
           ))}
         </View>
-
-        <Spacer size="lg" />
-        <Heading text={t('islamic.adhkar.browseCategories')} level="h3" />
-        <Spacer size="xxs" />
-        <TextView text={t('islamic.adhkar.browseSubtitle')} variant="caption" muted />
-        <Spacer size="sm" />
-
-        {isLoading ? (
-          <IslamicLoadingState />
-        ) : isError ? (
-          <IslamicErrorState message={t('islamic.errors.loadFailed')} />
-        ) : (
-          <View style={styles.grid}>
-            {groupCards.map(item => (
-              <FeatureHubCard
-                key={item.id}
-                title={item.title}
-                subtitle={item.subtitle}
-                iconType="Ionicons"
-                iconName={item.icon}
-                accentColor={item.accent}
-                onPress={() => openGroup(item.id, item.title)}
-              />
-            ))}
-          </View>
-        )}
-        <Spacer size="xxl" />
-      </ScrollView>
+      )}
+      <Spacer size="xxl" />
     </ScreenContainer>
   );
 };

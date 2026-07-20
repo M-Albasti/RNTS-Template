@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Pressable} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -19,14 +19,16 @@ type Props = {navigation: AppStackNavigationProp<'DeliveryHistory'>};
 
 const DeliveryHistory = ({navigation}: Props): React.JSX.Element => {
   const {t} = useTranslation();
-  const orders = useAppSelector(state =>
-    state.delivery.orders.filter(o => ['delivered', 'cancelled'].includes(o.status)),
+  const ordersRaw = useAppSelector(state => state.delivery.orders);
+  const orders = useMemo(
+    () => ordersRaw.filter(o => ['delivered', 'cancelled'].includes(o.status)),
+    [ordersRaw],
   );
   const styles = useThemedStyles(resolveOrderHistoryStyles);
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('delivery.orderHistory')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('delivery.orderHistory')} navigation={navigation} />
       {orders.length === 0 ? (
         <TextView text={t('delivery.noHistory')} align="center" muted />
       ) : (

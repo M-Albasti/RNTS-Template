@@ -2,6 +2,7 @@ import type {Middleware} from '@reduxjs/toolkit';
 import {REHYDRATE} from 'redux-persist';
 
 import {addUser, logout} from '@redux/slices/authSlice';
+import {hydratePreferences} from '@redux/slices/appSettingsSlice';
 import {trackLogout} from '@services/firebaseServices/firebaseAuthAnalytics';
 import {
   clearFirebaseUser,
@@ -29,6 +30,8 @@ export const firebaseAuthMiddleware: Middleware = store => next => action => {
   if ((action as {type?: string}).type === REHYDRATE) {
     const payload = (action as {payload?: {auth?: {user?: User | null}}}).payload;
     syncFirebaseUser(payload?.auth?.user ?? null);
+    // Older persisted settings lack `preferences` — backfill before toggles run.
+    store.dispatch(hydratePreferences());
   }
 
   return result;

@@ -13,27 +13,36 @@ export const hadithHttpClient = axios.create({
   headers: {Accept: 'application/json'},
 });
 
+/**
+ * HisnMuslim JSON files ship with a UTF-8 BOM. Force `responseType: 'text'`
+ * so every platform (especially iOS) runs BOM stripping before JSON.parse —
+ * otherwise `data['English']` can silently become `[]` and hide categories.
+ */
+const decodeHisnResponse = (data: unknown): unknown => {
+  if (typeof data !== 'string') {
+    return data;
+  }
+
+  const cleaned = data.replace(/^\uFEFF/, '');
+  try {
+    return JSON.parse(cleaned);
+  } catch {
+    return data;
+  }
+};
+
 export const adhkarHttpClient = axios.create({
   baseURL: 'https://www.hisnmuslim.com/api',
   timeout: 20000,
+  // Force text so BOM stripping runs on every platform (iOS may otherwise
+  // hand back a failed auto-parse and yield empty categories).
+  responseType: 'text',
   headers: {
     Accept: 'application/json',
     'User-Agent':
       'Mozilla/5.0 (compatible; RNTS-Template/1.0; +https://github.com/M-Albasti/RNTS-Template)',
   },
-  transformResponse: [
-    data => {
-      if (typeof data !== 'string') {
-        return data;
-      }
-      const cleaned = data.replace(/^\uFEFF/, '');
-      try {
-        return JSON.parse(cleaned);
-      } catch {
-        return data;
-      }
-    },
-  ],
+  transformResponse: [decodeHisnResponse],
 });
 
 export const prayerHttpClient = axios.create({

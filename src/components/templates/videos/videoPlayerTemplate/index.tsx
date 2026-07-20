@@ -25,11 +25,7 @@ const VideoPlayerTemplate = ({
     <ScreenContainer>
       <ScreenHeader
         title={videoDetails.title || 'Video player'}
-        onBack={() => {
-          if (navigation.canGoBack()) {
-            navigation.goBack();
-          }
-        }}
+        navigation={navigation}
       />
       <View style={styles.player}>
         <VideoPlayerView navigation={navigation} videoDetails={videoDetails} />

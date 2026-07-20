@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, Pressable, StyleSheet, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -20,8 +20,9 @@ interface GalleryGridProps {
 
 const GalleryGrid = ({navigation}: GalleryGridProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
-  const styles = useThemedStyles(resolveGalleryGridStyles)
+  const imagesRaw = useAppSelector(state => state.gallery.images);
+  const images = useMemo(() => imagesRaw.filter(i => !i.hidden), [imagesRaw]);
+  const styles = useThemedStyles(resolveGalleryGridStyles);
 
   const renderItem = ({item}: {item: GalleryImage}) => (
     <Pressable
@@ -36,7 +37,7 @@ const GalleryGrid = ({navigation}: GalleryGridProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('gallery.allPhotos')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.allPhotos')} navigation={navigation} />
       <FlashList
         data={images}
         numColumns={2}

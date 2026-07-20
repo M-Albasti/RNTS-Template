@@ -22,7 +22,7 @@
     "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081",
     "android-refresh-build": "cd android && rm -rf build .gradle .kotlin .idea/ app/build app/.cxx && ./gradlew clean && ./gradlew task && ./gradlew wrapper && cd .. && bunx react-native run-android",
     "ios-refresh-build": "cd ios && rm -rf build Pods Podfile.lock && pod deintegrate && pod cache clean --all && pod install --repo-update && open RNTS.xcworkspace && cd .. && bunx react-native run-ios",
-    "refresh-build-app": "rm -rf yarn.lock package-lock.json bun.lock node_modules ios/Pods ios/build ios/Podfile.lock android/build android/.gradle android/.idea android/app/build && sudo rm -rf ~/Library/Developer/Xcode/DerivedData && bun install && cd ios && pod cache clean --all && pod install --repo-update && open RNTS.xcworkspace && cd .. && cd android && ./gradlew clean && ./gradlew wrapper && ./gradlew task && cd .. && bunx react-native run-android && bunx react-native run-ios"
+    "refresh-build-app": "rm -rf yarn.lock package-lock.json bun.lock node_modules ios/Pods ios/build ios/Podfile.lock android/build android/.gradle android/.idea android/app/build && sudo rm -rf ~/Library/Developer/Xcode/DerivedData && bun install && cd ios && pod cache clean --all && pod install --repo-update && open RNTS-Template.xcworkspace && cd .. && cd android && ./gradlew clean && ./gradlew wrapper && ./gradlew task && cd .. && bunx react-native run-android && bunx react-native run-ios"
   },
   "dependencies": {
     "@expo-google-fonts/cairo": "^0.4.2",

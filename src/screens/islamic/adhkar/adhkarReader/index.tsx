@@ -22,6 +22,7 @@ import {useAdhkarAudioPlayer} from '@hooks/useAdhkarAudioPlayer';
 import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {updateAdhkarPreferences} from '@redux/slices/islamicSlice';
+import {resolveArabicBodyTextStyle} from '@theme/arabicText';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import type {AdhkarItem} from '@Types/islamicTypes';
@@ -133,16 +134,11 @@ const AdhkarReader = ({navigation, route}: Props): React.JSX.Element => {
       borderWidth: tokens.layout.borderWidth.md,
       backgroundColor: tokens.colors.mushafHighlight,
     },
-    arabic: {
-      fontSize: tokens.typography.mushafBody?.fontSize ?? tokens.typography.h3.fontSize,
-      lineHeight:
-        (tokens.typography.mushafBody?.lineHeight ??
-          tokens.typography.h3.lineHeight ??
-          28) * 1.35,
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
+    arabic: resolveArabicBodyTextStyle(tokens, {
+      fontSize: 24,
+      lineHeightRatio: 1.75,
       color: tokens.colors.mushafInk,
-    },
+    }),
     repeat: {
       alignSelf: 'flex-start' as const,
       backgroundColor: tokens.colors.primaryMuted,
@@ -233,7 +229,7 @@ const AdhkarReader = ({navigation, route}: Props): React.JSX.Element => {
   if (!categoryId) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={title} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={title} navigation={navigation} />
         <IslamicErrorState message={t('islamic.errors.loadFailed')} />
       </ScreenContainer>
     );
@@ -241,7 +237,7 @@ const AdhkarReader = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="none" style={styles.body}>
-      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={title} navigation={navigation} />
       {isLoading ? (
         <IslamicLoadingState />
       ) : isError || !data ? (
