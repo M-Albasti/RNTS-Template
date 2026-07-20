@@ -105,6 +105,16 @@ export const useQuranAudioPlayer = ({
         quranAudioController.playAyah(initialAyahNumber, surahNumber, reciterId);
         return;
       }
+      // Paused with a loaded track, but the mushaf moved — seek to the visible ayah.
+      if (
+        snapshot.hasLoadedTrack &&
+        isViewingPlayingSurah &&
+        initialAyahNumber > 0 &&
+        initialAyahNumber !== snapshot.activeAyahNumber
+      ) {
+        quranAudioController.playAyah(initialAyahNumber, surahNumber, reciterId);
+        return;
+      }
       quranAudioController.togglePlay(
         isViewingPlayingSurah
           ? snapshot.activeAyahNumber || initialAyahNumber

@@ -30,7 +30,7 @@ const MarketplaceMyListings = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.myListings')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.myListings')} navigation={navigation} />
       <Button
         label={t('marketplace.merchant.title')}
         variant="secondary"

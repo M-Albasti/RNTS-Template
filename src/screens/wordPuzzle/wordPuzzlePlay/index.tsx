@@ -369,7 +369,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
   if (isLoading || isFetching) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('wordPuzzle.title')} navigation={navigation} />
         <View style={styles.center}>
           <ActivityIndicator size="large" />
           <Spacer size="sm" />
@@ -382,7 +382,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
   if (isError || !book || !stage || puzzles.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('wordPuzzle.title')} navigation={navigation} />
         <ApiErrorView
           message={
             isError
@@ -400,7 +400,7 @@ const WordPuzzlePlay = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('wordPuzzle.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wordPuzzle.title')} navigation={navigation} />
       <View style={styles.toolbar}>
         <TextView text={progressLabel} variant="caption" muted />
         <TextView text={t('wordPuzzle.gems', {count: gems})} variant="caption" />

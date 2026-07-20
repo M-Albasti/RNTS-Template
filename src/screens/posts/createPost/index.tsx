@@ -46,9 +46,9 @@ const CreatePost = ({navigation}: CreatePostProps): React.JSX.Element => {
           mediaType === 'image'
             ? 'https://picsum.photos/seed/newpost/800/500'
             : mediaType === 'audio'
-              ? 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
+              ? 'https://samplefile.com/samples/download/audio/mp3/mp3_music_loop_sample.mp3'
               : mediaType === 'video'
-                ? 'https://picsum.photos/seed/newvideo/800/500'
+                ? 'https://samplefile.com/samples/download/video/mp4/mp4_15s_sample_file_868KB.mp4'
                 : undefined,
         likes: 0,
         likedByMe: false,
@@ -64,7 +64,7 @@ const CreatePost = ({navigation}: CreatePostProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('posts.newPost')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.newPost')} navigation={navigation} />
       <Card>
         <Heading text={t('posts.shareSomething')} level="h3" />
         <Spacer size="md" />

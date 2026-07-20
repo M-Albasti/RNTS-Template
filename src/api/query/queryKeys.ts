@@ -7,6 +7,10 @@ export const queryKeys = {
   dashboard: () => [...queryKeys.all, 'dashboard', 'stats'] as const,
   feed: (sort: FeedSort = 'recent') =>
     [...queryKeys.all, 'feed', sort] as const,
+  media: {
+    videos: () => [...queryKeys.all, 'media', 'videos'] as const,
+    audios: () => [...queryKeys.all, 'media', 'audios'] as const,
+  },
   auth: {
     session: () => [...queryKeys.all, 'auth', 'session'] as const,
   },

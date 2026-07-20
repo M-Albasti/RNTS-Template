@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, Pressable, StyleSheet, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -20,13 +20,14 @@ interface GalleryHiddenProps {
 
 const GalleryHidden = ({navigation}: GalleryHiddenProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const hidden = useAppSelector(state => state.gallery.images.filter(i => i.hidden));
-  const styles = useThemedStyles(resolveGalleryHiddenStyles)
+  const images = useAppSelector(state => state.gallery.images);
+  const hidden = useMemo(() => images.filter(i => i.hidden), [images]);
+  const styles = useThemedStyles(resolveGalleryHiddenStyles);
 
   if (hidden.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('gallery.privateVault')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('gallery.privateVault')} navigation={navigation} />
         <TextView text={t('gallery.noHiddenPhotos')} muted align="center" />
       </ScreenContainer>
     );
@@ -34,7 +35,7 @@ const GalleryHidden = ({navigation}: GalleryHiddenProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('gallery.privateVault')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.privateVault')} navigation={navigation} />
       <FlashList
         data={hidden}
         numColumns={2}

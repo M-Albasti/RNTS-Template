@@ -96,7 +96,7 @@ const NewDelivery = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('delivery.newDelivery')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('delivery.newDelivery')} navigation={navigation} />
       {renderAddressPicker(t('delivery.pickup'), pickupId, setPickupId)}
       <Spacer size="md" />
       {renderAddressPicker(t('delivery.dropoff'), dropoffId, setDropoffId)}

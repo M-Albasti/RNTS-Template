@@ -10,6 +10,7 @@ import Spacer from '@atoms/Spacer';
 import TextView from '@atoms/TextView';
 
 import {useAdhkarCategoryQuery} from '@api/query/hooks/useIslamicQueries';
+import {resolveArabicBodyTextStyle} from '@theme/arabicText';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import type {AdhkarItem} from '@Types/islamicTypes';
@@ -30,12 +31,10 @@ const AdhkarDetail = ({navigation, route}: Props): React.JSX.Element => {
 
   const styles = useThemedStyles(tokens => ({
     list: {flex: tokens.layout.flex.fill},
-    arabic: {
-      fontSize: tokens.typography.h3.fontSize,
-      lineHeight: (tokens.typography.h3.lineHeight ?? 28) * 1.5,
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
-    },
+    arabic: resolveArabicBodyTextStyle(tokens, {
+      fontSize: 24,
+      lineHeightRatio: 1.75,
+    }),
     repeat: {
       alignSelf: 'flex-start' as const,
       backgroundColor: tokens.colors.primaryMuted,
@@ -101,7 +100,7 @@ const AdhkarDetail = ({navigation, route}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={title} navigation={navigation} />
       {isLoading ? (
         <IslamicLoadingState />
       ) : isError || !data ? (

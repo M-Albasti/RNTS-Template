@@ -55,7 +55,7 @@ const MarketplaceOrderDetail = ({navigation, route}: Props): React.JSX.Element =
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.orderDetail')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.orderDetail')} navigation={navigation} />
       <Card>
         <OrderStatusBadge label={t(`marketplace.status.${order.status}`)} />
         <Spacer size="sm" />

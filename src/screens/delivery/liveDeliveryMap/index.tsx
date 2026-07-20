@@ -70,8 +70,7 @@ const LiveDeliveryMap = ({navigation, route}: Props): React.JSX.Element => {
           title={
             mode === 'driver' ? t('delivery.driverLiveMap') : t('delivery.customerLiveMap')
           }
-          onBack={() => navigation.goBack()}
-        />
+          navigation={navigation} />
       </View>
       <LocationPermissionGate>
         <DeliveryMap

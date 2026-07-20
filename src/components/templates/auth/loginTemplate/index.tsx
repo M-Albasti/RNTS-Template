@@ -1,13 +1,12 @@
 //* packages import
 import React from 'react';
 import {KeyboardTypeOptions} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 //* components import
+import AuthScreenShell from '@organisms/auth/AuthScreenShell';
 import LoginFooter from '@organisms/auth/login/LoginFooter';
 import LoginForm from '@organisms/auth/login/LoginForm';
-import LoginHeader from '@organisms/auth/login/LoginHeader';
-import ScreenContainer from '@atoms/ScreenContainer';
-import Spacer from '@atoms/Spacer';
 
 //* types import
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
@@ -26,22 +25,26 @@ interface LoginTemplateProps {
 }
 
 const LoginTemplate = (props: LoginTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
-    <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <LoginHeader />
-      <Spacer size="lg" />
+    <AuthScreenShell
+      title={t('auth.welcomeBack')}
+      subtitle={t('auth.signInSubtitle')}
+      iconName="lock-closed-outline"
+      footer={
+        <LoginFooter
+          navigation={props.navigation}
+          register={props.register}
+          registerType={props.registerType}
+        />
+      }>
       <LoginForm
         navigation={props.navigation}
         loginType={props.loginType}
         keyboardType={props.keyboardType}
       />
-      <Spacer size="md" />
-      <LoginFooter
-        navigation={props.navigation}
-        register={props.register}
-        registerType={props.registerType}
-      />
-    </ScreenContainer>
+    </AuthScreenShell>
   );
 };
 

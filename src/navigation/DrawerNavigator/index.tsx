@@ -1,6 +1,6 @@
 //* packages import
-import React, {Suspense} from 'react';
-import {Platform, View} from 'react-native';
+import React, {Suspense, useMemo} from 'react';
+import {Platform, useWindowDimensions, View} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import DrawerMenuContent from '@organisms/drawer/DrawerMenuContent';
@@ -40,13 +40,18 @@ import {styles} from './styles';
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const DrawerNavigator = (): React.JSX.Element => {
-  const {colors} = useThemeTokens();
+  const {colors, spacing} = useThemeTokens();
+  const {width: windowWidth} = useWindowDimensions();
+  const drawerWidth = useMemo(
+    () => Math.min(320, Math.max(260, Math.round(windowWidth * 0.82))),
+    [windowWidth],
+  );
 
   return (
     <Drawer.Navigator
       backBehavior="history"
       initialRouteName="TabRoot"
-      layout={({children, state, descriptors, navigation}) => (
+      layout={({children}) => (
         <ErrorBoundary>
           <Suspense
             fallback={
@@ -61,9 +66,16 @@ const DrawerNavigator = (): React.JSX.Element => {
         </ErrorBoundary>
       )}
       screenOptions={{
-        drawerType: 'slide',
+        drawerType: 'front',
         popToTopOnBlur: true,
         headerShown: false,
+        drawerStyle: {
+          width: drawerWidth,
+          backgroundColor: colors.background,
+          borderTopRightRadius: spacing.lg,
+          borderBottomRightRadius: spacing.lg,
+          overflow: 'hidden',
+        },
         ...Platform.select({
           ios: {
             drawerStatusBarAnimation: 'fade',

@@ -16,6 +16,7 @@ import {
   filterServicesCatalog,
   type ServiceCategoryId,
 } from '@config/servicesCatalog';
+import {FLOATING_TAB_CONTENT_INSET} from '@navigation/TabNavigator/styles/resolveFloatingTabBarStyles';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import type {AppStackNavigationProp, DrawerParamList} from '@Types/appNavigation';
 
@@ -52,12 +53,13 @@ const ServicesHub = ({navigation}: Props): React.JSX.Element => {
 
   const styles = useThemedStyles(tokens => ({
     hero: {
-      backgroundColor: tokens.colors.primary,
-      borderRadius: tokens.radius.lg,
+      backgroundColor: tokens.colors.surface,
+      borderRadius: tokens.radius.xl,
       padding: tokens.spacing.lg,
-      ...tokens.shadows.md,
+      borderWidth: tokens.layout.borderWidth.sm,
+      borderColor: tokens.colors.border,
+      gap: tokens.spacing.xs,
     },
-    heroText: {color: tokens.colors.textInverse},
     tabs: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.xs, marginBottom: tokens.spacing.md},
     tab: {
       borderWidth: tokens.layout.borderWidth.sm,
@@ -65,19 +67,36 @@ const ServicesHub = ({navigation}: Props): React.JSX.Element => {
       borderRadius: tokens.radius.full,
       paddingHorizontal: tokens.spacing.md,
       paddingVertical: tokens.spacing.xs,
+      backgroundColor: tokens.colors.surface,
     },
     tabActive: {backgroundColor: tokens.colors.primary, borderColor: tokens.colors.primary},
+    tabActiveText: {color: tokens.colors.textInverse},
     grid: {...tokens.layout.presets.wrapRow, gap: tokens.spacing.sm},
     sectionTitle: {marginBottom: tokens.spacing.sm},
   }));
 
   return (
-    <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('services.title')} showBack={false} />
+    <ScreenContainer
+      scroll
+      bottomPadding="xxl"
+      contentStyle={{paddingBottom: FLOATING_TAB_CONTENT_INSET}}>
+      <ScreenHeader
+        title={t('services.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'home',
+            iconName: 'home-outline',
+            onPress: () => navigation.navigate('Home'),
+            accessibilityLabel: t('tabs.home'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
-        <TextView text={t('services.subtitle')} variant="bodySmall" style={styles.heroText} />
-        <Spacer size="xs" />
-        <Heading text={t('services.hubTitle')} level="h2" align="center" style={styles.heroText} />
+        <TextView text={t('services.subtitle')} variant="bodySmall" muted />
+        <Heading text={t('services.hubTitle')} level="h2" />
       </View>
       <Spacer size="lg" />
       <TextInputView
@@ -93,7 +112,7 @@ const ServicesHub = ({navigation}: Props): React.JSX.Element => {
           <TextView
             text={t('services.categories.all')}
             variant="caption"
-            style={category === 'all' ? {color: '#fff'} : undefined}
+            style={category === 'all' ? styles.tabActiveText : undefined}
           />
         </Pressable>
         {SERVICE_CATEGORIES.map(item => (
@@ -104,7 +123,7 @@ const ServicesHub = ({navigation}: Props): React.JSX.Element => {
             <TextView
               text={t(`services.categories.${item}`)}
               variant="caption"
-              style={category === item ? {color: '#fff'} : undefined}
+              style={category === item ? styles.tabActiveText : undefined}
             />
           </Pressable>
         ))}

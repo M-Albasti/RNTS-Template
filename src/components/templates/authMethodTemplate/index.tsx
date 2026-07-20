@@ -1,9 +1,10 @@
 //* packages import
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 //* components import
+import AuthScreenShell from '@organisms/auth/AuthScreenShell';
 import AuthMethodButtons from '@organisms/authMethod/AuthMethodsButtons';
-import ScreenContainer from '@atoms/ScreenContainer';
 
 //* types import
 import {AppStackNavigationProp} from '@Types/appNavigation';
@@ -15,10 +16,15 @@ interface AuthMethodTemplateProps {
 const AuthMethodTemplate = ({
   navigation,
 }: AuthMethodTemplateProps): React.JSX.Element => {
+  const {t} = useTranslation();
+
   return (
-    <ScreenContainer centered scroll alignContent="center">
+    <AuthScreenShell
+      title={t('auth.chooseSignInMethod')}
+      subtitle={t('loginOptions.subtitle')}
+      iconName="apps-outline">
       <AuthMethodButtons navigation={navigation} />
-    </ScreenContainer>
+    </AuthScreenShell>
   );
 };
 

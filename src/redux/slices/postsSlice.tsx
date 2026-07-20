@@ -7,75 +7,7 @@ const extractHashtags = (content: string): string[] => {
   return matches ? matches.map(t => t.slice(1).toLowerCase()) : [];
 };
 
-const seedPosts: PostItem[] = [
-  {
-    id: '1',
-    author: 'Mahmoud',
-    avatar: 'https://i.pravatar.cc/100?u=1',
-    content: 'Welcome to RNTS social feed! #welcome #rnts',
-    mediaType: 'text',
-    likes: 12,
-    likedByMe: false,
-    myReaction: null,
-    shares: 3,
-    comments: [],
-    hashtags: ['welcome', 'rnts'],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    author: 'Sara',
-    avatar: 'https://i.pravatar.cc/100?u=2',
-    content: 'Sunset from the beach today. #travel #photography',
-    mediaType: 'image',
-    mediaUrl: 'https://picsum.photos/seed/beach/800/500',
-    likes: 34,
-    likedByMe: true,
-    myReaction: 'love',
-    shares: 8,
-    comments: [
-      {id: 'c1', author: 'Ali', text: 'Beautiful shot!', createdAt: new Date().toISOString()},
-    ],
-    hashtags: ['travel', 'photography'],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    author: 'Ali',
-    avatar: 'https://i.pravatar.cc/100?u=3',
-    content: 'New audio track uploaded. #music',
-    mediaType: 'audio',
-    mediaUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-    likes: 8,
-    likedByMe: false,
-    myReaction: null,
-    shares: 1,
-    comments: [],
-    hashtags: ['music'],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    author: 'Team RNTS',
-    avatar: 'https://i.pravatar.cc/100?u=8',
-    content: 'Which feature should we ship next?',
-    mediaType: 'poll',
-    likes: 5,
-    likedByMe: false,
-    myReaction: null,
-    shares: 2,
-    comments: [],
-    hashtags: ['poll'],
-    poll: {
-      options: [
-        {id: 'o1', text: 'Video calls in chat', votes: 14},
-        {id: 'o2', text: 'Wallet QR pay', votes: 22},
-        {id: 'o3', text: 'Gallery slideshow', votes: 9},
-      ],
-    },
-    createdAt: new Date().toISOString(),
-  },
-];
+const seedPosts: PostItem[] = [];
 
 export type PostsState = {
   posts: PostItem[];
@@ -86,7 +18,7 @@ export type PostsState = {
 
 const initialState: PostsState = {
   posts: seedPosts,
-  savedIds: ['2'],
+  savedIds: [],
   searchQuery: '',
   feedSort: 'recent',
 };

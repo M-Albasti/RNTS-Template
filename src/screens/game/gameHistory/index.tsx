@@ -28,7 +28,7 @@ const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
   if (history.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('game.rewardHistory')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('game.rewardHistory')} navigation={navigation} />
         <EmptyView
           title={t('game.spinToEarn')}
           iconName="trophy-outline"
@@ -54,7 +54,7 @@ const GameHistory = ({navigation}: GameHistoryProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('game.rewardHistory')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.rewardHistory')} navigation={navigation} />
       <FlashList
         data={history}
         renderItem={renderItem}

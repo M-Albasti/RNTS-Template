@@ -20,6 +20,7 @@ import {useAppDispatch} from '@hooks/useAppDispatch';
 import {useAppSelector} from '@hooks/useAppSelector';
 import {useQuranAudioPlayer} from '@hooks/useQuranAudioPlayer';
 import {setLastReadPosition, updateQuranPreferences} from '@redux/slices/islamicSlice';
+import {resolveArabicBodyTextStyle} from '@theme/arabicText';
 import {useThemedStyles} from '@theme/createThemedStyles';
 import {useThemeTokens} from '@theme/useThemeTokens';
 import type {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
@@ -135,16 +136,15 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
     },
     badgeActive: {backgroundColor: tokens.colors.primary},
     badgeTextActive: {color: tokens.colors.textInverse},
-    arabic: {
-      fontSize: tokens.typography.h2.fontSize,
-      lineHeight: (tokens.typography.h2.lineHeight ?? 32) * 1.6,
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
-    },
-    tafsir: {
-      textAlign: 'right' as const,
-      writingDirection: 'rtl' as const,
-    },
+    arabic: resolveArabicBodyTextStyle(tokens, {
+      fontSize: tokens.typography.h2.fontSize ?? 22,
+      lineHeightRatio: 1.7,
+    }),
+    tafsir: resolveArabicBodyTextStyle(tokens, {
+      fontSize: tokens.typography.body.fontSize ?? 16,
+      lineHeightRatio: 1.65,
+      color: tokens.colors.textPrimary,
+    }),
     headerMeta: {marginBottom: tokens.spacing.sm},
   }));
 
@@ -239,20 +239,19 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
     <ScreenContainer bottomPadding="none" style={styles.body}>
       <ScreenHeader
         title={data?.name ?? t('islamic.quran.tafsirReaderTitle')}
-        onBack={() => navigation.goBack()}
-        rightAccessory={
-          <TouchableIcon
-            iconType="Ionicons"
-            name="book-outline"
-            size={sizes.iconSm}
-            onPress={() =>
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'mushaf',
+            iconName: 'book-outline',
+            onPress: () =>
               navigation.navigate('QuranReader', {
                 surahNumber,
                 ayahNumber: focusedAyahNumber,
-              })
-            }
-          />
-        }
+              }),
+            accessibilityLabel: t('islamic.quran.mushaf', {defaultValue: 'Mushaf'}),
+          },
+        ]}
       />
       {isLoading ? (
         <IslamicLoadingState />
@@ -303,8 +302,16 @@ const QuranTafsirReader = ({navigation, route}: Props): React.JSX.Element => {
           />
           <QuranAudioBar
             reciterId={reciterId}
-            surahNumber={audio.playingSurahNumber}
-            activeAyahNumber={audio.activeAyahNumber}
+            surahNumber={
+              audio.isPlaying || audio.isLoading
+                ? audio.playingSurahNumber
+                : surahNumber
+            }
+            activeAyahNumber={
+              audio.isPlaying || audio.isLoading
+                ? audio.activeAyahNumber
+                : focusedAyahNumber
+            }
             isPlaying={audio.isPlaying}
             isLoading={audio.isLoading}
             continuous

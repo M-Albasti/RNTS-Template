@@ -115,8 +115,15 @@ const islamicSlice = createSlice({
       state.lastReadSurah = action.payload;
     },
     setLastReadPosition: (state, action: PayloadAction<QuranLastRead>) => {
+      const {surahNumber, ayahNumber} = action.payload;
+      if (
+        state.lastRead.surahNumber === surahNumber &&
+        state.lastRead.ayahNumber === ayahNumber
+      ) {
+        return;
+      }
       state.lastRead = action.payload;
-      state.lastReadSurah = action.payload.surahNumber;
+      state.lastReadSurah = surahNumber;
     },
     updateQuranPreferences: (state, action: PayloadAction<Partial<QuranPreferences>>) => {
       const next = {...state.quranPreferences, ...action.payload};

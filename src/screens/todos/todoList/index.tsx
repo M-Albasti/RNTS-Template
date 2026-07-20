@@ -121,7 +121,7 @@ const TodoList = ({navigation}: TodoListProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('todos.taskListScreen')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('todos.taskListScreen')} navigation={navigation} />
       <View style={styles.filters}>
         {FILTERS.map(f => (
           <Button

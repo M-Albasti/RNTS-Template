@@ -35,7 +35,7 @@ const WalletQRPay = ({navigation}: WalletQRPayProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll centered alignContent="center">
-      <ScreenHeader title={t('wallet.qrPay')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.qrPay')} navigation={navigation} />
       <Card constrained>
         <Heading text={t('wallet.scanAndPay')} level="h2" align="center" />
         <Spacer size="md" />

@@ -48,7 +48,7 @@ const WalletSend = ({navigation}: WalletSendProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('wallet.sendAndTopUp')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.sendAndTopUp')} navigation={navigation} />
       <Card>
         <Heading
           text={t('wallet.balanceLabel', {balance: balance.toFixed(2)})}

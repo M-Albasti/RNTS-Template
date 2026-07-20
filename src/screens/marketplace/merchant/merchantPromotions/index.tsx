@@ -25,8 +25,7 @@ const MerchantPromotions = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('marketplace.merchant.promotions')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <Button
         label={t('marketplace.merchant.createPromo')}
         fullWidth

@@ -27,7 +27,26 @@ const GalleryHub = ({navigation}: GalleryHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('gallery.title')} showBack={false} />
+      <ScreenHeader
+        title={t('gallery.title')}
+        showBack={false}
+        showDrawer
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'search',
+            iconName: 'search-outline',
+            onPress: () => navigation.navigate('GallerySearch'),
+            accessibilityLabel: t('gallery.searchPhotos'),
+          },
+          {
+            key: 'favorites',
+            iconName: 'heart-outline',
+            onPress: () => navigation.navigate('GalleryFavorites'),
+            accessibilityLabel: t('gallery.favorites'),
+          },
+        ]}
+      />
       <View style={styles.hero}>
         <Heading text={t('gallery.yourPhotos')} level="h2" align="center" />
         <Spacer size="xs" />

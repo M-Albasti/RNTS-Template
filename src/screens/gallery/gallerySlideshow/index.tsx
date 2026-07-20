@@ -22,10 +22,11 @@ interface GallerySlideshowProps {
 const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX.Element => {
   const {t} = useTranslation();
   const {imageId} = route.params;
-  const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
+  const imagesRaw = useAppSelector(state => state.gallery.images);
+  const images = useMemo(() => imagesRaw.filter(i => !i.hidden), [imagesRaw]);
   const startIndex = Math.max(0, images.findIndex(i => i.id === imageId));
   const [index, setIndex] = useState(startIndex);
-  const styles = useThemedStyles(resolveGallerySlideshowStyles)
+  const styles = useThemedStyles(resolveGallerySlideshowStyles);
 
   const current = images[index];
 
@@ -47,7 +48,7 @@ const GallerySlideshow = ({navigation, route}: GallerySlideshowProps): React.JSX
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('gallery.slideshow')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.slideshow')} navigation={navigation} />
       <Image source={{uri: current.uri}} style={styles.image as ImageStyle} resizeMode="cover" />
       <Spacer size="md" />
       <Heading text={current.title} level="h2" align="center" />

@@ -78,8 +78,7 @@ const WordPuzzleLibrary = ({navigation, route}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={language === 'ar' ? t('wordPuzzle.arabicWorld') : t('wordPuzzle.englishWorld')}
-        onBack={() => navigation.goBack()}
-      />
+        navigation={navigation} />
       <TextView
         text={t('wordPuzzle.libraryHintApi')}
         variant="body"

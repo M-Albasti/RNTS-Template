@@ -88,7 +88,7 @@ const ChatRoom = ({navigation, route}: ChatRoomProps): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="lg">
-      <ScreenHeader title={thread.name} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={thread.name} navigation={navigation} />
       <View style={styles.headerActions}>
         <Button
           label={t('common.info')}

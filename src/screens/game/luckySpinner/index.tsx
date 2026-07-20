@@ -78,7 +78,7 @@ const LuckySpinner = ({navigation}: LuckySpinnerProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll centered alignContent="center" bottomPadding="xxl">
-      <ScreenHeader title={t('game.luckySpinner')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('game.luckySpinner')} navigation={navigation} />
       <Card constrained>
         <View style={styles.stats}>
           <Heading text={t('game.coinsCount', {count: coins})} level="h2" align="center" />

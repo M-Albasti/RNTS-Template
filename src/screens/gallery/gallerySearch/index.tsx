@@ -24,7 +24,8 @@ interface GallerySearchProps {
 const GallerySearch = ({navigation}: GallerySearchProps): React.JSX.Element => {
   const {t} = useTranslation();
   const query = useAppSelector(state => state.gallery.searchQuery);
-  const images = useAppSelector(state => state.gallery.images.filter(i => !i.hidden));
+  const imagesRaw = useAppSelector(state => state.gallery.images);
+  const images = useMemo(() => imagesRaw.filter(i => !i.hidden), [imagesRaw]);
   const dispatch = useAppDispatch();
   const styles = useThemedStyles(resolveGallerySearchStyles);
 
@@ -38,7 +39,7 @@ const GallerySearch = ({navigation}: GallerySearchProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('gallery.searchPhotos')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.searchPhotos')} navigation={navigation} />
       <TextInputView
         placeholder={t('gallery.searchPlaceholder')}
         value={query}

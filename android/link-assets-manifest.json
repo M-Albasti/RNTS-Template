@@ -2,6 +2,18 @@
   "migIndex": 1,
   "data": [
     {
+      "path": "src/assets/fonts/Amiri/Amiri-Bold.ttf",
+      "sha1": "eb84bdc491cdb1a8d6b3d4a1fba9508759789836"
+    },
+    {
+      "path": "src/assets/fonts/Amiri/Amiri-Regular.ttf",
+      "sha1": "a5f4fe8279d587ca8e65b01159c405788850c6d3"
+    },
+    {
+      "path": "src/assets/fonts/AmiriQuran/AmiriQuran-Regular.ttf",
+      "sha1": "7fa35fe59f613abedf6c332fe80cb31198b3741e"
+    },
+    {
       "path": "src/assets/fonts/Cairo/Cairo-Bold.ttf",
       "sha1": "dd70862b408a084a4e55aa03529eb8e06641165e"
     },
@@ -15,7 +27,7 @@
     },
     {
       "path": "src/assets/fonts/index.json",
-      "sha1": "e90df4567911305465e06c4585512bff1818e633"
+      "sha1": "f66dec5428c943ede65210a9bd6d62f6be5e8c27"
     },
     {
       "path": "src/assets/fonts/Inter/Inter-Bold.ttf",

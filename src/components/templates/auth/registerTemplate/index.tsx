@@ -1,13 +1,11 @@
 import React from 'react';
-import {KeyboardTypeOptions, View} from 'react-native';
+import {KeyboardTypeOptions} from 'react-native';
+import {useTranslation} from 'react-i18next';
 
-import ScreenContainer from '@atoms/ScreenContainer';import Spacer from '@atoms/Spacer';
-import RegisterHeader from '@organisms/auth/register/RegisterHeader';
-import RegisterForm from '@organisms/auth/register/RegisterForm';
+import AuthScreenShell from '@organisms/auth/AuthScreenShell';
 import RegisterFooter from '@organisms/auth/register/RegisterFooter';
+import RegisterForm from '@organisms/auth/register/RegisterForm';
 
-import {useThemedStyles} from '@theme/createThemedStyles';
-import {resolveRegisterTemplateStyles} from './styles/resolveRegisterTemplateStyles';
 import {AppRouteProp, AppStackNavigationProp} from '@Types/appNavigation';
 import {RegisterScreens} from '@Types/registerScreens';
 
@@ -18,22 +16,20 @@ interface RegisterTemplateProps {
 }
 
 const RegisterTemplate = (props: RegisterTemplateProps): React.JSX.Element => {
-  const styles = useThemedStyles(resolveRegisterTemplateStyles);
+  const {t} = useTranslation();
 
   return (
-    <ScreenContainer scroll centered scrollProps={{keyboardShouldPersistTaps: 'handled'}}>
-      <RegisterHeader />
-      <Spacer size="lg" />
-      <View style={styles.formWrap}>
-        <RegisterForm
-          navigation={props.navigation}
-          registerType={props.registerType}
-          keyboardType={props.keyboardType}
-        />
-      </View>
-      <Spacer size="md" />
-      <RegisterFooter navigation={props.navigation} />
-    </ScreenContainer>
+    <AuthScreenShell
+      title={t('Register')}
+      subtitle={t('auth.registerSubtitle')}
+      iconName="person-add-outline"
+      footer={<RegisterFooter navigation={props.navigation} />}>
+      <RegisterForm
+        navigation={props.navigation}
+        registerType={props.registerType}
+        keyboardType={props.keyboardType}
+      />
+    </AuthScreenShell>
   );
 };
 

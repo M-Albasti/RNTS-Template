@@ -28,7 +28,7 @@ export const sizes = {
   dividerHairline: 2,
   progressTrack: 6,
   addButton: 28,
-  profileAvatar: 72,
+  profileAvatar: 96,
   galleryCover: 64,
   gallerySlide: 400,
   hitSlop: 8,

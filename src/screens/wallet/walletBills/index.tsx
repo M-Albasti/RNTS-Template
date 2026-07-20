@@ -29,7 +29,7 @@ const WalletBills = ({navigation}: WalletBillsProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('wallet.billPay')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.billPay')} navigation={navigation} />
       {bills.map(bill => (
         <View key={bill.id}>
           <Card style={bill.paid ? styles.paid : undefined}>

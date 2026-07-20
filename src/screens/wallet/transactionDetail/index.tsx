@@ -43,7 +43,7 @@ const TransactionDetail = ({
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('wallet.transactionTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('wallet.transactionTitle')} navigation={navigation} />
       <Card>
         <Heading text={tx.title} level="h2" align="center" />
         <Spacer size="md" />

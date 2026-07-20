@@ -65,7 +65,7 @@ const CreatePoll = ({navigation}: CreatePollProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll>
-      <ScreenHeader title={t('posts.createPollTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('posts.createPollTitle')} navigation={navigation} />
       <Card>
         <Heading text={t('posts.askQuestion')} level="h3" />
         <Spacer size="md" />

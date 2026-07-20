@@ -230,7 +230,7 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
   if (!configured) {
     return (
       <ScreenContainer scroll bottomPadding="xxl">
-        <ScreenHeader title={t('islamic.prayer.title')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('islamic.prayer.title')} navigation={navigation} />
         <View style={styles.setupCard}>
           <Heading text={t('islamic.prayer.needLocationTitle')} level="h3" />
           <Spacer size="xs" />
@@ -249,15 +249,15 @@ const PrayerTimes = ({navigation}: Props): React.JSX.Element => {
     <ScreenContainer scroll bottomPadding="xxl">
       <ScreenHeader
         title={t('islamic.prayer.title')}
-        onBack={() => navigation.goBack()}
-        rightAccessory={
-          <TouchableIcon
-            iconType="Ionicons"
-            name="compass-outline"
-            size={sizes.iconSm}
-            onPress={() => navigation.navigate('Qibla')}
-          />
-        }
+        navigation={navigation}
+        rightActions={[
+          {
+            key: 'qibla',
+            iconName: 'compass-outline',
+            onPress: () => navigation.navigate('Qibla'),
+            accessibilityLabel: t('islamic.qibla.title', {defaultValue: 'Qibla'}),
+          },
+        ]}
       />
 
       <PrayerHeroHeader

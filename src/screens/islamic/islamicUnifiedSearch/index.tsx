@@ -400,7 +400,7 @@ const IslamicUnifiedSearch = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.search.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('islamic.search.title')} navigation={navigation} />
       <TextInputView
         value={query}
         onChangeText={setQuery}

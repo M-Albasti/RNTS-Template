@@ -125,7 +125,7 @@ const Qibla = ({navigation}: Props): React.JSX.Element => {
   if (!hasCoords) {
     return (
       <ScreenContainer scroll bottomPadding="xxl">
-        <ScreenHeader title={t('islamic.prayer.qiblaTitle')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('islamic.prayer.qiblaTitle')} navigation={navigation} />
         <View style={styles.body}>
           <View style={styles.card}>
             <TextView text={t('islamic.prayer.qiblaNeedLocation')} variant="body" />
@@ -142,7 +142,7 @@ const Qibla = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.prayer.qiblaTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('islamic.prayer.qiblaTitle')} navigation={navigation} />
       <View style={styles.body}>
         <TextView
           text={location.label || `${location.city}, ${location.country}`}

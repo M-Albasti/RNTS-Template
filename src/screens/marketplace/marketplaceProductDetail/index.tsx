@@ -52,7 +52,7 @@ const MarketplaceProductDetail = ({navigation, route}: Props): React.JSX.Element
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={product.title} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={product.title} navigation={navigation} />
       <Card>
         <TextView text={product.imageEmoji} variant="h3" align="center" />
         <Spacer size="sm" />

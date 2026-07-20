@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Image, Pressable, StyleSheet, View, ImageStyle} from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useTranslation} from 'react-i18next';
@@ -20,13 +20,17 @@ interface GalleryFavoritesProps {
 
 const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Element => {
   const {t} = useTranslation();
-  const favorites = useAppSelector(state => state.gallery.images.filter(i => i.favorite));
-  const styles = useThemedStyles(resolveGalleryFavoritesStyles)
+  const images = useAppSelector(state => state.gallery.images);
+  const favorites = useMemo(
+    () => images.filter(i => i.favorite),
+    [images],
+  );
+  const styles = useThemedStyles(resolveGalleryFavoritesStyles);
 
   if (favorites.length === 0) {
     return (
       <ScreenContainer>
-        <ScreenHeader title={t('gallery.favorites')} onBack={() => navigation.goBack()} />
+        <ScreenHeader title={t('gallery.favorites')} navigation={navigation} />
         <View style={styles.empty}>
           <TextView text={t('gallery.noFavoritePhotos')} muted align="center" />
         </View>
@@ -36,7 +40,7 @@ const GalleryFavorites = ({navigation}: GalleryFavoritesProps): React.JSX.Elemen
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('gallery.favorites')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('gallery.favorites')} navigation={navigation} />
       <FlashList
         data={favorites}
         numColumns={2}

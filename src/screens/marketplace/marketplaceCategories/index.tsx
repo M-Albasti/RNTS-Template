@@ -20,7 +20,7 @@ const MarketplaceCategories = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('marketplace.categoriesTitle')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('marketplace.categoriesTitle')} navigation={navigation} />
       <View style={styles.grid}>
         {MARKETPLACE_CATEGORIES.map(category => (
           <Pressable

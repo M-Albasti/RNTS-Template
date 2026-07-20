@@ -175,7 +175,7 @@ const HadithSearch = ({navigation}: Props): React.JSX.Element => {
 
   return (
     <ScreenContainer bottomPadding="xxl">
-      <ScreenHeader title={t('islamic.hadith.search')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('islamic.hadith.search')} navigation={navigation} />
       <TextInputView
         value={query}
         onChangeText={onChangeQuery}

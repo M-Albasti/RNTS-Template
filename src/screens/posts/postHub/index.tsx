@@ -26,7 +26,7 @@ const PostHub = ({navigation}: PostHubProps): React.JSX.Element => {
 
   return (
     <ScreenContainer scroll bottomPadding="xxl">
-      <ScreenHeader title={t('posts.hubTitle')} showBack={false} />
+      <ScreenHeader title={t('posts.hubTitle')} showBack={false} showDrawer navigation={navigation} />
       <View style={styles.hero}>
         <Heading text={t('posts.communityFeed')} level="h2" align="center" />
         <Spacer size="xs" />

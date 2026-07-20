@@ -69,7 +69,7 @@ const Feed = ({navigation}: FeedProps): React.JSX.Element => {
 
   return (
     <ScreenContainer>
-      <ScreenHeader title={t('feed.title')} onBack={() => navigation.goBack()} />
+      <ScreenHeader title={t('feed.title')} navigation={navigation} />
       {feedQuery.isFetching ? (
         <>
           <TextView text={t('feed.syncing')} variant="bodySmall" muted />
