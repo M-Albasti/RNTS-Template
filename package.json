@@ -25,8 +25,7 @@
     "ios:archive": "SENTRY_BUILD_KIND=ios-archive bash scripts/sentry-enabled.sh && cd ios && xcodebuild -workspace RNTS-Template.xcworkspace -scheme RNTS-Template -configuration Release archive -archivePath build/RNTS-Template.xcarchive CODE_SIGNING_ALLOWED=NO",
     "android:apk": "SENTRY_BUILD_KIND=android-release bash scripts/sentry-enabled.sh && cd android && ./gradlew assembleRelease",
     "ios-refresh-build": "cd ios && rm -rf build Pods Podfile.lock && pod deintegrate && pod cache clean --all && pod install --repo-update && open RNTS.xcworkspace && cd .. && bunx react-native run-ios",
-    "refresh-build-app": "rm -rf yarn.lock package-lock.json bun.lock node_modules ios/Pods ios/build ios/Podfile.lock android/build android/.gradle android/.idea android/app/build && sudo rm -rf ~/Library/Developer/Xcode/DerivedData && bun install && cd ios && pod cache clean --all && pod install --repo-update && open RNTS-Template.xcworkspace && cd .. && cd android && ./gradlew clean && ./gradlew wrapper && ./gradlew task && cd .. && bunx react-native run-android && bunx react-native run-ios",
-    "postinstall": "patch-package"
+    "refresh-build-app": "rm -rf yarn.lock package-lock.json bun.lock node_modules ios/Pods ios/build ios/Podfile.lock android/build android/.gradle android/.idea android/app/build && sudo rm -rf ~/Library/Developer/Xcode/DerivedData && bun install && cd ios && pod cache clean --all && pod install --repo-update && open RNTS-Template.xcworkspace && cd .. && cd android && ./gradlew clean && ./gradlew wrapper && ./gradlew task && cd .. && bunx react-native run-android && bunx react-native run-ios"
   },
   "dependencies": {
     "@expo-google-fonts/cairo": "^0.4.2",
@@ -82,7 +81,7 @@
     "react-native-mmkv": "^4.3.1",
     "react-native-nitro-image": "^0.13.1",
     "react-native-nitro-modules": "^0.35.4",
-    "react-native-nitro-sound": "^0.2.13",
+    "react-native-nitro-sound": "0.2.17",
     "react-native-onboarding-swiper": "^1.4.0",
     "react-native-otp-entry": "^1.8.5",
     "react-native-quick-base64": "^2.2.2",
@@ -126,7 +125,6 @@
     "babel-plugin-module-resolver": "^5.0.3",
     "eslint": "^9.39.4",
     "jest": "^29.7.0",
-    "patch-package": "^8.0.1",
     "prettier": "^3.8.3",
     "react-native-dotenv": "^3.4.11",
     "react-test-renderer": "19.2.3",
