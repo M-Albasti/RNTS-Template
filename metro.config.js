@@ -8,6 +8,9 @@ const { withSentryConfig } = require('@sentry/react-native/metro');
  * Metro configuration
  * https://reactnative.dev/docs/metro
  *
+ * React Native CLI uses `withSentryConfig`. Expo apps should use:
+ * `getSentryExpoConfig(__dirname, { autoWrapExpoRouterErrorBoundary: true })`.
+ *
  * @type {import('@react-native/metro-config').MetroConfig}
  */
 const config = {};

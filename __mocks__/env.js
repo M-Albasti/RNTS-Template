@@ -2,6 +2,8 @@
 module.exports = {
   APP_ENV: 'test',
   SENTRY_DSN: '',
+  EXPO_PUBLIC_SENTRY_DSN: '',
+  EXPO_PUBLIC_ENV: 'test',
   API_BASE_URL: 'http://localhost:3000/v1',
   API_USE_MOCKS: 'true',
   MEDIA_API_BASE_URL: 'http://localhost:3000/v1',

@@ -8,3 +8,14 @@ declare module '@env' {
   export const MEDIA_API_BASE_URL: string;
   export const GOOGLE_MAPS_API_KEY: string;
 }
+
+declare namespace NodeJS {
+  interface ProcessEnv {
+    EXPO_PUBLIC_SENTRY_DSN?: string;
+    EXPO_PUBLIC_ENV?: string;
+    SENTRY_DSN?: string;
+    SENTRY_AUTH_TOKEN?: string;
+    SENTRY_DISABLE_AUTO_UPLOAD?: string;
+    SENTRY_PROPERTIES?: string;
+  }
+}
