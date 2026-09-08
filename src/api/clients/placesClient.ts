@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {GOOGLE_MAPS_API_KEY} from '@env';
 
+import {wireHttpClientForSentry} from '@core/http/HttpClientService';
+
 /**
  * Google Places / Geocoding / Time Zone helpers for prayer location setup.
  * Requires Places, Geocoding, and Time Zone APIs on the Maps key.
@@ -42,6 +44,8 @@ const mapsHttp = axios.create({
   baseURL: 'https://maps.googleapis.com/maps/api',
   timeout: 15000,
 });
+
+wireHttpClientForSentry(mapsHttp);
 
 const hasMapsKey = (): boolean =>
   Boolean(GOOGLE_MAPS_API_KEY && GOOGLE_MAPS_API_KEY !== 'YOUR_GOOGLE_MAPS_API_KEY');

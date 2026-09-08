@@ -1,6 +1,6 @@
 import React from 'react';
 import {FallbackProps} from 'react-error-boundary';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import {useTranslation} from 'react-i18next';
 
 import Button from '@atoms/Button';

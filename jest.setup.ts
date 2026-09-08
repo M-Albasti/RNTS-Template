@@ -3,20 +3,7 @@
  * @env is resolved via babel module-resolver alias in test mode (see babel.config.js).
  */
 
-jest.mock('@config/sentryConfig', () => ({}));
-
-jest.mock('@sentry/react-native', () => ({
-  init: jest.fn(),
-  getClient: jest.fn(() => null),
-  getGlobalScope: jest.fn(() => ({addEventProcessor: jest.fn()})),
-  getIsolationScope: jest.fn(() => ({addEventProcessor: jest.fn()})),
-  wrap: (component: unknown) => component,
-  mobileReplayIntegration: jest.fn(() => ({})),
-  feedbackIntegration: jest.fn(() => ({})),
-  reactNavigationIntegration: jest.fn(() => ({})),
-  captureException: jest.fn(),
-  captureMessage: jest.fn(),
-}));
+require('./jest.setup.sentry');
 
 jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'));
 
