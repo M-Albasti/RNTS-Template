@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import {wireHttpClientForSentry} from '@core/http/HttpClientService';
+
 /** Lightweight HTTP clients for public Islamic content APIs (no app JWT). */
 export const quranHttpClient = axios.create({
   baseURL: 'https://api.alquran.cloud/v1',
@@ -57,3 +59,13 @@ export const mp3quranHttpClient = axios.create({
   timeout: 20000,
   headers: {Accept: 'application/json'},
 });
+
+const islamicHttpClients = [
+  quranHttpClient,
+  hadithHttpClient,
+  adhkarHttpClient,
+  prayerHttpClient,
+  mp3quranHttpClient,
+];
+
+islamicHttpClients.forEach(wireHttpClientForSentry);

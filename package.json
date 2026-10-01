@@ -21,6 +21,9 @@
     "link-assets": "npx react-native-asset",
     "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081",
     "android-refresh-build": "cd android && rm -rf build .gradle .kotlin .idea/ app/build app/.cxx && ./gradlew clean && ./gradlew task && ./gradlew wrapper && cd .. && bunx react-native run-android",
+    "sentry:enable": "bash scripts/sentry-enabled.sh",
+    "ios:archive": "SENTRY_BUILD_KIND=ios-archive bash scripts/sentry-enabled.sh && cd ios && xcodebuild -workspace RNTS-Template.xcworkspace -scheme RNTS-Template -configuration Release archive -archivePath build/RNTS-Template.xcarchive CODE_SIGNING_ALLOWED=NO",
+    "android:apk": "SENTRY_BUILD_KIND=android-release bash scripts/sentry-enabled.sh && cd android && ./gradlew assembleRelease",
     "ios-refresh-build": "cd ios && rm -rf build Pods Podfile.lock && pod deintegrate && pod cache clean --all && pod install --repo-update && open RNTS.xcworkspace && cd .. && bunx react-native run-ios",
     "refresh-build-app": "rm -rf yarn.lock package-lock.json bun.lock node_modules ios/Pods ios/build ios/Podfile.lock android/build android/.gradle android/.idea android/app/build && sudo rm -rf ~/Library/Developer/Xcode/DerivedData && bun install && cd ios && pod cache clean --all && pod install --repo-update && open RNTS-Template.xcworkspace && cd .. && cd android && ./gradlew clean && ./gradlew wrapper && ./gradlew task && cd .. && bunx react-native run-android && bunx react-native run-ios"
   },
@@ -52,7 +55,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "@rneui/base": "^5.0.0",
     "@rneui/themed": "^5.0.0",
-    "@sentry/react-native": "^8.8.0",
+    "@sentry/react-native": "^8.11.1",
     "@shopify/flash-list": "^2.3.1",
     "@tanstack/react-query": "^5.101.0",
     "@types/react-redux": "^7.1.34",

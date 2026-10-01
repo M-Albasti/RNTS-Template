@@ -5,8 +5,10 @@
  * @format
  */
 
-//* config import
-import '@config/sentryConfig';
+//* core import — must run before React tree / DI / navigation
+import {initCrashReporter} from '@core/logging/useCrashReporter';
+
+initCrashReporter();
 
 //* packages import
 import React, {useEffect, useState} from 'react';
@@ -20,6 +22,7 @@ import {wrap} from '@sentry/react-native';
 
 //* config import
 import AppProviders from '@config/AppProviders';
+import ErrorBoundary from '@core/app/ErrorBoundary';
 
 //* navigators import
 import NavigationScreens from '@navigation/index';
@@ -73,23 +76,25 @@ const App = (): React.JSX.Element => {
   }
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <AppProviders>
-            <SafeAreaProvider>
-              <GestureHandlerRootView style={styles.container}>
-                <DriverBackgroundTrackingHost />
-                <FirebaseMessagingHost />
-                <IslamicNotificationHost />
-                <QuranAudioHost />
-                <NavigationScreens />
-              </GestureHandlerRootView>
-            </SafeAreaProvider>
-          </AppProviders>
-        </PersistGate>
-      </Provider>
-    </I18nextProvider>
+    <ErrorBoundary>
+      <I18nextProvider i18n={i18n}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <AppProviders>
+              <SafeAreaProvider>
+                <GestureHandlerRootView style={styles.container}>
+                  <DriverBackgroundTrackingHost />
+                  <FirebaseMessagingHost />
+                  <IslamicNotificationHost />
+                  <QuranAudioHost />
+                  <NavigationScreens />
+                </GestureHandlerRootView>
+              </SafeAreaProvider>
+            </AppProviders>
+          </PersistGate>
+        </Provider>
+      </I18nextProvider>
+    </ErrorBoundary>
   );
 };
 

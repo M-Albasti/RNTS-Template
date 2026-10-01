@@ -19,7 +19,7 @@ import {useAppColorScheme} from '@hooks/useAppColorScheme';
 import {useAppSelector} from '@hooks/useAppSelector';
 
 //* navigators import
-import {navigationIntegration} from '@navigation/navigationIntegration';
+import {navigationIntegration} from '@core/navigation/wrapRouterForSentry';
 import {trackNavigationScreenChange} from '@navigation/firebaseNavigationAnalytics';
 
 //* theme import

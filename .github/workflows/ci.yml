@@ -38,6 +38,13 @@ jobs:
       - name: Prepare environment
         run: cp .env.example .env
 
+      - name: Configure Sentry upload (CI)
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          echo "SENTRY_PROPERTIES=${{ github.workspace }}/sentry.properties" >> "$GITHUB_ENV"
+          echo "SENTRY_DISABLE_AUTO_UPLOAD=true" >> "$GITHUB_ENV"
+
       - name: Validate translations
         run: npm run validate:i18n
 

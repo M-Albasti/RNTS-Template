@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 import {apiConfig} from '@config/apiConfig';
-import {getAccessToken} from '@config/network/tokenStorage';
+import {wireHttpClientForSentry} from '@core/http/HttpClientService';
 import {normalizeApiError} from '@config/network/apiError';
+import {getAccessToken} from '@config/network/tokenStorage';
 import {trackApiError} from '@services/firebaseServices/firebaseAuthAnalytics';
 
 /** Shared Axios client for app REST APIs (auth, feed, dashboard, …). */
@@ -14,6 +15,8 @@ export const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+wireHttpClientForSentry(apiClient);
 
 apiClient.interceptors.request.use(config => {
   const token = getAccessToken();

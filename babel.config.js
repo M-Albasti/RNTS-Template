@@ -12,6 +12,7 @@ const moduleAliases = {
   '@templates': './src/components/templates',
   '@constants': './src/constants',
   '@config': './src/config',
+  '@core': './src/core',
   '@helpers': './src/helpers',
   '@hooks': './src/hooks',
   '@navigation': './src/navigation',
