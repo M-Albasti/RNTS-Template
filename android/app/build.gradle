@@ -11,6 +11,13 @@ def googleMapsApiKey = dotEnv.get("GOOGLE_MAPS_API_KEY", "YOUR_GOOGLE_MAPS_API_K
 def facebookAppId = dotEnv.get("FACEBOOK_APP_ID", "0")
 def facebookClientToken = dotEnv.get("FACEBOOK_CLIENT_TOKEN", "0")
 
+def releaseSigning = new Properties()
+def releaseSigningFile = rootProject.file("keystore.properties")
+if (releaseSigningFile.exists()) {
+    releaseSigningFile.withInputStream { releaseSigning.load(it) }
+}
+def hasReleaseSigning = releaseSigning.getProperty("MYAPP_UPLOAD_STORE_FILE")
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -100,11 +107,11 @@ android {
     }
     signingConfigs {
         release {
-            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
-                storeFile file(MYAPP_UPLOAD_STORE_FILE)
-                storePassword MYAPP_UPLOAD_STORE_PASSWORD
-                keyAlias MYAPP_UPLOAD_KEY_ALIAS
-                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            if (hasReleaseSigning) {
+                storeFile file(releaseSigning["MYAPP_UPLOAD_STORE_FILE"])
+                storePassword releaseSigning["MYAPP_UPLOAD_STORE_PASSWORD"]
+                keyAlias releaseSigning["MYAPP_UPLOAD_KEY_ALIAS"]
+                keyPassword releaseSigning["MYAPP_UPLOAD_KEY_PASSWORD"]
             }
         }
         debug {
@@ -116,15 +123,14 @@ android {
     }
     buildTypes {
         debug {
-            // Use debug keystore in CI / local dev when release keystore props are absent
-            signingConfig project.hasProperty('MYAPP_UPLOAD_STORE_FILE')
+            signingConfig hasReleaseSigning
                 ? signingConfigs.release
                 : signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig hasReleaseSigning
+                ? signingConfigs.release
+                : signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
